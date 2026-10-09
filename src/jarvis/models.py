@@ -1,11 +1,11 @@
-"""Strict input boundaries and the only M0 provider implementation."""
+"""Strict decisions, profiles, shared provider contracts, and scripted provider."""
 
 import json
 from collections.abc import Callable
 from dataclasses import dataclass
 from typing import Annotated, Any, Literal, Protocol
 
-from pydantic import BaseModel, ConfigDict, Field, TypeAdapter
+from pydantic import BaseModel, ConfigDict, Field, TypeAdapter, model_validator
 
 from jarvis.domain import Clock, Decision, Proposal
 
@@ -78,20 +78,72 @@ def parse_decision(raw: bytes) -> Decision:
     return Decision(parsed.kind, text=text)
 
 
-class Profile(StrictRecord):
+class BaseProfile(StrictRecord):
     schema_version: Literal[1] = 1
     profile_name: str
-    provider: Literal["fake"] = "fake"
     execution_mode: Literal["simulation"] = "simulation"
-    network_mode: Literal["none"] = "none"
     model_identity: str
     role: Literal["primary_text"] = "primary_text"
-    prompt_version: Literal["planner-v1"] = "planner-v1"
+    prompt_version: Literal["planner-v1", "planner-v2", "planner-v3", "planner-v4"] = "planner-v1"
     decision_version: Literal["decision-v1"] = "decision-v1"
     context_bytes: int = Field(default=16384, ge=1024, le=65536)
     max_output_bytes: int = Field(default=32768, ge=1, le=32768)
     task_seconds: int = Field(default=30, ge=1, le=120)
+
+
+class Profile(BaseProfile):
+    """The M0 fake-profile boundary remains deliberately separate."""
+
+    provider: Literal["fake"] = "fake"
+    network_mode: Literal["none"] = "none"
     reply: str = Field(max_length=32768)
+
+
+class ProviderOptions(StrictRecord):
+    think: bool | Literal["low", "medium", "high"] | None = None
+    keep_alive: str = Field(default="2m", pattern=r"^(?:0|[1-9][0-9]?[sm])$")
+
+
+class OllamaProfile(BaseProfile):
+    prompt_version: Literal["planner-v1", "planner-v2", "planner-v3", "planner-v4"] = "planner-v4"
+    provider: Literal["ollama"]
+    network_mode: Literal["local_model_only"]
+    base_url: Literal["http://127.0.0.1:11434"] = "http://127.0.0.1:11434"
+    model_identity: str = Field(
+        min_length=1, max_length=128, pattern=r"^[a-z0-9][a-z0-9._/-]*(?::[a-z0-9][a-z0-9._-]*)?$"
+    )
+    response_mode: Literal["json_schema"] = "json_schema"
+    context_tokens: int = Field(default=4096, ge=1024, le=16384)
+    max_output_tokens: int = Field(default=512, ge=128, le=1024)
+    safety_tokens: int = Field(default=256, ge=128, le=1024)
+    connect_timeout_seconds: float = Field(default=5.0, gt=0, le=10)
+    read_timeout_seconds: float = Field(default=10.0, gt=0, le=30)
+    max_envelope_bytes: int = Field(default=131072, ge=1024, le=262144)
+    temperature: float = Field(default=0.0, ge=0, le=1)
+    cloud_disabled_verified: bool = False
+    cloud_disabled_evidence: str = Field(default="", max_length=512)
+    provider_options: ProviderOptions = Field(default_factory=ProviderOptions)
+
+    @model_validator(mode="after")
+    def safe_profile(self):
+        if "cloud" in self.model_identity.split(":")[-1]:
+            raise ValueError("Cloud model identities are disabled")
+        if self.max_output_tokens + self.safety_tokens >= self.context_tokens:
+            raise ValueError("Output and safety reservations exhaust context")
+        if self.cloud_disabled_verified and not self.cloud_disabled_evidence.strip():
+            raise ValueError("User-verified local-only setup needs an evidence note")
+        return self
+
+
+TextProfile = Profile | OllamaProfile
+
+
+class ProviderError(ValueError):
+    """Normalized errors contain categories, never server bodies or prompts."""
+
+    def __init__(self, code: str):
+        self.code = code
+        super().__init__(code)
 
 
 @dataclass(frozen=True)
@@ -105,7 +157,7 @@ class ModelRequest:
     request_id: str
     task_id: str
     revision: int
-    profile: Profile
+    profile: TextProfile
     schema: dict[str, Any]
     deadline: float
     messages: tuple[Message, ...]
@@ -120,10 +172,12 @@ class ModelReply:
     identity: str
     runtime_version: str | None = None
     tokens: int | None = None
+    latency_seconds: float | None = None
+    runtime_load_seconds: float | None = None
 
 
 class Provider(Protocol):
-    def inspect(self, profile: Profile) -> dict[str, Any]: ...
+    def inspect(self, profile: TextProfile) -> dict[str, Any]: ...
     def generate(self, request: ModelRequest, cancel: Callable[[], bool]) -> ModelReply: ...
     def close(self) -> None: ...
 

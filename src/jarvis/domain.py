@@ -17,11 +17,18 @@ class State(StrEnum):
     CANCELLED = "CANCELLED"
     NEEDS_REVIEW = "NEEDS_REVIEW"
     WAITING_INPUT = "WAITING_INPUT"
+    ANSWERED = "ANSWERED"
 
 
 TRANSITIONS = {
     State.RECEIVED: {State.PLANNING, State.CANCELLED, State.FAILED},
-    State.PLANNING: {State.READY, State.WAITING_INPUT, State.FAILED, State.CANCELLED},
+    State.PLANNING: {
+        State.READY,
+        State.WAITING_INPUT,
+        State.FAILED,
+        State.CANCELLED,
+        State.ANSWERED,
+    },
     State.READY: {State.RUNNING, State.CANCELLED, State.FAILED, State.NEEDS_REVIEW},
     State.RUNNING: {State.VERIFYING, State.NEEDS_REVIEW},
     State.VERIFYING: {State.SUCCEEDED, State.FAILED, State.CANCELLED, State.NEEDS_REVIEW},
@@ -139,6 +146,7 @@ class TaskResult:
     state: State
     message: str
     simulated: bool = True
+    decision_kind: str = ""
 
 
 class Desktop(Protocol):

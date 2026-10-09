@@ -4,7 +4,7 @@ import hashlib
 import json
 from dataclasses import asdict, dataclass
 
-from jarvis.domain import Denied, Grant, PreparedAction, Proposal, Task
+from jarvis.domain import Denied, Grant, PreparedAction, Proposal, Scope, Task
 from jarvis.models import BOUNDARY
 from jarvis.policy import POLICY_VERSION
 
@@ -30,6 +30,28 @@ class Registry:
     def schema(self) -> dict:
         # The reviewed registry has exactly one capability, using these same boundary types.
         return BOUNDARY.json_schema()
+
+    def scope_for(self, session: str, text: str) -> Scope:
+        normalized = text.strip().casefold().rstrip(".!?")
+        aliases = {
+            "open my registered text editor",
+            "open my text editor",
+            "open text editor",
+            "launch my text editor",
+            "please open my text editor",
+        }
+        return Scope(session, "text_editor" if normalized in aliases else "none")
+
+    def needs_live_retrieval(self, text: str) -> bool:
+        value = text.casefold()
+        return (
+            ("myr" in value and "jpy" in value)
+            or any(word in value for word in ("exchange rate", "weather", "latest news"))
+            or (
+                any(word in value for word in ("current", "today", "now", "latest"))
+                and any(word in value for word in ("price", "rate", "news", "president"))
+            )
+        )
 
     def prepare(self, task: Task, proposal: Proposal, grant: Grant) -> PreparedAction:
         if proposal.capability != self.capability or proposal.app_id not in self.apps:

@@ -1,13 +1,53 @@
-# JARVIS — M0 safe simulated core
+# JARVIS local text assistant
 
-Only M0 is implemented from `JARVIS_Project_Specification.md` version 2.0.
-The first request is **“Open my registered text editor.”** All actions are
-**SIMULATED**. A scripted provider proposes one action; trusted code parses,
-resolves, authorizes, journals, admits, executes in fake state, and independently
-observes the postcondition. This is a tested application flow, not natural-language
-intelligence or real-model compatibility.
+M0's safe simulated core and M1's local Ollama integration are implemented from
+`JARVIS_Project_Specification.md`. **All desktop actions remain SIMULATED.**
+The real model proposes a decision; strict parsing, the reviewed registry,
+authorization, durable intent, cancellation gates, fake execution, and independent
+observation determine the result. M2 Windows control is not implemented.
 
-From the repository root in PowerShell, using the installed Python 3.13:
+The installed laptop model is `qwen3:1.7b`, served by official standalone Ollama
+0.40.2. The corrected `planner-v4` / `ollama-chat-v2` profile scored **27/30 (90%)
+in each of three runs**, with all editor and clarification cases correct and
+zero unauthorized dispatches. It uses `think=false` and the original limits.
+Initial failed evaluations and other unsuccessful profiles remain recorded.
+The unchanged acceptance gate is 90% correct with zero unauthorized dispatches.
+**The narrow simulated behavior gate passes.** Three unavailable requests still
+produce clarification instead of unsupported: desktop clicking, browser opening,
+and opening `other_editor`; each executes zero times. This is limited corpus
+evidence, not qualification for real Windows actions. Valid structured JSON alone
+does not establish correct behavior.
+See `docs/evaluations/` and `docs/BUILD_LOG.md` for measured evidence and limits.
+**M1's exit gate is met for this tested laptop/profile:** behavior qualification
+passes and actual offline loopback inference plus verified fake execution passed.
+Cloud-disabled startup evidence is operator-verified, not a programmatic attestation.
+The offline check observed no physical adapters up and no active external default
+routes before/after inference; snapshots do not continuously attest connectivity.
+
+To repeat the offline check, keep the loopback server running, disconnect
+Wi-Fi/Ethernet manually, and run this development check from the repository:
+
+```powershell
+.\scripts\Test-JarvisOffline.ps1
+```
+
+It reads physical-adapter/default-route state before and after real inference,
+checks the fake editor's 0->1 state change and independent verification, and saves
+`%LOCALAPPDATA%\Jarvis\offline-check.json`. It refuses to claim offline success while
+external adapters/default routes remain active. It changes no network settings.
+Snapshots do not continuously attest connectivity or exclude a hidden tunnel.
+The check includes hidden adapters and counts default routes only when their
+interfaces are active or unknown; stale routes on known disconnected interfaces
+do not block it. Disconnect USB Ethernet as well as Wi-Fi on this laptop.
+To queue a one-time check before disconnecting, add `-WaitForDisconnectSeconds 300`
+(maximum five minutes). It waits locally and never disables a connection itself.
+Reconnect before sharing the report in this chat; JARVIS itself needs no Codex
+connection for this check. Offline success does not enable real actions.
+The recorded pass is `docs/evaluations/m1-offline-validation.json`. The qualification
+report's offline flag remains false because those corpus runs occurred while
+connected; the separate offline report records the successful disconnected check.
+
+From the repository root in PowerShell:
 
 ```powershell
 python --version
@@ -15,105 +55,140 @@ python -m venv .venv
 .\.venv\Scripts\python.exe -m pip install --require-hashes -r requirements-dev.lock
 .\.venv\Scripts\python.exe -m pip install --no-deps --no-build-isolation -e .
 
-.\.venv\Scripts\python.exe -m jarvis demo --scenario open-editor
-.\.venv\Scripts\python.exe -m jarvis demo --scenario denied
-.\.venv\Scripts\python.exe -m jarvis demo --scenario cancelled
-.\.venv\Scripts\python.exe -m jarvis demo --scenario recovery-unknown
-.\.venv\Scripts\python.exe -m jarvis demo --scenario open-editor --profile config/examples/fake-alternate.toml
-
-.\.venv\Scripts\python.exe -m pytest
+.\.venv\Scripts\python.exe -m pytest -v -ra
 .\.venv\Scripts\python.exe -m ruff check .
 .\.venv\Scripts\python.exe -m ruff format --check .
 .\.venv\Scripts\python.exe -m pip check
 ```
 
-No activation or PowerShell execution-policy change is required. Development
-dependency installation needs package-index access; JARVIS runtime needs none.
-Tests allocate a fresh ignored `.pytest-run-*` directory inside the repository
-for each invocation and clean it on exit. This avoids Windows access-denied errors
-from a shared `%TEMP%\pytest-of-User` directory created in another execution context.
-The optional pytest cache is disabled to avoid inaccessible stale `.pytest_cache`
-files; all tests and assertions still run. `--lf`/`--ff` cache-based selection is
-therefore unavailable by default. An explicit `--basetemp` is honored; pytest clears
-that directory, so only supply a dedicated disposable test directory.
-Python 3.12 is the specification baseline. This machine has Python 3.13.14, which
-was used for resolution and testing. The source uses 3.12-compatible syntax, but
-3.12 and other platforms have not been tested. The lock is generated and verified
-on Windows/Python 3.13, not certified as a cross-platform lock.
+No activation or execution-policy change is required. Python 3.12 is the baseline;
+Windows Python 3.13.14 was actually tested. Source uses 3.12-compatible syntax,
+but Python 3.12 and other platforms have not been tested. The hash lock was
+generated on Windows/Python 3.13. Development dependency setup uses PyPI.
+Tests use HTTPX mock transports and fake state, with no actual network or desktop
+control. Each pytest invocation creates and cleans an ignored `.pytest-run-*`
+directory; optional pytest caching is disabled to avoid the previously observed
+Windows temp/cache access-denied errors. Explicit `--basetemp` is honored; use
+only a dedicated disposable directory because pytest clears it.
 
-To regenerate the lock after a deliberate dependency change:
+The authorized standalone installation is outside Git at
+`%LOCALAPPDATA%\Jarvis\runtime\ollama-v0.40.2\bin\ollama.exe`, with weights at
+`%LOCALAPPDATA%\Jarvis\models`. A manually started server is currently available.
+After restarting Windows, start it in a separate PowerShell terminal:
 
 ```powershell
-# Bootstrap only if pip-tools is not yet installed in .venv:
+$env:OLLAMA_NO_CLOUD = '1'
+$env:OLLAMA_HOST = '127.0.0.1:11434'
+$env:OLLAMA_MODELS = "$env:LOCALAPPDATA\Jarvis\models"
+$env:OLLAMA_CONTEXT_LENGTH = '4096'
+& "$env:LOCALAPPDATA\Jarvis\runtime\ollama-v0.40.2\bin\ollama.exe" serve
+```
+
+These settings apply only to that process and its children. No global PATH,
+persistent environment variables, startup services, or administrator setup were
+changed. Do not start a second server if the existing endpoint is occupied.
+The official [Windows distribution](https://docs.ollama.com/windows) supports
+standalone installation; cloud disabling uses the documented
+[`OLLAMA_NO_CLOUD` setting](https://docs.ollama.com/faq).
+Check the startup log for `Ollama cloud disabled: true` before marking a private
+profile's `cloud_disabled_verified` true and recording the evidence note.
+Committed examples deliberately leave that flag false.
+
+The private laptop profile has already been created on this machine. In the
+repository terminal:
+
+```powershell
+$jarvisProfile = "$env:LOCALAPPDATA\Jarvis\profiles\laptop.toml"
+.\.venv\Scripts\python.exe -m jarvis doctor --profile $jarvisProfile --evaluation-report docs/evaluations/m1-qwen3-1.7b-qualification.json
+.\.venv\Scripts\python.exe -m jarvis chat --profile $jarvisProfile
+# Explicit live evaluation; exit 0 passes, exit 1 fails the frozen behavior gate:
+.\.venv\Scripts\python.exe -m jarvis eval --live --profile $jarvisProfile --report "$env:LOCALAPPDATA\Jarvis\last-evaluation.json"
+```
+
+Try `Hello Jarvis.`, `Open my text editor.`, `Open my editor.` followed by
+`text editor`, and `What is the current MYR to JPY exchange rate?`. These flows
+were exercised through the actual CLI with planner-v4. `/stop` or `/cancel`
+cancels waiting inference and closes new action admissions; `/quit` exits.
+Cancellation does not promise rollback after an admitted effect. Windows terminal
+input handling is implemented; physical interactive key presses have not been
+manually tested. Finite piped input and cancellation races are tested.
+
+For another machine, copy `config/examples/laptop.toml` or `desktop.toml` into a
+private directory outside Git, retaining `execution_mode = "simulation"`.
+Edit model identity, bounded context/output settings, and provider options there;
+then select it with `--profile`. The future desktop example is `qwen3:8b` for the
+RTX 4070 / 32 GB / Ryzen 5 5600X PC; it was not downloaded or tested here. Neither
+example guarantees hardware fit. Install/download another model only after
+separate setup approval, verify local-only setup, run doctor and live evaluation,
+and treat its action role as unqualified until its own gates pass. No source
+change or automatic routing is needed. Runtime commands never download models.
+
+M0 regression demos still require neither Ollama nor runtime networking:
+
+```powershell
+.\.venv\Scripts\python.exe -m jarvis demo --scenario open-editor
+.\.venv\Scripts\python.exe -m jarvis demo --scenario denied
+.\.venv\Scripts\python.exe -m jarvis demo --scenario cancelled
+.\.venv\Scripts\python.exe -m jarvis demo --scenario recovery-unknown
+.\.venv\Scripts\python.exe -m jarvis demo --scenario open-editor --profile config/examples/fake-alternate.toml
+```
+
+Success changes fake running state from zero to one and observes it separately.
+Denied/cancelled scenarios execute zero times. Crash recovery leaves an uncertain
+effect in `NEEDS_REVIEW` without replay. Each demo has an isolated temporary
+SQLite journal. Interactive chat's journal is private at
+`%LOCALAPPDATA%\Jarvis\journal.sqlite`; history is memory-only, capped at eight
+turns and further trimmed to fit the context budget. Raw prompts, replies, and
+reasoning traces are not persisted. Synthetic evaluation reports contain case
+IDs and metrics, not private conversation text.
+
+Important files:
+
+- `src/jarvis/models.py`: strict decision union, frozen profiles, shared provider
+  interface, configurable scripted provider, and normalized inference errors.
+- `ollama.py`, `prompts.py`: fixed-loopback bounded HTTP transport, metadata/model
+  checks, versioned prompts and schemas, estimated context accounting.
+- `core.py`, `policy.py`, `tools.py`, `domain.py`: controller-owned scope, revisions,
+  exact approvals, trusted aliases, broker admission, and truthful outcomes.
+- `storage.py`, `adapters.py`: durable SQLite tasks/intents/attempts/audit events,
+  conservative recovery, fake mutation, and separate verification.
+- `conversation.py`, `terminal.py`, `cli.py`, `evaluation.py`: bounded conversation,
+  cancellation, observational doctor, explicit live evaluation and report summary.
+- `tests/test_m1.py`, `tests/fixtures/m1-corpus-v1.json`: mocked integration
+  regressions and the frozen 30-case live corpus; all original M0 tests remain.
+- `scripts/Test-JarvisOffline.ps1`: explicit development-time offline check with
+  read-only network observations and a real model/broker/fake-state smoke test.
+- `docs/IMPLEMENTATION_PLAN.md`, `docs/BUILD_LOG.md`: completion and actual evidence.
+
+One planner turn/action/observation, zero retries, one active planner, byte/token
+budgets, and connection/read/task deadlines bound each request. Token accounting
+uses an explicit UTF-8 byte estimate, not a claim about a real model's tokenizer.
+Only exact trusted editor aliases or a controller-managed clarification bind
+`text_editor`; other proposals cannot widen scope. Conversational history grants
+no permissions. Exact supplied approvals remain single-use and revision/digest/
+session/expiry-bound. Model switching affects the next task, never an active task.
+
+The HTTP client accepts only `127.0.0.1:11434`, ignores environment proxies,
+rejects redirects/cloud model metadata/native tool calls, caps complete responses,
+and has no fake/cloud fallback. Doctor only observes; it does not install or repair.
+Its selected evaluation report is historical evidence, never authorization.
+Live current facts use a trusted limitation without a retrieval or model call.
+Real launching/closing, browser control, desktop input, capture, audio, personal
+files, cloud providers, arbitrary execution, plugins and autonomous tasks are
+absent. Offline validation and qualification are required before claiming M1's
+exit gate. Stop for M1 review; do not enable M2.
+
+To regenerate the generated lock after a deliberate dependency change:
+
+```powershell
+# Bootstrap only if pip-tools is not already installed in .venv:
 .\.venv\Scripts\python.exe -m pip install pip-tools
 .\.venv\Scripts\python.exe -m piptools compile --extra dev --strip-extras --allow-unsafe --generate-hashes --output-file requirements-dev.lock pyproject.toml
 .\.venv\Scripts\python.exe -m pip install --require-hashes -r requirements-dev.lock
 .\.venv\Scripts\python.exe -m pip install --no-deps --no-build-isolation -e .
 ```
 
-`pip-tools` resolves actual package versions/hashes. `--allow-unsafe` includes
-the resolver's pip and build backend dependencies in the lock; it grants no
-JARVIS execution permission. Editable installation uses the already locked build
-backend and never resolves dependencies. Regenerate/test a separate lock when
-changing interpreter/platform if this lock cannot resolve there.
-
-Files that matter:
-
-- `src/jarvis/domain.py`: typed contracts and enumerated task transitions.
-- `models.py`: strict discriminated decision schema, duplicate-key rejection,
-  profile validation, provider protocol, and configurable scripted provider.
-- `core.py`, `policy.py`, `tools.py`: one-turn/one-action broker, task scope,
-  registry, canonical action digest, grant/approval validation, cancellation,
-  deadline gates, and evidence-based outcomes.
-- `storage.py`: SQLite tasks, intents, attempts, audit events, durable approval
-  consumption, uniqueness constraints, and validated recovery records.
-- `adapters.py`: bounded in-memory desktop mutation and separate observation.
-- `bootstrap.py`, `cli.py`: composition, injected clocks, isolated CLI scenarios.
-- `tests/`: deterministic behavior, denial, race-boundary, persistence, and
-  crash-injection tests, including two fake-provider profiles.
-- `config/`: strict M0 defaults and alternative fake profile; laptop/desktop
-  candidate documentation for M1. M0 rejects the real-provider examples.
-- `docs/IMPLEMENTATION_PLAN.md`, `docs/BUILD_LOG.md`: completion and actual evidence.
-
-The trusted CLI alias binds `text_editor` before inference. A standing fixture
-grant permits only that target/session/effect. Exact approval is optional for
-this low-risk operation; when supplied, it must match the prepared digest,
-revision, owner/session, and expiry, and is durably consumed once at admission.
-Model output cannot create grants, IDs, approvals, scope, or tool registrations.
-Profile selection freezes at task entry and is recorded without scripted reply
-content. A different model identity does not change the policy or fake adapter.
-
-The runtime has a fixed maximum of one planner turn, one action attempt, one
-observation, zero retries/repair calls, one active planner, bounded context/output,
-and a configured task deadline. Hooks and the manual clock make cancellation and
-late replies deterministic without sleeps. This single-process synchronous fake
-runtime is not a native-worker timeout implementation for future integrations.
-
-Each demo uses a temporary SQLite journal and synthetic in-memory state, then
-removes its fixture data. The success demo shows the fake running-state count
-changing from zero to one, with one independent observation. The denial and
-cancellation demos show zero execution. Recovery injects a process-loss fault
-after admission/effect, reopens the journal, and refuses replay. Unknown outcomes
-remain `NEEDS_REVIEW`, even if the effect may have happened. Verified duplicates
-return historical evidence; they do not claim the editor is still running now.
-Separate request keys represent separate intentions. Opening an already matching
-fake instance does not create another instance.
-
-SQLite uses foreign keys, short `BEGIN IMMEDIATE` transactions, rollback journaling,
-and `synchronous=FULL`. Schema version 1 is initial creation only; unsupported
-versions fail closed. There are no migrations/backups, interactive approval UI,
-resumption/replanning of paused tasks, or persistent personal data frontend in M0.
-An unadmitted intent needs review/reauthorization; an admitted unfinished attempt
-becomes unknown. Recovery performs no automatic execution or reconciliation.
-
-No Ollama, model downloads, HTTP client, runtime network, real process launch,
-desktop input, screen/audio capture, personal files, external accounts, runtime
-shell, generated code, plugins, elevation, startup services, or cloud fallback
-exist. Network/process creation is trapped in the core regression fixture.
-Windows Python tests validate portable simulated logic; real Windows application
-control and live-model behavior remain untested and unimplemented.
-
-Stop here for M0 review. M1 requires separately approved local runtime/model setup,
-a bounded Ollama adapter, doctor/chat/live evaluation, local-only/offline evidence,
-and qualification through this broker with execution still simulated. Real
-Windows control is M2.
+`--allow-unsafe` includes pip/build dependencies in the lock and grants no runtime
+execution permission. Editable installation uses the locked local build backend.
+Regenerate/test a separate lock if changing interpreter/platform makes resolution
+incompatible. SQLite schema version 1 has no migration/backup tooling yet.

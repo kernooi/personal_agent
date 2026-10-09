@@ -1,0 +1,15 @@
+{
+    "status":  "blocked",
+    "check_version":  "offline-check-v2",
+    "reason":  "External network adapter or default route remains active; disconnect manually.",
+    "network_before":  {
+                           "captured_at_utc":  "2026-10-09T07:54:27.6367802Z",
+                           "physical_adapters_up":  1,
+                           "any_adapters_up":  6,
+                           "physical_adapters_unknown":  0,
+                           "configured_default_routes":  2,
+                           "default_routes":  1
+                       },
+    "model_inference_ran":  false,
+    "offline_network_isolation_tested":  false
+}
