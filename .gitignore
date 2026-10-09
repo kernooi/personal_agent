@@ -1,0 +1,16 @@
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.pytest-run-*/
+.ruff_cache/
+build/
+dist/
+.env
+.env.*
+*.sqlite*
+*.db*
+private/
+artifacts/
+*.log

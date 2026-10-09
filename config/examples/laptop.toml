@@ -1,0 +1,16 @@
+# Documentation for M1 only. M0's strict Profile rejects this provider.
+schema_version = 1
+profile_name = "laptop-local-candidate"
+[runtime]
+model_provider = "ollama"
+execution_mode = "simulation"
+network_mode = "local_model_only"
+[model]
+name = "qwen3:1.7b"
+role = "primary_text"
+context_tokens = 4096
+max_output_tokens = 512
+response_mode = "json_schema"
+[model.provider_options]
+think = false
+# Lower-spec laptop resources unknown. No compatibility/fit claim.

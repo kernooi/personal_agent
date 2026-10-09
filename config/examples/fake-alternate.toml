@@ -1,0 +1,13 @@
+schema_version = 1
+profile_name = "simulation-alternate"
+provider = "fake"
+execution_mode = "simulation"
+network_mode = "none"
+model_identity = "scripted-editor-b"
+context_bytes = 8192
+max_output_bytes = 4096
+task_seconds = 15
+reply = '''{
+  "action": {"arguments": {"app_id": "text_editor"}, "capability": "apps.open"},
+  "kind": "propose_action"
+}'''

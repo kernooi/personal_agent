@@ -1,0 +1,7 @@
+schema_version = 1
+profile_name = "simulation"
+provider = "fake"
+execution_mode = "simulation"
+network_mode = "none"
+model_identity = "scripted-editor-a"
+reply = '{"kind":"propose_action","action":{"capability":"apps.open","arguments":{"app_id":"text_editor"}}}'
