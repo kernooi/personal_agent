@@ -4,8 +4,21 @@ from dataclasses import replace
 from uuid import uuid4
 
 from jarvis.core import Broker
-from jarvis.domain import State, UserRequest
+from jarvis.domain import State, TaskResult, UserRequest
 from jarvis.models import Message
+
+
+def conversational_text(result: TaskResult) -> str:
+    """Keep broker diagnostics out of non-action replies and model history."""
+    text = result.message
+    if result.decision_kind in {"say", "clarify", "unsupported"}:
+        prefixes = tuple(
+            f"SIMULATED: {kind}; no action verified. " for kind in ("say", "clarify", "unsupported")
+        )
+        while text.startswith(prefixes):
+            prefix = next(prefix for prefix in prefixes if text.startswith(prefix))
+            text = text.removeprefix(prefix)
+    return text
 
 
 class Conversation:
@@ -34,6 +47,8 @@ class Conversation:
             "launch an app",
         }
         if result.state != State.CANCELLED:
-            self.history.extend((Message("owner", text), Message("assistant", result.message)))
+            self.history.extend(
+                (Message("owner", text), Message("assistant", conversational_text(result)))
+            )
             self.history = self.history[-16:]
         return result

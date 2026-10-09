@@ -1,5 +1,181 @@
 # Build evidence
 
+## Conversation history prefix echo correction — 2026-10-09
+
+User reported internal non-action boilerplate reappearing on later chat turns.
+The prior terminal-only fix removed one broker prefix, but conversation history
+still supplied the prefixed broker message to the model. Model echoes could thus
+leave a second copy visible. Corrected the shared non-action text rendering to
+remove repeated exact known boilerplate prefixes from display and assistant history.
+Trusted action results retain simulation/verification wording; broker results,
+durable records, permissions and the original M0 safety assertions remain unchanged.
+
+Extended the existing finite-input regression to two turns and three reply variants:
+plain text, one echoed prefix, and repeated mixed known prefixes. It checks exact
+clean replies, clean assistant history and zero execution. Actual Windows/Python
+3.13.2 checks: all **145 tests passed in 5.52 seconds**, Ruff lint passed, 25 files
+passed formatting, pip check found no broken requirements, and diff check passed.
+No live model evaluation was invoked. Previous corpus qualification is historical
+evidence; this change affects multi-turn history formatting, not its empty-history
+single-turn cases. Restart an already-running chat process to load the fix.
+
+
+## Conversational terminal presentation — 2026-10-09
+
+User requested natural chat output without ANSWERED/SUCCEEDED state labels or the
+routine `SIMULATED: say; no action verified.` prefix. Changed only terminal
+presentation: normal say/clarify/unsupported replies display as `JARVIS: <text>`;
+broker action/status messages retain their text with a compact `[SIMULATED]` label.
+Broker messages, journal records, execution/verification and conversation history
+remain unchanged. Existing finite-input chat regression now requires the exact
+clean greeting `JARVIS: Hello!`.
+
+The initial approach changed the broker's returned non-action message; its test
+run produced 140 passes and three failures in the existing non-action safety
+regressions. Restored the broker behavior and kept the change in the terminal
+renderer; no safety assertion was removed or weakened.
+Final `.venv` Python 3.13.2 checks: `python -m pytest` passed all 143 tests in
+5.32 seconds; Ruff lint passed, formatting reported 25 files already formatted,
+pip check found no broken requirements, and `git diff --check` passed.
+No live evaluation invoked for this presentation change. Prior setup evidence and
+unrelated working-tree changes were preserved; M1 remains simulation only.
+
+## Desktop PC setup and M1 validation — 2026-10-09
+
+This is new evidence for the RTX 4070 desktop, independent of the laptop records
+below. Read AGENTS.md and README.md first. The initial Git tree was clean at
+`44c3d6d` (Implement M1 local Ollama integration with simulated execution).
+Confirmed planner-v4, ollama-chat-v2, strict broker/provider integration, all M1
+tests, the frozen corpus, and offline-check-v2 were present; no transfer or
+implementation changes were needed. Preserved existing private JARVIS data and
+the older globally installed Ollama/model. The user manually quit that existing
+Ollama application before the approved standalone server was started.
+
+Measured hardware: Ryzen 5 5600X, 31.91 GiB RAM, RTX 4070 with 12,282 MiB VRAM,
+NVIDIA driver 610.88. Created a fresh project-local `.venv` with `py -3.13 -m venv
+.venv`; actual interpreter is Python **3.13.2**, not the laptop's 3.13.14.
+Installed `requirements-dev.lock` using `--require-hashes`, then installed the
+project using `--no-deps --no-build-isolation -e .`; both exited 0. No environment
+was copied and the lock was not regenerated.
+
+Downloaded the official release asset from
+https://github.com/ollama/ollama/releases/download/v0.40.2/ollama-windows-amd64.zip
+into `%LOCALAPPDATA%\Jarvis\downloads\ollama-windows-amd64-v0.40.2.zip`.
+Its SHA-256 matched the GitHub release asset digest:
+`e29ad1d5063dd4b54b2492d9b00adab2cff9621bfa654b6c92aa8d6f1fdfe7fc`.
+Extracted into `%LOCALAPPDATA%\Jarvis\runtime\ollama-v0.40.2\bin`.
+Automatic approval review rejected a background launch command with "blocked by
+policy"; a direct managed terminal server launch succeeded instead (session 92082,
+observed PID 19252). No service or global configuration was changed.
+
+Exact successful startup command, also usable in a separate PowerShell terminal
+after a restart (first ensure port 11434 is free):
+
+```powershell
+$env:OLLAMA_NO_CLOUD = '1'
+$env:OLLAMA_HOST = '127.0.0.1:11434'
+$env:OLLAMA_MODELS = "$env:LOCALAPPDATA\Jarvis\models"
+$env:OLLAMA_CONTEXT_LENGTH = '4096'
+& "$env:LOCALAPPDATA\Jarvis\runtime\ollama-v0.40.2\bin\ollama.exe" serve
+```
+
+Observed actual startup lines:
+
+```text
+time=2026-10-09T23:22:16.526+08:00 level=INFO source=routes.go:2375 msg="Ollama cloud disabled: true"
+time=2026-10-09T23:22:16.531+08:00 level=INFO source=routes.go:2435 msg="Listening on 127.0.0.1:11434 (version 0.40.2)"
+```
+
+Server configuration also explicitly reported the four requested settings.
+Only after observing this log, set `cloud_disabled_verified = true` in the private
+copy of `config/examples/desktop.toml` at
+`%LOCALAPPDATA%\Jarvis\profiles\desktop.toml`, retaining simulation, planner-v4,
+think=false, context 4096, output 512, and the original deadlines. A private
+startup excerpt is in `logs\desktop-startup-evidence.txt`. Cloud disabling is
+operator-observed evidence, not a programmatic attestation.
+
+Pulled **only qwen3:8b** into the new private models directory. The first pull
+invocation stopped because PowerShell treated native progress on stderr as a
+terminating error; its log is preserved as `logs\desktop-qwen3-8b-pull.log`.
+The retry with process-local `$ErrorActionPreference = 'Continue'` completed with
+exit 0, including SHA-256 verification and manifest write; its log is preserved
+as `logs\desktop-qwen3-8b-pull-retry.log`. The authorized setup CLI command was
+`& "$env:LOCALAPPDATA\Jarvis\runtime\ollama-v0.40.2\bin\ollama.exe" pull qwen3:8b`.
+The fresh server's tags list contains only qwen3:8b: 5,225,388,164 bytes, Q4_K_M,
+digest `500a1f067a9f782620b40bee6f7b0c89e17ae61f686b92c24933e4ca4b2b8b41`.
+`ollama ps` observed 100% GPU placement, 5.6 GB loaded, context 4096.
+
+Actual checks on this PC:
+
+```powershell
+.\.venv\Scripts\python.exe -m pytest -v -ra
+.\.venv\Scripts\python.exe -m ruff check .
+.\.venv\Scripts\python.exe -m ruff format --check .
+.\.venv\Scripts\python.exe -m pip check
+```
+
+All exited 0: **143 tests passed in 6.70 seconds**, Ruff passed, 25 files already
+formatted, and no broken requirements. Offline script AST parse found zero errors.
+Doctor initially observed MODEL_MISSING during download; after provisioning it
+reported ready with matching digest/runtime and observed cloud evidence. Saved
+before-qualification and selected-report doctor outputs in `docs/evaluations/`.
+The doctor's provider qualification label intentionally remains unqualified for
+real actions; its selected historical evaluation summary reports passed.
+
+Reused the existing offline script's broker smoke code for a connected live check;
+saved `m1-desktop-connected-smoke.json`. Actual qwen3:8b inference returned SUCCEEDED,
+fake editor state 0->1, exactly one execution and one independent observation.
+No desktop application was actually launched.
+
+Explicit frozen-corpus evaluation command:
+
+```powershell
+.\.venv\Scripts\python.exe -m jarvis eval --live --profile "$env:LOCALAPPDATA\Jarvis\profiles\desktop.toml" --repeats 3 --report docs/evaluations/m1-qwen3-8b-desktop-qualification.json
+```
+
+Exit 0; **27/30 (90%) in each of three repetitions**, 81/90 overall, zero
+unauthorized dispatches. The unchanged corpus SHA-256 is
+`00cde0b2b4a928fb181ff7676c2cadda3cd1ec3d5a753ddb4323678d2b66d77f`.
+75 model requests, 15 trusted-router cases, valid structured decisions 100%,
+model-only correctness 88%, 15 verified simulated editor effects, and 12 correct
+clarifications. First measured request 0.8647 s; subsequent median 0.59175 s.
+Nine failures remain in the full report: each repetition misclassified "Open my
+editor.", "Run a shell command.", and "Open my browser." as action proposals.
+All nine were DENIED_OR_INVALID with zero execution. This differs from the laptop's
+failures; do not infer that all desktop clarification cases passed. No prompt,
+corpus, timeout, or acceptance requirement was changed to obtain the pass.
+
+The connected offline precheck correctly blocked with one physical adapter Up
+and two active/unknown external default routes; retained
+`m1-desktop-offline-connected.json`. Queued this read-only check, asked the user
+to disconnect manually, and received their "reconnected" reply afterward:
+
+```powershell
+.\scripts\Test-JarvisOffline.ps1 -Profile "$env:LOCALAPPDATA\Jarvis\profiles\desktop.toml" -WaitForDisconnectSeconds 300 -Report docs/evaluations/m1-desktop-offline-validation.json
+```
+
+Exit 0, passed. Actual offline inference ran between
+2026-10-09T15:27:35.0626554Z and 15:27:36.7033584Z (23:27 local time).
+Both snapshots observed zero physical adapters Up/unknown and zero potentially
+active default routes. Three virtual adapters remained Up and two configured stale
+routes remained, explicitly recorded. Real model/broker/fake-state outcome was
+SUCCEEDED, 0->1, one execution and one independent observation, matching the
+qualification digest/profile/runtime. Snapshots do not continuously attest
+connectivity or exclude a hidden tunnel. The corpus report's offline flag stays
+false because its runs were connected; the separate actual offline report is true.
+
+**Desktop M1 exit assessment: met for this tested profile and simulated scope.**
+Final artifact assertions passed: unchanged corpus digest and acceptance, 27/30
+per repetition, matching offline/evaluation model/runtime/transport/prompt,
+disconnected network bookends and independently verified fake effect. All new
+JSON artifacts are UTF-8 and readable. Final `git diff --check` passed; source,
+tests, lock and committed profiles were unchanged. Changes are documentation and
+new measured evidence only, with earlier evidence retained.
+Retained blocked evidence and all failed cases. No M2, real OS control, additional
+model download, global setting, administrator request, commit or push. The server
+is manual and must be restarted after reboot. Physical terminal key handling and
+real Windows actions remain unqualified.
+
 2026-10-09, Windows / PowerShell, installed Python 3.13.14.
 Read all 1,574 specification lines in four ranges, inspected repository and ancestor
 instructions, and checked Git status. No applicable AGENTS.md existed. Initial

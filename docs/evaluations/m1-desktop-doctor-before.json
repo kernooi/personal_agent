@@ -1,0 +1,22 @@
+{
+  "cli_installed": true,
+  "execution_mode": "simulation",
+  "last_evaluation": {
+    "status": "unknown",
+    "reason": "No evaluation report selected"
+  },
+  "available": true,
+  "model_present": true,
+  "identity": "qwen3:8b",
+  "digest": "500a1f067a9f782620b40bee6f7b0c89e17ae61f686b92c24933e4ca4b2b8b41",
+  "runtime_version": "0.40.2",
+  "transport_version": "ollama-chat-v2",
+  "text_generation": "supported",
+  "schema_constrained_output": "unknown",
+  "native_tool_calls": "supported",
+  "context_capacity": 40960,
+  "cloud_disabled": "user_verified",
+  "local_mode_programmatically_attested": false,
+  "ready": true,
+  "qualification": "unqualified; fake-execution evaluation only"
+}

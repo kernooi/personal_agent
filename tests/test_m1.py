@@ -435,11 +435,24 @@ def test_pending_input_stop_does_not_lose_cancellation():
     assert reader.begin(generation) is True and not reader.cancel.is_set()
 
 
-def test_chat_loop_finite_input(broker, runtime):
-    runtime.decision = {"kind": "say", "text": "Hello!"}
+@pytest.mark.parametrize(
+    "reply_text",
+    [
+        "Hello!",
+        "SIMULATED: say; no action verified. Hello!",
+        "SIMULATED: say; no action verified. SIMULATED: clarify; no action verified. Hello!",
+    ],
+)
+def test_chat_loop_finite_input(broker, runtime, reply_text):
+    runtime.decision = {"kind": "say", "text": reply_text}
     output = []
-    chat_loop(Conversation(broker), io.StringIO("Hello.\n"), output.append)
-    assert any("Hello!" in line for line in output)
+    conversation = Conversation(broker)
+    chat_loop(conversation, io.StringIO("Hello.\nHello again.\n"), output.append)
+    assert "JARVIS: Hello!" in output
+    assert [line for line in output if line.startswith("JARVIS:")] == ["JARVIS: Hello!"] * 2
+    assert all(
+        message.text == "Hello!" for message in conversation.history if message.role == "assistant"
+    )
     zero_effects(broker)
 
 

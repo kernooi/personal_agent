@@ -1,5 +1,40 @@
 # JARVIS implementation plan
 
+Conversation echo correction complete (2026-10-09): remove repeated known internal
+non-action prefixes from both visible replies and assistant history; preserve
+broker/journal semantics and trusted simulation labels for actions. Two-turn echo
+regressions and all 145 tests pass with lint, format and dependency checks.
+
+Conversational presentation follow-up complete (2026-10-09): terminal replies
+hide internal state labels and non-action boilerplate, while simulated action
+results retain `[SIMULATED]`. Broker/journal safety semantics remain unchanged;
+all 143 tests, lint, format and dependency checks pass. See BUILD_LOG.md.
+
+## Desktop PC validation — 2026-10-09
+
+1. Complete: confirmed latest M1 commit `44c3d6d` and clean initial tree; preserved
+   existing private data and older Ollama installation. No implementation transfer
+   or architectural change required.
+2. Complete: fresh local Python 3.13.2 `.venv`, hash-locked dependencies and
+   editable installation. All 143 tests, lint, formatting and dependency checks pass.
+3. Complete: explicitly authorized official standalone Ollama 0.40.2 archive,
+   verified release SHA-256, process-local loopback/cloud-disabled/context settings,
+   actual cloud-disabled startup evidence, and only qwen3:8b in the new model store.
+   Private desktop profile remains simulation with original bounded settings.
+4. Complete: doctor and real broker inference independently verified fake state
+   0->1; 100% GPU placement observed. Three frozen-corpus runs each scored 27/30
+   (90%) with zero unauthorized dispatches. Retain all nine rejected incorrect
+   proposals; desktop clarification accuracy differs from the laptop.
+5. Complete: user manually disconnected networking; queued read-only offline check
+   passed actual inference/fake verification with disconnected before/after network
+   snapshots. Preserve the earlier connected/blocked report and snapshot limits.
+6. Complete: recorded measured desktop evidence separately from laptop artifacts.
+   Desktop M1 exit gate met for this profile's simulated scope; stop at M1.
+
+Detailed commands, results and limitations are in BUILD_LOG.md and the desktop
+reports under `docs/evaluations/`. Prior laptop qualification remains historical
+evidence for that machine only. M2 and real desktop control remain unauthorized.
+
 1. Complete: project-local `.venv`, src project, strict configuration, generated
    hash lock, concise repository instructions, and README setup/check commands.
 2. Complete: typed domain/provider contracts, configurable fake provider, strict

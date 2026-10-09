@@ -8,7 +8,7 @@ import threading
 from collections.abc import Callable
 from typing import TextIO
 
-from jarvis.conversation import Conversation
+from jarvis.conversation import Conversation, conversational_text
 from jarvis.domain import Denied
 
 
@@ -128,7 +128,12 @@ def chat_loop(conversation: Conversation, stream: TextIO, output: Callable[[str]
                 continue
             try:
                 result = conversation.submit(text)
-                output(f"JARVIS [{result.state}]: {result.message}")
+                message = conversational_text(result)
+                if result.decision_kind not in {"say", "clarify", "unsupported"} and (
+                    message.startswith("SIMULATED: ")
+                ):
+                    message = "[SIMULATED] " + message.removeprefix("SIMULATED: ")
+                output(f"JARVIS: {message}")
             except Denied as exc:
                 output(f"SIMULATED: request rejected: {exc}")
             output("You> ")

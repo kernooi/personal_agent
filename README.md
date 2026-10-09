@@ -6,6 +6,19 @@ The real model proposes a decision; strict parsing, the reviewed registry,
 authorization, durable intent, cancellation gates, fake execution, and independent
 observation determine the result. M2 Windows control is not implemented.
 
+The RTX 4070 / 32 GB / Ryzen 5 5600X desktop was separately provisioned and tested
+on 2026-10-09 with Python 3.13.2, standalone Ollama 0.40.2 and `qwen3:8b`.
+All 143 tests and static/dependency checks passed. The unchanged frozen corpus
+scored 27/30 (90%) in each of three runs with zero unauthorized dispatches;
+actual manually disconnected local inference and independently verified fake
+editor state also passed. Desktop M1's simulated exit gate is met. Three request
+kinds still produce rejected incorrect proposals, including an ambiguous editor
+request; this is limited simulated qualification. See desktop reports in
+`docs/evaluations/` and the desktop section of `docs/BUILD_LOG.md`.
+Its private profile is `%LOCALAPPDATA%\Jarvis\profiles\desktop.toml`.
+The laptop history and commands below describe the earlier machine; use the
+desktop profile and desktop report paths on this PC.
+
 The installed laptop model is `qwen3:1.7b`, served by official standalone Ollama
 0.40.2. The corrected `planner-v4` / `ollama-chat-v2` profile scored **27/30 (90%)
 in each of three runs**, with all editor and clarification cases correct and
@@ -116,8 +129,8 @@ manually tested. Finite piped input and cancellation races are tested.
 For another machine, copy `config/examples/laptop.toml` or `desktop.toml` into a
 private directory outside Git, retaining `execution_mode = "simulation"`.
 Edit model identity, bounded context/output settings, and provider options there;
-then select it with `--profile`. The future desktop example is `qwen3:8b` for the
-RTX 4070 / 32 GB / Ryzen 5 5600X PC; it was not downloaded or tested here. Neither
+then select it with `--profile`. The desktop example is `qwen3:8b` for the
+RTX 4070 / 32 GB / Ryzen 5 5600X PC; it is separately tested as recorded above. Neither
 example guarantees hardware fit. Install/download another model only after
 separate setup approval, verify local-only setup, run doctor and live evaluation,
 and treat its action role as unqualified until its own gates pass. No source

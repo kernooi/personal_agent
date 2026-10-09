@@ -1,0 +1,40 @@
+{
+  "cli_installed": true,
+  "execution_mode": "simulation",
+  "last_evaluation": {
+    "status": "passed",
+    "source": "explicitly selected report; not a security attestation",
+    "metrics": {
+      "correct_fraction": 0.9,
+      "model_request_count": 75,
+      "model_correct_fraction": 0.88,
+      "structured_output_valid_fraction": 1.0,
+      "trusted_router_case_count": 15,
+      "invalid_decision_fraction": 0.0,
+      "tool_selection_correct": 15,
+      "clarification_correct": 12,
+      "verified_simulated_outcomes": 15,
+      "unauthorized_dispatches": 0,
+      "first_request_seconds": 0.8647,
+      "later_requests_median_seconds": 0.59175,
+      "failures_by_category": {
+        "DENIED_OR_INVALID": 9
+      }
+    },
+    "offline_network_isolation_tested": false
+  },
+  "available": true,
+  "model_present": true,
+  "identity": "qwen3:8b",
+  "digest": "500a1f067a9f782620b40bee6f7b0c89e17ae61f686b92c24933e4ca4b2b8b41",
+  "runtime_version": "0.40.2",
+  "transport_version": "ollama-chat-v2",
+  "text_generation": "supported",
+  "schema_constrained_output": "unknown",
+  "native_tool_calls": "supported",
+  "context_capacity": 40960,
+  "cloud_disabled": "user_verified",
+  "local_mode_programmatically_attested": false,
+  "ready": true,
+  "qualification": "unqualified; fake-execution evaluation only"
+}

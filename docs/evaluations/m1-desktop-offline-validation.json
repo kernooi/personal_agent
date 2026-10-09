@@ -1,0 +1,57 @@
+{
+    "status":  "passed",
+    "check_version":  "offline-check-v2",
+    "evidence_level":  "Physical-adapter/default-route snapshots before and after actual loopback inference.",
+    "limitation":  "Snapshots do not continuously attest network state or prove absence of a hidden tunnel.",
+    "network_before":  {
+                           "captured_at_utc":  "2026-10-09T15:27:35.0626554Z",
+                           "physical_adapters_up":  0,
+                           "any_adapters_up":  3,
+                           "physical_adapters_unknown":  0,
+                           "configured_default_routes":  2,
+                           "default_routes":  0
+                       },
+    "network_after":  {
+                          "captured_at_utc":  "2026-10-09T15:27:36.7033584Z",
+                          "physical_adapters_up":  0,
+                          "any_adapters_up":  3,
+                          "physical_adapters_unknown":  0,
+                          "configured_default_routes":  2,
+                          "default_routes":  0
+                      },
+    "model_inference_ran":  true,
+    "offline_network_isolation_tested":  true,
+    "simulated_smoke":  {
+                            "passed":  true,
+                            "result":  {
+                                           "task_id":  "b589dd7f-285a-4915-8c42-3185ef484ccf",
+                                           "state":  "SUCCEEDED",
+                                           "message":  "SIMULATED: registered text editor observed running in fake state.",
+                                           "simulated":  true,
+                                           "decision_kind":  ""
+                                       },
+                            "model_metadata":  {
+                                                   "available":  true,
+                                                   "model_present":  true,
+                                                   "identity":  "qwen3:8b",
+                                                   "digest":  "500a1f067a9f782620b40bee6f7b0c89e17ae61f686b92c24933e4ca4b2b8b41",
+                                                   "runtime_version":  "0.40.2",
+                                                   "transport_version":  "ollama-chat-v2",
+                                                   "text_generation":  "supported",
+                                                   "schema_constrained_output":  "unknown",
+                                                   "native_tool_calls":  "supported",
+                                                   "context_capacity":  40960,
+                                                   "cloud_disabled":  "user_verified",
+                                                   "local_mode_programmatically_attested":  false,
+                                                   "ready":  true,
+                                                   "qualification":  "unqualified; fake-execution evaluation only"
+                                               },
+                            "prompt_version":  "planner-v4",
+                            "execution_mode":  "simulation",
+                            "fake_running_before":  0,
+                            "fake_running_after":  1,
+                            "execution_calls":  1,
+                            "observation_calls":  1,
+                            "error":  null
+                        }
+}
