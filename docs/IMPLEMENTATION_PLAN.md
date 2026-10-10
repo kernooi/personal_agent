@@ -211,4 +211,69 @@ regression tests and the final real-model no-effect terminal check. Native real
 open/new phrases/clean close have independent postconditions; a bound clarification
 focus was correctly blocked for changed input, not falsely reported as success.
 257 tests/static/dependency checks pass. M2 is still a bounded attended Notepad
-controller, not unrestricted natural-language desktop control. No M3 work.
+controller, not unrestricted natural-language desktop control. No M3 work was
+included in that M2 assessment.
+
+### Initial M3 — approved public currency retrieval (2026-10-10, historical scope)
+
+Complete for the measured RTX 4070 desktop and existing qwen3:8b profile:
+
+- Existing deterministic M1/M2 baseline reviewed: 257 passing tests; actual M1
+  same-PC live/offline evidence and M2 Windows evidence retained. Both current
+  M2 qualification report contracts still match after M3.
+- Separate disabled/fixture/enabled public-data configuration, without enabling
+  real Windows actions or changing the local model/loopback gateway.
+- Existing broker/registry integration with owner-owned semantic scope, exact
+  typed model proposal, authorization, durable intent, admission gates and
+  independently validated currency evidence. Failed public reads/recovery do
+  not latch desktop control or automatically replay.
+- One reviewed provider: Frankfurter v2, ECB-specific daily reference pair routes.
+  Actual socket-peer binding, normal TLS/SNI, public-address checks, no redirects
+  or environment proxies, bounded worker/watchdog/deadlines/bytes/concurrency,
+  no automatic retries, and pair-only public disclosure.
+- Runtime-owned source records, date-only source precision, UTC/local retrieval
+  times, bounded public-only cache, explicit stale policy, source follow-ups,
+  trusted decimal conversions/rounding and local supplied-rate calculations.
+- `/cache`, `/cache-clear`, `/refresh-rate`, observational doctor evidence,
+  explicit `currency-check` and `eval-m3`; non-secret examples and provider ADR.
+- Final deterministic gate: 375 tests in 11.16 s, lint/format/dependency/diff checks
+  pass. Real provider r3: both directions pass. Real configured model, actual
+  Conversation/broker/provider r6: 11/11 frozen cases, zero desktop executions.
+  Failed r1/r2 and intermediate passed r3/r4/r5 are preserved; no gate weakening.
+
+M3's narrow gate is met. Physical M3 network disconnection was not tested:
+offline behavior uses a labeled provider fault and disabled-network policy.
+No new attended Notepad effects were performed; existing M2 evidence remains
+separate. General internet research, other currency pairs, intraday quotations,
+transactions, Notepad typing/saving and all M4 work remain outside this milestone.
+See `M3_TEST_REPORT.md`, `PUBLIC_DATA_COMPATIBILITY.md` and final build evidence.
+
+### M3 generic provider-supported currency clarification (2026-10-10)
+
+Complete for the same PC/profile/config; supersedes the initial two-pair limitation.
+
+- Generic canonical-code arguments; provider-wide `supported_currencies()` through
+  the same fixed broker-admitted public transport, validated membership before pair
+  dispatch and independent validation before factual rendering.
+- Bounded provider/version/origin/UTC/TTL catalogue cache, malformed/expired fail
+  closed, no support invented from ISO syntax or the model. Actual metadata advertises
+  45 codes; fresh pair availability is checked separately, including legacy limits.
+- Seven representative deterministic pairs and arbitrary synthetic advertised codes
+  prove no per-pair source change is needed. Native provider reverse quotes only;
+  no unsafe local inverse/cross fallback. Trusted Decimal math and display policy.
+- Compact/repeated-base amount fix, reviewed names, pending amount replies,
+  single-pair session followups, source/effective/refresh and context invalidation
+  prevent unsourced numeric model responses. Identity at rate 1 is local; local
+  calculations require unexpired cached coverage and never request metadata/quotes.
+- Preserve v1 corpus/failed evidence; freeze expanded v2 with original 11 + 23 new
+  cases. Final real provider v2-r2 3/3 including EUR/USD; actual qwen3:8b/broker/live
+  provider v2-r2 34/34, unchanged 100% / zero desktop-action gate. Doctor matches.
+- Final default suite 429 passed in 12.23 s; lint, formatting (58 files), dependency
+  and diff checks pass. M2 original qualification still matches; no Windows effects,
+  package/model installation, network-setting changes, push or M3 commit.
+
+Known constraints are documented: daily data, seven-day source age, provider legacy
+coverage distinct from fresh quotes, canonical codes for unreviewed names, cached
+metadata needed before local-only calculation, and simulated outage rather than
+physical M3 disconnection. No general web/crypto/securities/banking/trades/payments
+or M4. Stop after M3 for review.

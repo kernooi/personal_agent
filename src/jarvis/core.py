@@ -60,6 +60,7 @@ class Broker:
         self.last_decision: Decision | None = None
         self.last_error: str | None = None
         self.last_reply: ModelReply | None = None
+        self.currency = getattr(registry, "currency", None)
 
     def submit(self, request: UserRequest):
         text = request.text.strip().rstrip(".").casefold()
@@ -84,6 +85,10 @@ class Broker:
             raise Denied("Missing authenticated request identity")
         if len(request.request_key) > 128 or len(request.session) > 128:
             raise Denied("Request identity too long")
+        if scope.app_id == "currency" and self.currency is not None:
+            self.grant = replace(
+                self.grant, expires_at=self.clock.now() + self.profile.task_seconds
+            )
         profile = self.profile  # Freeze selection for this task; switches affect the next task.
         if len(request.text.encode()) > 4096 or len(request.untrusted_context.encode()) > 8192:
             raise Denied("Request context too large")
@@ -117,72 +122,81 @@ class Broker:
         self.last_decision = None
         self.last_error = None
         self.last_reply = None
+        currency_route = getattr(self.registry, "route", None) if self.currency else None
         try:
             self.store.transition(task.task_id, State.PLANNING)
             task = self.store.get(task.task_id)
             if self._cancelled(task.task_id):
                 return self._result(task.task_id)
-            if self.registry.needs_live_retrieval(request.text):
-                return self._non_action(
-                    task.task_id,
-                    Decision(
-                        "unsupported",
-                        text="I need live retrieval to verify current information. "
-                        "Live retrieval is not available in M1.",
-                    ),
+            route = currency_route
+            if route and route.kind in {"clarify", "unsupported"}:
+                return self._non_action(task.task_id, Decision(route.kind, text=route.message))
+            if scope.app_id == "currency":
+                from jarvis.currency_decisions import plan
+
+                decision = plan(self, task, request)
+            else:
+                if self.currency is None and self.registry.needs_live_retrieval(request.text):
+                    return self._non_action(
+                        task.task_id,
+                        Decision(
+                            "unsupported",
+                            text="I need live retrieval to verify current information. "
+                            "Live retrieval is not available in M1.",
+                        ),
+                    )
+                candidate_schema = (
+                    self.registry.schema_for(scope)
+                    if profile.prompt_version
+                    in {"planner-m2-v7", "planner-m2-v8", "planner-m2-v9", "planner-m2-v10"}
+                    else self.registry.schema()
                 )
-            candidate_schema = (
-                self.registry.schema_for(scope)
-                if profile.prompt_version
-                in {"planner-m2-v7", "planner-m2-v8", "planner-m2-v9", "planner-m2-v10"}
-                else self.registry.schema()
-            )
-            messages = context_messages(
-                profile,
-                scope,
-                request.text,
-                request.untrusted_context,
-                history,
-                candidate_schema,
-                self.registry.planner_context()
-                if profile.prompt_version
-                in {
-                    "planner-m2-v5",
-                    "planner-m2-v6",
-                    "planner-m2-v7",
-                    "planner-m2-v8",
-                    "planner-m2-v9",
-                    "planner-m2-v10",
-                }
-                else None,
-            )
-            model_request = ModelRequest(
-                str(uuid4()),
-                task.task_id,
-                task.revision,
-                profile,
-                candidate_schema,
-                task.deadline,
-                messages,
-            )
-            reply = self.provider.generate(model_request, lambda: self._cancelled(task.task_id))
-            self.last_reply = reply
-            self._cancelled(task.task_id)
-            current = self.store.get(task.task_id)
-            if (
-                current.cancelled
-                or current.revision != task.revision
-                or reply.request_id != model_request.request_id
-                or reply.task_id != task.task_id
-                or reply.revision != task.revision
-                or self.clock.now() >= task.deadline
-            ):
-                raise Denied("Late or obsolete model reply")
-            if len(reply.raw) > profile.max_output_bytes:
-                raise Denied("Model reply budget exceeded")
-            decision = parse_decision(reply.raw, profile.decision_version)
+                messages = context_messages(
+                    profile,
+                    scope,
+                    request.text,
+                    request.untrusted_context,
+                    history,
+                    candidate_schema,
+                    self.registry.planner_context()
+                    if profile.prompt_version
+                    in {
+                        "planner-m2-v5",
+                        "planner-m2-v6",
+                        "planner-m2-v7",
+                        "planner-m2-v8",
+                        "planner-m2-v9",
+                        "planner-m2-v10",
+                    }
+                    else None,
+                )
+                model_request = ModelRequest(
+                    str(uuid4()),
+                    task.task_id,
+                    task.revision,
+                    profile,
+                    candidate_schema,
+                    task.deadline,
+                    messages,
+                )
+                reply = self.provider.generate(model_request, lambda: self._cancelled(task.task_id))
+                self.last_reply = reply
+                self._cancelled(task.task_id)
+                current = self.store.get(task.task_id)
+                if (
+                    current.cancelled
+                    or current.revision != task.revision
+                    or reply.request_id != model_request.request_id
+                    or reply.task_id != task.task_id
+                    or reply.revision != task.revision
+                    or self.clock.now() >= task.deadline
+                ):
+                    raise Denied("Late or obsolete model reply")
+                if len(reply.raw) > profile.max_output_bytes:
+                    raise Denied("Model reply budget exceeded")
+                decision = parse_decision(reply.raw, profile.decision_version)
             self.last_decision = decision
-            if getattr(self.registry, "m2", False):
+            if getattr(self.registry, "m2", False) or scope.app_id == "currency":
                 with self.store.db:
                     self.store.event(
                         task.task_id,
@@ -206,7 +220,13 @@ class Broker:
             self.last_error = "MANUAL_HANDOFF"
             self.store.transition(task.task_id, State.WAITING_INPUT, str(exc))
         except (Denied, ValueError) as exc:
-            self.last_error = exc.code if isinstance(exc, ProviderError) else "DENIED_OR_INVALID"
+            from jarvis.public_data import PublicDataError
+
+            self.last_error = (
+                exc.code
+                if isinstance(exc, (ProviderError, PublicDataError))
+                else "DENIED_OR_INVALID"
+            )
             current = self.store.get(task.task_id)
             if current.state in (State.RECEIVED, State.PLANNING, State.READY):
                 self.store.transition(
@@ -217,6 +237,8 @@ class Broker:
                 )
         finally:
             self.busy = False
+            if self.currency is not None:
+                self.registry.completed(self.store.get(task.task_id), currency_route)
         return self._result(task.task_id)
 
     def _result(self, task_id: str):
@@ -229,11 +251,11 @@ class Broker:
                     "state": result.state,
                     "verified": result.state == State.SUCCEEDED,
                 }
-        if getattr(self.desktop, "real", False):
-            return replace(
-                result, simulated=False, message=result.message.removeprefix("SIMULATED: ")
-            )
-        if result.state == State.NEEDS_REVIEW and getattr(self.registry, "m2", False):
+        if (
+            result.state == State.NEEDS_REVIEW
+            and getattr(self.registry, "m2", False)
+            and self.store.get(task_id).scope.app_id != "currency"
+        ):
             self.desktop.review_task_id = task_id
             result = replace(
                 result,
@@ -243,6 +265,19 @@ class Broker:
                     "Inspect Notepad manually, then enter "
                     f"/review {task_id} manually-handled. I will not repeat the operation."
                 ),
+            )
+        if self.store.get(task_id).scope.app_id == "currency":
+            if result.state == State.FAILED:
+                result = replace(
+                    result,
+                    message="Currency information is unavailable ("
+                    + (self.last_error or "LOOKUP_FAILED")
+                    + "). No current rate is supplied.",
+                )
+            return replace(result, simulated=False)
+        if getattr(self.desktop, "real", False):
+            return replace(
+                result, simulated=False, message=result.message.removeprefix("SIMULATED: ")
             )
         return result
 
@@ -276,6 +311,9 @@ class Broker:
         )
 
     def dispatch(self, action: PreparedAction, approval: Approval | None = None):
+        adapter = self.currency if action.capability == "currency.quote" else self.desktop
+        if action.capability == "currency.quote":
+            adapter.cancel = lambda: self._cancelled(action.task_id)
         self.registry.validate(action)
         auth = authorize(
             self.store.get(action.task_id), action, self.grant, approval, self.clock.now()
@@ -304,7 +342,7 @@ class Broker:
                 except Denied as exc:
                     raise AdmissionRejected("Adapter admission gate closed") from exc
 
-            self.desktop.execute(action, gate)
+            adapter.execute(action, gate)
         except AdmissionRejected:
             # The fake adapter's gate rejected before mutation, so absence of effect is known.
             current = self.store.get(action.task_id)
@@ -317,7 +355,22 @@ class Broker:
                 "SIMULATED: adapter gate rejected; zero execution.",
             )
             return self._result(action.task_id)
-        except Exception:
+        except Exception as exc:
+            if action.capability == "currency.quote":
+                from jarvis.public_data import PublicDataError
+
+                self.last_error = (
+                    exc.code if isinstance(exc, PublicDataError) else "PUBLIC_READ_FAILED"
+                )
+                self.store.transition(action.task_id, State.VERIFYING)
+                self.store.complete(
+                    action_id,
+                    "FAILED",
+                    None,
+                    State.CANCELLED if self.store.get(action.task_id).cancelled else State.FAILED,
+                    "Currency lookup failed; no answer published.",
+                )
+                return self._result(action.task_id)
             self.store.complete(
                 action_id,
                 "UNKNOWN",
@@ -328,8 +381,22 @@ class Broker:
             return self._result(action.task_id)
         self.store.transition(action.task_id, State.VERIFYING)
         try:
-            evidence = self.desktop.observe(action)
-        except Exception:
+            evidence = adapter.observe(action)
+        except Exception as exc:
+            if action.capability == "currency.quote":
+                from jarvis.public_data import PublicDataError
+
+                self.last_error = (
+                    exc.code if isinstance(exc, PublicDataError) else "INVALID_EVIDENCE"
+                )
+                self.store.complete(
+                    action_id,
+                    "FAILED",
+                    None,
+                    State.CANCELLED if self.store.get(action.task_id).cancelled else State.FAILED,
+                    "Currency evidence could not be validated; no answer published.",
+                )
+                return self._result(action.task_id)
             evidence = None
         current = self.store.get(action.task_id)
         matches = (
@@ -338,14 +405,14 @@ class Broker:
             and evidence.session == action.session
             and evidence.observed_at <= self.clock.now()
             and evidence.observed_at >= attempt.admitted_at
-            and evidence.source
-            == getattr(self.desktop, "evidence_source", "fake-state-observer-v1")
-            and evidence.kind == getattr(self.desktop, "evidence_kind", "fake_api_state")
+            and evidence.source == getattr(adapter, "evidence_source", "fake-state-observer-v1")
+            and evidence.kind == getattr(adapter, "evidence_kind", "fake_api_state")
             and evidence.authority == "tool_output"
         )
         observed = (
             evidence.postcondition
-            if evidence and getattr(self.registry, "m2", False)
+            if evidence
+            and (getattr(self.registry, "m2", False) or action.capability == "currency.quote")
             else evidence.running
             if evidence
             else None
@@ -353,9 +420,9 @@ class Broker:
         if not matches or observed is None:
             self.store.complete(
                 action_id,
-                "UNKNOWN",
+                "FAILED" if action.capability == "currency.quote" else "UNKNOWN",
                 evidence,
-                State.NEEDS_REVIEW,
+                State.FAILED if action.capability == "currency.quote" else State.NEEDS_REVIEW,
                 "SIMULATED: postcondition unverified; outcome unknown; no replay.",
             )
         elif observed is not True:
@@ -377,9 +444,14 @@ class Broker:
                 evidence,
                 State.CANCELLED if current.cancelled else State.SUCCEEDED,
                 (
-                    self.desktop.success_message(action)
-                    if hasattr(self.desktop, "success_message")
-                    else "SIMULATED: registered text editor observed running in fake state."
+                    "Currency lookup cancelled; no answer published."
+                    " A request already sent cannot be retracted."
+                    if current.cancelled and action.capability == "currency.quote"
+                    else (
+                        adapter.success_message(action)
+                        if hasattr(adapter, "success_message")
+                        else "SIMULATED: registered text editor observed running in fake state."
+                    )
                 )
                 + (
                     " Cancellation arrived after the effect; no rollback."
@@ -406,6 +478,18 @@ class Broker:
             except ValueError:
                 valid = False
             if row["state"] == "DISPATCHING":
+                if row["capability"] == "currency.quote":
+                    if task.state == State.RUNNING:
+                        self.store.transition(task.task_id, State.VERIFYING)
+                    self.store.complete(
+                        row["action_id"],
+                        "FAILED",
+                        None,
+                        State.FAILED,
+                        "Interrupted public lookup; no answer published and no automatic replay.",
+                    )
+                    recovered.append(self._result(task.task_id))
+                    continue
                 self.store.complete(
                     row["action_id"],
                     "UNKNOWN",
@@ -435,7 +519,8 @@ class Broker:
         if hasattr(self.desktop, "blocked_unknown"):
             self.desktop.blocked_unknown = (
                 self.store.db.execute(
-                    "SELECT a.task_id FROM actions a WHERE a.state='UNKNOWN' AND NOT EXISTS "
+                    "SELECT a.task_id FROM actions a WHERE a.state='UNKNOWN' "
+                    "AND a.capability!='currency.quote' AND NOT EXISTS "
                     "(SELECT 1 FROM events e WHERE e.task_id=a.task_id "
                     "AND e.kind='manual_review_acknowledged')"
                 ).fetchone()

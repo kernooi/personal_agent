@@ -1,0 +1,13 @@
+# Permits the fixed ECB metadata and generic provider-supported pair routes only.
+# It does not enable real Windows control or cloud inference.
+mode = "enabled"
+provider = "frankfurter_ecb"
+display_timezone = "Asia/Kuala_Lumpur"
+timeout_seconds = 12.0
+max_response_bytes = 8192
+cache_seconds = 3600
+max_observation_days = 7
+allow_stale_cache = false
+stale_cache_seconds = 86400
+max_cache_entries = 8
+metadata_cache_seconds = 86400

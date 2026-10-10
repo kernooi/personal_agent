@@ -227,6 +227,8 @@ class OllamaProvider:
 
     def generate(self, request: ModelRequest, cancel: Callable[[], bool]) -> ModelReply:
         profile = self._profile(request.profile)
+        if request.decision_boundary not in {None, "currency-decision-v1"}:
+            raise ProviderError("INVALID_DECISION_BOUNDARY")
         if not profile.cloud_disabled_verified:
             raise ProviderError("LOCAL_MODE_UNVERIFIED")
         started = self.clock.now()
@@ -292,7 +294,7 @@ class OllamaProvider:
                 if len(raw) > profile.max_output_bytes:
                     raise ProviderError("RESPONSE_TOO_LARGE")
                 try:
-                    parse_decision(raw, profile.decision_version)
+                    parse_decision(raw, request.decision_boundary or profile.decision_version)
                 except ValueError as exc:
                     raise ProviderError("INVALID_DECISION") from exc
                 tokens = data.get("eval_count")

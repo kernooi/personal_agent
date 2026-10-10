@@ -1196,3 +1196,312 @@ Tests cover false past-tense/state claims, new aliases, bound followup, changed
 selection, extra/missing windows, intervening turns and persistent unknown latch.
 Private v10 profile created without overwriting v9; simulation remains its default.
 Prior reports and unrelated working-tree edits preserved. Stop at M2.
+
+## 2026-10-10 — explicitly authorized M3 public currency implementation
+
+Started from clean M2 commit `a81a621`. Read the attached M3 request, repository
+instructions, specification/freshness contracts, README, progress/build history,
+compatibility notes, ADRs, source, configuration and tests. Hardware is the actual
+RTX 4070 / 32 GB / Ryzen 5 5600X desktop. The attachment's generic laptop/model
+context did not cause a model substitution: existing qwen3:8b and Python 3.13.2
+were inspected and reused. No larger/new model, cloud inference, Notepad effects,
+network-setting change, service, global setting, administrator access or push.
+
+Baseline: 257 tests passed in 9.06 s; lint/format passed (43 files). Reviewed
+actual M1 desktop 27/30 x3 qualification and manual offline snapshot report, plus
+M2 native Windows/dirty-close/hotkey/takeover and corrected truth-guard evidence.
+Original/conversation M2 v10 reports remain matching (`qualified=True` for both).
+Earlier failed evidence is retained, including the initial v10 live failure.
+
+Implemented M3 on the existing broker: separate explicit public-data policy;
+typed exact semantic proposals with local-model request boundary; reviewed fixed
+Frankfurter v2 ECB pair routes; public numeric destination pinning and actual-peer
+check under normal TLS/SNI; no redirects/proxies/retries; bounded supervised
+fetch worker and independent watchdog; cancellation/late-response gates;
+strict quote/date/precision/source validation; runtime-owned IDs/timestamps;
+trusted Decimal conversions; public-only bounded cache/stale policy; source/date
+follow-ups and cache controls; effect-appropriate public read failure/recovery.
+No model-written current values are accepted as quote facts.
+
+The profile's original M2 schema/prompt and qualified source hashes are unchanged.
+The first live attempt exposed `INVALID_PROFILE` because an internal currency
+boundary was initially represented as an invalid profile copy. Corrected by a
+controller-selected `ModelRequest.decision_boundary`, preserving full original
+profile revalidation and fixed loopback gateway. A subsequent source-date case
+asked clarification despite a resolved session quote. Fixed by exact candidate
+schema and source-operation instructions. Frozen M3 corpus/gate stayed unchanged.
+
+Provider documentation/coverage/terms were checked against current official
+Frankfurter documentation and ECB sources; see `PUBLIC_DATA_COMPATIBILITY.md`.
+This is provider-derived ECB reference information, not default blended data,
+intraday executable rates or bank/card/cash proceeds. API date-only precision is
+retained. MYR/JPY and reverse have direct documented pair routes; no local
+cross-rate/inversion implementation or unrelated research provider was added.
+
+Setup/update commands actually run (all exit 0, project-local .venv):
+
+```powershell
+.\.venv\Scripts\python.exe -m piptools compile --allow-unsafe --extra=dev --extra=windows --generate-hashes --output-file=requirements-dev.lock --strip-extras pyproject.toml
+.\.venv\Scripts\python.exe -m pip install --no-deps --no-build-isolation -e .
+.\.venv\Scripts\python.exe -m pip install --require-hashes -r requirements-dev.lock
+```
+
+HTTPX 0.28.1 and HTTPcore 1.0.9 are explicitly pinned because the actual connection
+backend integration is reviewed for those versions. Lock generation changed
+only HTTPcore's direct-dependency attribution; no package versions/hashes changed.
+Locked installation found every requirement already satisfied. Editable wheel
+built/installed successfully. No .venv from another machine was used.
+
+Created the non-secret private `%LOCALAPPDATA%\Jarvis\public-data.toml` only when
+absent, using the committed enabled example; existing settings were preserved:
+
+```powershell
+if (-not (Test-Path -LiteralPath "$env:LOCALAPPDATA\Jarvis\public-data.toml")) {
+  Copy-Item -LiteralPath .\config\examples\public-data-enabled.toml `
+    -Destination "$env:LOCALAPPDATA\Jarvis\public-data.toml"
+}
+```
+
+Explicit live commands actually run:
+
+```powershell
+.\.venv\Scripts\python.exe -m jarvis currency-check --public-data-config "$env:LOCALAPPDATA\Jarvis\public-data.toml" --live --report .\docs\evaluations\m3-provider-v1-r3.json
+.\.venv\Scripts\python.exe -m jarvis eval-m3 --profile "$env:LOCALAPPDATA\Jarvis\profiles\notepad-m2-v10.toml" --public-data-config "$env:LOCALAPPDATA\Jarvis\public-data.toml" --live --report .\docs\evaluations\m3-qwen3-8b-v1-r6.json
+.\.venv\Scripts\python.exe -m jarvis doctor --profile "$env:LOCALAPPDATA\Jarvis\profiles\notepad-m2-v10.toml" --public-data-config "$env:LOCALAPPDATA\Jarvis\public-data.toml" --evaluation-report .\docs\evaluations\m3-qwen3-8b-v1-r6.json
+```
+
+All final commands exit 0. Provider final r3: two directions validated, 0.661 s
+MYR/JPY and 0.623 s JPY/MYR. Effective 2026-10-09; 38.74 JPY per MYR and 0.02581
+MYR per JPY. UTC retrieval 07:07:48.422846 / 07:07:49.103807 on 2026-10-10; actual
+checked public IPv6 peer `2606:4700:20::681a:e40`, normal TLS host verification,
+redirects/environment proxies false. Adapter check uses scripted lab proposals
+through the broker and is not mislabeled as model inference.
+
+Live model r1: exit 1, 4/11 (profile integration); r2: exit 1, 10/11 (source
+clarification). These failed reports are preserved. Corrected r3/r4/r5/r6 exit 0,
+11/11, zero desktop executions. Final r6 matches final hardening/precision/report
+contract; SHA256 `ab86d002fcd7af01de7f2e81c9b8f1e926447c932b4c0f57bf7d9f986d2306b5`.
+Frozen corpus SHA256 `d7ba5b67f1b22c0e0fda8654a22b78b44923f8abb0d9982a924cf17da66a8cb7`.
+Actual Conversation path used real configured qwen3:8b, real public provider for
+both pairs, independently checked 1,000 MYR -> 38,740 JPY and 10,000 JPY ->
+258.10 MYR. Source/date follows actual session evidence; ambiguity, unsupported
+weather, disabled reads, static explanations/arithmetic, local supplied-rate
+conversion and labeled provider outage passed. No raw prompts/model replies
+are persisted in reports; amounts are synthetic lab values.
+
+Doctor: actual model available/present/ready, Ollama 0.40.2, identity digest
+`500a1f067a9f782620b40bee6f7b0c89e17ae61f686b92c24933e4ca4b2b8b41`;
+selected M3 evaluation reports passed 11/11, public provider not contacted.
+Cloud-disabled status remains user verified from the existing actual startup
+log, not programmatically attested. The server was reused rather than restarted.
+Exact approved manual startup after a restart remains:
+
+```powershell
+$env:OLLAMA_NO_CLOUD = '1'
+$env:OLLAMA_HOST = '127.0.0.1:11434'
+$env:OLLAMA_MODELS = "$env:LOCALAPPDATA\Jarvis\models"
+$env:OLLAMA_CONTEXT_LENGTH = '4096'
+& "$env:LOCALAPPDATA\Jarvis\runtime\ollama-v0.40.2\bin\ollama.exe" serve
+```
+
+Verify the actual cloud-disabled startup line before recording new setup evidence.
+Do not start another server on an occupied endpoint or change global settings.
+
+Actual finite-input CLI smoke command used the same two private paths:
+
+```powershell
+@'
+Hello Jarvis
+What is the MYR to JPY exchange rate now?
+Convert 1,000 MYR to JPY using the latest available rate.
+When was that rate published, and where did it come from?
+/cache
+/cache-clear
+/cache
+'@ | .\.venv\Scripts\python.exe -m jarvis chat --profile "$env:LOCALAPPDATA\Jarvis\profiles\notepad-m2-v10.toml" --public-data-config "$env:LOCALAPPDATA\Jarvis\public-data.toml"
+```
+
+Exit 0: natural greeting; genuine fetched dated sourced rate; cached correct
+conversion; same source ID/retrieval timestamp on follow-up; cache listing,
+clear, then `[]`. Windows startup remained SIMULATED. No Notepad operations.
+Public quote cache ended empty; typed local task/evidence journal remains private.
+
+Final deterministic command `python -m pytest -q --tb=short` via .venv passed
+**375 tests in 11.16 s**. `ruff check .`, `ruff format --check .` (56 files),
+`pip check` (no broken requirements) and `git diff --check` pass with exit 0.
+An intermediate new test fixture omitted its required scripted reply, and another
+helper insertion misplaced an existing assertion; both development mistakes were
+corrected without removing prior assertions or changing acceptance requirements.
+
+Final precision review found a valid-boundary rounding defect at context precision
+40: `999999999999.999999999999 * 994999999999.999999999999` rounded to
+`994999999999999999999998.00` MYR instead of `.01`. Context precision is now 64,
+preserving all 48 product digits until final half-even display; the exact failing
+example is retained as a regression test. Final r6 model and r3 provider evidence
+were refreshed after this correction. Earlier r5 evidence remains untouched.
+
+M3 gate: met for this narrow PC/profile/provider configuration. No physical M3
+network-disconnection test or new attended Windows regression was performed.
+Offline M3 behavior is a labeled provider failure injection plus actual disabled
+policy, not network-isolation proof. No network settings were changed. Broader
+current-information research, other currencies, exact publication time, intraday
+quotations, transactions, desktop expansion and M4 remain out of scope. See
+`M3_TEST_REPORT.md` and provider/ADR notes for limits and reproducible commands.
+Changes are local and uncommitted; no push. Stop after M3.
+
+### M3 generic multi-currency clarification — 2026-10-10
+
+Read the user's complete generic-currency attachment and original M3 requirements,
+AGENTS.md/README, existing design/source/evidence; the complete project specification
+was already read earlier in this implementation session. Existing M3 work was dirty
+and preserved. Before extension, all **375** tests passed in **10.18 s** (exit 0).
+The subsequent baseline recheck also passed 375 in 10.24 s. No setup, model download,
+new dependency, admin privilege, global/network setting or Notepad effect was needed.
+
+Reviewed the official Frankfurter v2 documentation and actual ECB metadata response.
+The provider documents `/v2/providers/ecb/rate/{base}/{quote}` and metadata
+`/v2/providers/ecb`. The latter advertises 45 canonical codes, including historical
+coverage; fresh pair availability remains separate. Selected the provider-specific
+native pair route, preserving ECB/Frankfurter reference-pair provenance. No local
+inversion/cross fallback or per-pair code. The documentation/API did not provide a
+minor-unit catalogue for this contract; retained an explicit display policy of
+half-even whole JPY / two decimals elsewhere rather than inventing such metadata.
+
+Implemented generic canonical-code arguments, independent validated provider-wide
+coverage (`public_catalogue.py`), separate bounded catalogue cache/TTL, metadata on
+the same supervised TLS/pinned-public-peer transport, and membership before pair
+dispatch and before publication. Metadata is fetched only under admitted latest-rate
+tasks. Local supplied/identity calculations require cached membership and never
+fetch metadata or a quote. A cold/expired catalogue returns a clear error requiring
+a separate latest-rate request; it cannot fabricate support or silently use the model.
+The new `metadata_cache_seconds` field defaults to 86400; existing private config
+was not overwritten. New quote storage is `public-quotes-v2.json`; old cache preserved.
+
+Fixed compact `2000myr`, repeated base `2000 myr, myr to jpy`, reviewed currency names,
+pending amount replies, amount-only/reverse/source/effective/refresh followups. Context
+is controller-owned, single-pair, session-bound and cleared by ambiguity, unrelated
+chat or failure. Context completion binds the original current request's route.
+Bare numbers without a valid pair are clarified before model generation, preventing
+the user's unsourced current-conversion `say` failure. Same-currency calculation
+uses rate 1 and explicitly claims no retrieved public quotation.
+
+Preserved v1 corpus and reports; froze v2 with the original 11 cases plus 23 new
+generic/context/invalid cases. The 100% / zero desktop-effect gate was not lowered.
+Development checks initially failed two now-superseded two-pair route expectations
+and the historical-report config comparison (new metadata TTL default). Expectations
+were updated only for the approved generic scope; historical files were untouched.
+A new scientific-notation regression exposed `1e3` being parsed as amount `3`;
+fixed numeric boundaries and explicit exponent rejection, retaining the failing
+case as a test. Final 54 new checks also test arbitrary synthetic advertised codes,
+duplicate/malformed metadata, limits/TTL/origin, metadata cancellation, shortened TTL,
+no-network local operations, legacy stale data and incompatible/missing native pairs.
+
+Actual final commands, exit **0** each:
+
+```powershell
+.\.venv\Scripts\python.exe -m pytest -q
+.\.venv\Scripts\python.exe -m ruff check .
+.\.venv\Scripts\python.exe -m ruff format --check .
+.\.venv\Scripts\python.exe -m pip check
+git diff --check
+
+.\.venv\Scripts\python.exe -m jarvis currency-check --live `
+  --public-data-config "$env:LOCALAPPDATA\Jarvis\public-data.toml" `
+  --report .\docs\evaluations\m3-provider-v2-r2.json
+
+.\.venv\Scripts\python.exe -m jarvis eval-m3 --live `
+  --profile "$env:LOCALAPPDATA\Jarvis\profiles\notepad-m2-v10.toml" `
+  --public-data-config "$env:LOCALAPPDATA\Jarvis\public-data.toml" `
+  --report .\docs\evaluations\m3-qwen3-8b-v2-r2.json
+
+.\.venv\Scripts\python.exe -m jarvis doctor `
+  --profile "$env:LOCALAPPDATA\Jarvis\profiles\notepad-m2-v10.toml" `
+  --public-data-config "$env:LOCALAPPDATA\Jarvis\public-data.toml" `
+  --evaluation-report .\docs\evaluations\m3-qwen3-8b-v2-r2.json
+```
+
+Final deterministic result **429 passed in 12.23 s**; lint clean, formatting **58
+files** clean, dependencies report no broken requirements, diff check clean.
+Intermediate full generic check was 425 passed in 12.17 s before four additional
+metadata hardening checks. No package version or lock change was needed for this
+clarification. Existing Python 3.13.2 and qwen3:8b hardware/profile were reused.
+
+Final real-provider r2 at 09:22:56 UTC passes **3/3** with actual validated metadata:
+MYR/JPY **38.74** (1.159 s including metadata), JPY/MYR **0.02581** (0.596 s),
+EUR/USD **1.1206** (0.981 s), all effective **2026-10-09**. TLS/actual public peer,
+runtime source IDs, UTC retrieval/expiry and provenance are recorded. Only one
+metadata and three pair requests are needed, not an exhaustive currency matrix.
+Final real local-model r2 passes **34/34**, actual Conversation/broker/live provider,
+**zero desktop executions**. Report contract hash matches current code:
+`fd2bbd7ed532578a1415d3c6e976bcb77603df9d4427310fa5e058f7da0ff807`.
+Generic r1 provider/model also passed (3/3 and 34/34); retained as intermediate
+evidence before final metadata/cache/context hardening. All failed initial v1
+reports remain. Doctor recognizes current generic **34/34 passed**, local model
+ready, `public_provider_contacted=false` and cloud disabling **user_verified**.
+The running server was reused, not restarted; earlier actual startup-log evidence
+and exact process-local startup command above remain applicable.
+
+Read-only checks using current profile and actual model metadata confirm both
+M2 reports still satisfy `qualified(...)`: original `m2-qwen3-8b-simulation-v10-r3.json`
+and conversation `m2-conversation-v10-r2.json` both **true**, exit 0. M2 doctor with
+the original report also exits 0 and recognizes its matching gate. No new Windows
+effects or qualification for another machine are claimed.
+
+Actual CLI smoke command (exit **0**, genuine local inference/public provider):
+
+```powershell
+@'
+Hello Jarvis
+convert 2000myr to jpy
+convert 2000 myr, myr to jpy
+Convert SGD to MYR
+2000
+What's 100 EUR in USD?
+What about 500?
+What's the reverse rate?
+Convert 500 MYR to MYR
+/cache
+'@ | .\.venv\Scripts\python.exe -m jarvis chat `
+  --profile "$env:LOCALAPPDATA\Jarvis\profiles\notepad-m2-v10.toml" `
+  --public-data-config "$env:LOCALAPPDATA\Jarvis\public-data.toml"
+```
+
+Observed natural greeting, both corrected MYR amounts **77,480 JPY**, pending amount
+question then **2,000 SGD = 6,381.00 MYR**, **100 EUR = 112.06 USD**, contextual
+**500 EUR = 560.30 USD**, native reverse **1 USD = 0.89238 EUR**, and local identity
+**500 MYR = 500.00 MYR** with no external quote claim. All external facts carry
+actual source/date/retrieval evidence. Cache listing contains public quote records
+without conversion amounts. Windows startup remained SIMULATED; no Notepad effects.
+
+A separate actual CLI run with the same model/profile and
+`--public-data-config .\config\examples\public-data-disabled.toml` (exit **0**) then
+accepts `Convert 100 EUR to USD using rate 2.5` → **250.00 USD**, labeled user supplied,
+and `Convert 500 MYR to MYR` → **500.00 MYR**, labeled local identity. It uses the
+persisted valid catalogue, no public lookup. The old private config/quote cache and
+all unrelated work remain preserved.
+
+Generic M3 gate met for this PC/profile/config. Remaining documented constraints:
+daily reference data, no exact publication time, conservative source-age limit,
+provider legacy coverage distinct from fresh data, canonical codes required outside
+reviewed names, valid cached coverage required before local-only calculations, and
+simulated outage/disabled-policy evidence rather than physical M3 disconnection.
+No general web search, crypto/securities, banking, trades/transfers/payments, new
+desktop controls or M4. All changes remain local and uncommitted; stop for review.
+
+### M3 commit preparation — 2026-10-10
+
+The user requested a local commit. Rechecked the actual working tree against M2
+commit `a81a621`: changed/new files belong to the authorized M3 implementation,
+generic-currency extension, tests, configuration examples and retained evidence.
+Final pre-commit pytest exits 0: **429 passed in 13.23 s**. Ruff lint, formatting
+(58 files), `pip check` and `git diff --check` all exit 0. Final v2-r2 provider and
+model reports still pass and their contract hashes match the current source.
+No additional live model/provider or Windows effects were performed for this commit.
+
+A subsequent operator transcript exposed overlapping terminal output/input and a
+clarification loop. Read-only journal inspection and candidate-fingerprint comparison
+established that an extra initial character was submitted with the close request;
+the following replies had no Notepad action scope and no close was dispatched.
+This usability issue is diagnosed but **not fixed** in this commit. No raw private
+prompt, journal copy or personal Notepad content is added to Git. Commit the completed
+M3 work and its retained passed/failed evaluations locally; no push is authorized.

@@ -1,0 +1,6 @@
+# Independent of the local model profile and Windows execution mode.
+mode = "disabled"
+provider = "frankfurter_ecb"
+display_timezone = "Asia/Kuala_Lumpur"
+allow_stale_cache = false
+metadata_cache_seconds = 86400

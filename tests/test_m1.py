@@ -101,6 +101,42 @@ def zero_effects(broker):
     assert not broker.desktop.running
 
 
+def test_currency_boundary_keeps_original_model_profile_valid(tmp_path, profile, runtime):
+    from jarvis.currency_provider import FixtureProvider
+    from jarvis.public_data import CurrencyArguments, PublicConfig
+
+    runtime.decision = {
+        "kind": "propose_action",
+        "action": {
+            "capability": "currency.quote",
+            "arguments": CurrencyArguments(base="MYR", quote="JPY").model_dump(),
+        },
+    }
+    clock = ManualClock(1791604800)
+    provider = OllamaProvider(clock, httpx.MockTransport(runtime.handle))
+    instance = build(
+        tmp_path / "currency.sqlite",
+        profile,
+        clock,
+        provider,
+        public_config=PublicConfig(mode="fixture"),
+        currency_provider=FixtureProvider(
+            b'{"date":"2026-10-09","base":"MYR","quote":"JPY","rate":40}'
+        ),
+    )
+    try:
+        result = instance.converse(UserRequest("one", "demo-session", "MYR to JPY rate now"))
+        assert result.state == State.SUCCEEDED and "1 MYR = 40 JPY" in result.message
+        assert instance.profile.decision_version == "decision-v1"
+        request = next(row for row in runtime.requests if row.url.path == "/api/chat")
+        schema = json.loads(request.content)["format"]
+        assert schema["$defs"]["CurrencyArguments"]["properties"]["base"] == {"const": "MYR"}
+        zero_effects(instance)
+    finally:
+        instance.store.close()
+        provider.close()
+
+
 def test_ollama_action_through_broker(broker, runtime):
     runtime.response_update["load_duration"] = 3000000000
     result = submit(broker)

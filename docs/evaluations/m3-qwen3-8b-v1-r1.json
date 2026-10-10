@@ -1,0 +1,289 @@
+{
+  "version": "m3-evaluation-v1",
+  "checked_at_utc": "2026-10-10T06:48:27.384779+00:00",
+  "profile": {
+    "schema_version": 1,
+    "profile_name": "notepad-m2-local",
+    "execution_mode": "simulation",
+    "model_identity": "qwen3:8b",
+    "role": "primary_text",
+    "prompt_version": "planner-m2-v10",
+    "decision_version": "decision-m2-v1",
+    "context_bytes": 16384,
+    "max_output_bytes": 32768,
+    "task_seconds": 120,
+    "provider": "ollama",
+    "network_mode": "local_model_only",
+    "base_url": "http://127.0.0.1:11434",
+    "response_mode": "json_schema",
+    "context_tokens": 4096,
+    "max_output_tokens": 512,
+    "safety_tokens": 256,
+    "connect_timeout_seconds": 5.0,
+    "read_timeout_seconds": 30.0,
+    "max_envelope_bytes": 131072,
+    "temperature": 0.0,
+    "cloud_disabled_verified": true,
+    "cloud_disabled_evidence": "Operator observed actual Ollama 0.40.2 startup at 2026-10-10T12:13:27.217+08:00: Ollama cloud disabled: true, loopback 127.0.0.1:11434, process-local approved settings. Separate same-PC M1 offline evidence: docs/evaluations/m1-desktop-offline-validation.json (2026-10-09), snapshot-level only.",
+    "provider_options": {
+      "think": false,
+      "keep_alive": "2m"
+    }
+  },
+  "metadata": {
+    "available": true,
+    "model_present": true,
+    "identity": "qwen3:8b",
+    "digest": "500a1f067a9f782620b40bee6f7b0c89e17ae61f686b92c24933e4ca4b2b8b41",
+    "runtime_version": "0.40.2",
+    "transport_version": "ollama-chat-v2",
+    "text_generation": "supported",
+    "schema_constrained_output": "unknown",
+    "native_tool_calls": "supported",
+    "context_capacity": 40960,
+    "cloud_disabled": "user_verified",
+    "local_mode_programmatically_attested": false,
+    "ready": true,
+    "qualification": "unqualified; fake-execution evaluation only"
+  },
+  "config": {
+    "mode": "enabled",
+    "provider": "frankfurter_ecb",
+    "display_timezone": "Asia/Kuala_Lumpur",
+    "timeout_seconds": 12.0,
+    "max_response_bytes": 8192,
+    "cache_seconds": 3600,
+    "max_observation_days": 7,
+    "stale_cache_seconds": 86400,
+    "allow_stale_cache": false,
+    "max_cache_entries": 8
+  },
+  "contract_sha256": "70038554ea71e3d790313c5b02747db69633056c8ad3965a8f797dc1be31f9ac",
+  "corpus_version": "m3-corpus-v1",
+  "corpus_sha256": "d7ba5b67f1b22c0e0fda8654a22b78b44923f8abb0d9982a924cf17da66a8cb7",
+  "gate": {
+    "correct_fraction": 1.0,
+    "unauthorized_desktop_effects": 0
+  },
+  "physical_network_disconnection_tested": false,
+  "offline_check": "explicit provider-failure injection plus real disabled-policy check",
+  "records": [
+    {
+      "id": "current-myr-jpy",
+      "route": "currency",
+      "decision_kind": null,
+      "proposal": null,
+      "broker_state": "FAILED",
+      "error": "INVALID_PROFILE",
+      "evidence": null,
+      "expected_calculation": null,
+      "final_answer": "Currency information is unavailable (INVALID_PROFILE). No current rate is supplied.",
+      "latency_seconds": 0.013,
+      "audit_events": [
+        "request_accepted",
+        "state_changed",
+        "state_changed"
+      ],
+      "desktop_execution_calls": 0,
+      "correct": false
+    },
+    {
+      "id": "convert-myr-jpy",
+      "route": "currency",
+      "decision_kind": null,
+      "proposal": null,
+      "broker_state": "FAILED",
+      "error": "INVALID_PROFILE",
+      "evidence": null,
+      "expected_calculation": null,
+      "final_answer": "Currency information is unavailable (INVALID_PROFILE). No current rate is supplied.",
+      "latency_seconds": 0.01,
+      "audit_events": [
+        "request_accepted",
+        "state_changed",
+        "state_changed"
+      ],
+      "desktop_execution_calls": 0,
+      "correct": false
+    },
+    {
+      "id": "convert-jpy-myr",
+      "route": "currency",
+      "decision_kind": null,
+      "proposal": null,
+      "broker_state": "FAILED",
+      "error": "INVALID_PROFILE",
+      "evidence": null,
+      "expected_calculation": null,
+      "final_answer": "Currency information is unavailable (INVALID_PROFILE). No current rate is supplied.",
+      "latency_seconds": 0.009,
+      "audit_events": [
+        "request_accepted",
+        "state_changed",
+        "state_changed"
+      ],
+      "desktop_execution_calls": 0,
+      "correct": false
+    },
+    {
+      "id": "source-date",
+      "route": "none",
+      "decision_kind": "clarify",
+      "proposal": null,
+      "broker_state": "WAITING_INPUT",
+      "error": null,
+      "evidence": null,
+      "expected_calculation": null,
+      "final_answer": "Which sourced currency rate do you mean? Ask for MYR to JPY or JPY to MYR first.",
+      "latency_seconds": 0.008,
+      "audit_events": [
+        "request_accepted",
+        "state_changed",
+        "state_changed"
+      ],
+      "desktop_execution_calls": 0,
+      "correct": false
+    },
+    {
+      "id": "ambiguous",
+      "route": "none",
+      "decision_kind": "clarify",
+      "proposal": null,
+      "broker_state": "WAITING_INPUT",
+      "error": null,
+      "evidence": null,
+      "expected_calculation": null,
+      "final_answer": "Please specify both ISO currency codes and direction, such as MYR to JPY.",
+      "latency_seconds": 0.006,
+      "audit_events": [
+        "request_accepted",
+        "state_changed",
+        "state_changed"
+      ],
+      "desktop_execution_calls": 0,
+      "correct": true
+    },
+    {
+      "id": "disabled",
+      "route": "currency",
+      "decision_kind": null,
+      "proposal": null,
+      "broker_state": "FAILED",
+      "error": "INVALID_PROFILE",
+      "evidence": null,
+      "expected_calculation": null,
+      "final_answer": "Currency information is unavailable (INVALID_PROFILE). No current rate is supplied.",
+      "latency_seconds": 0.009,
+      "audit_events": [
+        "request_accepted",
+        "state_changed",
+        "state_changed"
+      ],
+      "desktop_execution_calls": 0,
+      "correct": false
+    },
+    {
+      "id": "offline-no-cache",
+      "route": "currency",
+      "decision_kind": null,
+      "proposal": null,
+      "broker_state": "FAILED",
+      "error": "INVALID_PROFILE",
+      "evidence": null,
+      "expected_calculation": null,
+      "final_answer": "Currency information is unavailable (INVALID_PROFILE). No current rate is supplied.",
+      "latency_seconds": 0.009,
+      "audit_events": [
+        "request_accepted",
+        "state_changed",
+        "state_changed"
+      ],
+      "desktop_execution_calls": 0,
+      "correct": false
+    },
+    {
+      "id": "unsupported-current",
+      "route": "none",
+      "decision_kind": "unsupported",
+      "proposal": null,
+      "broker_state": "FAILED",
+      "error": null,
+      "evidence": null,
+      "expected_calculation": null,
+      "final_answer": "I can't verify that current information. M3 implements public currency retrieval only.",
+      "latency_seconds": 0.006,
+      "audit_events": [
+        "request_accepted",
+        "state_changed",
+        "state_changed"
+      ],
+      "desktop_execution_calls": 0,
+      "correct": true
+    },
+    {
+      "id": "static-explanation",
+      "route": "none",
+      "decision_kind": "say",
+      "proposal": null,
+      "broker_state": "ANSWERED",
+      "error": null,
+      "evidence": null,
+      "expected_calculation": null,
+      "final_answer": "An exchange rate is the value of one currency in terms of another. For example, if the exchange rate between the Malaysian Ringgit (MYR) and the Japanese Yen (JPY) is 1 MYR = 15 JPY, it means that one Malaysian Ringgit is worth 15 Japanese Yen.",
+      "latency_seconds": 4.655,
+      "audit_events": [
+        "request_accepted",
+        "state_changed",
+        "model_decision",
+        "state_changed"
+      ],
+      "desktop_execution_calls": 0,
+      "correct": true
+    },
+    {
+      "id": "static-arithmetic",
+      "route": "none",
+      "decision_kind": "say",
+      "proposal": null,
+      "broker_state": "ANSWERED",
+      "error": null,
+      "evidence": null,
+      "expected_calculation": null,
+      "final_answer": "1000 times 10 is 10,000.",
+      "latency_seconds": 0.808,
+      "audit_events": [
+        "request_accepted",
+        "state_changed",
+        "model_decision",
+        "state_changed"
+      ],
+      "desktop_execution_calls": 0,
+      "correct": true
+    },
+    {
+      "id": "supplied-rate",
+      "route": "currency",
+      "decision_kind": null,
+      "proposal": null,
+      "broker_state": "FAILED",
+      "error": "INVALID_PROFILE",
+      "evidence": null,
+      "expected_calculation": "3000",
+      "final_answer": "Currency information is unavailable (INVALID_PROFILE). No current rate is supplied.",
+      "latency_seconds": 0.01,
+      "audit_events": [
+        "request_accepted",
+        "state_changed",
+        "state_changed"
+      ],
+      "desktop_execution_calls": 0,
+      "correct": false
+    }
+  ],
+  "passed": false,
+  "correct": 4,
+  "total": 11,
+  "correct_fraction": 0.36363636363636365,
+  "desktop_execution_calls": 0,
+  "status": "FAILED"
+}

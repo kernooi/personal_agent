@@ -48,6 +48,9 @@ def build(
     real: bool = False,
     registration: Path | None = None,
     attended: bool = False,
+    public_config=None,
+    currency_provider=None,
+    cache_path=None,
 ) -> Broker:
     if real and (
         not attended or registration is None or profile.decision_version != "decision-m2-v1"
@@ -113,9 +116,17 @@ def build(
     else:
         desktop = FakeDesktop(clock)
         registry = Registry()
+    if public_config is not None:
+        from jarvis.currency_tools import CurrencyAdapter, CurrencyRegistry
+
+        registry = CurrencyRegistry(
+            registry, CurrencyAdapter(clock, public_config, currency_provider, cache_path)
+        )
     store = Store(path, clock)
     if getattr(registry, "m2", False):
         registry.extended = profile.prompt_version == "planner-m2-v10"
+        if public_config is not None and hasattr(registry.underlying, "m2"):
+            registry.underlying.extended = registry.extended
     grant = Grant(
         "fixture-owner-grant",
         session,
@@ -127,9 +138,18 @@ def build(
         if profile.decision_version == "decision-m2-v1"
         else frozenset({"open"}),
     )
+    if public_config is not None:
+        from dataclasses import replace
+
+        grant = replace(
+            grant,
+            apps=grant.apps | {"currency"},
+            effects=grant.effects | {"public_read", "local_calculate", "read_evidence"},
+        )
     if real:
         unresolved = store.db.execute(
-            "SELECT a.task_id FROM actions a WHERE a.state='UNKNOWN' AND NOT EXISTS "
+            "SELECT a.task_id FROM actions a WHERE a.state='UNKNOWN' "
+            "AND a.capability!='currency.quote' AND NOT EXISTS "
             "(SELECT 1 FROM events e WHERE e.task_id=a.task_id "
             "AND e.kind='manual_review_acknowledged')"
         ).fetchone()

@@ -8,6 +8,12 @@ observation determine the result. M2 adds explicit attended control of the insta
 Microsoft Notepad: registered open, selected-window focus and safe graceful close.
 See the M2 instructions below and `docs/NOTEPAD_COMPATIBILITY.md` for measured limits.
 
+M3 adds opt-in provider-supported currency reference quotes and conversions through
+the same broker. Local Ollama inference, public retrieval and Windows execution
+have separate permissions. Decimal calculations and cited answers are produced
+from validated data, not model memory. See the M3 commands below and
+[M3 test report](docs/M3_TEST_REPORT.md).
+
 The RTX 4070 / 32 GB / Ryzen 5 5600X desktop was separately provisioned and tested
 on 2026-10-09 with Python 3.13.2, standalone Ollama 0.40.2 and `qwen3:8b`.
 All 143 tests and static/dependency checks passed. The unchanged frozen corpus
@@ -333,4 +339,138 @@ Default launcher behavior is measured, not guaranteed to produce a new isolated
 window. If it opens an existing tab or cannot uniquely establish readiness, the
 adapter reports uncertainty, blocks new effects and leaves manual handling.
 Prepare/select an empty disposable window yourself rather than changing settings.
-Do not overwrite old evaluation reports. M2 stops here; no M3 features are included.
+Do not overwrite old evaluation reports. That M2 validation did not include M3.
+
+## M3: public currency data with local inference
+
+The generic M3 extension discovers currency coverage from the configured provider's
+metadata. MYR/JPY, JPY/MYR and other supported pairs use the same typed capability.
+The original 11-case corpus/results are retained; the new 34-case v2 corpus keeps
+the 100% correctness / zero desktop execution gate and passes 34/34 on this PC.
+See current measured results in the test report. General internet research is absent.
+Read [provider and freshness limits](docs/PUBLIC_DATA_COMPATIBILITY.md) and
+[actual commands/results](docs/M3_TEST_REPORT.md).
+
+The existing Python 3.13 `.venv` and `qwen3:8b` profile are reused. For a clean
+project checkout, use the project-local setup block above after verifying that
+`python --version` reports 3.13; do not copy another PC's `.venv`. Existing setups
+only need the locked packages and editable project installation:
+
+```powershell
+.\.venv\Scripts\python.exe -m pip install --require-hashes -r requirements-dev.lock
+.\.venv\Scripts\python.exe -m pip install --no-deps --no-build-isolation -e .
+```
+
+Public data defaults to disabled when no config is selected. To retain a useful
+currency limitation while making supplied-rate calculations locally:
+
+```powershell
+$jarvisProfile = "$env:LOCALAPPDATA\Jarvis\profiles\notepad-m2-v10.toml"
+.\.venv\Scripts\python.exe -m jarvis chat --profile $jarvisProfile `
+  --public-data-config .\config\examples\public-data-disabled.toml
+```
+
+The approved non-secret provider config was created on this PC at
+`%LOCALAPPDATA%\Jarvis\public-data.toml` from the enabled example. On a new PC,
+copy `config/examples/public-data-enabled.toml` there only when choosing to enable
+that reviewed provider; preserve an existing config. Start currency chat:
+
+```powershell
+.\.venv\Scripts\python.exe -m jarvis chat --profile $jarvisProfile `
+  --public-data-config "$env:LOCALAPPDATA\Jarvis\public-data.toml"
+```
+
+This runs the real local model and real public currency retrieval while Windows
+actions remain simulated. No `--real` or `--attended` is needed for currency.
+For attended real Notepad **as well**, retain all the separate M2 arguments above
+and add `--public-data-config`; do not substitute an M3 report for an M2 report.
+
+Try these as separate messages:
+
+```text
+What is the MYR to JPY exchange rate now?
+Convert 1,000 MYR to JPY using the latest available rate.
+How much is 10,000 JPY in MYR?
+convert 2000myr to jpy
+Convert 250 SGD to MYR.
+What's 100 EUR in USD?
+Convert 50 pounds to Japanese yen.
+What's the reverse rate?
+What about 500?
+When was that rate published, and where did it come from?
+Convert 100 MYR to JPY using rate 30
+What is an exchange rate?
+```
+
+Answers identify live fetch, fresh cache or explicit stale-cache use, source IDs,
+the original effective date, UTC/local retrieval time and both sources. They say
+reference estimate, not a guaranteed bank/card/cash conversion. A date-only source
+cannot answer an exact publication-time question. All provider-advertised canonical
+three-letter codes are accepted; a pair still needs available, fresh provider data.
+Reviewed English aliases include ringgit, yen, US/Singapore dollars and pounds.
+Unspecified dollar/symbols, misspellings, missing direction and multiple pairs
+get clarification; unknown codes fail as unsupported. Weather/news are absent.
+Amount replies such as `2000` resolve a pending amount question; `What about 500?`
+reuses the immediately preceding unambiguous pair. An unrelated or ambiguous turn
+clears that context. Reverse requests use the provider's native reverse endpoint.
+
+Same-currency requests (`Convert 500 MYR to MYR`) calculate locally at rate 1 and
+claim no external quote. Supplied-rate and identity operations never make network
+requests, including metadata requests. To validate provider membership they require
+unexpired cached coverage: on a cold/expired cache, explicitly request a latest rate
+first. This is a deliberate fail-closed constraint, not a model-memory fallback.
+Metadata has its own 24-hour TTL (`metadata_cache_seconds`); quote TTL is one hour.
+Display rounding is half-even: JPY whole units, other currencies two decimal places.
+This is a display policy, not a claim about every currency's legal minor units.
+Accepted amounts are 0 through 1,000,000,000,000, at most 24 significant digits and
+12 decimal places; scientific notation, negatives and nonfinite values are rejected.
+
+Controls must be entered on their own line:
+
+```text
+/cache
+/cache-clear
+/refresh-rate
+/stop
+/quit
+```
+
+`/refresh-rate` submits a new broker request for the last sourced pair and bypasses
+fresh cache. Cache clearing does not erase task evidence or replay requests.
+Stale fallback is disabled by default; enabling it explicitly still labels dated
+cached information and keeps its original retrieval timestamp. An invalid cache
+file is preserved for manual inspection and not served.
+
+Repeat the checks explicitly (use new report filenames, never overwrite failures):
+
+```powershell
+.\.venv\Scripts\python.exe -m pytest -q
+.\.venv\Scripts\python.exe -m ruff check .
+.\.venv\Scripts\python.exe -m ruff format --check .
+.\.venv\Scripts\python.exe -m pip check
+
+.\.venv\Scripts\python.exe -m jarvis currency-check --live `
+  --public-data-config "$env:LOCALAPPDATA\Jarvis\public-data.toml" `
+  --report .\docs\evaluations\m3-provider-next.json
+
+.\.venv\Scripts\python.exe -m jarvis eval-m3 --live --profile $jarvisProfile `
+  --public-data-config "$env:LOCALAPPDATA\Jarvis\public-data.toml" `
+  --report .\docs\evaluations\m3-model-next.json
+
+.\.venv\Scripts\python.exe -m jarvis doctor --profile $jarvisProfile `
+  --public-data-config "$env:LOCALAPPDATA\Jarvis\public-data.toml" `
+  --evaluation-report .\docs\evaluations\m3-qwen3-8b-v2-r2.json
+```
+
+`currency-check` exercises real retrieval through the broker using scripted lab
+proposals, not local-model inference. `eval-m3` uses the real configured Ollama
+model and `Conversation` path, real provider for live cases, a disabled-policy case,
+and a clearly labeled simulated provider outage. Doctor is observational and
+does not contact the public provider. No physical network isolation is claimed
+by M3's outage test; disconnect networking manually if testing that separately.
+Neither command opens/focuses/closes Notepad. Report hashes bind the current
+currency contract, corpus, model profile/runtime identity and public-data config.
+The 100% / zero-desktop-action gate is separate from M1/M2 qualification.
+
+M3 ends here. No arbitrary URLs, browsing, transactions, Notepad typing/saving,
+cloud inference, additional models or M4 capabilities were added.

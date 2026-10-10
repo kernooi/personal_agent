@@ -95,6 +95,10 @@ def parse_decision(raw: bytes, version: str = "decision-v1") -> Decision:
         payload = json.loads(
             raw.decode("utf-8"), object_pairs_hook=unique_object, parse_constant=reject_constant
         )
+        if version == "currency-decision-v1":
+            from jarvis.currency_decisions import parse
+
+            return parse(raw)
         if version not in {"decision-v1", "decision-m2-v1"}:
             raise ValueError("Unknown decision version")
         boundary = BOUNDARY_M2 if version == "decision-m2-v1" else BOUNDARY
@@ -228,6 +232,7 @@ class ModelRequest:
     schema: dict[str, Any]
     deadline: float
     messages: tuple[Message, ...]
+    decision_boundary: Literal["currency-decision-v1"] | None = None
 
 
 @dataclass(frozen=True)

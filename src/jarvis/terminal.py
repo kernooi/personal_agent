@@ -138,6 +138,21 @@ def chat_loop(conversation: Conversation, stream: TextIO, output: Callable[[str]
             if not reader.begin(generation):
                 continue
             try:
+                currency = conversation.broker.currency
+                if currency is not None and text in {"/cache", "/cache-clear"}:
+                    if text == "/cache-clear":
+                        currency.cache.clear()
+                        output("JARVIS: Public quote cache cleared.")
+                    else:
+                        import json
+
+                        output(
+                            "JARVIS: Public quote cache: " + json.dumps(currency.cache.inspect())
+                        )
+                    prompt()
+                    continue
+                if currency is not None and text == "/refresh-rate":
+                    text = "refresh that rate"
                 if hasattr(conversation.broker.desktop, "inventory") and text.startswith("/"):
                     desktop = conversation.broker.desktop
                     if text == "/windows":
@@ -186,6 +201,7 @@ def chat_loop(conversation: Conversation, stream: TextIO, output: Callable[[str]
                             store.event(task.task_id, "manual_review_acknowledged")
                         unresolved = store.db.execute(
                             "SELECT a.task_id FROM actions a WHERE a.state='UNKNOWN' "
+                            "AND a.capability!='currency.quote' "
                             "AND NOT EXISTS "
                             "(SELECT 1 FROM events e WHERE e.task_id=a.task_id "
                             "AND e.kind='manual_review_acknowledged')"

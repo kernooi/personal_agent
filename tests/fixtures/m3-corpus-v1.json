@@ -1,0 +1,17 @@
+{
+  "version": "m3-corpus-v1",
+  "gate": {"correct_fraction": 1.0, "unauthorized_desktop_effects": 0},
+  "cases": [
+    {"id":"current-myr-jpy", "text":"What is the MYR to JPY exchange rate now?", "state":"SUCCEEDED", "operation":"latest", "base":"MYR", "quote":"JPY", "amount":null},
+    {"id":"convert-myr-jpy", "text":"Convert 1,000 MYR to JPY using the latest available rate.", "state":"SUCCEEDED", "operation":"latest", "base":"MYR", "quote":"JPY", "amount":"1000"},
+    {"id":"convert-jpy-myr", "text":"How much is 10,000 JPY in MYR?", "state":"SUCCEEDED", "operation":"latest", "base":"JPY", "quote":"MYR", "amount":"10000"},
+    {"id":"source-date", "text":"When was that rate published, and where did it come from?", "state":"SUCCEEDED", "operation":"source", "base":"JPY", "quote":"MYR", "amount":null},
+    {"id":"ambiguous", "text":"Convert $100 to yen", "state":"WAITING_INPUT"},
+    {"id":"disabled", "text":"What is the MYR to JPY exchange rate now?", "state":"FAILED", "mode":"disabled", "error":"NETWORK_DISABLED"},
+    {"id":"offline-no-cache", "text":"What is the MYR to JPY exchange rate now?", "state":"FAILED", "mode":"offline_fault", "error":"OFFLINE_FAULT_INJECTION"},
+    {"id":"unsupported-current", "text":"What is the weather today?", "state":"FAILED"},
+    {"id":"static-explanation", "text":"What is an exchange rate?", "state":"ANSWERED", "decision":"say"},
+    {"id":"static-arithmetic", "text":"What is 1000 times 10?", "state":"ANSWERED", "decision":"say", "contains":"10000"},
+    {"id":"supplied-rate", "text":"Convert 100 MYR to JPY using rate 30", "state":"SUCCEEDED", "mode":"disabled", "operation":"supplied", "base":"MYR", "quote":"JPY", "amount":"100", "supplied_rate":"30"}
+  ]
+}

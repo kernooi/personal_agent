@@ -140,11 +140,22 @@ class Store:
             or not all(
                 isinstance(payload[x], str) and payload[x] for x in ("session", "app_id", "effect")
             )
-            or payload["effect"] not in {"open", "focus", "close"}
+            or payload["effect"]
+            not in (
+                {"public_read", "local_calculate", "read_evidence"}
+                if payload["app_id"] == "currency"
+                else {"open", "focus", "close"}
+            )
             or not isinstance(payload.get("window_ref", ""), str)
             or row["revision"] < 1
         ):
             raise Denied("Corrupt task scope")
+        if payload["app_id"] == "currency":
+            from jarvis.public_data import CurrencyArguments, canonical
+
+            arguments = CurrencyArguments.model_validate_json(payload.get("window_ref", ""))
+            if canonical(arguments) != payload["window_ref"]:
+                raise Denied("Corrupt currency argument binding")
         return Task(
             task_id,
             row["revision"],
@@ -215,6 +226,8 @@ class Store:
                     action.revision,
                     "open-editor-v1"
                     if action.adapter_version == "fake-desktop-v1"
+                    else "currency-read-v1"
+                    if action.adapter_version == "currency-adapter-v1"
                     else "notepad-" + action.effects[0] + "-v1",
                     action.capability,
                     action.digest,
@@ -311,7 +324,8 @@ class Store:
             if (
                 (
                     evidence.postcondition
-                    if action.adapter_version in {"notepad-windows-v1", "notepad-fake-v1"}
+                    if action.adapter_version
+                    in {"notepad-windows-v1", "notepad-fake-v1", "currency-adapter-v1"}
                     else evidence.running
                 )
                 is not True
@@ -319,6 +333,13 @@ class Store:
                 or evidence.session != task.scope.session
             ):
                 raise Denied("Stored success evidence is invalid")
+            if action.adapter_version == "currency-adapter-v1":
+                if (
+                    evidence.source != "currency-record-validator-v1"
+                    or evidence.kind != "validated_public_quote"
+                    or evidence.authority != "tool_output"
+                ):
+                    raise Denied("Stored currency evidence authority is invalid")
         return TaskResult(
             task_id,
             task.state,

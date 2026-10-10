@@ -5,9 +5,16 @@ M2 is approved: genuine installed Microsoft Windows Notepad only, through the
 existing broker. Simulation is default; real mode requires explicit selection,
 trusted private registration and attended-session consent. The user replaced the
 specification's custom-editor fixture with Notepad; see docs/decisions/0002-notepad.md.
-Runtime networking is limited to 127.0.0.1:11434. No arbitrary shell, generated
-code, installation tools, generic input, plugins or M3 capabilities.
-Preserve unrelated work. Stop at M2. Ollama installation
+Local inference networking is limited to 127.0.0.1:11434. M3 is approved:
+fixed HTTPS Frankfurter/ECB public currency retrieval through
+the existing broker, separately configured from local inference and Windows
+control. Disclose only pair parameters; calculate amounts locally. No arbitrary shell, generated
+code, installation tools, generic input, plugins or M4 capabilities.
+Currency coverage is generic and discovered from bounded, validated ECB provider
+metadata; never substitute a manually invented support list. Membership is distinct
+from fresh pair availability. Local identity/supplied-rate calculations must not fetch.
+Retain the historical M3 v1 corpus/results; generic M3 v2 retains the 100% gate.
+Preserve unrelated work. Stop at M3. Ollama installation
 and model downloads require explicit setup approval; never silently substitute fake/cloud.
 
 The model proposes; only the broker executes. Strictly parse whole decisions,

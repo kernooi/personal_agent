@@ -38,9 +38,17 @@ def main() -> None:
     lab.add_argument("--interactive", action="store_true")
     lab.add_argument("--takeover-only", action="store_true")
     lab.add_argument("--prepared-synthetic", action="store_true")
-    for command in ("doctor", "chat", "eval", "eval-m2", "eval-m2-chat"):
+    currency = sub.add_parser(
+        "currency-check", help="Explicit live public adapter check; no model or Windows effects"
+    )
+    currency.add_argument("--public-data-config", type=Path, required=True)
+    currency.add_argument("--live", action="store_true", required=True)
+    currency.add_argument("--report", type=Path, required=True)
+    for command in ("doctor", "chat", "eval", "eval-m2", "eval-m2-chat", "eval-m3"):
         child = sub.add_parser(command, help=f"Local {command}; real chat requires explicit opt-in")
         child.add_argument("--profile", type=Path, required=True)
+        if command in {"doctor", "chat", "eval-m3"}:
+            child.add_argument("--public-data-config", type=Path, required=command == "eval-m3")
         if command == "doctor":
             child.add_argument("--evaluation-report", type=Path)
         if command == "chat":
@@ -49,7 +57,7 @@ def main() -> None:
             child.add_argument("--registration", type=Path)
             child.add_argument("--model-report", type=Path)
             child.add_argument("--conversation-report", type=Path)
-        if command in {"eval", "eval-m2", "eval-m2-chat"}:
+        if command in {"eval", "eval-m2", "eval-m2-chat", "eval-m3"}:
             child.add_argument("--live", action="store_true", required=True)
             child.add_argument("--report", type=Path)
         if command == "eval":
@@ -58,6 +66,16 @@ def main() -> None:
             )
             child.add_argument("--repeats", type=int, choices=(1, 2, 3), default=1)
     args = parser.parse_args()
+    if args.command == "currency-check":
+        from jarvis.currency_tools import load_public_config
+        from jarvis.m3_evaluation import provider_check
+
+        try:
+            report, code = provider_check(load_public_config(args.public_data_config), args.report)
+        except (OSError, ValueError) as exc:
+            parser.error(str(exc))
+        print(json.dumps(report, indent=2))
+        raise SystemExit(code)
     if args.command == "inspect-notepad":
         import threading
 
@@ -145,6 +163,32 @@ def live_command(args, parser):
         parser.error("Profile unavailable or invalid; see the strict M1 profile examples")
     if not isinstance(profile, OllamaProfile):
         parser.error("M1 commands require an explicit Ollama profile; no fake fallback")
+    public_config = None
+    if getattr(args, "public_data_config", None) is not None:
+        from jarvis.currency_tools import load_public_config
+
+        try:
+            public_config = load_public_config(args.public_data_config)
+        except (OSError, ValueError):
+            parser.error("Public-data configuration unavailable or invalid")
+        if public_config.mode == "fixture":
+            parser.error(
+                "Fixture mode requires explicit fixture-provider injection in tests; "
+                "no live fallback"
+            )
+    if args.command == "eval-m3":
+        from jarvis.m3_evaluation import evaluate as evaluate_m3
+
+        if args.report is None:
+            parser.error("eval-m3 requires --report; existing reports are never overwritten")
+        try:
+            report, code = evaluate_m3(profile, public_config, args.report)
+        except (OSError, ValueError) as exc:
+            parser.error(str(exc))
+        print(
+            json.dumps({key: value for key, value in report.items() if key != "records"}, indent=2)
+        )
+        raise SystemExit(code)
     if args.command in {"eval-m2", "eval-m2-chat"}:
         from jarvis.m2_evaluation import evaluate_m2
 
@@ -187,15 +231,29 @@ def live_command(args, parser):
             or standard.is_file()
             or (portable.exists() and any(portable.glob("ollama-*/bin/ollama.exe")))
         )
+        selected_summary = read_evaluation_summary(args.evaluation_report, profile, metadata)
+        if public_config and args.evaluation_report:
+            from jarvis.m3_evaluation import qualification_summary
+
+            m3_summary = qualification_summary(
+                args.evaluation_report, profile, metadata, public_config
+            )
+            if m3_summary["status"] == "passed":
+                selected_summary = m3_summary
         print(
             json.dumps(
                 {
                     "cli_installed": installed,
                     "execution_mode": "simulation",
-                    "last_evaluation": read_evaluation_summary(
-                        args.evaluation_report, profile, metadata
-                    ),
+                    "public_data": public_config.model_dump()
+                    if public_config
+                    else {"mode": "disabled"},
+                    "public_provider_contacted": False,
+                    "last_evaluation": selected_summary,
                     **metadata,
+                    "qualification": "M3 currency/chat passed; Windows qualification is separate"
+                    if selected_summary.get("milestone") == "M3 narrow public currency/chat"
+                    else metadata.get("qualification"),
                 },
                 indent=2,
             )
@@ -250,15 +308,30 @@ def live_command(args, parser):
         print("Model unqualified for real actions; local-mode evidence is user/operator verified.")
     data_home = Path(os.environ.get("LOCALAPPDATA", Path.home() / ".local/share")) / "Jarvis"
     data_home.mkdir(parents=True, exist_ok=True)
+    if public_config:
+        print(f"Public currency data: {public_config.mode} | provider=Frankfurter v2 / ECB.")
+        print(
+            "Public-data controls: /cache, /cache-clear, /refresh-rate. "
+            "Windows permission is separate."
+        )
     try:
         broker = build(
-            data_home / ("m2-journal.sqlite" if args.real else "journal.sqlite"),
+            data_home
+            / (
+                "m2-journal.sqlite"
+                if args.real
+                else "m3-journal.sqlite"
+                if public_config
+                else "journal.sqlite"
+            ),
             profile,
             provider=provider,
             session=str(uuid4()),
             real=args.real,
             registration=args.registration,
             attended=args.attended,
+            public_config=public_config,
+            cache_path=data_home / "public-quotes-v2.json" if public_config else None,
         )
     except (OSError, sqlite3.Error, ValueError):
         provider.close()
@@ -273,6 +346,7 @@ def live_command(args, parser):
         if args.real:
             pending = broker.store.db.execute(
                 "SELECT DISTINCT a.task_id FROM actions a WHERE a.state='UNKNOWN' "
+                "AND a.capability!='currency.quote' "
                 "AND NOT EXISTS (SELECT 1 FROM events e WHERE e.task_id=a.task_id "
                 "AND e.kind='manual_review_acknowledged')"
             ).fetchall()

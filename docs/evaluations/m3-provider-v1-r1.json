@@ -1,0 +1,92 @@
+{
+  "version": "m3-provider-v1",
+  "checked_at_utc": "2026-10-10T06:48:17.940206+00:00",
+  "contract_sha256": "70038554ea71e3d790313c5b02747db69633056c8ad3965a8f797dc1be31f9ac",
+  "config": {
+    "mode": "enabled",
+    "provider": "frankfurter_ecb",
+    "display_timezone": "Asia/Kuala_Lumpur",
+    "timeout_seconds": 12.0,
+    "max_response_bytes": 8192,
+    "cache_seconds": 3600,
+    "max_observation_days": 7,
+    "stale_cache_seconds": 86400,
+    "allow_stale_cache": false,
+    "max_cache_entries": 8
+  },
+  "local_model_used": false,
+  "desktop_execution_calls": 0,
+  "records": [
+    {
+      "base": "MYR",
+      "quote": "JPY",
+      "state": "SUCCEEDED",
+      "latency_seconds": 1.006,
+      "error": null,
+      "observation": {
+        "source_id": "src_2cf5961768d04c2ba407ec7a1439ea1a",
+        "adapter_version": "frankfurter-ecb-v1",
+        "provider": "Frankfurter v2 / ECB",
+        "provenance": "ECB reference rates, served and pair-derived by Frankfurter",
+        "source_url": "https://api.frankfurter.dev/v2/providers/ecb/rate/myr/jpy",
+        "original_source_url": "https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/index.en.html",
+        "base": "MYR",
+        "quote": "JPY",
+        "rate": "38.74",
+        "unit_base": 1,
+        "basis": "daily reference estimate; provider-derived pair",
+        "effective_date": "2026-10-09",
+        "effective_precision": "date",
+        "retrieved_at_utc": "2026-10-10T06:48:16.949645+00:00",
+        "expires_at_utc": "2026-10-10T07:48:16.949645+00:00",
+        "freshness": "latest_available_daily",
+        "validation": "validated",
+        "sensitivity": "public"
+      },
+      "connection_receipt": {
+        "connected_public_ip": "2606:4700:20::681a:f40",
+        "tls_hostname": "api.frankfurter.dev",
+        "tls_verification": true,
+        "redirects": false,
+        "environment_proxies": false
+      },
+      "correct": true
+    },
+    {
+      "base": "JPY",
+      "quote": "MYR",
+      "state": "SUCCEEDED",
+      "latency_seconds": 0.981,
+      "error": null,
+      "observation": {
+        "source_id": "src_19cccd31e68f4a2984738848532a0794",
+        "adapter_version": "frankfurter-ecb-v1",
+        "provider": "Frankfurter v2 / ECB",
+        "provenance": "ECB reference rates, served and pair-derived by Frankfurter",
+        "source_url": "https://api.frankfurter.dev/v2/providers/ecb/rate/jpy/myr",
+        "original_source_url": "https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/index.en.html",
+        "base": "JPY",
+        "quote": "MYR",
+        "rate": "0.02581",
+        "unit_base": 1,
+        "basis": "daily reference estimate; provider-derived pair",
+        "effective_date": "2026-10-09",
+        "effective_precision": "date",
+        "retrieved_at_utc": "2026-10-10T06:48:17.932244+00:00",
+        "expires_at_utc": "2026-10-10T07:48:17.932244+00:00",
+        "freshness": "latest_available_daily",
+        "validation": "validated",
+        "sensitivity": "public"
+      },
+      "connection_receipt": {
+        "connected_public_ip": "2606:4700:20::681a:f40",
+        "tls_hostname": "api.frankfurter.dev",
+        "tls_verification": true,
+        "redirects": false,
+        "environment_proxies": false
+      },
+      "correct": true
+    }
+  ],
+  "passed": true
+}
