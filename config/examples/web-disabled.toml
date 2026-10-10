@@ -1,0 +1,6 @@
+# Web research and the separate infrastructure permission are off by default.
+enabled = false
+provider = "searxng"
+search_endpoint = "http://127.0.0.1:8080/search"
+local_search_authorized = false
+timezone = "Asia/Kuala_Lumpur"

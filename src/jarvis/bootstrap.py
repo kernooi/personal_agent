@@ -51,6 +51,9 @@ def build(
     public_config=None,
     currency_provider=None,
     cache_path=None,
+    web_config=None,
+    search_provider=None,
+    page_fetcher=None,
 ) -> Broker:
     if real and (
         not attended or registration is None or profile.decision_version != "decision-m2-v1"
@@ -127,6 +130,12 @@ def build(
         registry.extended = profile.prompt_version == "planner-m2-v10"
         if public_config is not None and hasattr(registry.underlying, "m2"):
             registry.underlying.extended = registry.extended
+    if web_config is not None:
+        from jarvis.web_tools import WebAdapter, WebRegistry
+
+        registry = WebRegistry(
+            registry, WebAdapter(clock, web_config, search_provider, page_fetcher)
+        )
     grant = Grant(
         "fixture-owner-grant",
         session,
@@ -146,10 +155,18 @@ def build(
             apps=grant.apps | {"currency"},
             effects=grant.effects | {"public_read", "local_calculate", "read_evidence"},
         )
+    if web_config is not None:
+        from dataclasses import replace
+
+        grant = replace(
+            grant,
+            apps=grant.apps | {"web"},
+            effects=grant.effects | {"web_public_read", "web_evidence"},
+        )
     if real:
         unresolved = store.db.execute(
             "SELECT a.task_id FROM actions a WHERE a.state='UNKNOWN' "
-            "AND a.capability!='currency.quote' AND NOT EXISTS "
+            "AND a.capability NOT IN ('currency.quote','web.research') AND NOT EXISTS "
             "(SELECT 1 FROM events e WHERE e.task_id=a.task_id "
             "AND e.kind='manual_review_acknowledged')"
         ).fetchone()

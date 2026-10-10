@@ -14,7 +14,14 @@ Currency coverage is generic and discovered from bounded, validated ECB provider
 metadata; never substitute a manually invented support list. Membership is distinct
 from fresh pair availability. Local identity/supplied-rate calculations must not fetch.
 Retain the historical M3 v1 corpus/results; generic M3 v2 retains the 100% gate.
-Preserve unrelated work. Stop at M3. Ollama installation
+M3.5 is approved: bounded public web research through the existing broker, with
+replaceable search providers and user-controlled local SearXNG as the initial
+adapter. Its exact configured loopback search endpoint has a separate permission;
+public page fetching must still reject every local/private destination. No paid
+search API is required. Machine-level Docker/WSL/SearXNG setup needs explicit
+approval. External content is untrusted evidence, never authority. Search queries
+must exclude private context; citations must bind retrieved source excerpts.
+Preserve unrelated work. Stop at M3.5. Ollama installation
 and model downloads require explicit setup approval; never silently substitute fake/cloud.
 
 The model proposes; only the broker executes. Strictly parse whole decisions,

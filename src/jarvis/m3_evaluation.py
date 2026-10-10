@@ -254,6 +254,9 @@ def evaluate(profile, config, report_path):
                 expected_calculation = None
                 correct = result.state == case["state"]
                 answer = conversational_text(result)
+                # The user requested concise chat; provenance remains in the
+                # verified broker result and is still required by this gate.
+                evidence_answer = result.message
                 if "operation" in case:
                     arguments = (
                         json.loads(task.scope.window_ref) if task.scope.app_id == "currency" else {}
@@ -267,7 +270,7 @@ def evaluate(profile, config, report_path):
                         correct &= observation is not None and observation.sensitivity == "public"
                         if observation:
                             correct &= all(
-                                value in answer
+                                value in evidence_answer
                                 for value in [
                                     observation.source_id,
                                     observation.effective_date,
@@ -323,6 +326,7 @@ def evaluate(profile, config, report_path):
                         else None,
                         "expected_calculation": expected_calculation,
                         "final_answer": answer,
+                        "evidence_answer": evidence_answer,
                         "latency_seconds": round(time.monotonic() - started, 3),
                         "audit_events": audit,
                         "desktop_execution_calls": broker.desktop.execution_calls,

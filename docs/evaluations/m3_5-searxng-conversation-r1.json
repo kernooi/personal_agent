@@ -1,0 +1,7 @@
+{
+  "scope": "Development live conversation smoke attempt; not qualification",
+  "passed": false,
+  "reporting_error": "AttributeError: NotepadDesktop has no effect_count attribute",
+  "records_available": false,
+  "note": "Requests ran in a temporary simulated desktop session, but the lab failed before saving records. No conversation success is credited. A corrected separately named run is required."
+}

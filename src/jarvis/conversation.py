@@ -10,7 +10,7 @@ from jarvis.models import Message
 
 def conversational_text(result: TaskResult) -> str:
     """Keep broker diagnostics out of non-action replies and model history."""
-    text = result.message
+    text = result.display_message if result.display_message is not None else result.message
     if result.decision_kind in {"say", "clarify", "unsupported"}:
         prefixes = tuple(
             f"SIMULATED: {kind}; no action verified. " for kind in ("say", "clarify", "unsupported")

@@ -61,6 +61,9 @@ class Broker:
         self.last_error: str | None = None
         self.last_reply: ModelReply | None = None
         self.currency = getattr(registry, "currency", None)
+        self.web = getattr(registry, "web", None)
+        if self.web is not None:
+            self.web.broker = self
 
     def submit(self, request: UserRequest):
         text = request.text.strip().rstrip(".").casefold()
@@ -85,7 +88,7 @@ class Broker:
             raise Denied("Missing authenticated request identity")
         if len(request.request_key) > 128 or len(request.session) > 128:
             raise Denied("Request identity too long")
-        if scope.app_id == "currency" and self.currency is not None:
+        if scope.app_id in {"currency", "web"}:
             self.grant = replace(
                 self.grant, expires_at=self.clock.now() + self.profile.task_seconds
             )
@@ -105,7 +108,12 @@ class Broker:
             request.request_key,
             scope,
             fingerprint,
-            self.clock.now() + profile.task_seconds,
+            self.clock.now()
+            + (
+                min(profile.task_seconds, self.web.config.task_seconds)
+                if scope.app_id == "web"
+                else profile.task_seconds
+            ),
             {
                 **profile.model_dump(exclude={"reply"}),
                 "execution_mode": "windows"
@@ -129,9 +137,15 @@ class Broker:
             if self._cancelled(task.task_id):
                 return self._result(task.task_id)
             route = currency_route
-            if route and route.kind in {"clarify", "unsupported"}:
+            if scope.app_id != "web" and route and route.kind in {"clarify", "unsupported"}:
                 return self._non_action(task.task_id, Decision(route.kind, text=route.message))
-            if scope.app_id == "currency":
+            if scope.app_id == "web":
+                # The owner router binds the public topic. Local model planning and
+                # source selection happen inside the admitted, bounded read adapter.
+                from jarvis.web_decisions import plan_owner
+
+                decision = plan_owner(self, task)
+            elif scope.app_id == "currency":
                 from jarvis.currency_decisions import plan
 
                 decision = plan(self, task, request)
@@ -215,7 +229,7 @@ class Broker:
             approval = self.approve(action)
             authorize(self.store.get(task.task_id), action, self.grant, approval, self.clock.now())
             self.store.transition(task.task_id, State.READY)
-            self.dispatch(action, approval)
+            return self.dispatch(action, approval)
         except Handoff as exc:
             self.last_error = "MANUAL_HANDOFF"
             self.store.transition(task.task_id, State.WAITING_INPUT, str(exc))
@@ -254,7 +268,7 @@ class Broker:
         if (
             result.state == State.NEEDS_REVIEW
             and getattr(self.registry, "m2", False)
-            and self.store.get(task_id).scope.app_id != "currency"
+            and self.store.get(task_id).scope.app_id not in {"currency", "web"}
         ):
             self.desktop.review_task_id = task_id
             result = replace(
@@ -266,6 +280,15 @@ class Broker:
                     f"/review {task_id} manually-handled. I will not repeat the operation."
                 ),
             )
+        if self.store.get(task_id).scope.app_id == "web":
+            if result.state == State.FAILED:
+                result = replace(
+                    result,
+                    message="I could not complete web research ("
+                    + (self.last_error or "RESEARCH_FAILED")
+                    + "). No unverified factual answer is supplied.",
+                )
+            return replace(result, simulated=False)
         if self.store.get(task_id).scope.app_id == "currency":
             if result.state == State.FAILED:
                 result = replace(
@@ -311,8 +334,14 @@ class Broker:
         )
 
     def dispatch(self, action: PreparedAction, approval: Approval | None = None):
-        adapter = self.currency if action.capability == "currency.quote" else self.desktop
-        if action.capability == "currency.quote":
+        adapter = (
+            self.currency
+            if action.capability == "currency.quote"
+            else self.web
+            if action.capability == "web.research"
+            else self.desktop
+        )
+        if action.capability in {"currency.quote", "web.research"}:
             adapter.cancel = lambda: self._cancelled(action.task_id)
         self.registry.validate(action)
         auth = authorize(
@@ -356,7 +385,7 @@ class Broker:
             )
             return self._result(action.task_id)
         except Exception as exc:
-            if action.capability == "currency.quote":
+            if action.capability in {"currency.quote", "web.research"}:
                 from jarvis.public_data import PublicDataError
 
                 self.last_error = (
@@ -383,7 +412,7 @@ class Broker:
         try:
             evidence = adapter.observe(action)
         except Exception as exc:
-            if action.capability == "currency.quote":
+            if action.capability in {"currency.quote", "web.research"}:
                 from jarvis.public_data import PublicDataError
 
                 self.last_error = (
@@ -412,7 +441,10 @@ class Broker:
         observed = (
             evidence.postcondition
             if evidence
-            and (getattr(self.registry, "m2", False) or action.capability == "currency.quote")
+            and (
+                getattr(self.registry, "m2", False)
+                or action.capability in {"currency.quote", "web.research"}
+            )
             else evidence.running
             if evidence
             else None
@@ -420,9 +452,11 @@ class Broker:
         if not matches or observed is None:
             self.store.complete(
                 action_id,
-                "FAILED" if action.capability == "currency.quote" else "UNKNOWN",
+                "FAILED" if action.capability in {"currency.quote", "web.research"} else "UNKNOWN",
                 evidence,
-                State.FAILED if action.capability == "currency.quote" else State.NEEDS_REVIEW,
+                State.FAILED
+                if action.capability in {"currency.quote", "web.research"}
+                else State.NEEDS_REVIEW,
                 "SIMULATED: postcondition unverified; outcome unknown; no replay.",
             )
         elif observed is not True:
@@ -446,7 +480,7 @@ class Broker:
                 (
                     "Currency lookup cancelled; no answer published."
                     " A request already sent cannot be retracted."
-                    if current.cancelled and action.capability == "currency.quote"
+                    if current.cancelled and action.capability in {"currency.quote", "web.research"}
                     else (
                         adapter.success_message(action)
                         if hasattr(adapter, "success_message")
@@ -459,7 +493,10 @@ class Broker:
                     else ""
                 ),
             )
-        return self._result(action.task_id)
+        result = self._result(action.task_id)
+        if result.state == State.SUCCEEDED and hasattr(adapter, "concise_message"):
+            result = replace(result, display_message=adapter.concise_message(action))
+        return result
 
     def recover(self):
         # Recovery never executes, even when an admitted effect appears absent.
@@ -478,7 +515,7 @@ class Broker:
             except ValueError:
                 valid = False
             if row["state"] == "DISPATCHING":
-                if row["capability"] == "currency.quote":
+                if row["capability"] in {"currency.quote", "web.research"}:
                     if task.state == State.RUNNING:
                         self.store.transition(task.task_id, State.VERIFYING)
                     self.store.complete(
@@ -520,7 +557,7 @@ class Broker:
             self.desktop.blocked_unknown = (
                 self.store.db.execute(
                     "SELECT a.task_id FROM actions a WHERE a.state='UNKNOWN' "
-                    "AND a.capability!='currency.quote' AND NOT EXISTS "
+                    "AND a.capability NOT IN ('currency.quote','web.research') AND NOT EXISTS "
                     "(SELECT 1 FROM events e WHERE e.task_id=a.task_id "
                     "AND e.kind='manual_review_acknowledged')"
                 ).fetchone()

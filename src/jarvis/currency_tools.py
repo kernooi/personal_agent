@@ -293,6 +293,12 @@ class CurrencyAdapter:
         args = CurrencyArguments.model_validate_json(action.window_ref, strict=True)
         return render(args, self.observation, status=self.last_status, failure=self.failure)
 
+    def concise_message(self, action):
+        args = CurrencyArguments.model_validate_json(action.window_ref, strict=True)
+        return render(
+            args, self.observation, status=self.last_status, failure=self.failure, concise=True
+        )
+
 
 def load_public_config(path):
     import tomllib

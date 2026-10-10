@@ -2,8 +2,9 @@
 
 import re
 from dataclasses import dataclass
+from decimal import localcontext
 
-from jarvis.public_data import CurrencyArguments, PublicDataError, canonical
+from jarvis.public_data import CurrencyArguments, PublicDataError, canonical, number
 
 NUM = r"(?:[0-9]{1,3}(?:,[0-9]{3})+|[0-9]+)(?:\.[0-9]+)?"
 # Language aliases are not a support list: provider metadata remains authoritative.
@@ -55,6 +56,90 @@ def resolved(base, quote, amount=None, supplied=None, refresh=False):
         )
 
 
+def quantity_conversion(value, context=None):
+    """Resolve a complete quantity/unit-price request, without evaluating code.
+
+    Item names are labels, never provider parameters. Full matching prevents
+    silently ignoring another purchase, tax, discount, rate or action.
+    """
+    prefix = (
+        r"(?:(?:if )?(?:i|we) (?:bought|buy|purchase|purchased)|"
+        r"i said|i mean|convert|how much (?:is|are)|what (?:is|are))?"
+    )
+    purchase = re.match(
+        rf"^{prefix}\s*(?P<count>{NUM})\s+"
+        r"(?P<items>[a-z]+(?: [a-z]+){0,2}?)\s+"
+        r"(?:each (?:worth|costing|priced at)|at|for)\s+"
+        rf"(?P<price>{NUM})(?:\s*(?P<base>[a-z]{{3}})\b)?(?:\s+each)?",
+        value,
+    )
+    if purchase:
+        reference = (
+            rf"(?:(?:the )?{re.escape(purchase['count'])}\s+"
+            rf"{re.escape(purchase['items'])}|(?:all )?(?:the )?"
+            rf"(?:{re.escape(purchase['items'])}|items|these|those|them)|that|it|the total)"
+        )
+        tail = re.fullmatch(
+            r"[.,;]?\s*(?:"
+            rf"(?:how|what) much (?:would|will) {reference} (?:be(?: worth)?|worth|cost|come to)|"
+            rf"(?:how|what) much (?:is|are) {reference}(?: worth)?|"
+            r"what (?:is|would be) (?:the )?(?:total|cost|price)"
+            r")?\s*(?:in|to)\s+(?P<quote>[a-z]{3})",
+            value[purchase.end() :].strip(),
+        )
+        remainder = value[purchase.end() :].strip()
+        if not remainder and context is not None:
+            if purchase["base"] and purchase["base"].upper() != context[0]:
+                return None
+            base, quote = context
+        elif tail and purchase["base"]:
+            base, quote = purchase["base"], tail["quote"]
+        else:
+            return None
+        count, price = (
+            purchase["count"],
+            purchase["price"],
+        )
+    else:
+        product = re.fullmatch(
+            rf"(?:convert |how much is |what is )?({NUM})\s*(?:\*|x|times)\s*"
+            rf"({NUM})\s*([a-z]{{3}})\s*(?:in|to)\s*([a-z]{{3}})",
+            value,
+        )
+        if product is None:
+            return None
+        count, price, base, quote = product.groups()
+    try:
+        quantity = number(count.replace(",", ""))
+        unit_price = number(price.replace(",", ""))
+        if purchase and quantity != quantity.to_integral_value():
+            return Route("clarify", message="Please specify a whole-number item quantity.")
+        with localcontext() as decimal_context:
+            decimal_context.prec = 64
+            total = format(quantity * unit_price, "f")
+        return resolved(base.upper(), quote.upper(), amount=total)
+    except PublicDataError:
+        return Route(
+            "clarify",
+            message="Please use valid nonnegative quantities and unit prices "
+            "within the supported amount and precision limits.",
+        )
+
+
+def pending_quantity_pair(value):
+    """Keep only an explicitly stated pair for the next clarification turn."""
+    if re.search(
+        r"\b(?:fees?|tax(?:es)?|discounts?|shipping|plus|minus|and|then|using|rate)\b|[%=;]",
+        value,
+    ):
+        return None
+    prices = re.findall(rf"{NUM}\s*([a-z]{{3}})\b", value)
+    destination = re.search(r"\b(?:in|to)\s+([a-z]{3})$", value)
+    if len(prices) == 1 and destination:
+        return prices[0].upper(), destination[1].upper()
+    return None
+
+
 def route(text, previous=None, context=None):
     value = " ".join(text.strip().casefold().rstrip(".!?").split())
     if len(value) > 4096:
@@ -104,9 +189,24 @@ def route(text, previous=None, context=None):
         return Route()
     for name in sorted(ALIASES, key=len, reverse=True):
         value = re.sub(rf"\b{re.escape(name)}\b", ALIASES[name].lower(), value)
+    quantity_request = bool(
+        re.search(r"\b(?:each|apiece|per item)\b", value)
+        or re.search(rf"{NUM}\s+[a-z ]+\s+(?:at|for)\s+{NUM}", value)
+        or re.search(rf"{NUM}\s*(?:\*|x|times)\s*{NUM}\s*[a-z]{{3}}\b", value)
+    )
     currency_like = any(
         w in value for w in ("convert", "exchange rate", "currency", "how much", "myr", "jpy")
     ) or bool(re.search(r"(?:[0-9]\s*|\b)[a-z]{3}\s*(?:to|in|/|->)\s*[a-z]{3}\b", value))
+    currency_like = currency_like or (
+        quantity_request and bool(re.search(r"\b(?:in|to)\s+[a-z]{3}\b", value))
+    )
+    currency_like = currency_like or (quantity_request and context is not None)
+    currency_like = currency_like or bool(
+        re.search(
+            rf"{NUM}\s+[a-z ]+\s+(?:each (?:worth|costing|priced at)|at|for)\s+{NUM}",
+            value,
+        )
+    )
     if currency_like:
         if re.fullmatch(r"(?:what is|explain) [a-z]{3}", value):
             return Route()
@@ -129,6 +229,14 @@ def route(text, previous=None, context=None):
                 "unsupported",
                 message="Historical-date retrieval is not implemented; "
                 "request the latest available daily reference rate.",
+            )
+        if quantity_request:
+            return quantity_conversion(value, context) or Route(
+                "clarify",
+                message="Please specify one quantity, its price per item and the destination "
+                "currency, for example: 40 tickets at 40 SGD each in USD. "
+                "For fees, discounts or multiple purchases, provide the final total to convert.",
+                pending_pair=pending_quantity_pair(value),
             )
         pairs = re.findall(r"(?<![a-z])([a-z]{3})\s*(?:to|in|/|->)\s*([a-z]{3})(?![a-z])", value)
         if len(set(pairs)) != 1:

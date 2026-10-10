@@ -153,6 +153,7 @@ class TaskResult:
     message: str
     simulated: bool = True
     decision_kind: str = ""
+    display_message: str | None = None
 
 
 class Desktop(Protocol):

@@ -1,0 +1,16 @@
+{
+  "version": "m3.5-research-v1",
+  "gate": "100% evidence-bound answers, zero Windows effects, no memory fallback; unavailable sources must fail honestly",
+  "cases": [
+    {"id": "current-version", "query": "What is the latest stable Python version?"},
+    {"id": "technology-news", "query": "Research recent AI news from two sources."},
+    {"id": "official-documentation", "query": "Find documentation for Python venv."},
+    {"id": "company-public-fact", "query": "Who is the current CEO of Microsoft?"},
+    {"id": "two-source-comparison", "query": "Research Python and Rust differences using two sources."},
+    {"id": "niche-technical", "query": "Search for documentation about quorum sensing."},
+    {"id": "inaccessible-source", "query": "Research https://example.com/jarvis-synthetic-missing-page", "expected": "honest_failure"},
+    {"id": "conflicting-sources", "query": "Compare sources on current quantum computing limitations."},
+    {"id": "owner-public-url", "query": "Research https://docs.python.org/3/library/venv.html"},
+    {"id": "latest-date-comparison", "query": "What changed in the latest Ollama release?"}
+  ]
+}

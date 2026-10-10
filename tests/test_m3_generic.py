@@ -8,12 +8,195 @@ from test_m3 import NOW, ask, payload
 from test_m3 import broker as currency_broker
 
 from jarvis.currency_provider import FixtureProvider
+from jarvis.currency_router import route
 from jarvis.domain import State
 from jarvis.public_catalogue import CatalogueCache, parse_catalogue, validate_catalogue
 from jarvis.public_data import METADATA_URL, PublicConfig, PublicDataError, conversion, endpoint
 from jarvis.public_transport import validate_url
 
 broker = currency_broker
+
+
+@pytest.mark.parametrize("subject", ["40 tickets", "the 40 tickets", "these"])
+@pytest.mark.parametrize(
+    "question",
+    [
+        "how much would {subject} worth",
+        "how much would {subject} be worth",
+        "how much are {subject} worth",
+        "what much would {subject} worth",
+    ],
+)
+def test_quantity_worth_question_variants(broker, subject, question):
+    from jarvis.conversation import conversational_text
+
+    text = "if i buy 40 tickets each worth 40 sgd. " + question.format(subject=subject) + " in usd"
+    result = ask(broker, text)
+    assert result.state == State.SUCCEEDED, result
+    assert conversational_text(result).startswith("1600 SGD = ")
+    assert broker.currency.provider.calls == [("SGD", "USD")]
+    assert broker.desktop.execution_calls == 0
+
+
+def test_worth_question_does_not_ignore_mismatched_quantity_or_discount():
+    for tail in [
+        "how much would 50 tickets worth in USD",
+        "how much would 40 tickets worth in USD with 10% discount",
+    ]:
+        assert route("40 tickets each worth 40 SGD. " + tail).kind == "clarify"
+
+
+def test_reported_typo_and_quantity_followup_use_session_pair(broker):
+    from test_m3 import reply
+
+    from jarvis.conversation import Conversation, conversational_text
+
+    conversation = Conversation(broker)
+    texts = [
+        "if i buy 40 tickets each worth 40 sgd. what much would the 40 tickets be in usd",
+        "i said 40 tickets each worth 40",
+    ]
+    for text in texts:
+        broker.registry.scope_for(broker.grant.session, text)
+        args = broker.registry.route.arguments
+        assert args is not None and args.amount == "1600"
+        broker.profile = broker.profile.model_copy(update={"reply": reply(args.model_dump())})
+        result = conversation.submit(text)
+        assert result.state == State.SUCCEEDED
+        assert conversational_text(result).startswith("1600 SGD = ")
+    assert broker.currency.provider.calls == [("SGD", "USD")]
+
+
+def test_quantity_clarification_retains_only_explicit_pair(broker):
+    first = ask(broker, "40 tickets at 40 SGD each, tell me the total in USD")
+    assert first.state == State.WAITING_INPUT
+    assert not broker.currency.provider.calls
+    second = ask(broker, "i said 40 tickets each worth 40")
+    assert second.state == State.SUCCEEDED
+    assert "1600 SGD = " in second.message
+    assert broker.currency.provider.calls == [("SGD", "USD")]
+
+
+def test_quantity_context_cannot_cross_session_or_intervening_chat(broker):
+    ask(broker, "40 tickets at 40 SGD each, tell me the total in USD")
+    other = broker.registry.scope_for("another-session", "i said 40 tickets each worth 40")
+    assert other.app_id != "currency"
+    ask(broker, "Hello")
+    assert route("i said 40 tickets each worth 40").arguments is None
+    assert not broker.currency.provider.calls
+
+
+def test_quantity_followup_cannot_silently_replace_source_currency():
+    assert route("i said 40 tickets each worth 40 EUR", context=("SGD", "USD")).kind == "clarify"
+
+
+def test_discount_clarification_cannot_drop_discount_in_followup(broker):
+    first = ask(broker, "40 tickets at 40 SGD each with 10% discount in USD")
+    assert first.state == State.WAITING_INPUT
+    assert broker.registry.context is None
+    second = ask(broker, "i said 40 tickets each worth 40")
+    assert second.state == State.WAITING_INPUT
+    assert not broker.currency.provider.calls
+
+
+@pytest.mark.parametrize(
+    "text,total,base,quote",
+    [
+        (
+            "if i bought 40 tickets each worth 40 sgd. how much would the 40 tickets be in usd",
+            "1600",
+            "SGD",
+            "USD",
+        ),
+        ("40 tickets at 40 SGD each in USD", "1600", "SGD", "USD"),
+        ("Convert 40 tickets each worth 40SGD to USD", "1600", "SGD", "USD"),
+        ("How much are 3 books at 12.50 EUR each in MYR?", "37.50", "EUR", "MYR"),
+        (
+            "I bought 5 concert tickets each costing 25 SGD, how much is that in USD?",
+            "125",
+            "SGD",
+            "USD",
+        ),
+        (
+            "If we purchased 12 meals at 8.25 SGD each, what is the total in USD?",
+            "99.00",
+            "SGD",
+            "USD",
+        ),
+        ("2 bags each priced at 10 euros in US dollars", "20", "EUR", "USD"),
+        ("1,000 tokens at 0.005 SGD each in JPY", "5.000", "SGD", "JPY"),
+        ("0 tickets at 40 SGD each in USD", "0", "SGD", "USD"),
+        ("40 x 40 SGD to USD", "1600", "SGD", "USD"),
+        ("Convert 40 * 40 SGD to USD", "1600", "SGD", "USD"),
+        ("How much is 2.5 times 12.34 EUR in MYR", "30.850", "EUR", "MYR"),
+        ("40 tickets at 40 QRS each in XYZ", "1600", "QRS", "XYZ"),
+    ],
+)
+def test_quantity_and_unit_price_routes(text, total, base, quote):
+    result = route(text)
+    assert result.kind == "currency", result.message
+    assert result.arguments.amount == total
+    assert (result.arguments.base, result.arguments.quote) == (base, quote)
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        "40 tickets each worth 40 SGD, how much would the 50 tickets be in USD",
+        "40 tickets at 40 SGD each and 2 meals at 10 SGD each in USD",
+        "40 tickets at 40 SGD each plus a 5 SGD fee in USD",
+        "40 tickets at 40 SGD each with 10% discount in USD",
+        "40 tickets at 40 SGD each including tax in USD",
+        "40 tickets at 40 SGD each in USD and EUR",
+        "40 tickets at 40 SGD each in USD then open Notepad",
+        "-40 tickets at 40 SGD each in USD",
+        "2.5 tickets at 40 SGD each in USD",
+        "40 tickets at -40 SGD each in USD",
+        "40 tickets at 4,00 SGD each in USD",
+        "40 tickets at NaN SGD each in USD",
+        "40 tickets at 40 dollars each in USD",
+        "40 tickets each worth 40 SGD in USD using rate 2",
+        "1000000000001 tickets at 1 SGD each in USD",
+        "1000000000000 tickets at 2 SGD each in USD",
+        "2 tickets at 0.0000000000001 SGD each in USD",
+    ],
+)
+def test_ambiguous_or_invalid_quantity_requests_do_not_fetch(broker, text):
+    before_metadata = broker.currency.provider.metadata_calls
+    result = ask(broker, text)
+    assert result.state in {State.WAITING_INPUT, State.FAILED}, result
+    assert not broker.currency.provider.calls
+    assert broker.currency.provider.metadata_calls == before_metadata
+    assert broker.desktop.execution_calls == 0
+
+
+def test_quantity_total_through_broker_discloses_only_pair(broker):
+    from jarvis.conversation import conversational_text
+
+    broker.currency.provider.raw = lambda a, b: payload(a, b, 0.75)
+    result = ask(
+        broker, "if i bought 40 tickets each worth 40 sgd. how much would the 40 tickets be in usd"
+    )
+    assert result.state == State.SUCCEEDED
+    assert conversational_text(result) == "1600 SGD = 1200.00 USD. Approximate conversion."
+    assert broker.currency.provider.calls == [("SGD", "USD")]
+    assert broker.desktop.execution_calls == 0
+    # Item labels/counts are absent from durable normalized tool arguments.
+    scope = broker.store.db.execute(
+        "SELECT scope_json FROM tasks WHERE task_id=?", (result.task_id,)
+    ).fetchone()[0]
+    assert "tickets" not in scope
+    assert json.loads(json.loads(scope)["window_ref"])["amount"] == "1600"
+
+
+def test_quantity_identity_remains_local_when_public_data_disabled(broker):
+    before_metadata = broker.currency.provider.metadata_calls
+    broker.currency.config = PublicConfig(mode="disabled")
+    result = ask(broker, "40 tickets at 40 SGD each in SGD")
+    assert result.state == State.SUCCEEDED
+    assert "1600 SGD = 1600.00 SGD" in result.message
+    assert not broker.currency.provider.calls
+    assert broker.currency.provider.metadata_calls == before_metadata
 
 
 @pytest.mark.parametrize(

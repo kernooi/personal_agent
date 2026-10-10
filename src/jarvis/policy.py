@@ -23,6 +23,8 @@ def authorize(
             ("currency.quote", ("public_read",)),
             ("currency.quote", ("local_calculate",)),
             ("currency.quote", ("read_evidence",)),
+            ("web.research", ("web_public_read",)),
+            ("web.research", ("web_evidence",)),
         }
         or action.window_ref != task.scope.window_ref
         or action.policy_version != POLICY_VERSION

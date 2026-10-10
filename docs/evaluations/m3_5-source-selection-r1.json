@@ -1,0 +1,382 @@
+{
+  "scope": "Two public source-selection diagnostics; not full milestone qualification",
+  "model": {
+    "available": true,
+    "model_present": true,
+    "identity": "qwen3:8b",
+    "digest": "500a1f067a9f782620b40bee6f7b0c89e17ae61f686b92c24933e4ca4b2b8b41",
+    "runtime_version": "0.40.2",
+    "transport_version": "ollama-chat-v2",
+    "text_generation": "supported",
+    "schema_constrained_output": "unknown",
+    "native_tool_calls": "supported",
+    "context_capacity": 40960,
+    "cloud_disabled": "user_verified",
+    "local_mode_programmatically_attested": false,
+    "ready": true,
+    "qualification": "unqualified; fake-execution evaluation only"
+  },
+  "config": {
+    "enabled": true,
+    "provider": "searxng",
+    "search_endpoint": "http://127.0.0.1:8080/search",
+    "local_search_authorized": true,
+    "max_searches": 2,
+    "result_limit": 8,
+    "max_pages": 5,
+    "max_response_bytes": 1048576,
+    "max_total_bytes": 3145728,
+    "max_text_chars": 12000,
+    "max_model_turns": 4,
+    "timeout_seconds": 12.0,
+    "task_seconds": 100.0,
+    "redirects": 2,
+    "cache_seconds": 600,
+    "timezone": "Asia/Kuala_Lumpur"
+  },
+  "real_windows_adapter": false,
+  "contract_sha256": "5283043d2930ae7d3aa72184f8fa2798bf986373bff549d170a027d5f0d0ebe4",
+  "records": [
+    {
+      "synthetic_public_question": "Who is Lee Zii Jia?",
+      "state": "SUCCEEDED",
+      "error": null,
+      "latency_seconds": 16.578397512435913,
+      "metrics": {
+        "searches": 1,
+        "pages": 5,
+        "downloaded_bytes": 266202,
+        "text_chars": 778
+      },
+      "failures": [
+        "AUTHENTICATION_OR_SITE_BLOCK",
+        "AUTHENTICATION_OR_SITE_BLOCK",
+        "AUTHENTICATION_OR_SITE_BLOCK",
+        "AUTHENTICATION_OR_SITE_BLOCK",
+        "PAGE_BUDGET_REACHED"
+      ],
+      "receipts": [
+        {
+          "kind": "search",
+          "endpoint": "http://127.0.0.1:8080/search",
+          "redirects": false,
+          "environment_proxies": false,
+          "downloaded_bytes": 18009
+        },
+        {
+          "kind": "fetch_failure",
+          "url": "https://en.wikipedia.org/wiki/Lee_Zii_Jia",
+          "error": "AUTHENTICATION_OR_SITE_BLOCK",
+          "downloaded_bytes": 0
+        },
+        {
+          "kind": "fetch_failure",
+          "url": "https://bwfbadminton.com/player/81561/lee-zii-jia",
+          "error": "AUTHENTICATION_OR_SITE_BLOCK",
+          "downloaded_bytes": 0
+        },
+        {
+          "kind": "fetch_failure",
+          "url": "https://ms.wikipedia.org/wiki/Lee_Zii_Jia",
+          "error": "AUTHENTICATION_OR_SITE_BLOCK",
+          "downloaded_bytes": 0
+        },
+        {
+          "kind": "fetch",
+          "url": "https://www.utusan.com.my/terkini/2026/10/zii-jia-kejutkan-bintang-no-2-dunia-di-finland/",
+          "content_type": "text/html",
+          "hops": [
+            {
+              "url": "https://www.utusan.com.my/terkini/2026/10/zii-jia-kejutkan-bintang-no-2-dunia-di-finland/",
+              "peer": "2606:4700:20::ac43:46a5"
+            }
+          ],
+          "tls_verified": true,
+          "environment_proxies": false,
+          "downloaded_bytes": 248193,
+          "decoded_bytes": 248193,
+          "content_encoding": "identity"
+        },
+        {
+          "kind": "fetch_failure",
+          "url": "https://www.olympics.com/en/video/lee-zii-jia-top-facts-malaysian-badminton-star-singer-bbq",
+          "error": "AUTHENTICATION_OR_SITE_BLOCK",
+          "downloaded_bytes": 0
+        }
+      ],
+      "sources": [
+        {
+          "source_id": "websrc_7043159c17aa4862bb0b2dc1bf282e22",
+          "search_result_id": "result_0d7b3ad2c48b48ddb14c3c6a78b54a7c",
+          "provider": "searxng",
+          "url": "https://www.utusan.com.my/terkini/2026/10/zii-jia-kejutkan-bintang-no-2-dunia-di-finland/",
+          "canonical_url": "https://www.utusan.com.my/terkini/2026/10/zii-jia-kejutkan-bintang-no-2-dunia-di-finland/",
+          "domain": "www.utusan.com.my",
+          "title": "Zii Jia kejutkan bintang No. 2 dunia di Finland",
+          "author": "AIZAWATI AHMAD",
+          "published_at": "2026-10-09T12:45:51+00:00",
+          "updated_at": "2026-10-09T13:31:14+00:00",
+          "retrieved_at": "2026-10-10T15:46:00.227888+00:00",
+          "content_type": "text/html",
+          "extraction_version": "public-extract-v1",
+          "chunks": [
+            "Hakim Mahkamah Keadilan Antarabangsa menang Hadiah Nobel Keamanan",
+            "9 Oktober 2026, 9:05 pm",
+            "Reformasi Madani perkukuh ekonomi, buka peluang baharu sektor perbankan",
+            "9 Oktober 2026, 7:55 pm",
+            "Waad Nasional angkat martabat negara, rakyat \u2013 Anwar",
+            "9 Oktober 2026, 7:19 pm",
+            "Belanjawan 2027 perlu diterjemah kepada pelaksanaan berkesan -Zahid",
+            "9 Oktober 2026, 7:04 pm",
+            "Belanjawan 2027 perkukuh perlindungan insurans, keselamatan jalan raya",
+            "9 Oktober 2026, 9:18 pm",
+            "Belanjawan 2027 imbangi penyatuan fiskal, kekalkan pertumbuhan, tangani kos sara hidup \u2013 MICCI",
+            "9 Oktober 2026, 8:52 pm",
+            "Belanjawan 2027 perkukuh keselamatan siber, perlindungan data",
+            "9 Oktober 2026, 8:49 pm",
+            "Zii Jia kejutkan bintang No. 2 dunia di Finland",
+            "9 Oktober 2026, 8:45 pm",
+            "Perkukuh peluang kontraktor bumiputera G1-G4",
+            "9 Oktober 2026, 8:19 pm"
+          ],
+          "headings": [
+            "Zii Jia kejutkan bintang No. 2 dunia di Finland",
+            "BERITA BERKAITAN",
+            "",
+            "Hakim Mahkamah Keadilan Antarabangsa menang Hadiah Nobel Keamanan",
+            "Reformasi Madani perkukuh ekonomi, buka peluang baharu sektor perbankan",
+            "Waad Nasional angkat martabat negara, rakyat \u2013 Anwar",
+            "Belanjawan 2027 perlu diterjemah kepada pelaksanaan berkesan -Zahid",
+            "Terkini",
+            "Belanjawan 2027 perkukuh perlindungan insurans, keselamatan jalan raya",
+            "Belanjawan 2027 imbangi penyatuan fiskal, kekalkan pertumbuhan, tangani kos sara hidup \u2013 MICCI",
+            "Belanjawan 2027 perkukuh keselamatan siber, perlindungan data",
+            "Perkukuh peluang kontraktor bumiputera G1-G4"
+          ],
+          "task_id": "4e1b1ebe-4263-461b-8ffe-ba2a890745e5",
+          "query_hash": "cc5231c7480aa04903e6ddbc1bf2512b44f3fa1c62e4aa88b873cb9a01f87575",
+          "provenance": "public HTTPS, independently fetched; external content is untrusted",
+          "freshness": "dated source; retrieval is not publication",
+          "reliability_notes": "Source assertions are evidence, not independently established truth."
+        }
+      ],
+      "answer": "\"Zii Jia kejutkan bintang No. 2 dunia di Finland\" [Zii Jia kejutkan bintang No. 2 dunia di Finland \u2014 www.utusan.com.my](https://www.utusan.com.my/terkini/2026/10/zii-jia-kejutkan-bintang-no-2-dunia-di-finland/) (published: 2026-10-09T12:45:51+00:00; updated: 2026-10-09T13:31:14+00:00).\nPartial research: some sources could not be retrieved (AUTHENTICATION_OR_SITE_BLOCK, AUTHENTICATION_OR_SITE_BLOCK, AUTHENTICATION_OR_SITE_BLOCK, AUTHENTICATION_OR_SITE_BLOCK, PAGE_BUDGET_REACHED).\nThese are source excerpts, not independently proven facts. Retrieval time is separate from publication; use /sources for provenance.",
+      "assessment": "supported"
+    },
+    {
+      "synthetic_public_question": "What is the smallest shrimp in the world?",
+      "state": "SUCCEEDED",
+      "error": null,
+      "latency_seconds": 20.140437602996826,
+      "metrics": {
+        "searches": 1,
+        "pages": 5,
+        "downloaded_bytes": 2990037,
+        "text_chars": 4063
+      },
+      "failures": [
+        "NO_USABLE_TEXT",
+        "NO_USABLE_TEXT",
+        "AUTHENTICATION_OR_SITE_BLOCK",
+        "PAGE_BUDGET_REACHED"
+      ],
+      "receipts": [
+        {
+          "kind": "search",
+          "endpoint": "http://127.0.0.1:8080/search",
+          "redirects": false,
+          "environment_proxies": false,
+          "downloaded_bytes": 18404
+        },
+        {
+          "kind": "fetch_failure",
+          "url": "https://www.instagram.com/reel/DXO0BrGkia1/",
+          "error": "NO_USABLE_TEXT",
+          "downloaded_bytes": null
+        },
+        {
+          "kind": "fetch",
+          "url": "https://www.fishi-pedia.com/crustacea/type/crevette-naine-eau-douce",
+          "content_type": "text/html",
+          "hops": [
+            {
+              "url": "https://www.fishi-pedia.com/crustacea/type/crevette-naine-eau-douce",
+              "peer": "2606:4700:3037::6815:839"
+            }
+          ],
+          "tls_verified": true,
+          "environment_proxies": false,
+          "downloaded_bytes": 795518,
+          "decoded_bytes": 795518,
+          "content_encoding": "identity"
+        },
+        {
+          "kind": "fetch",
+          "url": "https://www.tfhmagazine.com/articles/freshwater/dwarf-freshwater-shrimps",
+          "content_type": "text/html",
+          "hops": [
+            {
+              "url": "https://www.tfhmagazine.com/articles/freshwater/dwarf-freshwater-shrimps",
+              "peer": "40.113.231.190"
+            }
+          ],
+          "tls_verified": true,
+          "environment_proxies": false,
+          "downloaded_bytes": 78963,
+          "decoded_bytes": 78963,
+          "content_encoding": "identity"
+        },
+        {
+          "kind": "fetch_failure",
+          "url": "https://www.facebook.com/worldoceanday/posts/meet-the-tiny-idiomysis-shrimp-these-minuscule-crustaceans-measure-just-3-5-mill/1296731985816544/",
+          "error": "NO_USABLE_TEXT",
+          "downloaded_bytes": null
+        },
+        {
+          "kind": "fetch_failure",
+          "url": "https://www.scuba.com/blog/5-tiniest-shrimp-species-globe/",
+          "error": "AUTHENTICATION_OR_SITE_BLOCK",
+          "downloaded_bytes": 0
+        }
+      ],
+      "sources": [
+        {
+          "source_id": "websrc_d957efdbb7ab402cb90fe7a200730696",
+          "search_result_id": "result_31a559e538394a548076e8c82bf3d55b",
+          "provider": "searxng",
+          "url": "https://www.fishi-pedia.com/crustacea/type/crevette-naine-eau-douce",
+          "canonical_url": "https://www.fishi-pedia.com/crustacea/type/crevette-naine-eau-douce",
+          "domain": "www.fishi-pedia.com",
+          "title": "List of freshwater dwarf shrimps \u2022 Fishipedia",
+          "author": null,
+          "published_at": null,
+          "updated_at": null,
+          "retrieved_at": "2026-10-10T15:46:14.681269+00:00",
+          "content_type": "text/html",
+          "extraction_version": "public-extract-v1",
+          "chunks": [
+            "LC Atyaephyra desmarestii",
+            "Atyidae",
+            "3 cm",
+            "living in colonies",
+            "scavenger",
+            "Loading...",
+            "VU Caridina caerulea",
+            "2 cm",
+            "NE Caridina cf. babaulti \u201cGreen\u201d",
+            "1.5 cm",
+            "NE Caridina cf. babaulti \u201cMalaya\u201d",
+            "NE Caridina cf. babaulti \u201cStripes\u201d",
+            "CR sulawesi cardinal shrimp",
+            "Caridina dennerli",
+            "LC Caridina gracilirostris",
+            "herbivorous",
+            "DD Caridina hodgarti",
+            "2.5 cm",
+            "NE Caridina logemanni",
+            "NE Caridina logemanni \u201cBee\u201d",
+            "NE Caridina logemanni \u201cCrystal Red\u201d",
+            "NE Caridina logemanni \u201cDouble-Hinomaru.\u201d",
+            "NE Caridina logemanni \u201cRed Bee Mosura\u201d",
+            "NE Caridina logemanni \u201cSuper Crystal Red\u201d",
+            "NE Caridina mariae \u201cBlack Tiger\u201d",
+            "NE Caridina mariae \u201cBlue Tiger\u201d",
+            "NE Caridina mariae \u201cRoyal Tiger OE\u201d",
+            "NE Caridina mariae \u201cSuper Tiger\u201c",
+            "NE Caridina mariae \u201cTiger\u201c",
+            "NE Caridina meridionalis",
+            "1.8 cm",
+            "LC Caridina multidentata",
+            "3.5 cm",
+            "NE Caridina sp \"Black Shadow Single Lined\"",
+            "1 cm",
+            "NE Caridina sp \u201dBlack shadow BluePanda\u201d",
+            "NE Caridina sp \u201dBlack shadow full black\u201d",
+            "NE Caridina sp \u201dBlack shadow full spotted\u201d",
+            "NE Caridina sp \u201dBlack Shadow Hinomaru\u201d",
+            "NE Caridina sp \u201dBlack shadow Multistripe\u201d",
+            "NE Caridina sp \u201dBlack-Shadow-Double-Banded\u201d",
+            "NE Caridina sp \u201dBlue Shadow\u201d",
+            "NE Caridina sp \u201dFancy Tiger\u201d",
+            "NE Caridina sp \u201dRed Shadow Bolt\u201d",
+            "NE Caridina sp \u201dRed Shadow Hinomaru\u201d",
+            "NE Caridina sp \u201dRed Shadow\u201d",
+            "NE Caridina sp \u201dShadow Blue Bolt\u201d",
+            "NE Caridina sp \u201dShadow Red Bolt\u201d",
+            "NE Caridina sp \u201dShadow Spotted-Head\u201d",
+            "NE Caridina sp \u201dShadow Yellow King Kong\u201d",
+            "NE Caridina sp \u201dSnow White\u201d",
+            "VU Caridina trifasciata",
+            "DD Caridina venusta",
+            "CR harlequin shrimp sulawesi",
+            "Caridina woltereckae",
+            "1.2 cm",
+            "NE Neocaridina davidi \u201dBlack Fire\u201d",
+            "NE Neocaridina davidi \u201dBlack Rili\u201d",
+            "NE Neocaridina davidi \u201dBloody Mary\u201d",
+            "NE Neocaridina davidi \u201dBlue Fire\u201d",
+            "NE Neocaridina davidi \u201dBlue Jelly\u201d",
+            "NE Neocaridina davidi \u201dBrown\u201d",
+            "NE Neocaridina davidi \u201dChocolate\u201d"
+          ],
+          "headings": [
+            "Enter a miniature world of crustaceans with 10 pairs of legs",
+            "{{#first_name}}{{first_name}} {{last_name}}{{/first_name}} {{^first_name}}{{user_login}}{{/first_name}}",
+            "Jouets & jeux \u00e9ducatifs",
+            "Accessoires enfants",
+            "Mode enfant",
+            "Jouets \u00e9ducatifs"
+          ],
+          "task_id": "8090822b-db4b-472e-bf71-6675d9149eb5",
+          "query_hash": "5d60a023bab022b8d5811dd93d97b0d7d0f7a00aaad31a51918a8f2453abd4f1",
+          "provenance": "public HTTPS, independently fetched; external content is untrusted",
+          "freshness": "publication time unknown",
+          "reliability_notes": "Source assertions are evidence, not independently established truth."
+        },
+        {
+          "source_id": "websrc_f9a45c5b601e4d248c34c914e206afef",
+          "search_result_id": "result_93308b0fdf024d5e959f3185e3f34f45",
+          "provider": "searxng",
+          "url": "https://www.tfhmagazine.com/articles/freshwater/dwarf-freshwater-shrimps",
+          "canonical_url": "https://www.tfhmagazine.com/articles/freshwater/dwarf-freshwater-shrimps",
+          "domain": "www.tfhmagazine.com",
+          "title": "Dwarf Freshwater Shrimps: An Overview | TFH Magazine",
+          "author": null,
+          "published_at": null,
+          "updated_at": null,
+          "retrieved_at": "2026-10-10T15:46:16.342848+00:00",
+          "content_type": "text/html",
+          "extraction_version": "public-extract-v1",
+          "chunks": [
+            "Dwarf Freshwater Shrimps: An Overview",
+            "Joshua Wiegert",
+            "When I was a youngster, my grandparents had a small aquarium in their home. The nearest aquarium store to them was in the back corner of Woolworths, so unlike the aquarium we had at my parents\u2019 home, my grandparents\u2019 tank was routinely filled with whatever Woolworths got in. The most memorable thing about the tank is how often it was bizarrely stocked.",
+            "Scissortail rasboras (Rasbora trilineata) featured prominently, as did various snails. The tank even briefly held an irresistibly cute oscar (Astronotus ocellatus). But the most unusual thing was my grandmother\u2019s penchant for adding freshwater shrimp. These weren\u2019t anything fancy, just mostly clear, somewhat yellow critters that crawled around the bottom of the tank and were usually sold as either \u201cghost shrimp\u201d or \u201cwhisker shrimp.\u201d",
+            "Just the same, they captured my imagination. If to me fish tanks represented another world with animals that glided effortlessly through their universe, the shrimp were the true aliens, with multiple legs, antenna, claws, and a total lack of skeleton\u2014something truly \u201cother.\u201d Today, the generic clear shrimp you\u2019ll find in pet shops have mostly moved from the display tanks to the feeder tanks in the back, having been replaced by myriad varieties of shrimp in colors my grandparents would never have imagined.",
+            "Cherry Shrimp",
+            "The shrimp at the center of the new craze is undoubtedly the cherry shrimp (Neocaridina davidi). To channel my inner taxonomist, I would say this shrimp has undergone something of a nomenclatural journey, as it can be found in various resources under several different names. Much of the literature describes it as Neocaridina heteropoda, based off a 2002 description by Liang\u2014indeed, this is probably the most common name you\u2019ll see cherry shrimp listed under. However, a 1918 description of this shrimp as Neocaridina denticulata has been cited by numerous sources, and this name is sometimes used. The earliest, correct description, however, is in 1904 as N. davidi.",
+            "These are relatively small shrimp, reaching about 1\u00bd inches (4 cm) at most. Males are often half that size. The natural shrimp isn\u2019t much to look at\u2014they\u2019re kind of a brownish green, and especially because of their size, you\u2019d be forgiven for overlooking them. An interesting mutation leads to the mottled color being replaced by red, and depending on how far this mu"
+          ],
+          "headings": [
+            "Dwarf Freshwater Shrimps: An Overview",
+            "Cherry Shrimp",
+            "Bee Shrimp",
+            "Cardinal Shrimp",
+            "Amano Shrimp",
+            "Ghost and Grass Shrimp",
+            "Long-Arm Shrimp",
+            "Bamboo Shrimp",
+            "Parting Notes"
+          ],
+          "task_id": "8090822b-db4b-472e-bf71-6675d9149eb5",
+          "query_hash": "5d60a023bab022b8d5811dd93d97b0d7d0f7a00aaad31a51918a8f2453abd4f1",
+          "provenance": "public HTTPS, independently fetched; external content is untrusted",
+          "freshness": "publication time unknown",
+          "reliability_notes": "Source assertions are evidence, not independently established truth."
+        }
+      ],
+      "answer": "\"LC Atyaephyra desmarestii\" [List of freshwater dwarf shrimps \u2022 Fishipedia \u2014 www.fishi-pedia.com](https://www.fishi-pedia.com/crustacea/type/crevette-naine-eau-douce) (published: unknown; updated: unknown).\n\"CR sulawesi cardinal shrimp\" [List of freshwater dwarf shrimps \u2022 Fishipedia \u2014 www.fishi-pedia.com](https://www.fishi-pedia.com/crustacea/type/crevette-naine-eau-douce) (published: unknown; updated: unknown).\n\"LC Caridina gracilirostris\" [List of freshwater dwarf shrimps \u2022 Fishipedia \u2014 www.fishi-pedia.com](https://www.fishi-pedia.com/crustacea/type/crevette-naine-eau-douce) (published: unknown; updated: unknown).\n\"DD Caridina hodgarti\" [List of freshwater dwarf shrimps \u2022 Fishipedia \u2014 www.fishi-pedia.com](https://www.fishi-pedia.com/crustacea/type/crevette-naine-eau-douce) (published: unknown; updated: unknown).\n\"NE Caridina logemanni \u201cRed Bee Mosura\u201d\" [List of freshwater dwarf shrimps \u2022 Fishipedia \u2014 www.fishi-pedia.com](https://www.fishi-pedia.com/crustacea/type/crevette-naine-eau-douce) (published: unknown; updated: unknown).\n\"NE Caridina mariae \u201cBlack Tiger\u201d\" [List of freshwater dwarf shrimps \u2022 Fishipedia \u2014 www.fishi-pedia.com](https://www.fishi-pedia.com/crustacea/type/crevette-naine-eau-douce) (published: unknown; updated: unknown).\nPartial research: some sources could not be retrieved (NO_USABLE_TEXT, NO_USABLE_TEXT, AUTHENTICATION_OR_SITE_BLOCK, PAGE_BUDGET_REACHED).\nThese are source excerpts, not independently proven facts. Retrieval time is separate from publication; use /sources for provenance.",
+      "assessment": "supported"
+    }
+  ]
+}

@@ -1,0 +1,485 @@
+{
+  "scope": "Two fixed public questions; manual answer-quality review required, not milestone qualification",
+  "real_windows_adapter": false,
+  "config": {
+    "enabled": true,
+    "provider": "searxng",
+    "search_endpoint": "http://127.0.0.1:8080/search",
+    "local_search_authorized": true,
+    "max_searches": 2,
+    "result_limit": 8,
+    "max_pages": 5,
+    "max_response_bytes": 1048576,
+    "max_total_bytes": 3145728,
+    "max_text_chars": 12000,
+    "max_model_turns": 4,
+    "timeout_seconds": 12.0,
+    "task_seconds": 100.0,
+    "redirects": 2,
+    "cache_seconds": 600,
+    "timezone": "Asia/Kuala_Lumpur"
+  },
+  "contract_sha256": "3e37f73b0d21adbc36ccdc6fbbf2d18b7303bd59097a8e76a48919357fe1ba56",
+  "records": [
+    {
+      "synthetic_public_question": "Who is Lee Zii Jia?",
+      "state": "SUCCEEDED",
+      "error": null,
+      "latency_seconds": 18.674878120422363,
+      "metrics": {
+        "searches": 2,
+        "pages": 5,
+        "downloaded_bytes": 815683,
+        "text_chars": 4800
+      },
+      "failures": [
+        "AUTHENTICATION_OR_SITE_BLOCK",
+        "AUTHENTICATION_OR_SITE_BLOCK",
+        "AUTHENTICATION_OR_SITE_BLOCK",
+        "PAGE_BUDGET_REACHED"
+      ],
+      "receipts": [
+        {
+          "kind": "search",
+          "endpoint": "http://127.0.0.1:8080/search",
+          "redirects": false,
+          "environment_proxies": false,
+          "downloaded_bytes": 22679
+        },
+        {
+          "kind": "search",
+          "endpoint": "http://127.0.0.1:8080/search",
+          "redirects": false,
+          "environment_proxies": false,
+          "downloaded_bytes": 18314
+        },
+        {
+          "kind": "fetch_failure",
+          "url": "https://en.wikipedia.org/wiki/Lee_Zii_Jia",
+          "error": "AUTHENTICATION_OR_SITE_BLOCK",
+          "downloaded_bytes": 0
+        },
+        {
+          "kind": "fetch_failure",
+          "url": "https://ms.wikipedia.org/wiki/Lee_Zii_Jia",
+          "error": "AUTHENTICATION_OR_SITE_BLOCK",
+          "downloaded_bytes": 0
+        },
+        {
+          "kind": "fetch_failure",
+          "url": "https://www.wikiwand.com/en/Lee_Zii_Jia",
+          "error": "AUTHENTICATION_OR_SITE_BLOCK",
+          "downloaded_bytes": 0
+        },
+        {
+          "kind": "fetch",
+          "url": "https://thesportsgrail.com/lee-zii-jia-biography-family-parents-wife-age-ranking-badminton-career-racket-shoes-coach-net-worth/",
+          "content_type": "text/html",
+          "hops": [
+            {
+              "url": "https://thesportsgrail.com/lee-zii-jia-biography-family-parents-wife-age-ranking-badminton-career-racket-shoes-coach-net-worth/",
+              "peer": "91.108.108.6"
+            }
+          ],
+          "tls_verified": true,
+          "environment_proxies": false,
+          "downloaded_bytes": 293415,
+          "decoded_bytes": 293415,
+          "content_encoding": "identity"
+        },
+        {
+          "kind": "fetch",
+          "url": "https://grokipedia.com/page/Lee_Zii_Jia",
+          "content_type": "text/html",
+          "hops": [
+            {
+              "url": "https://grokipedia.com/page/Lee_Zii_Jia",
+              "peer": "2606:4700::6812:1202"
+            }
+          ],
+          "tls_verified": true,
+          "environment_proxies": false,
+          "downloaded_bytes": 481275,
+          "decoded_bytes": 481275,
+          "content_encoding": "identity"
+        }
+      ],
+      "sources": [
+        {
+          "source_id": "websrc_11d73cf0790b45a3b0ad8c7ac49ce402",
+          "search_result_id": "result_fe26ac3d26a74e53a335eef10d3527cd",
+          "provider": "searxng",
+          "url": "https://thesportsgrail.com/lee-zii-jia-biography-family-parents-wife-age-ranking-badminton-career-racket-shoes-coach-net-worth/",
+          "canonical_url": "https://thesportsgrail.com/lee-zii-jia-biography-family-parents-wife-age-ranking-badminton-career-racket-shoes-coach-net-worth/",
+          "domain": "thesportsgrail.com",
+          "title": "Lee Zii Jia Biography, Family, Parents, Wife, Age, Ranking, Badminton Career, Racket, Shoes, Coach, Net Worth - The SportsGrail",
+          "author": "TheSportsGrail",
+          "published_at": "2022-01-02T19:10:50+05:30",
+          "updated_at": "2022-01-02T20:43:49+05:30",
+          "retrieved_at": "2026-10-10T15:52:49.695835+00:00",
+          "content_type": "text/html",
+          "extraction_version": "public-extract-v1",
+          "chunks": [
+            "HOME \u00bb BADMINTON \u00bb Lee Zii Jia Biography, Family, Parents, Wife, Age, Ranking, Badminton Career, Racket, Shoes, Coach, Net Worth",
+            "Lee Zii Jia Biography, Family, Parents, Wife, Age, Ranking, Badminton Career, Racket, Shoes, Coach, Net Worth",
+            "Lee Zii Jia in 2017 advanced to the semifinals of the Thailand Masters where he was defeated by the hosts\u2019 player Kantaphon Wangcharoen, know his racket, shoes, ranking",
+            "The tournament win made Lee become the second player from the country to do so after Lee Chong Wei since the year 2013. Zii Jia ended that year with the Korea Masters advancement to the final of the tournament where he was dominated by former World No. 1 Son Wan-ho of South Korea.",
+            "Malaysia Badminton Player Lee Zii Jia Biography, Age, Wife, Parents, Family, Ranking, Coach, Racket, Shoes",
+            "A Malaysian badminton player who is currently ranked 7th in Men\u2019s singles which is his highest ranking, Lee Zii Jia, was born on 29th March 1998 in Al or Set at, Kedah (Malaysia).",
+            "Lee Zii Jia\u2019s Professional Life, Coach And Badminton Career",
+            "Lee Zii Jia Wins And Achievements",
+            "Lee Zii Jia\u2019s Net Worth",
+            "Lee Zii Jia Malaysia Pornpawee Chochuwong",
+            "Lee, in October of the year 2018, overthrew World No. Chou Tien-chen at the Chinese Taipei Open and advanced to the final of the tournament where he thwarted Riichi Takeshita and earned the BWF World Tour trophy as his first BWF title and his second international.",
+            "The player was introduced to the badminton world at the age of just six years old by his parents Lee Chee Hin and Leow Siet Peng, who are teachers and former basketball players. Following his great outcome in the under 12 competition, he was effortlessly drafted to the Bukit Jalil Sports School.",
+            "Lee was crowned as the junior champion at the Perak and Selangor Badminton Open in the year 2015 because of this, he got recognised by the Badminton Association of Malaysia. One year later in 2016, he managed to earn a bronze medal in the World Junior Championships as the Malaysian was lost in the semifinals fixture against Chico Aura Dwi Wardoyo of Indonesia. Later in the same month, Lee took part in the India International Series and supervised until he faced world number 17 Lakshya Sen of India in the final match.",
+            "Lee was crowned with his first senior title at the Polish International where he defeated his country\u2019s Soong Joo Ven at the final face-off. Two months later in November of the same year, the"
+          ],
+          "headings": [
+            "Lee Zii Jia Biography, Family, Parents, Wife, Age, Ranking, Badminton Career, Racket, Shoes, Coach, Net Worth",
+            "Malaysia Badminton Player Lee Zii Jia Biography, Age, Wife, Parents, Family, Ranking, Coach, Racket, Shoes"
+          ],
+          "task_id": "3dfef9ed-3c03-4f52-a679-223f7c21aab9",
+          "query_hash": "cc5231c7480aa04903e6ddbc1bf2512b44f3fa1c62e4aa88b873cb9a01f87575",
+          "provenance": "public HTTPS, independently fetched; external content is untrusted",
+          "freshness": "dated source; retrieval is not publication",
+          "reliability_notes": "Source assertions are evidence, not independently established truth."
+        },
+        {
+          "source_id": "websrc_2909669e0e574d65bc04ad1f143cf304",
+          "search_result_id": "result_806e6fb03ae34a5abd8ca675f61f7ee3",
+          "provider": "searxng",
+          "url": "https://grokipedia.com/page/Lee_Zii_Jia",
+          "canonical_url": "https://grokipedia.com/page/Lee_Zii_Jia",
+          "domain": "grokipedia.com",
+          "title": "Lee Zii Jia \u2014 Grokipedia",
+          "author": null,
+          "published_at": null,
+          "updated_at": null,
+          "retrieved_at": "2026-10-10T15:52:51.719524+00:00",
+          "content_type": "text/html",
+          "extraction_version": "public-extract-v1",
+          "chunks": [
+            "Lee Zii Jia (born 29 March 1998) is a Malaysian professional badminton player specializing in men's singles.[1] Ranked world number 83 by the Badminton World Federation as of 18 November 2025,[2] he is recognized for his aggressive playing style, powerful smashes, and resilience in high-pressure matches.[1] Born in Alor Setar, Kedah, to Chinese Malaysian parents, Lee began playing badminton at age six and trained at the Bukit Jalil Sports School before turning professional in 2016.[3][1] His career breakthrough came in 2021 when, ranked 11th, he won the prestigious YONEX All England Open Badminton Championships\u2014defeating world number one Viktor Axelsen in the final 30-29, 20-22, 21-9\u2014becoming the first Malaysian men's singles player to claim the title since Lee Chong Wei in 2012.[4][5] Lee peaked at world number two in 2022 and added the men's singles gold at the Badminton Asia Championships that year, the first Malaysian to do so since Lee Chong Wei in 2010, after overcoming Indonesia's Jonatan Christie in the final.[6][7] At the 2024 Summer Olympics in Paris, he earned a bronze medal in men's singles by defeating India's Lakshya Sen in the bronze medal match 13-21, 21-16, 21-11, becoming the third Malaysian men's singles player to medal at the Olympics after Rashid Sidek (1996) and Lee Chong Wei (2008, 2012, 2016).[3] Despite facing injuries and ranking dips in 2025, including a five-month hiatus earlier in the year, Lee remains a key figure in Malaysian badminton, often seen as a successor to Lee Chong Wei in carrying the nation's hopes in the sport.[6][8]",
+            "Lee Zii Jia was born on 29 March 1998 in Alor Setar, Kedah, Malaysia, to Malaysian Chinese parents Lee Chee Hin and Leow Siet Peng.[9][10] Both of his parents are school teachers who previously competed as national basketball players, instilling in their children a strong appreciation for sports from an early age.[9][10] They encouraged physical activity and healthy competition within the family, providing a supportive environment that nurtured Zii Jia's initial interest in athletics.[10] Physically, Zii Jia stands at 1.86 meters tall and is right-handed, attributes that were evident during his childhood and contributed to his natural aptitude for sports.[2]",
+            "Lee Zii Jia was introduced to badminton at the age of six by his parents, who enrolled him in a local club in Kedah primarily for exercise and health"
+          ],
+          "headings": [
+            "Lee Zii Jia",
+            "Early life and education",
+            "Early life",
+            "Education and training",
+            "Career",
+            "2015",
+            "2016",
+            "2017",
+            "2018",
+            "2019",
+            "2020: Entering the top 10",
+            "2021: All England title and Olympic debut",
+            "2022: Asian Championships gold and national team ban",
+            "2023: Title wins amid slump",
+            "2024: Super 500 titles and Olympic bronze",
+            "2025: Injury setbacks and ranking decline",
+            "Playing style and equipment",
+            "Playing style",
+            "Equipment and sponsorships",
+            "Awards and recognition"
+          ],
+          "task_id": "3dfef9ed-3c03-4f52-a679-223f7c21aab9",
+          "query_hash": "cc5231c7480aa04903e6ddbc1bf2512b44f3fa1c62e4aa88b873cb9a01f87575",
+          "provenance": "public HTTPS, independently fetched; external content is untrusted",
+          "freshness": "publication time unknown",
+          "reliability_notes": "Source assertions are evidence, not independently established truth."
+        }
+      ],
+      "answer": "\"Lee Zii Jia was born on 29 March 1998 in Alor Setar, Kedah, Malaysia, to Malaysian Chinese parents Lee Chee Hin and Leow Siet Peng.[9][10] Both of his parents are school teachers who previously competed as national basketball players, instilling in their children a strong appreciation for sports from an early age.[9][10] They encouraged physical activity and healthy competition within the family, providing a supportive environment that nurtured Zii Jia's initial interest in athletics.[10] Physically, Zii Jia stands at 1.86 meters tall and is right-handed, attributes that were evident during hi\" [Lee Zii Jia \u2014 Grokipedia \u2014 grokipedia.com](https://grokipedia.com/page/Lee_Zii_Jia) (published: unknown; updated: unknown).\n\"Lee Zii Jia was introduced to badminton at the age of six by his parents, who enrolled him in a local club in Kedah primarily for exercise and health\" [Lee Zii Jia \u2014 Grokipedia \u2014 grokipedia.com](https://grokipedia.com/page/Lee_Zii_Jia) (published: unknown; updated: unknown).\n\"A Malaysian badminton player who is currently ranked 7th in Men\u2019s singles which is his highest ranking, Lee Zii Jia, was born on 29th March 1998 in Al or Set at, Kedah (Malaysia).\" [Lee Zii Jia Biography, Family, Parents, Wife, Age, Ranking, Badminton Career, Racket, Shoes, Coach, Net Worth - The SportsGrail \u2014 thesportsgrail.com](https://thesportsgrail.com/lee-zii-jia-biography-family-parents-wife-age-ranking-badminton-career-racket-shoes-coach-net-worth/) (published: 2022-01-02T19:10:50+05:30; updated: 2022-01-02T20:43:49+05:30).\n\"The player was introduced to the badminton world at the age of just six years old by his parents Lee Chee Hin and Leow Siet Peng, who are teachers and former basketball players. Following his great outcome in the under 12 competition, he was effortlessly drafted to the Bukit Jalil Sports School.\" [Lee Zii Jia Biography, Family, Parents, Wife, Age, Ranking, Badminton Career, Racket, Shoes, Coach, Net Worth - The SportsGrail \u2014 thesportsgrail.com](https://thesportsgrail.com/lee-zii-jia-biography-family-parents-wife-age-ranking-badminton-career-racket-shoes-coach-net-worth/) (published: 2022-01-02T19:10:50+05:30; updated: 2022-01-02T20:43:49+05:30).\nPartial research: some sources could not be retrieved (AUTHENTICATION_OR_SITE_BLOCK, AUTHENTICATION_OR_SITE_BLOCK, AUTHENTICATION_OR_SITE_BLOCK, PAGE_BUDGET_REACHED).\nThese are source excerpts, not independently proven facts. Retrieval time is separate from publication; use /sources for provenance.",
+      "assessment": "supported"
+    },
+    {
+      "synthetic_public_question": "What is the smallest shrimp in the world?",
+      "state": "SUCCEEDED",
+      "error": null,
+      "latency_seconds": 20.167874574661255,
+      "metrics": {
+        "searches": 1,
+        "pages": 5,
+        "downloaded_bytes": 3145728,
+        "text_chars": 4615
+      },
+      "failures": [
+        "NO_USABLE_TEXT",
+        "OVERSIZED_PAYLOAD",
+        "PAGE_BUDGET_REACHED"
+      ],
+      "receipts": [
+        {
+          "kind": "search",
+          "endpoint": "http://127.0.0.1:8080/search",
+          "redirects": false,
+          "environment_proxies": false,
+          "downloaded_bytes": 22972
+        },
+        {
+          "kind": "fetch",
+          "url": "https://www.instagram.com/reel/DXO0BrGkia1/",
+          "content_type": "text/html",
+          "hops": [
+            {
+              "url": "https://www.instagram.com/reel/DXO0BrGkia1/",
+              "peer": "2a03:2880:f27a:e3:face:b00c:0:4420"
+            }
+          ],
+          "tls_verified": true,
+          "environment_proxies": false,
+          "downloaded_bytes": 840249,
+          "decoded_bytes": 840249,
+          "content_encoding": "identity"
+        },
+        {
+          "kind": "fetch_failure",
+          "url": "https://www.facebook.com/worldoceanday/posts/meet-the-tiny-idiomysis-shrimp-these-minuscule-crustaceans-measure-just-3-5-mill/1296731985816544/",
+          "error": "NO_USABLE_TEXT",
+          "downloaded_bytes": null
+        },
+        {
+          "kind": "fetch",
+          "url": "https://www.fishi-pedia.com/crustacea/type/crevette-naine-eau-douce",
+          "content_type": "text/html",
+          "hops": [
+            {
+              "url": "https://www.fishi-pedia.com/crustacea/type/crevette-naine-eau-douce",
+              "peer": "2606:4700:3030::ac43:bc52"
+            }
+          ],
+          "tls_verified": true,
+          "environment_proxies": false,
+          "downloaded_bytes": 795517,
+          "decoded_bytes": 795517,
+          "content_encoding": "identity"
+        },
+        {
+          "kind": "fetch",
+          "url": "https://www.tfhmagazine.com/articles/freshwater/dwarf-freshwater-shrimps",
+          "content_type": "text/html",
+          "hops": [
+            {
+              "url": "https://www.tfhmagazine.com/articles/freshwater/dwarf-freshwater-shrimps",
+              "peer": "40.113.231.190"
+            }
+          ],
+          "tls_verified": true,
+          "environment_proxies": false,
+          "downloaded_bytes": 78963,
+          "decoded_bytes": 78963,
+          "content_encoding": "identity"
+        },
+        {
+          "kind": "fetch_failure",
+          "url": "https://www.aquariumcoop.com/blogs/aquarium/freshwater-dwarf-shrimp",
+          "error": "OVERSIZED_PAYLOAD",
+          "downloaded_bytes": null
+        }
+      ],
+      "sources": [
+        {
+          "source_id": "websrc_b1ffe851a64a4cd6a12f3587d647739a",
+          "search_result_id": "result_4146c48424cf4de6b7c689bcf60ad09c",
+          "provider": "searxng",
+          "url": "https://www.instagram.com/reel/DXO0BrGkia1/",
+          "canonical_url": "https://www.instagram.com/reel/DXO0BrGkia1/",
+          "domain": "www.instagram.com",
+          "title": "Instagram",
+          "author": null,
+          "published_at": null,
+          "updated_at": null,
+          "retrieved_at": "2026-10-10T15:53:04.550849+00:00",
+          "content_type": "text/html",
+          "extraction_version": "public-extract-v1",
+          "chunks": [
+            "Around 1 mm in size.",
+            "Probably the tiniest shrimp in the world\u2026 \ud83e\udd90",
+            "#MacroLife #Shrimp #MarineLife #UnderwaterWorld #ScubaDiving",
+            "Very little shrimp",
+            "Never miss a post from jason_byrk",
+            "Sign up for Instagram to stay in the loop.",
+            "By continuing, you agree to Instagram's Terms of Use and Privacy Policy.",
+            "Sign up",
+            "Log in",
+            "jason_byrk",
+            "and 3 others",
+            "Big Head Todd and The Monsters\u2022Boom Boom",
+            "25w",
+            "Does anyone know what this little guy is called? \ud83d\udc40",
+            "ssoueidi",
+            "24w",
+            "Like",
+            "Reply",
+            "therealglenngallegos",
+            "Scrimp. It's scrimp",
+            "65",
+            "2",
+            "April 17",
+            "Log in to like or comment.",
+            "More posts from jason_byrk",
+            "See more posts"
+          ],
+          "headings": [],
+          "task_id": "2faf54fa-90f9-46c8-8ea7-3ecee07690d0",
+          "query_hash": "5d60a023bab022b8d5811dd93d97b0d7d0f7a00aaad31a51918a8f2453abd4f1",
+          "provenance": "public HTTPS, independently fetched; external content is untrusted",
+          "freshness": "publication time unknown",
+          "reliability_notes": "Source assertions are evidence, not independently established truth."
+        },
+        {
+          "source_id": "websrc_65b5cc923d0349cb97096ee6b90f319f",
+          "search_result_id": "result_acbc822fd373410d853278332d98b076",
+          "provider": "searxng",
+          "url": "https://www.fishi-pedia.com/crustacea/type/crevette-naine-eau-douce",
+          "canonical_url": "https://www.fishi-pedia.com/crustacea/type/crevette-naine-eau-douce",
+          "domain": "www.fishi-pedia.com",
+          "title": "List of freshwater dwarf shrimps \u2022 Fishipedia",
+          "author": null,
+          "published_at": null,
+          "updated_at": null,
+          "retrieved_at": "2026-10-10T15:53:08.614294+00:00",
+          "content_type": "text/html",
+          "extraction_version": "public-extract-v1",
+          "chunks": [
+            "3 cm",
+            "2 cm",
+            "1.5 cm",
+            "2.5 cm",
+            "1.8 cm",
+            "3.5 cm",
+            "1 cm",
+            "1.2 cm",
+            "CR sulawesi cardinal shrimp",
+            "CR harlequin shrimp sulawesi",
+            "LC Atyaephyra desmarestii",
+            "Atyidae",
+            "living in colonies",
+            "scavenger",
+            "Loading...",
+            "VU Caridina caerulea",
+            "NE Caridina cf. babaulti \u201cGreen\u201d",
+            "NE Caridina cf. babaulti \u201cMalaya\u201d",
+            "NE Caridina cf. babaulti \u201cStripes\u201d",
+            "Caridina dennerli",
+            "LC Caridina gracilirostris",
+            "herbivorous",
+            "DD Caridina hodgarti",
+            "NE Caridina logemanni",
+            "NE Caridina logemanni \u201cBee\u201d",
+            "NE Caridina logemanni \u201cCrystal Red\u201d",
+            "NE Caridina logemanni \u201cDouble-Hinomaru.\u201d",
+            "NE Caridina logemanni \u201cRed Bee Mosura\u201d",
+            "NE Caridina logemanni \u201cSuper Crystal Red\u201d",
+            "NE Caridina mariae \u201cBlack Tiger\u201d",
+            "NE Caridina mariae \u201cBlue Tiger\u201d",
+            "NE Caridina mariae \u201cRoyal Tiger OE\u201d",
+            "NE Caridina mariae \u201cSuper Tiger\u201c",
+            "NE Caridina mariae \u201cTiger\u201c",
+            "NE Caridina meridionalis",
+            "LC Caridina multidentata",
+            "NE Caridina sp \"Black Shadow Single Lined\"",
+            "NE Caridina sp \u201dBlack shadow BluePanda\u201d",
+            "NE Caridina sp \u201dBlack shadow full black\u201d",
+            "NE Caridina sp \u201dBlack shadow full spotted\u201d",
+            "NE Caridina sp \u201dBlack Shadow Hinomaru\u201d",
+            "NE Caridina sp \u201dBlack shadow Multistripe\u201d",
+            "NE Caridina sp \u201dBlack-Shadow-Double-Banded\u201d",
+            "NE Caridina sp \u201dBlue Shadow\u201d",
+            "NE Caridina sp \u201dFancy Tiger\u201d",
+            "NE Caridina sp \u201dRed Shadow Bolt\u201d",
+            "NE Caridina sp \u201dRed Shadow Hinomaru\u201d",
+            "NE Caridina sp \u201dRed Shadow\u201d",
+            "NE Caridina sp \u201dShadow Blue Bolt\u201d",
+            "NE Caridina sp \u201dShadow Red Bolt\u201d",
+            "NE Caridina sp \u201dShadow Spotted-Head\u201d",
+            "NE Caridina sp \u201dShadow Yellow King Kong\u201d",
+            "NE Caridina sp \u201dSnow White\u201d",
+            "VU Caridina trifasciata",
+            "DD Caridina venusta",
+            "Caridina woltereckae",
+            "NE Neocaridina davidi \u201dBlack Fire\u201d",
+            "NE Neocaridina davidi \u201dBlack Rili\u201d",
+            "NE Neocaridina davidi \u201dBloody Mary\u201d",
+            "NE Neocaridina davidi \u201dBlue Fire\u201d",
+            "NE Neocaridina davidi \u201dBlue Jelly\u201d",
+            "NE Neocaridina davidi \u201dBrown\u201d",
+            "NE Neocaridina davidi \u201dChocolate\u201d"
+          ],
+          "headings": [
+            "Enter a miniature world of crustaceans with 10 pairs of legs",
+            "{{#first_name}}{{first_name}} {{last_name}}{{/first_name}} {{^first_name}}{{user_login}}{{/first_name}}",
+            "Jouets & jeux \u00e9ducatifs",
+            "Accessoires enfants",
+            "Mode enfant",
+            "Jouets \u00e9ducatifs"
+          ],
+          "task_id": "2faf54fa-90f9-46c8-8ea7-3ecee07690d0",
+          "query_hash": "5d60a023bab022b8d5811dd93d97b0d7d0f7a00aaad31a51918a8f2453abd4f1",
+          "provenance": "public HTTPS, independently fetched; external content is untrusted",
+          "freshness": "publication time unknown",
+          "reliability_notes": "Source assertions are evidence, not independently established truth."
+        },
+        {
+          "source_id": "websrc_794be382f91b45b9970261c26a05ef2d",
+          "search_result_id": "result_d15648f4c5994e01b7e84a2e7b9a2656",
+          "provider": "searxng",
+          "url": "https://www.tfhmagazine.com/articles/freshwater/dwarf-freshwater-shrimps",
+          "canonical_url": "https://www.tfhmagazine.com/articles/freshwater/dwarf-freshwater-shrimps",
+          "domain": "www.tfhmagazine.com",
+          "title": "Dwarf Freshwater Shrimps: An Overview | TFH Magazine",
+          "author": null,
+          "published_at": null,
+          "updated_at": null,
+          "retrieved_at": "2026-10-10T15:53:10.286892+00:00",
+          "content_type": "text/html",
+          "extraction_version": "public-extract-v1",
+          "chunks": [
+            "These are relatively small shrimp, reaching about 1\u00bd inches (4 cm) at most. Males are often half that size. The natural shrimp isn\u2019t much to look at\u2014they\u2019re kind of a brownish green, and especially because of their size, you\u2019d be forgiven for overlooking them. An interesting mutation leads to the mottled color being replaced by red, and depending on how far this mutation goes, they can range from sort of red to solidly bright red. In addition to the red, other mutations have occurred that result in orange, yellow, black, green, blue, and even purple.",
+            "C. multidentata are generally not picky about water chemistry, though they can be sensitive to poor water quality. They\u2019re a larger shrimp, and fully grown adults can push 2 inches (5 cm). Unlike the other varieties of shrimp discussed thus far, the Amano shrimp cannot be bred successfully in the average home aquarium. They\u2019ll breed, and do almost constantly, but the larvae do not develop. In the wild, they\u2019re found in areas connected to saltwater. Their larvae are released and washed into brackish estuaries, where they develop and migrate back into freshwater. This is nearly impossible to mimic in the average aquarium (particularly as the adults are sensitive to salt), though a handful of aquarists, including me, have done it. Fortunately, they\u2019re anything but rare in the wild and collection of them is not problematic.",
+            "Tankmates for the cherry shrimp should be chosen with care. Obviously, when placing anything with small shrimp, it should not be large enough to eat them. Remember that the babies are small, a quarter of the size of adults, and fish are apt to pick them off. This may or may not be a problem: the shrimp are relatively fast breeders, and with adequate hiding places, many of them will reach adulthood. More important, the males are half the size of the females, if that, and a population of shrimp can become all female very quickly if there\u2019s a tankmate eating the smallest ones.",
+            "Scissortail rasboras (Rasbora trilineata) featured prominently, as did various snails. The tank even briefly held an irresistibly cute oscar (Astronotus ocellatus). But the most unusual thing was my grandmother\u2019s penchant for adding freshwater shrimp. These weren\u2019t anything fancy, just mostly clear, somewhat yellow critters that crawled around the bottom of the tank and were usually sold as either \u201cghost shrimp\u201d or \u201cwhisker shrim"
+          ],
+          "headings": [
+            "Dwarf Freshwater Shrimps: An Overview",
+            "Cherry Shrimp",
+            "Bee Shrimp",
+            "Cardinal Shrimp",
+            "Amano Shrimp",
+            "Ghost and Grass Shrimp",
+            "Long-Arm Shrimp",
+            "Bamboo Shrimp",
+            "Parting Notes"
+          ],
+          "task_id": "2faf54fa-90f9-46c8-8ea7-3ecee07690d0",
+          "query_hash": "5d60a023bab022b8d5811dd93d97b0d7d0f7a00aaad31a51918a8f2453abd4f1",
+          "provenance": "public HTTPS, independently fetched; external content is untrusted",
+          "freshness": "publication time unknown",
+          "reliability_notes": "Source assertions are evidence, not independently established truth."
+        }
+      ],
+      "answer": "\"Probably the tiniest shrimp in the world\u2026 \ud83e\udd90\" [Instagram \u2014 www.instagram.com](https://www.instagram.com/reel/DXO0BrGkia1/) (published: unknown; updated: unknown).\n\"LC Atyaephyra desmarestii\" [List of freshwater dwarf shrimps \u2022 Fishipedia \u2014 www.fishi-pedia.com](https://www.fishi-pedia.com/crustacea/type/crevette-naine-eau-douce) (published: unknown; updated: unknown).\n\"DD Caridina hodgarti\" [List of freshwater dwarf shrimps \u2022 Fishipedia \u2014 www.fishi-pedia.com](https://www.fishi-pedia.com/crustacea/type/crevette-naine-eau-douce) (published: unknown; updated: unknown).\n\"NE Caridina logemanni\" [List of freshwater dwarf shrimps \u2022 Fishipedia \u2014 www.fishi-pedia.com](https://www.fishi-pedia.com/crustacea/type/crevette-naine-eau-douce) (published: unknown; updated: unknown).\n\"NE Caridina logemanni \u201cBee\u201d\" [List of freshwater dwarf shrimps \u2022 Fishipedia \u2014 www.fishi-pedia.com](https://www.fishi-pedia.com/crustacea/type/crevette-naine-eau-douce) (published: unknown; updated: unknown).\n\"NE Caridina logemanni \u201cCrystal Red\u201d\" [List of freshwater dwarf shrimps \u2022 Fishipedia \u2014 www.fishi-pedia.com](https://www.fishi-pedia.com/crustacea/type/crevette-naine-eau-douce) (published: unknown; updated: unknown).\nPartial research: some sources could not be retrieved (NO_USABLE_TEXT, OVERSIZED_PAYLOAD, PAGE_BUDGET_REACHED).\nThese are source excerpts, not independently proven facts. Retrieval time is separate from publication; use /sources for provenance.",
+      "assessment": "supported"
+    }
+  ],
+  "model": {
+    "available": true,
+    "model_present": true,
+    "identity": "qwen3:8b",
+    "digest": "500a1f067a9f782620b40bee6f7b0c89e17ae61f686b92c24933e4ca4b2b8b41",
+    "runtime_version": "0.40.2",
+    "transport_version": "ollama-chat-v2",
+    "text_generation": "supported",
+    "schema_constrained_output": "unknown",
+    "native_tool_calls": "supported",
+    "context_capacity": 40960,
+    "cloud_disabled": "user_verified",
+    "local_mode_programmatically_attested": false,
+    "ready": true,
+    "qualification": "unqualified; fake-execution evaluation only"
+  }
+}

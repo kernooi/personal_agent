@@ -99,6 +99,10 @@ def parse_decision(raw: bytes, version: str = "decision-v1") -> Decision:
             from jarvis.currency_decisions import parse
 
             return parse(raw)
+        if version in {"web-route-v1", "web-plan-v1", "web-select-v1", "web-answer-v1"}:
+            from jarvis.web_decisions import gateway_parse
+
+            return gateway_parse(raw, version)
         if version not in {"decision-v1", "decision-m2-v1"}:
             raise ValueError("Unknown decision version")
         boundary = BOUNDARY_M2 if version == "decision-m2-v1" else BOUNDARY
@@ -232,7 +236,12 @@ class ModelRequest:
     schema: dict[str, Any]
     deadline: float
     messages: tuple[Message, ...]
-    decision_boundary: Literal["currency-decision-v1"] | None = None
+    decision_boundary: (
+        Literal[
+            "currency-decision-v1", "web-route-v1", "web-plan-v1", "web-select-v1", "web-answer-v1"
+        ]
+        | None
+    ) = None
 
 
 @dataclass(frozen=True)

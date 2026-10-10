@@ -1,0 +1,9 @@
+{
+  "scope": "Development source-selection diagnostic; partial reporting failure, not qualification",
+  "harness_error": "UnicodeEncodeError while printing shrimp answer through a cp1252 development pipe before report save",
+  "complete_records_available": false,
+  "observed_case_summaries": [
+    {"question": "Who is Lee Zii Jia?", "state": "SUCCEEDED", "assessment": "supported", "searches": 2, "pages": 5, "downloaded_bytes": 1408446, "source_url": "https://stbadmintonacademy.my/professional_players/lee-zii-jia/", "review": "Captured source excerpt identifies Malaysia and men's singles badminton; complete source records were not saved."},
+    {"question": "What is the smallest shrimp in the world?", "state": "SUCCEEDED", "assessment": "supported", "searches": 1, "pages": 5, "downloaded_bytes": 3145728, "review": "Answer printing failed; no answer-quality success is credited."}
+  ]
+}

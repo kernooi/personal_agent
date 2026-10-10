@@ -14,7 +14,7 @@ import httpx
 import pytest
 
 from jarvis.bootstrap import ManualClock, build
-from jarvis.conversation import Conversation
+from jarvis.conversation import Conversation, conversational_text
 from jarvis.currency_cache import QuoteCache
 from jarvis.currency_decisions import parse
 from jarvis.currency_provider import FixtureProvider, FrankfurterProvider
@@ -140,6 +140,30 @@ def test_cache_privacy_refresh_and_source_identity(broker):
     assert ask(broker, "refresh that rate").state == State.SUCCEEDED
     assert broker.currency.last_quote.source_id != first.source_id
     assert len(broker.currency.provider.calls) == 2
+
+
+def test_currency_reply_is_concise_with_details_on_request(broker):
+    result = ask(broker, "Convert 2000 MYR to JPY")
+    assert conversational_text(result) == "2000 MYR = 80000 JPY. Approximate conversion."
+    assert "Retrieved:" in result.message and broker.currency.last_quote.source_id in result.message
+    calls = len(broker.currency.provider.calls)
+    details = conversational_text(ask(broker, "Where did that rate come from?"))
+    assert "Retrieved:" in details and "Source-effective date:" in details
+    assert len(broker.currency.provider.calls) == calls
+
+
+def test_concise_stale_rate_keeps_warning(broker):
+    ask(broker, "MYR to JPY rate now")
+    broker.clock.advance(3601)
+    broker.currency.config = PublicConfig(mode="fixture", allow_stale_cache=True)
+    broker.currency.cache.config = broker.currency.config
+    broker.currency.provider = FailingProvider()
+    result = ask(broker, "Convert 100 MYR to JPY")
+    assert result.state == State.SUCCEEDED
+    assert conversational_text(result) == (
+        "100 MYR = 4000 JPY. Approximate conversion. "
+        "Using an earlier rate; the current rate has not been verified."
+    )
 
 
 @pytest.mark.parametrize(

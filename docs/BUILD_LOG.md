@@ -1505,3 +1505,366 @@ the following replies had no Notepad action scope and no close was dispatched.
 This usability issue is diagnosed but **not fixed** in this commit. No raw private
 prompt, journal copy or personal Notepad content is added to Git. Commit the completed
 M3 work and its retained passed/failed evaluations locally; no push is authorized.
+
+### M3.5 public research with local SearXNG — 2026-10-10
+
+Read repository/specification/request and preserve clean M3 commit `b987a61`.
+The user explicitly rejected a required commercial search API and selected a
+user-controlled local SearXNG adapter. Reviewed official API/container/settings/
+license documentation. Read-only host inspection: Docker/Podman not on PATH;
+checked Docker Desktop paths absent; WSL default version 2, no listed distribution.
+No machine-level provisioning was performed. Exact Windows container instructions
+are prepared in SEARCH_PROVIDER_COMPATIBILITY.md and require separate setup approval.
+
+Baseline: **429 passed in 12.10 s**, actual default pytest, exit 0. Added broker-bound
+research provider/fetch abstractions, SearXNG JSON adapter, independent narrow local
+API permission, public pinned HTTPS/DNS/peer/TLS/redirect policy, supervised
+workers/cancellation/memory limits, inert HTML/plain/PDF extraction, strict runtime
+IDs/excerpt citation checks, owner-only query egress, routing, budgets, cache and
+controls. Model-assisted niche consideration remains controller scoped; model
+confidence does not enable network or widen disclosure. No new desktop capabilities.
+
+README lock workflow regenerated successfully, installed hashes and editable project
+in `.venv`: new pypdf 6.20.0 and tzdata 2026.5, existing versions unchanged. Initial
+offline failures from timezone availability/profile fixtures/JSON tuple restoration/
+mock streaming were fixed, with requirements and rejection tests retained.
+
+Live public Python venv URL through broker/real qwen3:8b: r1 rejected altered model
+quotation after actual fetch; retained. Change uses runtime excerpt IDs and original
+text rendering, without relaxing citation support. r2's insufficient assessment
+failed the gate; URL-task static-summary prompt clarified, not acceptance weakened.
+r3–r7 narrow checks pass. r3's Select-Object truncation pipeline exits 1, though the
+report passed; later untruncated commands exit 0. Final r7: **1/1**, **10.85 s**, one
+page, **103,240 bytes**, **12,000 chars**, actual IPv6 peer `2a04:4e42::223`,
+verified TLS, no environment proxy, one real synthesis turn, zero search/Windows
+effects. Source pub/update dates remain unknown, separate from real retrieval time.
+
+Explicit development model lab: actual Ollama planning/selection/synthesis with
+clearly synthetic web services. r1 rejected extra query words before search, retained.
+Dynamic schema limits query choices to controller-approved topic-only refinements;
+the runtime disclosure check stays strict. Final r3: **3/3** research/source-view/
+fresh-followup, one synthetic search/two synthetic pages, zero public networking or
+Windows effects. No fake-inference or real-search success is claimed.
+
+Existing M1 desktop report inspected: **27/30** in each of three original runs,
+same digest/runtime; earlier disconnected check status passed with actual inference
+and physical adapter/default-route snapshots. No new physical offline claim. Original
+M2 model/conversation reports still match the current profile/schema/runtime.
+Shared broker changes prompted retained M3 regressions r3/r4 and final r5-m3_5:
+**34/34**, unchanged 100% / zero-desktop gate. Final matching contract is
+`a8105c31317a853429ec712a1041f6609aff168a1d8dd4dc948f48f268272b7d`.
+Actual doctor exits 0 and recognizes final M3 qualification with web disabled;
+neither public provider is contacted by doctor.
+
+Final offline suite **559 passed in 15.70 s**, including **130** new research tests.
+Ruff lint, formatting (75 files), pip check and git diff --check all exit 0.
+Extra cases verify new/recent/compare forms, an empty source question without model
+or network, NAT64 denial before connection, and full currency calculation with web
+enabled but zero search/fetch. Initial added-test assertions expected a later NAT64
+error and comma-grouped display; actual earlier destination rejection and existing
+`3000 JPY` display were correct. Assertions now check the real intended behavior;
+network rejection and calculation acceptance criteria are unchanged.
+No actual Notepad effects, administrative/global/network/service changes, host
+installation, cloud fallback, additional model, remote push or new commit.
+
+**M3.5 remains incomplete**: no real SearXNG exists here yet; full ten-category
+live search/model corpus is not run. Extractive evidence answers, broad live-source
+relevance/conflict judgments and universal latest-event ordering remain qualification
+limits. Do not turn narrow/mocked passes into milestone completion. Full details,
+commands, preserved failures and setup blockers are in M3_5_TEST_REPORT.md. Stop at
+M3.5 for review; M4 remains outside scope. All changes remain local and uncommitted.
+
+### 2026-10-10 — M3.5 assistant identity routing correction
+
+The user's interactive transcript showed `what is your name` being classified as
+public research and failing against the unavailable local SearXNG endpoint.
+Assistant self-identification now bypasses web routing and stays on the existing
+local conversation/model path. This is a narrow whole-request match: questions
+about public people and identity origins retain research eligibility. No identity
+answer is hardcoded, and no web permissions or evidence gates were weakened.
+
+Added 31 deterministic broker/conversation regressions: 14 identity forms with
+web enabled and disabled, plus three external-topic cases. Identity cases assert
+a normal say decision, no web classification turn, zero searches/fetches and zero
+desktop effects. The initial run had 28 assertion failures (562 passed): the new
+test expected user-facing text from an internal broker Result whose message still
+contains the simulation receipt. Corrected the assertion to check the say decision
+and answer suffix; production terminal rendering was unchanged.
+
+Final actual checks: 590 passed in 18.17s; ruff check passed; ruff format --check
+passed (75 files); pip check passed; no live model, public network or Windows
+operation was performed for this fix. Live SearXNG qualification remains pending.
+# 2026-10-10 — Authorized local SearXNG setup and live validation
+
+The user supplied and started Docker, authorizing the remaining local SearXNG
+setup. Docker Desktop 4.94.0 / Docker Engine 29.8.2 was operational in
+`desktop-linux` context, linux/amd64. Read-only inspection found no existing named
+container, listener on port 8080, SearXNG private directory or web.toml. Downloaded
+the official SearXNG image and ran the digest-pinned container using the exact
+commands in SEARCH_PROVIDER_COMPATIBILITY.md. Independently inspected host port
+binding 127.0.0.1:8080 and restart policy `no`. Created a fresh private secret,
+JSON-enabled settings and persistent config/data below %LOCALAPPDATA%\Jarvis\searxng;
+copied the example to a new private %LOCALAPPDATA%\Jarvis\web.toml. No existing
+configuration was overwritten. No host software install, Windows feature/global
+setting change, startup entry, administrator operation or real desktop effect ran.
+
+Image digest:
+`sha256:85492ba800a861e3e8ff6014c430e81369fe6ca766a9990595f616d1ce95b272`.
+SearXNG version: `2026.10.9-f4822b3fc`. First probe during certificate initialization
+failed with a closed connection; after listening startup, a real POST JSON search
+for Python venv documentation returned Python documentation and virtualenv sources.
+Some upstream engines reported CAPTCHA/rate limiting and ahmia/torch startup errors;
+no restrictions were bypassed and no commercial API was configured.
+
+Ollama was not running: initial eval-web r1 recorded 1/10 (honest-failure case only),
+exit 1, runtime unavailable. Preserved docs/evaluations/m3_5-searxng-qwen3-8b-r1.json.
+Started the existing standalone executable manually, hidden, with process-local
+OLLAMA_NO_CLOUD=1, HOST=127.0.0.1:11434, MODELS=%LOCALAPPDATA%\Jarvis\models,
+CONTEXT_LENGTH=4096. No new model was downloaded. Actual stderr at
+2026-10-10T21:52:04.741+08:00 confirmed `Ollama cloud disabled: true`; next log
+confirmed version 0.40.2 listening on loopback. PID 1272; private stdout/stderr
+logs named ollama-searxng-20261010-215203.*.log. Prior profile evidence was preserved.
+
+Actual full live qwen3:8b corpus r2: 8/10, exit 1, zero Windows effects. News and
+quorum-sensing research returned no fetched evidence. Successful records also
+revealed compressed page refusals and a two-source query credited with only one
+source. Added bounded gzip decoding, separate decoded/wire byte ceilings,
+malformed/truncated/extra-stream rejection, fair per-page text allocation and a
+stricter two-source evaluation predicate. Kept the frozen corpus and 100% gate.
+Full live r3: 7/10, exit 1; news and comparison then passed with two sources.
+Three fetched pages exposed a combined synthesis context limit; fixed by bounding
+all source excerpts together rather than increasing model context/output settings.
+Quorum-sensing sources hit redirect limits and authentication/site blocking.
+Historical r2/r3 reports remain unchanged. New reports record retrieval failure codes.
+
+Validation after these source fixes: 597 tests passed in 18.60 s. An earlier
+590-test run passed in 19.43 s, and the gzip/text allocation iteration passed
+596 in 18.15 s. Formatting initially found mixed encoding in the prior documentation
+append; restored only invalid CP1252 bytes to UTF-8, retaining existing valid text.
+Subsequent lint/format/pip checks passed. Doctor with the existing M3 r5 report
+exited 0, local model ready, 34/34 qualification still matching; doctor contacted
+no search/currency provider. Full live r4 is recorded separately below on completion.
+
+Final full live r4: 7/10, exit 1, zero Windows effects. Both context-limit cases
+now passed. News and Python/Rust comparison lacked a second accessible cited
+source; quorum-sensing candidates were site-blocked/oversized. Full M3.5 remains
+incomplete. Reports r1-r4 are preserved; no further corpus reruns were made merely
+to obtain a lucky pass. Final source contract hash:
+60a657c4e4239e1d4d27f81baceac9fc4afa06314ad0e79a763a63f3ace29546.
+
+A separate real-provider/local-model conversation check passed 5/5 in r2:
+identity ANSWERED with zero reads, documentation SUCCEEDED (one search/three
+fetches), sources SUCCEEDED with zero new reads, followup SUCCEEDED with zero new
+reads, disabled-web request FAILED with zero reads. Explicitly asserted the
+Notepad adapter was simulated; no native Windows adapter was selected. Report:
+docs/evaluations/m3_5-searxng-conversation-r2.json. Initial smoke r1 failed in the
+development reporting harness because NotepadDesktop has no effect_count field;
+retained that reporting failure separately and credited no results from it.
+The corrected check verifies desktop.real is False rather than assuming the field.
+This five-case smoke is not full milestone or semantic qualification.
+
+### 2026-10-10/11 ? Source-selection and private-budget improvements
+
+User authorized source-selection improvements and a larger bounded download limit.
+Read current instructions and preserved the existing uncommitted M3.5 work/history.
+The old private web.toml was saved as
+web-before-source-selection-20261010-234404.toml outside Git. Updated only its
+result_limit=8, max_pages=5, max_response_bytes=1048576 and max_total_bytes=3145728.
+Context/output settings, model-turn/deadline/text limits and hard ceilings stayed.
+No global setting, installer, model download, native Notepad operation or service
+change ran.
+
+The model's ranked IDs are followed by alternatives from the same validated
+returned results. Runtime ordering deduplicates URLs, diversifies domains and puts
+common social shells/derivative encyclopedias later. Every attempted candidate,
+including failures/cached evidence, counts against the page-attempt cap. Each
+network admission still rechecks cancellation, permission, deadline and journal.
+No arbitrary model/page URLs or source-driven queries were introduced.
+
+Who-is questions can use an exact controller-approved biography/profile refinement
+(the owner topic plus those fixed descriptive words). Runtime validation was
+strengthened from word membership to exact approved query candidates. Retrieved
+paragraphs are ranked before both per-source evidence and combined model-context
+trimming. A conservative numeric/superlative heuristic can downgrade unsupported
+world-record excerpts to insufficient; it does not establish worldwide truth.
+
+Owned worker error receipts now measure zero body bytes for status refusals before
+reading, and retain completed download bytes if extraction fails. Only validated
+integer counts within the reserved limit can refund a reservation. Unknown failures
+and timeouts retain full conservative charges. Negative/bool/string/over-limit
+counts fail closed. TLS, DNS/peer, SSRF, redirect, worker-memory and cancellation
+protections remain unchanged. Site bot protections were not bypassed; Wikimedia
+identification/contact/API compatibility remains outside this correction.
+
+Added 13 deterministic regressions for alternative fetches, attempt caps, unknown
+byte reservations, invalid refunds, cancellation, reviewed biography queries,
+paragraph retention, social ordering, unsupported superlatives and extraction-error
+receipts. An initial suite had 604 passes and one failure in the existing currency
+cache/refresh test; that case passed in isolation, then full runs passed. The cause
+was not established; no currency code or test was weakened. Later actual suite
+runs: 605 in 21.02 s, 607 in 20.32 s, 609 in 21.17 s and final 610 in 20.82 s.
+
+Live fixed-public-question diagnostics r1 retrieved pages but returned weak
+headline/species-list excerpts; preserved. r2 captured an identifying biography,
+but the development pipe failed printing an emoji with cp1252 before complete
+report save; preserved as partial reporting failure, no complete-answer credit.
+Added scripts/Test-JarvisSourceSelection.py with explicit --live, real Ollama
+profile requirement, simulation-only adapter, UTF-8 incremental evidence save and
+ASCII-safe JSON output. r3 returned biographies but still selected weak shrimp
+material; preserved. r4 returned Lee Zii Jia biographical excerpts from readable
+alternatives (2 searches, 5 attempts, 376818 body bytes), and shrimp research fetched
+three usable pages (1 search, 5 attempts) while correctly retaining insufficient
+world-record assessment. Some biography excerpts contain dated rankings; broad
+freshness/semantic qualification still remains open.
+
+The frozen ten-case research corpus r5 scored 10/10, exit 0, zero Windows effects,
+using the new private settings and the original frozen corpus/100% binding gate.
+Manual review found the gate cannot certify full semantic/latest/conflict behavior.
+The historical r5 full_milestone_passed flag is overbroad and is not credited as
+milestone completion. Fixed future reports to separate corpus_gate_passed from
+full_milestone_passed (false while independent broader qualification is pending).
+No historical result was altered. A selection-prompt grammar correction was made
+before the final separately named corpus r6. Its result is recorded below.
+
+Final 2026-10-11 validation: frozen corpus r6 passed 10/10, exit 0, zero Windows
+effects; corpus_gate_passed=true, full_milestone_passed=false with explicit semantic,
+latest-ordering and conflict qualification limits. Final source SHA256:
+044046565d48d573e4585ed9b167a618cf09a9278e2bf64d2031259a90bc5fb0.
+All 610 offline tests passed in 20.82 s; ruff lint/format (76 files), pip check and
+diff check passed. Doctor exit 0 still matches the existing 34/34 M3 report, local
+model ready, no public provider contact. Source-selection work is complete for this
+correction; broad M3.5 semantic/freshness qualification remains open. Historical
+failures and intermediate results are retained. No commit/push or M4 work ran.
+
+2026-10-11 — Answer-only chat presentation, requested by the user. Successful
+verified web/currency results carry a separate transient display message. Durable
+broker messages, citations, source dates, failure receipts, and acceptance checks
+retain their detailed evidence. Normal chat/history uses selected source text or
+the requested decimal conversion without reference links, timestamps, or footers.
+Source requests remain detailed and perform no new retrieval. Insufficient/conflict
+and stale-rate warnings remain visible; no new paraphrased claims are generated.
+Initial adapter-only rendering produced 17 legacy evidence-output assertion
+failures (335 passed); preserving detailed broker output corrected that design.
+The next full run had 3 new presentation-test failures (612 passed) because run()
+discarded dispatch's transient display result. Returning the dispatch result fixed
+the issue. No existing acceptance assertions were removed or relaxed.
+Final full suite: 615 passed in 19.82 s. Ruff lint and format check (76 files),
+pip check, and git diff --check passed. Five new tests cover concise web/currency,
+on-demand sources without networking, stale rates, and insufficient/conflicting
+evidence. No live inference/public retrieval or attended Windows effects were run
+for this presentation change; previous reports retain their own source snapshots.
+Existing M3.5 broader qualification limitations remain. No commit or push.
+
+2026-10-11 — Qualification follow-up after the user reported real chat rejecting
+the old v10 reports. The answer-only edit changed conversation.py, one of the
+explicit M2 v10 fingerprint inputs. The earlier restart instruction incorrectly
+omitted the need to refresh qualification. No gate or historical report changed.
+Ran real local qwen3:8b inference with simulated Notepad for both unchanged corpora:
+`eval-m2 --live --profile <private notepad-m2-v10.toml> --report
+docs/evaluations/m2-qwen3-8b-simulation-v10-answer-only-r1.json` passed 18/18;
+`eval-m2-chat --live --profile <same> --report
+docs/evaluations/m2-conversation-v10-answer-only-r1.json` passed 29/29.
+Both commands exited 0 with zero unauthorized dispatches. Current contract SHA256:
+6224f22b58dcd48cdacf9740963a34bd39aae13a5f9d6e55548d605497886793.
+An observational inspect/qualified check returned ready=true and matching=true for
+both reports against current profile, corpus, code and runtime/model metadata
+(Ollama 0.40.2, existing qwen3:8b digest). Initial ad hoc verification attempts used
+an incorrect clock import and omitted allow_ollama=True; corrected verification
+passed without changing project code. No genuine Windows effects, public web
+requests, gate changes, model downloads, commits or pushes occurred. Earlier 615
+unit tests and quality checks still apply to unchanged source. Supplied an updated
+full chat command using the new reports.
+
+2026-10-11 — Quantity/unit-price currency requests. The existing trusted router
+required a contiguous base-to-quote phrase and could not aggregate item counts.
+Added full-request recognition for quantity/items/each-worth or at/for-unit-price
+phrases, repeated matching quantity references, and explicit multiplication. Generic
+item labels and provider-discovered currency codes are retained; no ticket-specific
+price logic or invented currency list. Decimal multiplication is local, bounded
+and exact; fractional item counts, mixed purchases, fees/discounts, conflicting
+references, malformed amounts, extra instructions and excess limits clarify before
+any lookup. The normalized total/pair still passes the existing model proposal,
+scope equality, broker admission and quote-validation path. No new capability.
+Initial targeted run: 19 failed / 67 passed, caused by new tests assuming fixture
+metadata started at zero, a mistaken durable-scope assertion (the normalized total
+is intentionally stored), and a synthetic string rate rejected by strict payload
+validation. Corrected tests to compare pre-request metadata counts, assert normalized
+1600 and absence of item labels, and use a valid numeric fixture rate. Next targeted
+run had only that payload fixture failure (85 passed); corrected fixture passed in
+the full suite. No existing assertions/corpus were removed or weakened.
+The M3 evaluator previously tested provenance in conversational_text(), which now
+intentionally hides it. Retained every provenance criterion against result.message
+and added evidence_answer to reports; visible conversion calculations remain checked
+against final_answer. Frozen corpus and 100% gate unchanged.
+Actual real local model + public quote smoke check of the reported request passed:
+normalized 1600 SGD; display 1600 SGD = 1249.62 USD. Approximate conversion.
+An independent Decimal calculation agreed with the validated quote. Saved exclusive
+docs/evaluations/m3-quantity-sgd-usd-qwen3-8b-r1.json, with zero desktop effects.
+Frozen live M3 v2 passed 34/34, exit 0, zero desktop effects, at
+docs/evaluations/m3-qwen3-8b-v2-quantity-r1.json. Current M3 contract SHA256:
+add9be54800c4a461e0060c60da948904443d6ed720835bc706e2281f67916b7.
+Final full suite: 647 passed in 20.16 s (earlier 647/20.87 s before evaluator-only
+adjustment). Ruff lint/format (76 files) and pip check passed. Observational checks
+confirmed the new M3 report matches and both M2 v10-answer-only-r1 reports still
+match; the user's latest full chat command needs no further report-path change.
+No real Windows effects, network settings, models, global settings, commits or pushes
+changed. Physical disconnection was not tested. Broad M3.5 qualification remains open.
+
+2026-10-11 — Quantity typo/clarification follow-up. The reported `what much`
+question was rejected by the initial complete-request grammar; the next-turn
+quantity had no trusted currency scope and fell through to ordinary conversation.
+Accepted the reported typo as an equivalent question phrase. Quantity clarifications
+(`I said` / `I mean`) can reuse the one explicitly established same-session pair,
+with local total recomputation and all broker validation unchanged. Unsupported
+question wording preserves only a unique explicit pair for a following complete
+quantity clarification. Fees/discounts/taxes/additional effects or rates cannot
+seed this context; conflicting source currencies clarify. Without pair context,
+a quantity-only request now gets trusted currency clarification instead of an
+ordinary model claim that the user must supply a rate. Unrelated turns clear
+context, and another session cannot access it. No raw request state is persisted.
+Added five regression tests covering the exact typo and follow-up, pending-pair
+clarification, session/intervening-chat isolation, conflicting base, and preventing
+a discount from being silently dropped. Existing denial assertions remain intact.
+All 652 tests passed in 21.07 s. Ruff lint/format (76 files), pip and diff checks
+passed after correcting one new local import-order lint issue. Intermediate 651-test
+runs also passed; no failing runtime result was hidden.
+Actual qwen3:8b + public currency two-turn checks passed twice, saved independently
+as docs/evaluations/m3-quantity-followup-qwen3-8b-r1.json and r2.json. Each turn
+resolved 1600 SGD to USD and displayed 1600 SGD = 1249.62 USD. Approximate conversion.
+Independent Decimal results matched the validated quote, with zero desktop effects.
+Frozen M3 v2 runs quantity-r2 and quantity-r3 each passed 34/34 on their intermediate
+source snapshots; they remain historical because subsequent defensive checks changed
+the router fingerprint. Final quantity-r4 passed 34/34, exit 0, zero desktop effects,
+on current contract 75d9aa9af65234862a92f724d4b980b11a9e8c8dc0d9533979642989a87a3c61.
+The final two-turn report confirms both M2 v10-answer-only-r1 reports still match.
+Restart with the same latest command; no report-path change required. No native
+Windows effects, physical-offline test, global changes, installs, commits or pushes.
+
+2026-10-11 — Follow-up worth-question wording. The previous fix still required
+`be`, `cost` or `come to` after the repeated item reference; it rejected the user's
+`how much would 40 tickets worth in USD`. Extended the complete-request grammar
+to accept `worth` and `be worth`, including is/are questions, while retaining exact
+quantity/reference matching and refusing additional discounts or clauses. Added
+12 broker wording-variant cases plus a conflicting-quantity/discount regression.
+All 665 tests passed in 21.78 s; Ruff lint/format (76 files), pip and diff checks
+passed. Exact reported wording passed actual local qwen3:8b/public-rate inference:
+1600 SGD = 1249.62 USD. Approximate conversion. Independent Decimal verification
+agreed; exclusive report docs/evaluations/m3-quantity-worth-qwen3-8b-r1.json.
+Frozen M3 v2 quantity-r5 passed 34/34, exit 0, zero desktop effects, with unchanged
+corpus and 100% gate. Current contract SHA256:
+0086783a0cbf2b8c9258459ee3eb1182bb10ad38884e025d3d9026398976694a.
+Both M2 answer-only reports still match. Earlier source snapshots remain intact.
+No genuine Windows control or physical-offline validation ran; no setup, global
+settings, models, commits or pushes changed. Parser coverage is bounded rather
+than general natural-language reasoning. Restart latest chat command unchanged.
+
+2026-10-11 — User-requested M3.5 commit checkpoint. Reviewed all tracked/untracked
+changes, including SearXNG/public fetch infrastructure, security policy, evidence,
+source-selection and chat presentation, currency quantity follow-ups, and retained
+failed/intermediate evaluations. No private runtime configuration, model files,
+venv, database or logs are included. Final pre-commit suite: 665 passed in 22.97 s;
+Ruff lint/format (76 files), pip check and diff check passed. A targeted private-key
+pattern scan of source/config/docs/scripts/tests found no matches. This checkpoint
+preserves current implementation; it does not assert broad M3.5 semantic/freshness
+qualification or implement the subsequently discussed model-led conversation
+architecture. Commit is local only; no push authorized or performed.

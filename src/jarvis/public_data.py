@@ -205,7 +205,28 @@ def conversion(amount, rate, quote):
         )
 
 
-def render(arguments, observation=None, *, status="live", failure=None):
+def render(arguments, observation=None, *, status="live", failure=None, concise=False):
+    if concise and arguments.operation != "source":
+        if arguments.operation == "identity":
+            rate = "1"
+        elif arguments.operation == "supplied":
+            rate = format(number(arguments.supplied_rate, rate=True).normalize(), "f")
+        else:
+            if observation is None:
+                raise PublicDataError("UNKNOWN_CITATION")
+            rate = observation.rate
+        amount = arguments.amount if arguments.amount is not None else "1"
+        converted = (
+            conversion(amount, rate, arguments.quote) if arguments.amount is not None else rate
+        )
+        text = f"{amount} {arguments.base} = {converted} {arguments.quote}."
+        if arguments.operation == "supplied":
+            text += " Using your supplied rate."
+        elif arguments.operation != "identity":
+            text += " Approximate conversion."
+            if status in {"stale cache", "dated session evidence"}:
+                text += " Using an earlier rate; the current rate has not been verified."
+        return text
     if arguments.operation == "identity":
         rate = "1"
         text = (

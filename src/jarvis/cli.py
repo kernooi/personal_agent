@@ -44,11 +44,15 @@ def main() -> None:
     currency.add_argument("--public-data-config", type=Path, required=True)
     currency.add_argument("--live", action="store_true", required=True)
     currency.add_argument("--report", type=Path, required=True)
-    for command in ("doctor", "chat", "eval", "eval-m2", "eval-m2-chat", "eval-m3"):
+    for command in ("doctor", "chat", "eval", "eval-m2", "eval-m2-chat", "eval-m3", "eval-web"):
         child = sub.add_parser(command, help=f"Local {command}; real chat requires explicit opt-in")
         child.add_argument("--profile", type=Path, required=True)
         if command in {"doctor", "chat", "eval-m3"}:
             child.add_argument("--public-data-config", type=Path, required=command == "eval-m3")
+        if command in {"doctor", "chat", "eval-web"}:
+            child.add_argument("--web-config", type=Path, required=command == "eval-web")
+        if command == "eval-web":
+            child.add_argument("--owner-url-only", action="store_true")
         if command == "doctor":
             child.add_argument("--evaluation-report", type=Path)
         if command == "chat":
@@ -57,7 +61,7 @@ def main() -> None:
             child.add_argument("--registration", type=Path)
             child.add_argument("--model-report", type=Path)
             child.add_argument("--conversation-report", type=Path)
-        if command in {"eval", "eval-m2", "eval-m2-chat", "eval-m3"}:
+        if command in {"eval", "eval-m2", "eval-m2-chat", "eval-m3", "eval-web"}:
             child.add_argument("--live", action="store_true", required=True)
             child.add_argument("--report", type=Path)
         if command == "eval":
@@ -164,6 +168,24 @@ def live_command(args, parser):
     if not isinstance(profile, OllamaProfile):
         parser.error("M1 commands require an explicit Ollama profile; no fake fallback")
     public_config = None
+    web_config = None
+    if getattr(args, "web_config", None) is not None:
+        from jarvis.web_data import load_web_config
+
+        try:
+            web_config = load_web_config(args.web_config)
+        except (OSError, ValueError):
+            parser.error("Web research configuration unavailable or invalid")
+    if args.command == "eval-web":
+        from jarvis.web_evaluation import evaluate_web
+
+        if args.report is None:
+            parser.error("eval-web requires --report; existing reports are never overwritten")
+        report, code = evaluate_web(
+            profile, web_config, args.report, owner_url_only=args.owner_url_only
+        )
+        print(json.dumps({k: v for k, v in report.items() if k != "records"}, indent=2))
+        raise SystemExit(code)
     if getattr(args, "public_data_config", None) is not None:
         from jarvis.currency_tools import load_public_config
 
@@ -249,10 +271,13 @@ def live_command(args, parser):
                     if public_config
                     else {"mode": "disabled"},
                     "public_provider_contacted": False,
+                    "web_research": web_config.model_dump() if web_config else {"enabled": False},
+                    "web_provider_contacted": False,
                     "last_evaluation": selected_summary,
                     **metadata,
                     "qualification": "M3 currency/chat passed; Windows qualification is separate"
-                    if selected_summary.get("milestone") == "M3 narrow public currency/chat"
+                    if selected_summary.get("status") == "passed"
+                    and str(selected_summary.get("milestone", "")).startswith("M3 ")
                     else metadata.get("qualification"),
                 },
                 indent=2,
@@ -314,6 +339,15 @@ def live_command(args, parser):
             "Public-data controls: /cache, /cache-clear, /refresh-rate. "
             "Windows permission is separate."
         )
+    if web_config:
+        print(
+            f"Public web research: {'enabled' if web_config.enabled else 'disabled'} "
+            f"| provider={web_config.provider}."
+        )
+        print(
+            "Web controls: /web-status, /web-enable, /web-disable, /sources, "
+            "/web-cache, /web-cache-clear, /web-refresh."
+        )
     try:
         broker = build(
             data_home
@@ -332,6 +366,7 @@ def live_command(args, parser):
             attended=args.attended,
             public_config=public_config,
             cache_path=data_home / "public-quotes-v2.json" if public_config else None,
+            web_config=web_config,
         )
     except (OSError, sqlite3.Error, ValueError):
         provider.close()

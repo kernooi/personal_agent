@@ -1,0 +1,96 @@
+{
+  "scope": "Real local model and local SearXNG: identity, documentation, sources, followup, web-disable; NOT full milestone qualification",
+  "passed": true,
+  "real_windows_adapter": false,
+  "model": {
+    "available": true,
+    "model_present": true,
+    "identity": "qwen3:8b",
+    "digest": "500a1f067a9f782620b40bee6f7b0c89e17ae61f686b92c24933e4ca4b2b8b41",
+    "runtime_version": "0.40.2",
+    "transport_version": "ollama-chat-v2",
+    "text_generation": "supported",
+    "schema_constrained_output": "unknown",
+    "native_tool_calls": "supported",
+    "context_capacity": 40960,
+    "cloud_disabled": "user_verified",
+    "local_mode_programmatically_attested": false,
+    "ready": true,
+    "qualification": "unqualified; fake-execution evaluation only"
+  },
+  "search_calls": [
+    {
+      "query": "documentation Python venv.",
+      "result_limit": 5,
+      "recency": null,
+      "domains": []
+    }
+  ],
+  "fetch_calls": [
+    "https://docs.python.org/3/library/venv.html",
+    "https://docs.python.org/3/tutorial/venv.html",
+    "https://virtualenv.pypa.io/"
+  ],
+  "records": [
+    {
+      "synthetic_owner_request": "What is your name?",
+      "state": "ANSWERED",
+      "correct": true,
+      "error": null,
+      "network_calls": [
+        0,
+        0
+      ],
+      "answer": "SIMULATED: say; no action verified. My name is JARVIS.",
+      "latency_seconds": 0.736152172088623
+    },
+    {
+      "synthetic_owner_request": "Find documentation for Python venv.",
+      "state": "SUCCEEDED",
+      "correct": true,
+      "error": null,
+      "network_calls": [
+        1,
+        3
+      ],
+      "answer": "\"The venv module supports creating lightweight \u201cvirtual environments\u201d, each with their own independent set of Python packages installed in their site directories. A virtual environment is created on top of an existing Python installation, known as the virtual environment\u2019s \u201cbase\u201d Python, and by default is isolated from the packages in the base environment, so that only those explicitly installed in the virtual environment are available. See Virtual Environments and site\u2019s virtual environments documentation for more information.\" [venv \u2014 Creation of virtual environments \u2014 Python 3.15.0 documentation \u2014 docs.python.org](https://docs.python.org/3/library/venv.html) (published: unknown; updated: unknown).\n\"When used from within a virtual environment, common installation tools such as pip will install Python packages into a virtual environment without needing to be told to do so explicitly.\" [venv \u2014 Creation of virtual environments \u2014 Python 3.15.0 documentation \u2014 docs.python.org](https://docs.python.org/3/library/venv.html) (published: unknown; updated: unknown).\n\"virtualenv is a tool to create isolated Python environments. Since Python 3.3, a subset of it has been integrated into the standard library under the venv module. For how virtualenv compares to the stdlib venv module, see Explanation.\" [virtualenv \u2014 virtualenv.pypa.io](https://virtualenv.pypa.io/en/latest/) (published: unknown; updated: unknown).\n\"Use virtualenv \u2014 Select Python versions, activate environments, configure defaults, and use from Python code\" [virtualenv \u2014 virtualenv.pypa.io](https://virtualenv.pypa.io/en/latest/) (published: unknown; updated: unknown).\nThese are source excerpts, not independently proven facts. Retrieval time is separate from publication; use /sources for provenance.",
+      "latency_seconds": 10.724716424942017
+    },
+    {
+      "synthetic_owner_request": "What sources did you use?",
+      "state": "SUCCEEDED",
+      "correct": true,
+      "error": null,
+      "network_calls": [
+        0,
+        0
+      ],
+      "answer": "websrc_3c443949e7ba490ab7071cb11b351f45: venv \u2014 Creation of virtual environments \u2014 Python 3.15.0 documentation | docs.python.org | https://docs.python.org/3/library/venv.html\nPublished: unknown; updated: unknown; retrieved UTC: 2026-10-10T14:01:53.891778+00:00. publication time unknown.\nwebsrc_4247fffcce874bfe8063e9e946699477: 12. Virtual Environments and Packages \u2014 Python 3.15.0 documentation | docs.python.org | https://docs.python.org/3/tutorial/venv.html\nPublished: unknown; updated: unknown; retrieved UTC: 2026-10-10T14:01:54.658898+00:00. publication time unknown.\nwebsrc_5dccb737449d4f16863d7d2af2e70dc3: virtualenv | virtualenv.pypa.io | https://virtualenv.pypa.io/en/latest/\nPublished: unknown; updated: unknown; retrieved UTC: 2026-10-10T14:01:55.704816+00:00. publication time unknown.",
+      "latency_seconds": 0.020638227462768555
+    },
+    {
+      "synthetic_owner_request": "What changed?",
+      "state": "SUCCEEDED",
+      "correct": true,
+      "error": null,
+      "network_calls": [
+        0,
+        0
+      ],
+      "answer": "\"The venv module supports creating lightweight \u201cvirtual environments\u201d, each with their own independent set of Python packages installed in their site directories. A virtual environment is created on top of an existing Python installation, known as the virtual environment\u2019s \u201cbase\u201d Python, and by default is isolated from the packages in the base environment, so that only those explicitly installed in the virtual environment are available. See Virtual Environments and site\u2019s virtual environments documentation for more information.\" [venv \u2014 Creation of virtual environments \u2014 Python 3.15.0 documentation \u2014 docs.python.org](https://docs.python.org/3/library/venv.html) (published: unknown; updated: unknown).\n\"When used from within a virtual environment, common installation tools such as pip will install Python packages into a virtual environment without needing to be told to do so explicitly.\" [venv \u2014 Creation of virtual environments \u2014 Python 3.15.0 documentation \u2014 docs.python.org](https://docs.python.org/3/library/venv.html) (published: unknown; updated: unknown).\n\"virtualenv is a tool to create isolated Python environments. Since Python 3.3, a subset of it has been integrated into the standard library under the venv module. For how virtualenv compares to the stdlib venv module, see Explanation.\" [virtualenv \u2014 virtualenv.pypa.io](https://virtualenv.pypa.io/en/latest/) (published: unknown; updated: unknown).\n\"Use virtualenv \u2014 Select Python versions, activate environments, configure defaults, and use from Python code\" [virtualenv \u2014 virtualenv.pypa.io](https://virtualenv.pypa.io/en/latest/) (published: unknown; updated: unknown).\nThese are source excerpts, not independently proven facts. Retrieval time is separate from publication; use /sources for provenance.",
+      "latency_seconds": 3.718886613845825
+    },
+    {
+      "synthetic_owner_request": "Search for Python venv documentation",
+      "state": "FAILED",
+      "correct": true,
+      "error": "WEB_DISABLED",
+      "network_calls": [
+        0,
+        0
+      ],
+      "answer": "I could not complete web research (WEB_DISABLED). No unverified factual answer is supplied.",
+      "latency_seconds": 0.008835554122924805
+    }
+  ]
+}

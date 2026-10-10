@@ -142,7 +142,9 @@ class Store:
             )
             or payload["effect"]
             not in (
-                {"public_read", "local_calculate", "read_evidence"}
+                {"web_public_read", "web_evidence"}
+                if payload["app_id"] == "web"
+                else {"public_read", "local_calculate", "read_evidence"}
                 if payload["app_id"] == "currency"
                 else {"open", "focus", "close"}
             )
@@ -156,6 +158,12 @@ class Store:
             arguments = CurrencyArguments.model_validate_json(payload.get("window_ref", ""))
             if canonical(arguments) != payload["window_ref"]:
                 raise Denied("Corrupt currency argument binding")
+        if payload["app_id"] == "web":
+            from jarvis.web_data import WebArguments, canonical
+
+            arguments = WebArguments.model_validate_json(payload.get("window_ref", ""))
+            if canonical(arguments) != payload["window_ref"]:
+                raise Denied("Corrupt research argument binding")
         return Task(
             task_id,
             row["revision"],
@@ -325,7 +333,12 @@ class Store:
                 (
                     evidence.postcondition
                     if action.adapter_version
-                    in {"notepad-windows-v1", "notepad-fake-v1", "currency-adapter-v1"}
+                    in {
+                        "notepad-windows-v1",
+                        "notepad-fake-v1",
+                        "currency-adapter-v1",
+                        "web-adapter-v1",
+                    }
                     else evidence.running
                 )
                 is not True
@@ -340,6 +353,33 @@ class Store:
                     or evidence.authority != "tool_output"
                 ):
                     raise Denied("Stored currency evidence authority is invalid")
+            if action.adapter_version == "web-adapter-v1":
+                from jarvis.web_data import Source
+                from jarvis.web_decisions import ResearchAnswer, validate_answer
+
+                if (
+                    evidence.source != "web-excerpt-validator-v1"
+                    or evidence.kind != "validated_public_research"
+                    or evidence.authority != "tool_output"
+                ):
+                    raise Denied("Stored web evidence authority is invalid")
+                record = json.loads(
+                    evidence.observed_identity,
+                    object_pairs_hook=unique_object,
+                    parse_constant=reject_constant,
+                )
+                sources = tuple(
+                    Source.model_validate_json(json.dumps(s)) for s in record["sources"]
+                )
+                from jarvis.web_data import WebArguments
+
+                args = WebArguments.model_validate_json(action.window_ref)
+                if not sources or any(s.query_hash != args.query_hash for s in sources):
+                    raise Denied("Stored source relationship differs from owner task")
+                if args.operation != "sources" and record["answer"] is None:
+                    raise Denied("Stored research success has no grounded answer")
+                if record["answer"] is not None:
+                    validate_answer(ResearchAnswer.model_validate(record["answer"]), sources)
         return TaskResult(
             task_id,
             task.state,

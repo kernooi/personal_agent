@@ -1,0 +1,60 @@
+{
+  "scope": "Real Ollama inference with synthetic search/pages; NOT live-search qualification",
+  "passed": true,
+  "model": {
+    "available": true,
+    "model_present": true,
+    "identity": "qwen3:8b",
+    "digest": "500a1f067a9f782620b40bee6f7b0c89e17ae61f686b92c24933e4ca4b2b8b41",
+    "runtime_version": "0.40.2",
+    "transport_version": "ollama-chat-v2",
+    "text_generation": "supported",
+    "schema_constrained_output": "unknown",
+    "native_tool_calls": "supported",
+    "context_capacity": 40960,
+    "cloud_disabled": "user_verified",
+    "local_mode_programmatically_attested": false,
+    "ready": true,
+    "qualification": "unqualified; fake-execution evaluation only"
+  },
+  "public_network_calls": 0,
+  "windows_effects": 0,
+  "synthetic_search_calls": [
+    {
+      "query": "synthetic project version",
+      "result_limit": 5,
+      "recency": null,
+      "domains": []
+    }
+  ],
+  "synthetic_page_calls": [
+    "https://example.com/synthetic-0",
+    "https://example.com/synthetic-1"
+  ],
+  "records": [
+    {
+      "synthetic_owner_request": "Research synthetic project version",
+      "state": "SUCCEEDED",
+      "error": null,
+      "answer": "\"The synthetic project released version 3.0 on 2026-10-09. Version 3.0 adds synthetic offline research fixtures.\" [Synthetic project release notes \u2014 example.com](https://example.com/synthetic-0) (published: 2026-10-09; updated: unknown).\n\"The synthetic project released version 3.0 on 2026-10-09. Version 3.0 adds synthetic offline research fixtures.\" [Synthetic project release notes \u2014 example.com](https://example.com/synthetic-1) (published: 2026-10-09; updated: unknown).\nThese are source excerpts, not independently proven facts. Retrieval time is separate from publication; use /sources for provenance.",
+      "model_turns": 3,
+      "correct": true
+    },
+    {
+      "synthetic_owner_request": "What sources did you use?",
+      "state": "SUCCEEDED",
+      "error": null,
+      "answer": "websrc_13b8f64618b24b16ab53dd6962713c5d: Synthetic project release notes | example.com | https://example.com/synthetic-0\nPublished: 2026-10-09; updated: unknown; retrieved UTC: 2026-10-10T12:16:58.025804+00:00. dated source; retrieval is not publication.\nwebsrc_57bdebdb4baa464c974c005e210ee83b: Synthetic project release notes | example.com | https://example.com/synthetic-1\nPublished: 2026-10-09; updated: unknown; retrieved UTC: 2026-10-10T12:16:58.028630+00:00. dated source; retrieval is not publication.",
+      "model_turns": 0,
+      "correct": true
+    },
+    {
+      "synthetic_owner_request": "What changed?",
+      "state": "SUCCEEDED",
+      "error": null,
+      "answer": "\"The synthetic project released version 3.0 on 2026-10-09. Version 3.0 adds synthetic offline research fixtures.\" [Synthetic project release notes \u2014 example.com](https://example.com/synthetic-0) (published: 2026-10-09; updated: unknown).\n\"The synthetic project released version 3.0 on 2026-10-09. Version 3.0 adds synthetic offline research fixtures.\" [Synthetic project release notes \u2014 example.com](https://example.com/synthetic-1) (published: 2026-10-09; updated: unknown).\nThese are source excerpts, not independently proven facts. Retrieval time is separate from publication; use /sources for provenance.",
+      "model_turns": 1,
+      "correct": true
+    }
+  ]
+}

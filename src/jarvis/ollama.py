@@ -227,7 +227,14 @@ class OllamaProvider:
 
     def generate(self, request: ModelRequest, cancel: Callable[[], bool]) -> ModelReply:
         profile = self._profile(request.profile)
-        if request.decision_boundary not in {None, "currency-decision-v1"}:
+        if request.decision_boundary not in {
+            None,
+            "currency-decision-v1",
+            "web-route-v1",
+            "web-plan-v1",
+            "web-select-v1",
+            "web-answer-v1",
+        }:
             raise ProviderError("INVALID_DECISION_BOUNDARY")
         if not profile.cloud_disabled_verified:
             raise ProviderError("LOCAL_MODE_UNVERIFIED")

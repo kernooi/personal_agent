@@ -1,0 +1,50 @@
+{
+  "scope": "Real Ollama inference with synthetic search/pages; NOT live-search qualification",
+  "passed": false,
+  "model": {
+    "available": true,
+    "model_present": true,
+    "identity": "qwen3:8b",
+    "digest": "500a1f067a9f782620b40bee6f7b0c89e17ae61f686b92c24933e4ca4b2b8b41",
+    "runtime_version": "0.40.2",
+    "transport_version": "ollama-chat-v2",
+    "text_generation": "supported",
+    "schema_constrained_output": "unknown",
+    "native_tool_calls": "supported",
+    "context_capacity": 40960,
+    "cloud_disabled": "user_verified",
+    "local_mode_programmatically_attested": false,
+    "ready": true,
+    "qualification": "unqualified; fake-execution evaluation only"
+  },
+  "public_network_calls": 0,
+  "windows_effects": 0,
+  "synthetic_search_calls": [],
+  "synthetic_page_calls": [],
+  "records": [
+    {
+      "synthetic_owner_request": "Research synthetic project version",
+      "state": "FAILED",
+      "error": "QUERY_WIDENS_DISCLOSURE_SCOPE",
+      "answer": "I could not complete web research (QUERY_WIDENS_DISCLOSURE_SCOPE). No unverified factual answer is supplied.",
+      "model_turns": 1,
+      "correct": false
+    },
+    {
+      "synthetic_owner_request": "What sources did you use?",
+      "state": "FAILED",
+      "error": null,
+      "answer": "SIMULATED: unsupported; no action verified. I do not use external sources or maintain a record of information retrieval.",
+      "model_turns": 1,
+      "correct": false
+    },
+    {
+      "synthetic_owner_request": "What changed?",
+      "state": "ANSWERED",
+      "error": null,
+      "answer": "SIMULATED: say; no action verified. I am JARVIS, your personal assistant. I do not track or record changes to my knowledge or capabilities.",
+      "model_turns": 1,
+      "correct": false
+    }
+  ]
+}

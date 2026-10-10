@@ -139,6 +139,15 @@ def chat_loop(conversation: Conversation, stream: TextIO, output: Callable[[str]
                 continue
             try:
                 currency = conversation.broker.currency
+                web = conversation.broker.web
+                if web is not None and text.startswith("/"):
+                    reply = web.control(text)
+                    if reply is not None:
+                        output("JARVIS: " + reply)
+                        prompt()
+                        continue
+                    if text == "/web-refresh":
+                        text = "refresh my research"
                 if currency is not None and text in {"/cache", "/cache-clear"}:
                     if text == "/cache-clear":
                         currency.cache.clear()
@@ -201,7 +210,7 @@ def chat_loop(conversation: Conversation, stream: TextIO, output: Callable[[str]
                             store.event(task.task_id, "manual_review_acknowledged")
                         unresolved = store.db.execute(
                             "SELECT a.task_id FROM actions a WHERE a.state='UNKNOWN' "
-                            "AND a.capability!='currency.quote' "
+                            "AND a.capability NOT IN ('currency.quote','web.research') "
                             "AND NOT EXISTS "
                             "(SELECT 1 FROM events e WHERE e.task_id=a.task_id "
                             "AND e.kind='manual_review_acknowledged')"

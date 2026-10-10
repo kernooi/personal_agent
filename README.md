@@ -224,6 +224,12 @@ passed M2 report, installation registration and attended selection are required
 for real chat. Model qualification is limited corpus evidence, not general
 permission to control applications. There is no automatic save/discard or force kill.
 
+After the answer-only chat change, the matching reports for the desktop v10 profile
+are `docs/evaluations/m2-qwen3-8b-simulation-v10-answer-only-r1.json` (18/18) and
+`docs/evaluations/m2-conversation-v10-answer-only-r1.json` (29/29). Use these as
+`--model-report` and `--conversation-report` respectively. The older v10 reports
+remain historical evidence; their code fingerprint no longer matches current chat.
+
 From the project directory, local dependency setup is:
 
 ```powershell
@@ -393,6 +399,9 @@ Convert 1,000 MYR to JPY using the latest available rate.
 How much is 10,000 JPY in MYR?
 convert 2000myr to jpy
 Convert 250 SGD to MYR.
+If I bought 40 tickets each worth 40 SGD, how much would the 40 tickets be in USD?
+How much are 3 books at 12.50 EUR each in MYR?
+Convert 40 * 40 SGD to USD.
 What's 100 EUR in USD?
 Convert 50 pounds to Japanese yen.
 What's the reverse rate?
@@ -402,12 +411,21 @@ Convert 100 MYR to JPY using rate 30
 What is an exchange rate?
 ```
 
-Answers identify live fetch, fresh cache or explicit stale-cache use, source IDs,
-the original effective date, UTC/local retrieval time and both sources. They say
-reference estimate, not a guaranteed bank/card/cash conversion. A date-only source
+Normal replies show the requested conversion or rate, with a short approximation
+notice. Stale rates retain a warning. Ask `Where did that rate come from?` to see
+source IDs, the effective date, UTC/local retrieval time and both sources. Detailed
+evidence remains recorded by the broker. A date-only source
 cannot answer an exact publication-time question. All provider-advertised canonical
 three-letter codes are accepted; a pair still needs available, fresh provider data.
 Reviewed English aliases include ringgit, yen, US/Singapore dollars and pounds.
+Simple quantity × unit-price requests calculate the total locally before converting
+it. Item labels and quantities never go to the rate provider. Item quantities must
+be whole numbers; totals retain the existing amount/precision limits. For multiple
+purchases, fees, discounts or unclear wording, provide the final total to convert.
+The common `what much` typo is accepted in a quantity question. A next-turn
+clarification such as `I said 40 tickets each worth 40` reuses only the explicitly
+established currency pair in that session; unrelated chat clears it. JARVIS retrieves
+the rate itself when public currency access is enabled.
 Unspecified dollar/symbols, misspellings, missing direction and multiple pairs
 get clarification; unknown codes fail as unsupported. Weather/news are absent.
 Amount replies such as `2000` resolve a pending amount question; `What about 500?`
@@ -472,5 +490,122 @@ Neither command opens/focuses/closes Notepad. Report hashes bind the current
 currency contract, corpus, model profile/runtime identity and public-data config.
 The 100% / zero-desktop-action gate is separate from M1/M2 qualification.
 
-M3 ends here. No arbitrary URLs, browsing, transactions, Notepad typing/saving,
+M3's currency capability ends here. No transactions, Notepad typing/saving,
 cloud inference, additional models or M4 capabilities were added.
+
+## M3.5: public web research with local SearXNG (qualification pending)
+
+M3.5 adds separately configured public research to the existing broker. SearXNG
+is the initial replaceable search adapter, with no required paid search API or key.
+Use your own local instance. See [Windows setup/API compatibility](docs/SEARCH_PROVIDER_COMPATIBILITY.md),
+[network/privacy policy](docs/WEB_NETWORK_POLICY.md), and [actual test report](docs/M3_5_TEST_REPORT.md).
+The initial inspection found no working Docker/Podman runtime. The user subsequently
+installed Docker Desktop and authorized local SearXNG setup. It now runs on
+`127.0.0.1:8080`, with JSON enabled and restart policy `no`; the private JARVIS
+configuration is `%LOCALAPPDATA%\Jarvis\web.toml`. See the compatibility document
+for the pinned image and manual restart/stop commands. Search infrastructure is
+available; the full research qualification gate remains separate.
+
+Web research is absent without `--web-config`; the disabled example supplies
+explicit status controls. The enabled example authorizes one exact local search
+API. Public fetching still blocks loopback/private networks. Ollama, currency and
+attended Notepad permissions remain separate, with no M4 browser/media automation.
+
+After your own local SearXNG has been set up and validated, preserve any existing
+private configuration and create a new one from the non-secret example:
+
+```powershell
+$jarvisProfile = "$env:LOCALAPPDATA\Jarvis\profiles\notepad-m2-v10.toml"
+$jarvisWebConfig = "$env:LOCALAPPDATA\Jarvis\web.toml"
+if (Test-Path -LiteralPath $jarvisWebConfig) { throw 'Inspect existing web config first.' }
+Copy-Item -LiteralPath .\config\examples\web-searxng.toml -Destination $jarvisWebConfig
+.\.venv\Scripts\python.exe -m jarvis chat --profile $jarvisProfile `
+  --public-data-config "$env:LOCALAPPDATA\Jarvis\public-data.toml" `
+  --web-config $jarvisWebConfig
+```
+
+Windows remains simulated. For genuine attended Notepad, retain all existing M2
+`--real --attended --registration --model-report --conversation-report` arguments
+and matching passed reports. Web research never supplies Windows authorization.
+
+Try `What is the latest stable Python version?`, `Find documentation for Python
+venv`, `Research recent AI news from two sources`, or
+`Read this page: https://docs.python.org/3/library/venv.html`. Automatic routing
+uses reviewed freshness/research terms plus local-model classification for owner
+factual questions; obscure questions can also explicitly request `Search` or
+`Research`. Trivial arithmetic/recursion/rewrite stays local. Structured
+currency takes priority over generic research.
+
+The local model plans owner-topic queries, selects result IDs, then selects fetched
+source/excerpt IDs. Normal replies show the selected text without reference links,
+timestamps or diagnostic footers. `/sources` and explicit source questions show
+provenance; broker records retain citations and retrieval failures. Uncertainty
+and conflicting-evidence warnings remain visible. This initial answer mode is extractive, not unrestricted
+paraphrased synthesis. Sources may be incomplete or wrong; retrieval today never
+establishes publication today. See the report for qualification limits.
+
+Controls, on separate lines:
+
+```text
+/web-status
+/web-enable
+/web-disable
+/sources
+/web-refresh
+/web-cache
+/web-cache-clear
+/stop
+/quit
+```
+
+`What sources did you use?` reuses evidence without networking. `What changed?`
+reuses fresh session evidence. `Check whether anything newer came out today` and
+`/web-refresh` bypass caches. The public memory-only caches retain original times;
+clearing them retains task evidence. Queries never receive chat history, Notepad,
+files or memory. Known private patterns are refused; this is not universal secret
+detection. Invalid/blocked/insufficient/conflicting/partial retrieval stays visible.
+
+Default checks remain pytest, ruff check, ruff format --check and pip check.
+Explicit live tests use synthetic public questions, no Windows effects and new
+exclusive report filenames:
+
+```powershell
+# Full ten-category corpus requires your own ready SearXNG instance.
+.\.venv\Scripts\python.exe -m jarvis eval-web --live --profile $jarvisProfile `
+  --web-config $jarvisWebConfig --report .\docs\evaluations\m3_5-web-next.json
+# Real public fetch and real local model, with no search-provider call:
+.\.venv\Scripts\python.exe -m jarvis eval-web --live --owner-url-only `
+  --profile $jarvisProfile --web-config .\config\examples\web-searxng.toml `
+  --report .\docs\evaluations\m3_5-owner-url-next.json
+# Observational; no public search/fetch:
+.\.venv\Scripts\python.exe -m jarvis doctor --profile $jarvisProfile `
+  --web-config .\config\examples\web-disabled.toml
+```
+
+The owner-URL test does not establish the full search gate. M3.5 remains incomplete,
+with historical failed/pass evidence retained. M4 remains outside scope. No machine
+installation is performed by these JARVIS commands.
+
+### Improved source selection on this PC
+
+The private `%LOCALAPPDATA%\Jarvis\web.toml` now uses 8 candidates per query,
+5 bounded page attempts, 1 MiB per response and 3 MiB total, with a preserved backup.
+Restart chat to load changed configuration/code. Returned search alternatives may
+be fetched if preferred pages fail; every attempt consumes the configured budget.
+Biographical refinements, domain diversity, later social/derivative candidates and
+relevant paragraph selection improve readable evidence. Site access restrictions
+are respected; Wikipedia/BWF/other 403 responses are not bypassed. The world-record
+question can still be insufficient even when pages are retrieved.
+
+The explicit fixed-public-question diagnostics (simulation only) are repeatable:
+
+```powershell
+.\.venv\Scripts\python.exe scripts/Test-JarvisSourceSelection.py --live `
+  --profile "$env:LOCALAPPDATA\Jarvis\profiles\notepad-m2-v10.toml" `
+  --web-config "$env:LOCALAPPDATA\Jarvis\web.toml" `
+  --report docs/evaluations/m3_5-source-selection-next.json
+```
+
+The report preserves retrieved pages, failure receipts, source excerpts, timing
+and model assessment. Manual answer review is required; script exit 0 alone is
+not full milestone qualification. Existing reports cannot be overwritten.

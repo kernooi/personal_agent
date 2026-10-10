@@ -1,0 +1,93 @@
+{
+  "scope": "Real Ollama inference with synthetic search/pages; NOT live-search qualification",
+  "passed": true,
+  "model": {
+    "available": true,
+    "model_present": true,
+    "identity": "qwen3:8b",
+    "digest": "500a1f067a9f782620b40bee6f7b0c89e17ae61f686b92c24933e4ca4b2b8b41",
+    "runtime_version": "0.40.2",
+    "transport_version": "ollama-chat-v2",
+    "text_generation": "supported",
+    "schema_constrained_output": "unknown",
+    "native_tool_calls": "supported",
+    "context_capacity": 40960,
+    "cloud_disabled": "user_verified",
+    "local_mode_programmatically_attested": false,
+    "ready": true,
+    "qualification": "unqualified; fake-execution evaluation only"
+  },
+  "profile": {
+    "schema_version": 1,
+    "profile_name": "notepad-m2-local",
+    "execution_mode": "simulation",
+    "model_identity": "qwen3:8b",
+    "role": "primary_text",
+    "prompt_version": "planner-m2-v10",
+    "decision_version": "decision-m2-v1",
+    "context_bytes": 16384,
+    "max_output_bytes": 32768,
+    "task_seconds": 120,
+    "provider": "ollama",
+    "network_mode": "local_model_only",
+    "base_url": "http://127.0.0.1:11434",
+    "response_mode": "json_schema",
+    "context_tokens": 4096,
+    "max_output_tokens": 512,
+    "safety_tokens": 256,
+    "connect_timeout_seconds": 5.0,
+    "read_timeout_seconds": 30.0,
+    "max_envelope_bytes": 131072,
+    "temperature": 0.0,
+    "cloud_disabled_verified": true,
+    "cloud_disabled_evidence": "Operator observed actual Ollama 0.40.2 startup at 2026-10-10T12:13:27.217+08:00: Ollama cloud disabled: true, loopback 127.0.0.1:11434, process-local approved settings. Separate same-PC M1 offline evidence: docs/evaluations/m1-desktop-offline-validation.json (2026-10-09), snapshot-level only.",
+    "provider_options": {
+      "think": false,
+      "keep_alive": "2m"
+    }
+  },
+  "corpus_sha256": "b378eddefda346870c5e2978e4729b11bdcac373d9001373af6712d0b1ac2267",
+  "public_network_calls": 0,
+  "windows_effects": 0,
+  "synthetic_search_calls": [
+    {
+      "query": "synthetic project version",
+      "result_limit": 5,
+      "recency": null,
+      "domains": []
+    }
+  ],
+  "synthetic_page_calls": [
+    "https://example.com/synthetic-0",
+    "https://example.com/synthetic-1"
+  ],
+  "records": [
+    {
+      "synthetic_owner_request": "Research synthetic project version",
+      "state": "SUCCEEDED",
+      "error": null,
+      "answer": "\"The synthetic project released version 3.0 on 2026-10-09. Version 3.0 adds synthetic offline research fixtures.\" [Synthetic project release notes \u2014 example.com](https://example.com/synthetic-0) (published: 2026-10-09; updated: unknown).\n\"The synthetic project released version 3.0 on 2026-10-09. Version 3.0 adds synthetic offline research fixtures.\" [Synthetic project release notes \u2014 example.com](https://example.com/synthetic-1) (published: 2026-10-09; updated: unknown).\nThese are source excerpts, not independently proven facts. Retrieval time is separate from publication; use /sources for provenance.",
+      "model_turns": 3,
+      "assessment": "supported",
+      "correct": true
+    },
+    {
+      "synthetic_owner_request": "What sources did you use?",
+      "state": "SUCCEEDED",
+      "error": null,
+      "answer": "websrc_68fe79c456194f52af0784f8bff56687: Synthetic project release notes | example.com | https://example.com/synthetic-0\nPublished: 2026-10-09; updated: unknown; retrieved UTC: 2026-10-10T12:19:05.677664+00:00. dated source; retrieval is not publication.\nwebsrc_72bbf5daad944a1e803989e2713bc58c: Synthetic project release notes | example.com | https://example.com/synthetic-1\nPublished: 2026-10-09; updated: unknown; retrieved UTC: 2026-10-10T12:19:05.680695+00:00. dated source; retrieval is not publication.",
+      "model_turns": 0,
+      "assessment": null,
+      "correct": true
+    },
+    {
+      "synthetic_owner_request": "What changed?",
+      "state": "SUCCEEDED",
+      "error": null,
+      "answer": "\"The synthetic project released version 3.0 on 2026-10-09. Version 3.0 adds synthetic offline research fixtures.\" [Synthetic project release notes \u2014 example.com](https://example.com/synthetic-0) (published: 2026-10-09; updated: unknown).\n\"The synthetic project released version 3.0 on 2026-10-09. Version 3.0 adds synthetic offline research fixtures.\" [Synthetic project release notes \u2014 example.com](https://example.com/synthetic-1) (published: 2026-10-09; updated: unknown).\nThese are source excerpts, not independently proven facts. Retrieval time is separate from publication; use /sources for provenance.",
+      "model_turns": 1,
+      "assessment": "supported",
+      "correct": true
+    }
+  ]
+}

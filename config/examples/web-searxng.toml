@@ -1,0 +1,18 @@
+# Use only with your own inspected SearXNG instance. No commercial API/key.
+# Copy to a private configuration only when authorizing this exact search API.
+enabled = true
+provider = "searxng"
+search_endpoint = "http://127.0.0.1:8080/search"
+local_search_authorized = true
+max_searches = 2
+result_limit = 5
+max_pages = 3
+max_response_bytes = 524288
+max_total_bytes = 1572864
+max_text_chars = 12000
+max_model_turns = 4
+timeout_seconds = 12.0
+task_seconds = 100.0
+redirects = 2
+cache_seconds = 600
+timezone = "Asia/Kuala_Lumpur"
