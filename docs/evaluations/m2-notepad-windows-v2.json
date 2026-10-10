@@ -1,0 +1,72 @@
+{
+  "version": "m2-notepad-adapter-lab-v1",
+  "provider": "scripted",
+  "execution_mode": "windows",
+  "notepad_version": "11.2607.14.0",
+  "preexisting_window_count": 0,
+  "preexisting_preserved": true,
+  "remaining_window_count": 1,
+  "interactive_checks_requested": true,
+  "cases": [
+    {
+      "case_id": "open-1",
+      "broker_state": "SUCCEEDED",
+      "message": "The selected Notepad window is open and ready.",
+      "simulated": false,
+      "latency_seconds": 1.2014,
+      "executions": 1,
+      "observations": 1
+    },
+    {
+      "case_id": "reuse-1",
+      "broker_state": "SUCCEEDED",
+      "message": "The selected Notepad window is open and ready.",
+      "simulated": false,
+      "latency_seconds": 1.1876,
+      "executions": 2,
+      "observations": 2
+    },
+    {
+      "case_id": "focus-1",
+      "broker_state": "SUCCEEDED",
+      "message": "The selected Notepad window is in the foreground.",
+      "simulated": false,
+      "latency_seconds": 1.7473,
+      "executions": 3,
+      "observations": 3
+    },
+    {
+      "case_id": "open-2",
+      "broker_state": "SUCCEEDED",
+      "message": "The selected Notepad window is open and ready.",
+      "simulated": false,
+      "latency_seconds": 1.1483,
+      "executions": 4,
+      "observations": 4
+    },
+    {
+      "case_id": "focus-2",
+      "broker_state": "SUCCEEDED",
+      "message": "The selected Notepad window is in the foreground.",
+      "simulated": false,
+      "latency_seconds": 1.7285,
+      "executions": 5,
+      "observations": 5
+    },
+    {
+      "case_id": "close-2",
+      "broker_state": "SUCCEEDED",
+      "message": "The selected Notepad window is closed.",
+      "simulated": false,
+      "latency_seconds": 1.2628,
+      "executions": 6,
+      "observations": 6
+    },
+    {
+      "case_id": "lab-blocked",
+      "passed": false,
+      "reason": "Required native identity, isolation, focus or close safety unavailable; manual handling required"
+    }
+  ],
+  "completion_gate": "pending live-model, dirty-state and interruption evidence"
+}

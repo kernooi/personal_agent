@@ -1,0 +1,11 @@
+{
+  "version": "m2-native-takeover-v1",
+  "provider": "scripted",
+  "execution_mode": "windows",
+  "broker_state": "FAILED",
+  "message": "adapter gate rejected; zero execution.",
+  "native_deliveries": 0,
+  "window_preserved": true,
+  "passed": true,
+  "scope": "User-confirmed synthetic window; focus only; no open/close"
+}

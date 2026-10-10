@@ -122,3 +122,93 @@ Current exit assessment: behavior qualification is resolved at the unchanged gat
 Actual offline validation passed in `docs/evaluations/m1-offline-validation.json`.
 M1's exit gate is met for the tested laptop/profile. Stop at M1 review; M2 is not
 authorized by this follow-up and remains unimplemented.
+
+## M2: user-authorized installed Microsoft Notepad (2026-10-10)
+
+This later explicit request supersedes the preceding M1 stop instruction only
+for the M2 slice. `decisions/0002-notepad.md` records the approved replacement of
+the custom editor fixture. No M3 work is authorized or implemented.
+
+1. Complete: read specification/instructions/history; preserve M0/M1; baseline
+   145 tests and static/dependency checks pass; review this desktop's separately
+   passed M1 corpus/offline artifacts and actual cloud-disabled Ollama startup.
+2. Complete: observational Microsoft package/signature inspection and private
+   registration; generated locked optional comtypes dependency in .venv only.
+3. Complete: versioned M2 decisions/scoped window references, existing broker
+   authorization/intent/approval/recovery, bounded native/UIA workers, independent
+   postconditions, foreground restrictions, desktop lease and latched global stop.
+   Default demos and profiles remain simulated; real chat requires explicit
+   flags, registration, attended consent and matching M2 model qualification.
+4. Complete: frozen 18-case corpus, unchanged >=90% / zero unauthorized gate;
+   retain failed v1/v2/v3 reports; v4 passed 18/18 three times using actual qwen3:8b.
+5. Complete: attended genuine Notepad opening/reuse/focus/two-window targeting,
+   clean graceful close, manual synthetic unsaved handoff, physical stop and a
+   separate native takeover rejection; preserve failed compatibility/input runs.
+6. Complete: actual local-model terminal chat verifies open/focus/clean close,
+   ambiguity/unregistered-app no-effect handling and unsaved handoff. The browser
+   request incorrectly clarifies rather than unsupported; record this limitation.
+7. Complete: final checks, README commands, compatibility record, build evidence
+   and separate model/adapter/live reports. Leave the dirty synthetic window for
+   manual handling. No automatic cleanup, extra model, settings change or push.
+
+M2's measured Windows safety exit gate is met for this installation/profile:
+open/focus/empty close, identity, unsaved work, takeover, stop and independent
+verification have actual evidence. Qualification is narrow corpus evidence;
+conversation can still misclassify unavailable requests, and other installations,
+classic Notepad, dirty automatic close and general desktop control are unqualified.
+Simulation remains default. Stop after M2.
+
+Terminal presentation follow-up: corrected the Enter newline being labeled
+JARVIS and made the console prompt inline/flushed. Console regression and all
+197 tests/static checks pass; physical manual confirmation is pending. No
+authorization, adapter or milestone scope changed.
+
+## M2 conversational completion follow-up (2026-10-10)
+
+The prior Windows safety completion did not establish conversational usability.
+The reported transcript is now represented by a separate frozen 23-turn corpus,
+with a 100% / zero unauthorized dispatch gate in addition to the unchanged
+18-case >=90% gate. Old profiles and failed reports are preserved.
+
+Implemented: whole-message natural request resolution; selection and permission
+separation; stale identity clearing; permitted candidate schemas with exact
+references; fresh action context; actionable close handoff; `/confirm-empty` and
+terminal-only `/clear`. No typing/saving/general desktop or M3 functionality.
+
+v9 passes 23/23 on two runs and 17/18 on two original-corpus runs. The remaining
+classification error is generic `Open my editor`: unsupported instead of clarify,
+with zero effect; `Open my text editor` resolves correctly. This meets the original
+unchanged 90% gate and the added 100% conversation gate.
+
+Complete: attended actual qwen3:8b retest (`m2-live-conversation-v9-r1.json`): two
+genuine windows opened sequentially, natural focus variants, unconfirmed-close
+handoff, `/confirm-empty`, polite clean close, missing pronoun clarification,
+manual synthetic dirty close with zero admission, physical global stop followed
+by cancelled focus with zero admission. Three input/focus-change rejections are
+preserved in that report. Five effects have independent native postconditions.
+No pre-existing windows; one unsaved synthetic window remains for manual handling.
+
+Final validation: 244 tests, lint, formatting, dependency and diff checks pass.
+Doctor now recognizes explicitly selected matching M2 evaluation evidence while
+remaining observational. Old profile/report gates remain reproducible; new
+profiles require matching conversation evidence as well. Default simulation,
+whole-window clean disposable confirmation, no typing/save/discard and no M3
+remain deliberate limits. M2 completion is measured for this PC and profile.
+
+### Operator transcript correction after v9 completion assessment
+
+The v9 assessment was too broad: real operator conversation still made false say
+completion claims and missed editor/repetition phrases. This follow-up fixes those
+specific gaps with controller presentation enforcement and versioned narrow request
+resolution. Clarification is bound to a single already selected window, never to
+an arbitrary personal window. Unknown input-during-verification stays blocked;
+recovery instructions identify the required manual review.
+
+Current final source: planner-m2-v10; original r3 18/18 and expanded 29-turn
+conversation r2 29/29, zero unauthorized dispatches. Initial attended v10 report
+is retained as failed due to a missed state-claim wording; corrected guard passes
+regression tests and the final real-model no-effect terminal check. Native real
+open/new phrases/clean close have independent postconditions; a bound clarification
+focus was correctly blocked for changed input, not falsely reported as success.
+257 tests/static/dependency checks pass. M2 is still a bounded attended Notepad
+controller, not unrestricted natural-language desktop control. No M3 work.

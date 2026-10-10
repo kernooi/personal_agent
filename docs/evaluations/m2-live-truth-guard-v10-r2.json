@@ -1,0 +1,32 @@
+{
+  "version": "m2-live-truth-guard-v1",
+  "execution_mode": "windows",
+  "prompt_version": "planner-m2-v10",
+  "model_identity": "qwen3:8b",
+  "model_report": "m2-qwen3-8b-simulation-v10-r3.json",
+  "conversation_report": "m2-conversation-v10-r2.json",
+  "cases": [
+    {
+      "state": "ANSWERED",
+      "model_decision": {
+        "capability": null,
+        "kind": "say"
+      },
+      "actions": 0
+    },
+    {
+      "state": "ANSWERED",
+      "model_decision": {
+        "capability": null,
+        "kind": "say"
+      },
+      "actions": 0
+    }
+  ],
+  "presentation_checks": {
+    "requested_false_foreground_claim_replaced_with_no_action_reply": true,
+    "ordinary_greeting_natural": true
+  },
+  "passed": true,
+  "native_effects": 0
+}

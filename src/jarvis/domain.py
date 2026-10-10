@@ -54,6 +54,7 @@ class Scope:
     session: str
     app_id: str
     effect: str = "open"
+    window_ref: str = ""
 
 
 @dataclass(frozen=True)
@@ -70,6 +71,7 @@ class Task:
 class Proposal:
     capability: str
     app_id: str
+    window_ref: str = ""
 
 
 @dataclass(frozen=True)
@@ -94,6 +96,7 @@ class PreparedAction:
     grant_version: int
     expires_at: float
     digest: str
+    window_ref: str = ""
 
 
 @dataclass(frozen=True)
@@ -129,6 +132,9 @@ class Evidence:
     authority: str = "tool_output"
     sensitivity: str = "synthetic"
     kind: str = "fake_api_state"
+    postcondition: bool | None = None
+    window_ref: str = ""
+    observed_identity: str = ""
 
 
 @dataclass(frozen=True)
@@ -160,6 +166,10 @@ class Denied(ValueError):
 
 class AdmissionRejected(Denied):
     """Raised only by the last broker gate, before the adapter mutates fake state."""
+
+
+class Handoff(Denied):
+    """A trusted adapter requires user handling before an effect can be admitted."""
 
 
 class SimulatedCrash(BaseException):

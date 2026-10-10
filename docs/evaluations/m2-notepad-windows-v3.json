@@ -1,0 +1,93 @@
+{
+  "version": "m2-notepad-adapter-lab-v1",
+  "provider": "scripted",
+  "execution_mode": "windows",
+  "notepad_version": "11.2607.14.0",
+  "preexisting_window_count": 0,
+  "preexisting_preserved": true,
+  "remaining_window_count": 1,
+  "interactive_checks_requested": true,
+  "cases": [
+    {
+      "case_id": "open-1",
+      "broker_state": "SUCCEEDED",
+      "message": "The selected Notepad window is open and ready.",
+      "simulated": false,
+      "latency_seconds": 1.1956,
+      "executions": 1,
+      "observations": 1
+    },
+    {
+      "case_id": "reuse-1",
+      "broker_state": "SUCCEEDED",
+      "message": "The selected Notepad window is open and ready.",
+      "simulated": false,
+      "latency_seconds": 1.1904,
+      "executions": 2,
+      "observations": 2
+    },
+    {
+      "case_id": "focus-1",
+      "broker_state": "SUCCEEDED",
+      "message": "The selected Notepad window is in the foreground.",
+      "simulated": false,
+      "latency_seconds": 1.7388,
+      "executions": 3,
+      "observations": 3
+    },
+    {
+      "case_id": "open-2",
+      "broker_state": "SUCCEEDED",
+      "message": "The selected Notepad window is open and ready.",
+      "simulated": false,
+      "latency_seconds": 1.1561,
+      "executions": 4,
+      "observations": 4
+    },
+    {
+      "case_id": "focus-2",
+      "broker_state": "SUCCEEDED",
+      "message": "The selected Notepad window is in the foreground.",
+      "simulated": false,
+      "latency_seconds": 1.7419,
+      "executions": 5,
+      "observations": 5
+    },
+    {
+      "case_id": "close-2",
+      "broker_state": "SUCCEEDED",
+      "message": "The selected Notepad window is closed.",
+      "simulated": false,
+      "latency_seconds": 1.2771,
+      "executions": 6,
+      "observations": 6
+    },
+    {
+      "case_id": "dirty-close-handoff",
+      "broker_state": "WAITING_INPUT",
+      "message": "I will not close this window: its whole-window empty disposable scope is unconfirmed, dirty, mixed or unknown. Handle it manually; no close was sent.",
+      "simulated": false,
+      "latency_seconds": 0.6773,
+      "executions": 6,
+      "observations": 6
+    },
+    {
+      "case_id": "dirty-handoff-verification",
+      "passed": true
+    },
+    {
+      "case_id": "physical-stop",
+      "passed": true
+    },
+    {
+      "case_id": "stopped-request",
+      "broker_state": "CANCELLED",
+      "message": "cancelled before execution; no effect admitted.",
+      "simulated": false,
+      "latency_seconds": 0.2034,
+      "executions": 6,
+      "observations": 6
+    }
+  ],
+  "completion_gate": "pending live-model, dirty-state and interruption evidence"
+}

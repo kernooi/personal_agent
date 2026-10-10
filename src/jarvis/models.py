@@ -43,8 +43,34 @@ class Propose(StrictRecord):
     action: OpenAction
 
 
+class WindowArguments(StrictRecord):
+    window_ref: str = Field(pattern=r"^win_[0-9a-f]{32}$")
+
+
+class WindowAction(StrictRecord):
+    capability: Literal["windows.focus", "windows.close"]
+    arguments: WindowArguments
+
+
+class NotepadArguments(StrictRecord):
+    app_id: Literal["notepad"]
+
+
+class NotepadAction(StrictRecord):
+    capability: Literal["apps.open"]
+    arguments: NotepadArguments
+
+
+class ProposeM2(StrictRecord):
+    kind: Literal["propose_action"]
+    action: Annotated[NotepadAction | WindowAction, Field(discriminator="capability")]
+
+
 BOUNDARY = TypeAdapter(
     Annotated[Say | Clarify | Unsupported | Propose, Field(discriminator="kind")]
+)
+BOUNDARY_M2 = TypeAdapter(
+    Annotated[Say | Clarify | Unsupported | ProposeM2, Field(discriminator="kind")]
 )
 MAX_REPLY_BYTES = 32768
 
@@ -62,18 +88,29 @@ def reject_constant(value: str) -> Any:
     raise ValueError("Non-finite JSON number")
 
 
-def parse_decision(raw: bytes) -> Decision:
+def parse_decision(raw: bytes, version: str = "decision-v1") -> Decision:
     if not isinstance(raw, bytes) or not raw or len(raw) > MAX_REPLY_BYTES:
         raise ValueError("Empty, non-byte, or oversized reply")
     try:
         payload = json.loads(
             raw.decode("utf-8"), object_pairs_hook=unique_object, parse_constant=reject_constant
         )
-        parsed = BOUNDARY.validate_python(payload, strict=True)
+        if version not in {"decision-v1", "decision-m2-v1"}:
+            raise ValueError("Unknown decision version")
+        boundary = BOUNDARY_M2 if version == "decision-m2-v1" else BOUNDARY
+        parsed = boundary.validate_python(payload, strict=True)
     except (ValueError, UnicodeError, RecursionError) as exc:
         raise ValueError("Invalid decision") from exc
     if isinstance(parsed, Propose):
         return Decision(parsed.kind, proposal=Proposal("apps.open", parsed.action.arguments.app_id))
+    if isinstance(parsed, ProposeM2):
+        if isinstance(parsed.action, NotepadAction):
+            proposal = Proposal("apps.open", "notepad")
+        else:
+            proposal = Proposal(
+                parsed.action.capability, "notepad", parsed.action.arguments.window_ref
+            )
+        return Decision(parsed.kind, proposal=proposal)
     text = getattr(parsed, "text", getattr(parsed, "question", getattr(parsed, "message", "")))
     return Decision(parsed.kind, text=text)
 
@@ -84,8 +121,23 @@ class BaseProfile(StrictRecord):
     execution_mode: Literal["simulation"] = "simulation"
     model_identity: str
     role: Literal["primary_text"] = "primary_text"
-    prompt_version: Literal["planner-v1", "planner-v2", "planner-v3", "planner-v4"] = "planner-v1"
-    decision_version: Literal["decision-v1"] = "decision-v1"
+    prompt_version: Literal[
+        "planner-v1",
+        "planner-v2",
+        "planner-v3",
+        "planner-v4",
+        "planner-m2-v1",
+        "planner-m2-v2",
+        "planner-m2-v3",
+        "planner-m2-v4",
+        "planner-m2-v5",
+        "planner-m2-v6",
+        "planner-m2-v7",
+        "planner-m2-v8",
+        "planner-m2-v9",
+        "planner-m2-v10",
+    ] = "planner-v1"
+    decision_version: Literal["decision-v1", "decision-m2-v1"] = "decision-v1"
     context_bytes: int = Field(default=16384, ge=1024, le=65536)
     max_output_bytes: int = Field(default=32768, ge=1, le=32768)
     task_seconds: int = Field(default=30, ge=1, le=120)
@@ -105,7 +157,22 @@ class ProviderOptions(StrictRecord):
 
 
 class OllamaProfile(BaseProfile):
-    prompt_version: Literal["planner-v1", "planner-v2", "planner-v3", "planner-v4"] = "planner-v4"
+    prompt_version: Literal[
+        "planner-v1",
+        "planner-v2",
+        "planner-v3",
+        "planner-v4",
+        "planner-m2-v1",
+        "planner-m2-v2",
+        "planner-m2-v3",
+        "planner-m2-v4",
+        "planner-m2-v5",
+        "planner-m2-v6",
+        "planner-m2-v7",
+        "planner-m2-v8",
+        "planner-m2-v9",
+        "planner-m2-v10",
+    ] = "planner-v4"
     provider: Literal["ollama"]
     network_mode: Literal["local_model_only"]
     base_url: Literal["http://127.0.0.1:11434"] = "http://127.0.0.1:11434"

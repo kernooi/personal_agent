@@ -2,7 +2,7 @@
 
 import json
 import sqlite3
-from dataclasses import asdict, fields
+from dataclasses import MISSING, asdict, fields
 from pathlib import Path
 from uuid import uuid4
 
@@ -98,8 +98,9 @@ class Store:
                 "SELECT * FROM tasks WHERE session=? AND request_key=?", (scope.session, key)
             ).fetchone()
             if row:
-                if row["request_fingerprint"] != fingerprint or row["scope_json"] != encode(
-                    asdict(scope)
+                if (
+                    row["request_fingerprint"] != fingerprint
+                    or self.get(row["task_id"]).scope != scope
                 ):
                     raise Denied("Request key reused for different instruction")
                 self.event(row["task_id"], "duplicate_delivery")
@@ -134,9 +135,13 @@ class Store:
             row["scope_json"], object_pairs_hook=unique_object, parse_constant=reject_constant
         )
         if (
-            set(payload) != {"session", "app_id", "effect"}
-            or not all(isinstance(x, str) and x for x in payload.values())
-            or payload["effect"] != "open"
+            set(payload)
+            not in ({"session", "app_id", "effect"}, {"session", "app_id", "effect", "window_ref"})
+            or not all(
+                isinstance(payload[x], str) and payload[x] for x in ("session", "app_id", "effect")
+            )
+            or payload["effect"] not in {"open", "focus", "close"}
+            or not isinstance(payload.get("window_ref", ""), str)
             or row["revision"] < 1
         ):
             raise Denied("Corrupt task scope")
@@ -208,7 +213,9 @@ class Store:
                     action_id,
                     action.task_id,
                     action.revision,
-                    "open-editor-v1",
+                    "open-editor-v1"
+                    if action.adapter_version == "fake-desktop-v1"
+                    else "notepad-" + action.effects[0] + "-v1",
                     action.capability,
                     action.digest,
                     encode(asdict(action)),
@@ -302,7 +309,12 @@ class Store:
             action = self.load_action(outcome["prepared_json"])
             evidence = self.load_record(outcome["evidence_json"], Evidence)
             if (
-                evidence.running is not True
+                (
+                    evidence.postcondition
+                    if action.adapter_version in {"notepad-windows-v1", "notepad-fake-v1"}
+                    else evidence.running
+                )
+                is not True
                 or evidence.target_identity != action.target_identity
                 or evidence.session != task.scope.session
             ):
@@ -321,6 +333,12 @@ class Store:
 
     def load_record(self, raw: str, record_type):
         payload = json.loads(raw, object_pairs_hook=unique_object, parse_constant=reject_constant)
-        if not isinstance(payload, dict) or set(payload) != {f.name for f in fields(record_type)}:
+        names = {f.name for f in fields(record_type)}
+        required = {
+            f.name
+            for f in fields(record_type)
+            if f.default is MISSING and f.default_factory is MISSING
+        }
+        if not isinstance(payload, dict) or not required <= set(payload) <= names:
             raise Denied("Invalid stored record fields")
         return TypeAdapter(record_type).validate_json(raw, strict=True)

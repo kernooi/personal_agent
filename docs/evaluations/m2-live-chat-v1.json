@@ -1,0 +1,143 @@
+{
+  "version": "m2-live-chat-validation-v1",
+  "provider": "ollama",
+  "model": "qwen3:8b",
+  "execution_mode": "windows",
+  "evidence_origin": "Actual CLI terminal and private durable journal; model kinds reconstructed from reviewed broker branches for this synthetic attended session",
+  "profile": {
+    "base_url": "http://127.0.0.1:11434",
+    "cloud_disabled_evidence": "Operator observed Ollama cloud disabled: true at 2026-10-09T23:22:16.526+08:00, standalone 0.40.2 session 92082; startup excerpt in private logs/desktop-startup-evidence.txt. Separate desktop offline validation passed at 2026-10-09T15:27:35Z with snapshot-level evidence; see docs/evaluations/m1-desktop-offline-validation.json.",
+    "cloud_disabled_verified": true,
+    "connect_timeout_seconds": 5.0,
+    "context_bytes": 16384,
+    "context_tokens": 4096,
+    "decision_version": "decision-m2-v1",
+    "execution_mode": "windows",
+    "max_envelope_bytes": 131072,
+    "max_output_bytes": 32768,
+    "max_output_tokens": 512,
+    "model_identity": "qwen3:8b",
+    "network_mode": "local_model_only",
+    "profile_name": "notepad-m2-local",
+    "prompt_version": "planner-m2-v4",
+    "provider": "ollama",
+    "provider_options": {
+      "keep_alive": "2m",
+      "think": false
+    },
+    "read_timeout_seconds": 30.0,
+    "response_mode": "json_schema",
+    "role": "primary_text",
+    "safety_tokens": 256,
+    "schema_version": 1,
+    "task_seconds": 120,
+    "temperature": 0.0
+  },
+  "cases": [
+    {
+      "case_id": "open",
+      "model_kind": "propose_action",
+      "model_capability": "apps.open",
+      "broker_state": "SUCCEEDED",
+      "native_deliveries": 1,
+      "observation": {
+        "authority": "tool_output",
+        "kind": "windows_uia_state",
+        "observed_at": 1791606418.2215698,
+        "postcondition": true,
+        "running": true,
+        "sensitivity": "personal",
+        "session": "1b34343b-e66e-4074-87e5-092df8e631c7",
+        "source": "notepad-native-observer-v1",
+        "target_identity": "{\"activity\": {\"foreground\": 197382, \"last_input\": 1939203}, \"window\": null}",
+        "window_ref": "win_cf5b708cc3f646cf91b73c1c5ded532e"
+      },
+      "final_response": "The selected Notepad window is open and ready.",
+      "latency_seconds": 1.7952
+    },
+    {
+      "case_id": "focus",
+      "model_kind": "propose_action",
+      "model_capability": "windows.focus",
+      "broker_state": "SUCCEEDED",
+      "native_deliveries": 1,
+      "observation": {
+        "authority": "tool_output",
+        "kind": "windows_uia_state",
+        "observed_at": 1791606444.8615308,
+        "postcondition": true,
+        "running": true,
+        "sensitivity": "personal",
+        "session": "1b34343b-e66e-4074-87e5-092df8e631c7",
+        "source": "notepad-native-observer-v1",
+        "target_identity": "{\"activity\": {\"foreground\": 263980, \"last_input\": 1939203}, \"window\": {\"class_name\": \"Notepad\", \"created\": 134360798837756732, \"empty\": true, \"enabled\": true, \"exe\": \"C:\\\\Program Files\\\\WindowsApps\\\\Microsoft.WindowsNotepad_11.2607.14.0_x64__8wekyb3d8bbwe\\\\Notepad\\\\Notepad.exe\", \"exe_sha256\": \"03745e9e21684c0e6d9fdc50d91caa0935f4baf50f626c11987ab7d6991d58d1\", \"hwnd\": 263980, \"modified\": false, \"os_session\": 1, \"owned_dialog\": false, \"owner_sid\": \"933e7d82d1054f2a18aeffae99e60acd5099ec7e512a923703d89fcf550ba3b2\", \"package\": \"Microsoft.WindowsNotepad_11.2607.14.0_x64__8wekyb3d8bbwe\", \"pid\": 20376, \"runtime_id\": [42, 263980], \"tab_ids\": [[42, 263966, 4, 4]]}}",
+        "window_ref": "win_cf5b708cc3f646cf91b73c1c5ded532e"
+      },
+      "final_response": "The selected Notepad window is in the foreground.",
+      "latency_seconds": 2.6335
+    },
+    {
+      "case_id": "clean-close",
+      "model_kind": "propose_action",
+      "model_capability": "windows.close",
+      "broker_state": "SUCCEEDED",
+      "native_deliveries": 1,
+      "observation": {
+        "authority": "tool_output",
+        "kind": "windows_uia_state",
+        "observed_at": 1791606555.3714612,
+        "postcondition": true,
+        "running": false,
+        "sensitivity": "personal",
+        "session": "1b34343b-e66e-4074-87e5-092df8e631c7",
+        "source": "notepad-native-observer-v1",
+        "target_identity": "{\"activity\": {\"foreground\": 263980, \"last_input\": 1939203}, \"window\": {\"class_name\": \"Notepad\", \"created\": 134360798837756732, \"empty\": true, \"enabled\": true, \"exe\": \"C:\\\\Program Files\\\\WindowsApps\\\\Microsoft.WindowsNotepad_11.2607.14.0_x64__8wekyb3d8bbwe\\\\Notepad\\\\Notepad.exe\", \"exe_sha256\": \"03745e9e21684c0e6d9fdc50d91caa0935f4baf50f626c11987ab7d6991d58d1\", \"hwnd\": 263980, \"modified\": false, \"os_session\": 1, \"owned_dialog\": false, \"owner_sid\": \"933e7d82d1054f2a18aeffae99e60acd5099ec7e512a923703d89fcf550ba3b2\", \"package\": \"Microsoft.WindowsNotepad_11.2607.14.0_x64__8wekyb3d8bbwe\", \"pid\": 20376, \"runtime_id\": [42, 263980], \"tab_ids\": [[42, 263966, 4, 4]]}}",
+        "window_ref": "win_cf5b708cc3f646cf91b73c1c5ded532e"
+      },
+      "final_response": "The selected Notepad window is closed.",
+      "latency_seconds": 2.4206
+    },
+    {
+      "case_id": "ambiguous-window",
+      "model_kind": "clarify",
+      "model_capability": null,
+      "broker_state": "WAITING_INPUT",
+      "native_deliveries": 0,
+      "observation": null,
+      "final_response": "Which window should I close?",
+      "latency_seconds": 0.7942
+    },
+    {
+      "case_id": "unregistered-browser",
+      "model_kind": "clarify",
+      "model_capability": null,
+      "broker_state": "WAITING_INPUT",
+      "native_deliveries": 0,
+      "observation": null,
+      "final_response": "Which browser app should I open?",
+      "latency_seconds": 0.8105
+    },
+    {
+      "case_id": "unsaved-close-handoff",
+      "model_kind": "propose_action",
+      "model_capability": "windows.close",
+      "broker_state": "WAITING_INPUT",
+      "native_deliveries": 0,
+      "observation": null,
+      "final_response": "I will not close this window: its whole-window empty disposable scope is unconfirmed, dirty, mixed or unknown. Handle it manually; no close was sent.",
+      "latency_seconds": 1.6021
+    }
+  ],
+  "native_deliveries_total": 3,
+  "remaining_window_count": 1,
+  "remaining_window_state": {
+    "empty": false,
+    "modified": true,
+    "enabled": true,
+    "owned_dialog": false
+  },
+  "remaining_tab_count": 1,
+  "synthetic_leftover_confirmed_by_user": true,
+  "unregistered_browser_classification": "clarify rather than unsupported; no dispatch",
+  "limitations": "One synthetic interactive session; frozen corpus qualification is separate. No claim of general model correctness."
+}

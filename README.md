@@ -1,10 +1,12 @@
 # JARVIS local text assistant
 
 M0's safe simulated core and M1's local Ollama integration are implemented from
-`JARVIS_Project_Specification.md`. **All desktop actions remain SIMULATED.**
+`JARVIS_Project_Specification.md`. **Simulation remains the default.**
 The real model proposes a decision; strict parsing, the reviewed registry,
 authorization, durable intent, cancellation gates, fake execution, and independent
-observation determine the result. M2 Windows control is not implemented.
+observation determine the result. M2 adds explicit attended control of the installed
+Microsoft Notepad: registered open, selected-window focus and safe graceful close.
+See the M2 instructions below and `docs/NOTEPAD_COMPATIBILITY.md` for measured limits.
 
 The RTX 4070 / 32 GB / Ryzen 5 5600X desktop was separately provisioned and tested
 on 2026-10-09 with Python 3.13.2, standalone Ollama 0.40.2 and `qwen3:8b`.
@@ -186,17 +188,17 @@ rejects redirects/cloud model metadata/native tool calls, caps complete response
 and has no fake/cloud fallback. Doctor only observes; it does not install or repair.
 Its selected evaluation report is historical evidence, never authorization.
 Live current facts use a trusted limitation without a retrieval or model call.
-Real launching/closing, browser control, desktop input, capture, audio, personal
-files, cloud providers, arbitrary execution, plugins and autonomous tasks are
-absent. Offline validation and qualification are required before claiming M1's
-exit gate. Stop for M1 review; do not enable M2.
+M1 profiles remain simulated. M2's separately selected adapter supports only
+Notepad open/focus/close; browser control, desktop input, capture, audio, file
+editing, cloud providers, arbitrary execution, plugins and autonomous tasks remain
+absent. M1 qualification does not qualify an M2 profile or another computer.
 
 To regenerate the generated lock after a deliberate dependency change:
 
 ```powershell
 # Bootstrap only if pip-tools is not already installed in .venv:
 .\.venv\Scripts\python.exe -m pip install pip-tools
-.\.venv\Scripts\python.exe -m piptools compile --extra dev --strip-extras --allow-unsafe --generate-hashes --output-file requirements-dev.lock pyproject.toml
+.\.venv\Scripts\python.exe -m piptools compile --extra dev --extra windows --strip-extras --allow-unsafe --generate-hashes --output-file requirements-dev.lock pyproject.toml
 .\.venv\Scripts\python.exe -m pip install --require-hashes -r requirements-dev.lock
 .\.venv\Scripts\python.exe -m pip install --no-deps --no-build-isolation -e .
 ```
@@ -205,3 +207,130 @@ To regenerate the generated lock after a deliberate dependency change:
 execution permission. Editable installation uses the locked local build backend.
 Regenerate/test a separate lock if changing interpreter/platform makes resolution
 incompatible. SQLite schema version 1 has no migration/backup tooling yet.
+
+## M2: attended Microsoft Notepad
+
+The approved target change is recorded in `docs/decisions/0002-notepad.md`.
+This PC uses packaged Notepad 11.2607.14.0 and the existing qwen3:8b model.
+M2's frozen 18-case model corpus uses the unchanged 90% / zero unauthorized
+dispatch gate. Failed prompt versions remain in `docs/evaluations/`. A matching
+passed M2 report, installation registration and attended selection are required
+for real chat. Model qualification is limited corpus evidence, not general
+permission to control applications. There is no automatic save/discard or force kill.
+
+From the project directory, local dependency setup is:
+
+```powershell
+# Create only when .venv does not already exist; never copy another machine's venv.
+py -3.13 -m venv .venv
+.\.venv\Scripts\python.exe -m pip install --require-hashes -r requirements-dev.lock
+.\.venv\Scripts\python.exe -m pip install --no-deps --no-build-isolation -e .
+.\scripts\Register-Notepad.ps1 -Output "$env:LOCALAPPDATA\Jarvis\notepad-registration.json"
+.\.venv\Scripts\python.exe -m jarvis inspect-notepad --registration "$env:LOCALAPPDATA\Jarvis\notepad-registration.json"
+```
+
+Registration is private, pins the verified Microsoft package/executable and
+launcher hashes, and refuses overwriting an existing registration. After an app
+update, inspect the changed installation and deliberately create a new registration.
+No Notepad settings or recovery files are touched. Classic/unpackaged installations
+are currently unsupported and fail closed.
+
+Start the already installed standalone Ollama manually in a separate terminal:
+
+```powershell
+$env:OLLAMA_NO_CLOUD = '1'
+$env:OLLAMA_HOST = '127.0.0.1:11434'
+$env:OLLAMA_MODELS = "$env:LOCALAPPDATA\Jarvis\models"
+$env:OLLAMA_CONTEXT_LENGTH = '4096'
+& "$env:LOCALAPPDATA\Jarvis\runtime\ollama-v0.40.2\bin\ollama.exe" serve
+```
+
+These settings affect this process only. Check its actual startup log for
+`Ollama cloud disabled: true` before marking private profile evidence verified.
+Do not infer cloud-disabled status solely from the loopback address.
+On this PC the private M2 profile was derived from `desktop.toml`, retaining its
+model/provider options, setting `prompt_version="planner-m2-v10"` and
+`decision_version="decision-m2-v1"`. The checked-in example
+`config/examples/notepad-m2.toml` starts with cloud evidence unverified.
+
+```powershell
+$m2Profile = "$env:LOCALAPPDATA\Jarvis\profiles\notepad-m2-v10.toml"
+$notepadRegistration = "$env:LOCALAPPDATA\Jarvis\notepad-registration.json"
+.\.venv\Scripts\python.exe -m jarvis chat --profile $m2Profile
+.\.venv\Scripts\python.exe -m jarvis eval-m2 --live --profile $m2Profile --report docs/evaluations/m2-new-run.json
+# Multi-turn usability has an additional frozen 29-case, 100% / zero unauthorized gate.
+.\.venv\Scripts\python.exe -m jarvis eval-m2-chat --live --profile $m2Profile --report docs/evaluations/m2-chat-new-run.json
+# Requires both matching passed reports. This is a real, attended desktop session.
+.\.venv\Scripts\python.exe -m jarvis chat --profile $m2Profile --real --attended --registration $notepadRegistration --model-report docs/evaluations/m2-new-run.json --conversation-report docs/evaluations/m2-chat-new-run.json
+```
+
+Ask `Open Notepad.` or `Open my text editor.`, then
+`Bring that Notepad window to the front.`. Use `/windows` to list opaque scoped
+references. `/select <reference>` selects the window; only when you personally
+confirm the whole window is an empty disposable single-tab test window, use
+`/select <reference> empty-disposable` before `Close that Notepad window.`.
+For the currently selected window, `/confirm-empty` provides the same explicit
+operator confirmation without copying its reference. Use it only after personally
+checking that the whole window is your empty, unmodified, single-tab disposable
+window. Then `Close it`, `Close the Notepad window` or `Please close it` works.
+`Focus on the Notepad`, `Bring Notepad to front`, and polite requests resolve to
+that selected window. These are bounded single-action forms; arbitrary desktop
+requests remain unsupported. Repeated focus is independently verified each time.
+The adapter independently rechecks identity, empty/unmodified state and all tabs.
+Nonempty, modified, multiple-tab, dialog or unknown state causes handoff before
+WM_CLOSE, even if you supplied disposable confirmation. It never clicks dialogs.
+Ambiguous or missing targets cannot acquire action permission. The v10 qualification handles `Open my editor` by asking a clarification;
+`Open my text editor` names the registered application explicitly. An unavailable
+app cannot acquire a grant. Bare `clear` asks what you mean; `/clear` clears only
+the terminal display, retaining conversation and window selection. Enter slash
+commands on their own line, then send the action request separately.
+`Bring the text editor to the front` and `Bring it to the front again` are supported.
+A reply such as `the only one that is open now` can resolve only an immediately
+preceding window clarification, only to the already selected window, and only if
+independent inventory shows exactly that one window. Changed selection, another
+window, or an intervening turn prevents that resolution. It never selects a
+personal window implicitly. Model prose claiming an effect is not an action receipt;
+unsupported claims are replaced with a truthful no-action reply.
+General chat retains its history. Window requests use fresh controller state and
+the current owner request rather than stale action replies; their model schema
+contains only the action permitted for that exact scoped reference.
+Ordinary conversational replies display natural text; only simulated actions are
+labeled `[SIMULATED]`. Verified real actions have no simulated label.
+
+Ctrl+Alt+Shift+F10 latches stop while any app has focus. A hotkey conflict prevents
+real startup. `/stop` also cancels inference; `/quit` exits. Restart chat after
+stop only after reviewing any pending effect. Unknown effects are never retried;
+after manually checking the outcome, `/review <task_id> manually-handled` records
+operator review without replaying that action. The recovery notice prints the
+exact task ID. Inspect and handle the outcome before acknowledging review; this
+does not select a window, confirm it disposable, or re-execute the old request. Real persistence is separate at
+`%LOCALAPPDATA%\Jarvis\m2-journal.sqlite`. Close dirty/unknown leftovers yourself;
+exiting chat does not close Notepad. Stop Ollama with Ctrl+C in its serve terminal.
+
+Automated tests use synthetic windows and no Ollama/desktop effects:
+
+```powershell
+.\.venv\Scripts\python.exe -m pytest
+.\.venv\Scripts\python.exe -m ruff check .
+.\.venv\Scripts\python.exe -m ruff format --check .
+.\.venv\Scripts\python.exe -m pip check
+```
+
+The separate opt-in adapter lab uses scripted proposals through the same broker.
+Before running it, confirm you are at the PC and accept at most two new disposable
+Notepad windows and short focus changes. Pre-existing windows are excluded.
+Use an interactive PowerShell terminal, stay at the PC and avoid input during
+each automated operation. The interactive steps require you to type synthetic
+unsaved text manually, then press the global stop hotkey with Notepad focused.
+
+```powershell
+.\.venv\Scripts\python.exe -m jarvis test-notepad --windows --attended --interactive --registration $notepadRegistration --report docs/evaluations/m2-windows-new-run.json
+# Separate takeover check: exactly one user-confirmed synthetic window must remain.
+.\.venv\Scripts\python.exe -m jarvis test-notepad --windows --attended --takeover-only --prepared-synthetic --registration $notepadRegistration --report docs/evaluations/m2-takeover-new-run.json
+```
+
+Default launcher behavior is measured, not guaranteed to produce a new isolated
+window. If it opens an existing tab or cannot uniquely establish readiness, the
+adapter reports uncertainty, blocks new effects and leaves manual handling.
+Prepare/select an empty disposable window yourself rather than changing settings.
+Do not overwrite old evaluation reports. M2 stops here; no M3 features are included.

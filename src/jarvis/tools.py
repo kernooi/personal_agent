@@ -88,6 +88,8 @@ class Registry:
 def digest(action: PreparedAction) -> str:
     payload = asdict(action)
     payload.pop("digest")
+    if not action.window_ref:
+        payload.pop("window_ref")  # Preserve the original M0/M1 canonical digest.
     return hashlib.sha256(
         json.dumps(payload, sort_keys=True, separators=(",", ":"), allow_nan=False).encode()
     ).hexdigest()

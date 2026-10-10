@@ -15,7 +15,13 @@ def authorize(
         or action.app_id != task.scope.app_id
         or action.session != task.scope.session
         or action.effects != (task.scope.effect,)
-        or action.capability != "apps.open"
+        or (action.capability, action.effects)
+        not in {
+            ("apps.open", ("open",)),
+            ("windows.focus", ("focus",)),
+            ("windows.close", ("close",)),
+        }
+        or action.window_ref != task.scope.window_ref
         or action.policy_version != POLICY_VERSION
         or now >= action.expires_at
     ):

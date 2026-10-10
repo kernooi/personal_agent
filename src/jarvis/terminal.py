@@ -109,10 +109,21 @@ class TerminalInput:
 
 
 def chat_loop(conversation: Conversation, stream: TextIO, output: Callable[[str], None] = print):
-    reader = TerminalInput(stream, output)
-    conversation.broker.cancel_requested = reader.cancel.is_set
-    output("Type /stop during inference; /quit to exit. Actions are SIMULATED.")
-    output("You> ")
+    def notice(text):
+        output("JARVIS: " + text.removeprefix("SIMULATED: ") if text else "")
+
+    def prompt():
+        if output is print:
+            output("You> ", end="", flush=True)
+        else:
+            output("You> ")
+
+    reader = TerminalInput(stream, notice)
+    desktop_stop = getattr(conversation.broker.desktop, "stop", threading.Event())
+    conversation.broker.cancel_requested = lambda: reader.cancel.is_set() or desktop_stop.is_set()
+    mode = "WINDOWS" if getattr(conversation.broker.desktop, "real", False) else "SIMULATED"
+    output(f"Type /stop during inference; /quit to exit. Actions use {mode} mode.")
+    prompt()
     reader.thread.start()
     try:
         while not reader.exit.is_set():
@@ -127,6 +138,70 @@ def chat_loop(conversation: Conversation, stream: TextIO, output: Callable[[str]
             if not reader.begin(generation):
                 continue
             try:
+                if hasattr(conversation.broker.desktop, "inventory") and text.startswith("/"):
+                    desktop = conversation.broker.desktop
+                    if text == "/windows":
+                        for window in desktop.inventory():
+                            output(f"JARVIS: {window}")
+                    elif text == "/confirm-empty":
+                        if not desktop.selected_ref:
+                            raise Denied(
+                                "Select a test Notepad window first with /windows and /select."
+                            )
+                        desktop.select(desktop.selected_ref, confirm_disposable=True)
+                        output(
+                            "JARVIS: Confirmed the selected empty disposable test window. "
+                            "You can now ask me to close it; safety will be checked again."
+                        )
+                    elif text == "/clear":
+                        if output is print and stream.isatty():
+                            output("\x1b[2J\x1b[H", end="", flush=True)
+                        output(
+                            "JARVIS: Chat display cleared. "
+                            "The selected Notepad window is unchanged."
+                        )
+                    elif text.startswith("/select "):
+                        parts = text.split()
+                        if len(parts) not in {2, 3} or (
+                            len(parts) == 3 and parts[2] != "empty-disposable"
+                        ):
+                            raise Denied("Use /select <window_ref> [empty-disposable]")
+                        desktop.select(parts[1], confirm_disposable=len(parts) == 3)
+                        output(
+                            "JARVIS: Selected Notepad window. "
+                            "Close safety will be rechecked at dispatch."
+                        )
+                    elif text.startswith("/review "):
+                        parts = text.split()
+                        if len(parts) != 3 or parts[2] != "manually-handled":
+                            raise Denied(
+                                "Use /review <task_id> manually-handled "
+                                "after inspecting the outcome"
+                            )
+                        store = conversation.broker.store
+                        task = store.get(parts[1])
+                        if task.state != "NEEDS_REVIEW":
+                            raise Denied("Task does not require outcome review")
+                        with store.db:
+                            store.event(task.task_id, "manual_review_acknowledged")
+                        unresolved = store.db.execute(
+                            "SELECT a.task_id FROM actions a WHERE a.state='UNKNOWN' "
+                            "AND NOT EXISTS "
+                            "(SELECT 1 FROM events e WHERE e.task_id=a.task_id "
+                            "AND e.kind='manual_review_acknowledged')"
+                        ).fetchone()
+                        desktop.blocked_unknown = unresolved is not None
+                        output(
+                            "JARVIS: Manual review recorded. The old action will never be replayed."
+                        )
+                    else:
+                        output(
+                            "JARVIS: Enter commands on their own line: /windows, "
+                            "/select <reference> [empty-disposable], /confirm-empty, "
+                            "/clear, /stop, /quit. Send Notepad requests on a separate line."
+                        )
+                    prompt()
+                    continue
                 result = conversation.submit(text)
                 message = conversational_text(result)
                 if result.decision_kind not in {"say", "clarify", "unsupported"} and (
@@ -135,10 +210,10 @@ def chat_loop(conversation: Conversation, stream: TextIO, output: Callable[[str]
                     message = "[SIMULATED] " + message.removeprefix("SIMULATED: ")
                 output(f"JARVIS: {message}")
             except Denied as exc:
-                output(f"SIMULATED: request rejected: {exc}")
-            output("You> ")
+                output(f"JARVIS: Request paused: {exc}")
+            prompt()
     except KeyboardInterrupt:
         reader.cancel.set()
-        output("SIMULATED: interrupted; any admitted effect remains journaled.")
+        output("JARVIS: Interrupted; any admitted effect remains journaled.")
     finally:
         reader.close()

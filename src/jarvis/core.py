@@ -13,6 +13,7 @@ from jarvis.domain import (
     Denied,
     Desktop,
     Grant,
+    Handoff,
     PreparedAction,
     Scope,
     State,
@@ -67,6 +68,12 @@ class Broker:
         return self._submit(request, Scope(request.session, "text_editor"))
 
     def converse(self, request: UserRequest, history: tuple[Message, ...] = ()):
+        prior = self.store.db.execute(
+            "SELECT task_id FROM tasks WHERE session=? AND request_key=?",
+            (request.session, request.request_key),
+        ).fetchone()
+        if prior:
+            return self._submit(request, self.store.get(prior["task_id"]).scope, history)
         return self._submit(
             request, self.registry.scope_for(request.session, request.text), history
         )
@@ -94,13 +101,18 @@ class Broker:
             scope,
             fingerprint,
             self.clock.now() + profile.task_seconds,
-            profile.model_dump(exclude={"reply"}),
+            {
+                **profile.model_dump(exclude={"reply"}),
+                "execution_mode": "windows"
+                if getattr(self.desktop, "real", False)
+                else "simulation",
+            },
         )
         if not fresh:
-            return self.store.result(task.task_id)
+            return self._result(task.task_id)
         if self.busy:
             self.store.transition(task.task_id, State.FAILED, "SIMULATED: planner is busy.")
-            return self.store.result(task.task_id)
+            return self._result(task.task_id)
         self.busy = True
         self.last_decision = None
         self.last_error = None
@@ -109,7 +121,7 @@ class Broker:
             self.store.transition(task.task_id, State.PLANNING)
             task = self.store.get(task.task_id)
             if self._cancelled(task.task_id):
-                return self.store.result(task.task_id)
+                return self._result(task.task_id)
             if self.registry.needs_live_retrieval(request.text):
                 return self._non_action(
                     task.task_id,
@@ -119,20 +131,37 @@ class Broker:
                         "Live retrieval is not available in M1.",
                     ),
                 )
+            candidate_schema = (
+                self.registry.schema_for(scope)
+                if profile.prompt_version
+                in {"planner-m2-v7", "planner-m2-v8", "planner-m2-v9", "planner-m2-v10"}
+                else self.registry.schema()
+            )
             messages = context_messages(
                 profile,
                 scope,
                 request.text,
                 request.untrusted_context,
                 history,
-                self.registry.schema(),
+                candidate_schema,
+                self.registry.planner_context()
+                if profile.prompt_version
+                in {
+                    "planner-m2-v5",
+                    "planner-m2-v6",
+                    "planner-m2-v7",
+                    "planner-m2-v8",
+                    "planner-m2-v9",
+                    "planner-m2-v10",
+                }
+                else None,
             )
             model_request = ModelRequest(
                 str(uuid4()),
                 task.task_id,
                 task.revision,
                 profile,
-                self.registry.schema(),
+                candidate_schema,
                 task.deadline,
                 messages,
             )
@@ -151,8 +180,20 @@ class Broker:
                 raise Denied("Late or obsolete model reply")
             if len(reply.raw) > profile.max_output_bytes:
                 raise Denied("Model reply budget exceeded")
-            decision = parse_decision(reply.raw)
+            decision = parse_decision(reply.raw, profile.decision_version)
             self.last_decision = decision
+            if getattr(self.registry, "m2", False):
+                with self.store.db:
+                    self.store.event(
+                        task.task_id,
+                        "model_decision",
+                        payload={
+                            "kind": decision.kind,
+                            "capability": decision.proposal.capability
+                            if decision.proposal
+                            else None,
+                        },
+                    )
             if decision.proposal is None:
                 return self._non_action(task.task_id, decision)
             action = self.registry.prepare(task, decision.proposal, self.grant)
@@ -161,6 +202,9 @@ class Broker:
             authorize(self.store.get(task.task_id), action, self.grant, approval, self.clock.now())
             self.store.transition(task.task_id, State.READY)
             self.dispatch(action, approval)
+        except Handoff as exc:
+            self.last_error = "MANUAL_HANDOFF"
+            self.store.transition(task.task_id, State.WAITING_INPUT, str(exc))
         except (Denied, ValueError) as exc:
             self.last_error = exc.code if isinstance(exc, ProviderError) else "DENIED_OR_INVALID"
             current = self.store.get(task.task_id)
@@ -173,7 +217,34 @@ class Broker:
                 )
         finally:
             self.busy = False
-        return self.store.result(task.task_id)
+        return self._result(task.task_id)
+
+    def _result(self, task_id: str):
+        result = self.store.result(task_id)
+        if getattr(self.registry, "conversational", False):
+            task = self.store.get(task_id)
+            if task.scope.app_id == "notepad":
+                self.desktop.last_outcome = {
+                    "effect": task.scope.effect,
+                    "state": result.state,
+                    "verified": result.state == State.SUCCEEDED,
+                }
+        if getattr(self.desktop, "real", False):
+            return replace(
+                result, simulated=False, message=result.message.removeprefix("SIMULATED: ")
+            )
+        if result.state == State.NEEDS_REVIEW and getattr(self.registry, "m2", False):
+            self.desktop.review_task_id = task_id
+            result = replace(
+                result,
+                message=(
+                    getattr(self.desktop, "verification_note", "")
+                    + "The operation's outcome is uncertain; new actions are paused. "
+                    "Inspect Notepad manually, then enter "
+                    f"/review {task_id} manually-handled. I will not repeat the operation."
+                ),
+            )
+        return result
 
     def _cancelled(self, task_id: str) -> bool:
         if self.cancel_requested():
@@ -182,6 +253,12 @@ class Broker:
 
     def _non_action(self, task_id: str, decision: Decision):
         self.last_decision = decision
+        if getattr(self.registry, "m2", False):
+            from jarvis.action_language import non_action_text
+
+            decision = replace(
+                decision, text=non_action_text(decision, getattr(self.registry, "intent", None))
+            )
         state = {
             "say": State.ANSWERED,
             "clarify": State.WAITING_INPUT,
@@ -193,7 +270,7 @@ class Broker:
             f"SIMULATED: {decision.kind}; no action verified. Text is not persisted.",
         )
         return replace(
-            self.store.result(task_id),
+            self._result(task_id),
             message=f"SIMULATED: {decision.kind}; no action verified. {decision.text}",
             decision_kind=decision.kind,
         )
@@ -239,7 +316,7 @@ class Broker:
                 State.CANCELLED if current.cancelled else State.FAILED,
                 "SIMULATED: adapter gate rejected; zero execution.",
             )
-            return self.store.result(action.task_id)
+            return self._result(action.task_id)
         except Exception:
             self.store.complete(
                 action_id,
@@ -248,7 +325,7 @@ class Broker:
                 State.NEEDS_REVIEW,
                 "SIMULATED: execution outcome unknown; no replay.",
             )
-            return self.store.result(action.task_id)
+            return self._result(action.task_id)
         self.store.transition(action.task_id, State.VERIFYING)
         try:
             evidence = self.desktop.observe(action)
@@ -261,11 +338,19 @@ class Broker:
             and evidence.session == action.session
             and evidence.observed_at <= self.clock.now()
             and evidence.observed_at >= attempt.admitted_at
-            and evidence.source == "fake-state-observer-v1"
-            and evidence.kind == "fake_api_state"
+            and evidence.source
+            == getattr(self.desktop, "evidence_source", "fake-state-observer-v1")
+            and evidence.kind == getattr(self.desktop, "evidence_kind", "fake_api_state")
             and evidence.authority == "tool_output"
         )
-        if not matches or evidence.running is None:
+        observed = (
+            evidence.postcondition
+            if evidence and getattr(self.registry, "m2", False)
+            else evidence.running
+            if evidence
+            else None
+        )
+        if not matches or observed is None:
             self.store.complete(
                 action_id,
                 "UNKNOWN",
@@ -273,13 +358,17 @@ class Broker:
                 State.NEEDS_REVIEW,
                 "SIMULATED: postcondition unverified; outcome unknown; no replay.",
             )
-        elif evidence.running is not True:
+        elif observed is not True:
             self.store.complete(
                 action_id,
                 "FAILED",
                 evidence,
                 State.FAILED,
-                "SIMULATED: verification failed; editor is not observed running.",
+                getattr(
+                    self.desktop,
+                    "failure_message",
+                    "SIMULATED: verification failed; editor is not observed running.",
+                ),
             )
         else:
             self.store.complete(
@@ -287,14 +376,18 @@ class Broker:
                 "VERIFIED",
                 evidence,
                 State.CANCELLED if current.cancelled else State.SUCCEEDED,
-                "SIMULATED: registered text editor observed running in fake state."
+                (
+                    self.desktop.success_message(action)
+                    if hasattr(self.desktop, "success_message")
+                    else "SIMULATED: registered text editor observed running in fake state."
+                )
                 + (
                     " Cancellation arrived after the effect; no rollback."
                     if current.cancelled
                     else ""
                 ),
             )
-        return self.store.result(action.task_id)
+        return self._result(action.task_id)
 
     def recover(self):
         # Recovery never executes, even when an admitted effect appears absent.
@@ -328,7 +421,7 @@ class Broker:
                     State.NEEDS_REVIEW,
                     "SIMULATED: unadmitted intent pending; reauthorization required.",
                 )
-            recovered.append(self.store.result(task.task_id))
+            recovered.append(self._result(task.task_id))
         # A crash during planning or before intent admission carries no action to retry.
         for row in self.store.db.execute(
             "SELECT task_id FROM tasks WHERE state IN "
@@ -338,7 +431,16 @@ class Broker:
             self.store.transition(
                 task.task_id, State.FAILED, "SIMULATED: interrupted before admission; no replay."
             )
-            recovered.append(self.store.result(task.task_id))
+            recovered.append(self._result(task.task_id))
+        if hasattr(self.desktop, "blocked_unknown"):
+            self.desktop.blocked_unknown = (
+                self.store.db.execute(
+                    "SELECT a.task_id FROM actions a WHERE a.state='UNKNOWN' AND NOT EXISTS "
+                    "(SELECT 1 FROM events e WHERE e.task_id=a.task_id "
+                    "AND e.kind='manual_review_acknowledged')"
+                ).fetchone()
+                is not None
+            )
         return recovered
 
     def revoke_grant(self):

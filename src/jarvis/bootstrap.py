@@ -44,9 +44,29 @@ def build(
     clock: Clock | None = None,
     provider: Provider | None = None,
     session: str = "demo-session",
+    *,
+    real: bool = False,
+    registration: Path | None = None,
+    attended: bool = False,
 ) -> Broker:
+    if real and (
+        not attended or registration is None or profile.decision_version != "decision-m2-v1"
+    ):
+        raise ValueError("Real mode requires M2 profile, registration and attended-session consent")
+    if profile.decision_version == "decision-m2-v1" and profile.prompt_version not in {
+        "planner-m2-v1",
+        "planner-m2-v2",
+        "planner-m2-v3",
+        "planner-m2-v4",
+        "planner-m2-v5",
+        "planner-m2-v6",
+        "planner-m2-v7",
+        "planner-m2-v8",
+        "planner-m2-v9",
+        "planner-m2-v10",
+    }:
+        raise ValueError("M2 schema requires its versioned prompt")
     clock = clock or SystemClock()
-    store = Store(path, clock)
     if provider is None:
         if isinstance(profile, OllamaProfile):
             from jarvis.ollama import OllamaProvider
@@ -54,11 +74,65 @@ def build(
             provider = OllamaProvider(clock)
         else:
             provider = FakeProvider(clock)
-    desktop = FakeDesktop(clock)
+    if profile.decision_version == "decision-m2-v1":
+        import os
+        import threading
+
+        from jarvis.notepad import (
+            DesktopLease,
+            NotepadDesktop,
+            NotepadRegistry,
+            WorkerTransport,
+            load_registration,
+        )
+
+        if real:
+            stop = threading.Event()
+            transport = WorkerTransport(load_registration(registration), stop)
+            lease = DesktopLease(Path(os.environ["LOCALAPPDATA"]) / "Jarvis/desktop-lease.lock")
+        else:
+            from jarvis.notepad_fake import FakeNotepadTransport
+
+            transport = FakeNotepadTransport()
+            lease = None
+        desktop = NotepadDesktop(clock, transport, real=real, lease=lease)
+        if real:
+            desktop.stop = stop
+        registry = NotepadRegistry(
+            desktop,
+            conversational=profile.prompt_version
+            in {
+                "planner-m2-v5",
+                "planner-m2-v6",
+                "planner-m2-v7",
+                "planner-m2-v8",
+                "planner-m2-v9",
+                "planner-m2-v10",
+            },
+        )
+    else:
+        desktop = FakeDesktop(clock)
+        registry = Registry()
+    store = Store(path, clock)
+    if getattr(registry, "m2", False):
+        registry.extended = profile.prompt_version == "planner-m2-v10"
     grant = Grant(
         "fixture-owner-grant",
         session,
-        frozenset({"text_editor"}),
+        frozenset({"notepad"})
+        if profile.decision_version == "decision-m2-v1"
+        else frozenset({"text_editor"}),
         clock.now() + profile.task_seconds + 60,
+        effects=frozenset({"open", "focus", "close"})
+        if profile.decision_version == "decision-m2-v1"
+        else frozenset({"open"}),
     )
-    return Broker(store, clock, provider, desktop, Registry(), profile, grant)
+    if real:
+        unresolved = store.db.execute(
+            "SELECT a.task_id FROM actions a WHERE a.state='UNKNOWN' AND NOT EXISTS "
+            "(SELECT 1 FROM events e WHERE e.task_id=a.task_id "
+            "AND e.kind='manual_review_acknowledged')"
+        ).fetchone()
+        desktop.blocked_unknown = unresolved is not None
+        desktop.review_task_id = unresolved[0] if unresolved else ""
+    return Broker(store, clock, provider, desktop, registry, profile, grant)

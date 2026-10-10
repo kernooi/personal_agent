@@ -1,0 +1,188 @@
+{
+  "version": "m2-live-conversation-retest-v1",
+  "execution_mode": "windows",
+  "provider": "ollama",
+  "model_identity": "qwen3:8b",
+  "prompt_version": "planner-m2-v9",
+  "model_report": "m2-qwen3-8b-simulation-v9-r1.json",
+  "conversation_report": "m2-conversation-v9-r1.json",
+  "notepad_version": "11.2607.14.0",
+  "preexisting_window_count": 0,
+  "remaining_window_count": 1,
+  "remaining_window": "user-typed synthetic unsaved test window; left open for manual handling",
+  "operator_checks": {
+    "synthetic_text_typed": true,
+    "stop_hotkey_pressed_with_notepad_focused": true,
+    "disposable_confirmation": "explicit /confirm-empty on first freshly created empty single-tab test window"
+  },
+  "cases": [
+    {
+      "case_id": "greeting",
+      "broker_state": "ANSWERED",
+      "model_decision": {
+        "capability": null,
+        "kind": "say"
+      },
+      "admitted_attempts": 0,
+      "independent_evidence": []
+    },
+    {
+      "case_id": "open-input-changed-1",
+      "broker_state": "WAITING_INPUT",
+      "model_decision": {
+        "capability": "apps.open",
+        "kind": "propose_action"
+      },
+      "admitted_attempts": 0,
+      "independent_evidence": []
+    },
+    {
+      "case_id": "open-input-changed-2",
+      "broker_state": "WAITING_INPUT",
+      "model_decision": {
+        "capability": "apps.open",
+        "kind": "propose_action"
+      },
+      "admitted_attempts": 0,
+      "independent_evidence": []
+    },
+    {
+      "case_id": "open-first",
+      "broker_state": "SUCCEEDED",
+      "model_decision": {
+        "capability": "apps.open",
+        "kind": "propose_action"
+      },
+      "admitted_attempts": 1,
+      "independent_evidence": [
+        {
+          "source": "notepad-native-observer-v1",
+          "kind": "windows_uia_state",
+          "authority": "tool_output",
+          "postcondition": true,
+          "running": true
+        }
+      ]
+    },
+    {
+      "case_id": "close-input-changed",
+      "broker_state": "WAITING_INPUT",
+      "model_decision": {
+        "capability": "windows.close",
+        "kind": "propose_action"
+      },
+      "admitted_attempts": 0,
+      "independent_evidence": []
+    },
+    {
+      "case_id": "close-pronoun-unconfirmed",
+      "broker_state": "WAITING_INPUT",
+      "model_decision": {
+        "capability": "windows.close",
+        "kind": "propose_action"
+      },
+      "admitted_attempts": 0,
+      "independent_evidence": []
+    },
+    {
+      "case_id": "focus-on-notepad",
+      "broker_state": "SUCCEEDED",
+      "model_decision": {
+        "capability": "windows.focus",
+        "kind": "propose_action"
+      },
+      "admitted_attempts": 1,
+      "independent_evidence": [
+        {
+          "source": "notepad-native-observer-v1",
+          "kind": "windows_uia_state",
+          "authority": "tool_output",
+          "postcondition": true,
+          "running": true
+        }
+      ]
+    },
+    {
+      "case_id": "bring-notepad-to-front",
+      "broker_state": "SUCCEEDED",
+      "model_decision": {
+        "capability": "windows.focus",
+        "kind": "propose_action"
+      },
+      "admitted_attempts": 1,
+      "independent_evidence": [
+        {
+          "source": "notepad-native-observer-v1",
+          "kind": "windows_uia_state",
+          "authority": "tool_output",
+          "postcondition": true,
+          "running": true
+        }
+      ]
+    },
+    {
+      "case_id": "confirmed-polite-close",
+      "broker_state": "SUCCEEDED",
+      "model_decision": {
+        "capability": "windows.close",
+        "kind": "propose_action"
+      },
+      "admitted_attempts": 1,
+      "independent_evidence": [
+        {
+          "source": "notepad-native-observer-v1",
+          "kind": "windows_uia_state",
+          "authority": "tool_output",
+          "postcondition": true,
+          "running": false
+        }
+      ]
+    },
+    {
+      "case_id": "missing-pronoun-target",
+      "broker_state": "WAITING_INPUT",
+      "model_decision": {
+        "capability": null,
+        "kind": "clarify"
+      },
+      "admitted_attempts": 0,
+      "independent_evidence": []
+    },
+    {
+      "case_id": "polite-open-editor",
+      "broker_state": "SUCCEEDED",
+      "model_decision": {
+        "capability": "apps.open",
+        "kind": "propose_action"
+      },
+      "admitted_attempts": 1,
+      "independent_evidence": [
+        {
+          "source": "notepad-native-observer-v1",
+          "kind": "windows_uia_state",
+          "authority": "tool_output",
+          "postcondition": true,
+          "running": true
+        }
+      ]
+    },
+    {
+      "case_id": "dirty-close-pronoun",
+      "broker_state": "WAITING_INPUT",
+      "model_decision": {
+        "capability": "windows.close",
+        "kind": "propose_action"
+      },
+      "admitted_attempts": 0,
+      "independent_evidence": []
+    },
+    {
+      "case_id": "focus-after-global-stop",
+      "broker_state": "CANCELLED",
+      "model_decision": null,
+      "admitted_attempts": 0,
+      "independent_evidence": []
+    }
+  ],
+  "passed": true
+}

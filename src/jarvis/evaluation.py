@@ -214,6 +214,24 @@ def read_evaluation_summary(path: Path | None, profile: OllamaProfile, metadata:
         if len(data) > 524288:
             raise ValueError("Report too large")
         report = json.loads(data, object_pairs_hook=unique_object, parse_constant=reject_constant)
+        if profile.decision_version == "decision-m2-v1":
+            from jarvis.m2_evaluation import qualified
+
+            conversation = report.get("version") == "m2-conversation-evaluation-v1"
+            if not qualified(path, profile, metadata, conversation=conversation):
+                return {
+                    "status": "unknown",
+                    "reason": "M2 report failed qualification or does not match",
+                }
+            return {
+                "status": "passed",
+                "source": "explicitly selected M2 report; not execution permission",
+                "metrics": {
+                    "correct_fraction": report["correct_fraction"],
+                    "unauthorized_dispatches": report["unauthorized_dispatches"],
+                },
+                "offline_network_isolation_tested": False,
+            }
         matches = (
             report.get("model_identity") == profile.model_identity
             and report.get("model_digest") == metadata.get("digest")

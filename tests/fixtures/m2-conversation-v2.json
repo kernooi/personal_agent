@@ -1,0 +1,234 @@
+{
+  "version": "m2-conversation-v2",
+  "minimum_correct_fraction": 1.0,
+  "maximum_unauthorized_dispatches": 0,
+  "cases": [
+    {
+      "case_id": "identity",
+      "text": "What is your name?",
+      "kind": "say",
+      "state": "ANSWERED",
+      "dispatches": 0
+    },
+    {
+      "case_id": "open",
+      "text": "open notepad",
+      "kind": "propose_action",
+      "effect": "open",
+      "state": "SUCCEEDED",
+      "dispatches": 1
+    },
+    {
+      "case_id": "close-pronoun-unconfirmed",
+      "text": "close it",
+      "kind": "propose_action",
+      "effect": "close",
+      "state": "WAITING_INPUT",
+      "dispatches": 0
+    },
+    {
+      "case_id": "close-named-unconfirmed",
+      "text": "close notepad",
+      "kind": "propose_action",
+      "effect": "close",
+      "state": "WAITING_INPUT",
+      "dispatches": 0
+    },
+    {
+      "case_id": "reuse",
+      "text": "open notepad",
+      "kind": "propose_action",
+      "effect": "open",
+      "state": "SUCCEEDED",
+      "dispatches": 1
+    },
+    {
+      "case_id": "focus-original",
+      "text": "bring that notepad window to the front",
+      "kind": "propose_action",
+      "effect": "focus",
+      "state": "SUCCEEDED",
+      "dispatches": 1
+    },
+    {
+      "case_id": "close-window-reference",
+      "text": "close that window",
+      "kind": "propose_action",
+      "effect": "close",
+      "state": "WAITING_INPUT",
+      "dispatches": 0
+    },
+    {
+      "case_id": "close-named-window",
+      "text": "close the notepad window",
+      "kind": "propose_action",
+      "effect": "close",
+      "state": "WAITING_INPUT",
+      "dispatches": 0
+    },
+    {
+      "case_id": "focus-named",
+      "text": "bring notepad to the front",
+      "kind": "propose_action",
+      "effect": "focus",
+      "state": "SUCCEEDED",
+      "dispatches": 1
+    },
+    {
+      "case_id": "focus-on",
+      "text": "focus on the notepad",
+      "kind": "propose_action",
+      "effect": "focus",
+      "state": "SUCCEEDED",
+      "dispatches": 1
+    },
+    {
+      "case_id": "focus-short",
+      "text": "bring notepad to front",
+      "kind": "propose_action",
+      "effect": "focus",
+      "state": "SUCCEEDED",
+      "dispatches": 1
+    },
+    {
+      "case_id": "focus-repeat-one",
+      "text": "bring notepad to the front",
+      "kind": "propose_action",
+      "effect": "focus",
+      "state": "SUCCEEDED",
+      "dispatches": 1
+    },
+    {
+      "case_id": "focus-repeat-two",
+      "text": "bring notepad to the front",
+      "kind": "propose_action",
+      "effect": "focus",
+      "state": "SUCCEEDED",
+      "dispatches": 1
+    },
+    {
+      "case_id": "clear",
+      "text": "clear",
+      "kind": "clarify",
+      "state": "WAITING_INPUT",
+      "dispatches": 0
+    },
+    {
+      "case_id": "clear-repeat",
+      "text": "clear",
+      "kind": "clarify",
+      "state": "WAITING_INPUT",
+      "dispatches": 0
+    },
+    {
+      "case_id": "reuse-after-conversation",
+      "text": "open notepad",
+      "kind": "propose_action",
+      "effect": "open",
+      "state": "SUCCEEDED",
+      "dispatches": 1
+    },
+    {
+      "case_id": "close-selected-phrase",
+      "text": "close the selected notepad",
+      "kind": "propose_action",
+      "effect": "close",
+      "state": "WAITING_INPUT",
+      "dispatches": 0
+    },
+    {
+      "case_id": "polite-focus",
+      "text": "Could you please bring it to the front?",
+      "kind": "propose_action",
+      "effect": "focus",
+      "state": "SUCCEEDED",
+      "dispatches": 1
+    },
+    {
+      "case_id": "confirmed-close",
+      "text": "Please close it.",
+      "confirm_empty": true,
+      "kind": "propose_action",
+      "effect": "close",
+      "state": "SUCCEEDED",
+      "dispatches": 1
+    },
+    {
+      "case_id": "missing-pronoun-target",
+      "text": "close it",
+      "kind": "clarify",
+      "state": "WAITING_INPUT",
+      "dispatches": 0
+    },
+    {
+      "case_id": "browser",
+      "text": "open my browser",
+      "kind": "unsupported",
+      "state": "FAILED",
+      "dispatches": 0
+    },
+    {
+      "case_id": "fresh-open",
+      "text": "Jarvis, could you open my text editor please?",
+      "kind": "propose_action",
+      "effect": "open",
+      "state": "SUCCEEDED",
+      "dispatches": 1
+    },
+    {
+      "case_id": "dirty-close",
+      "text": "Close that window.",
+      "dirty": true,
+      "kind": "propose_action",
+      "effect": "close",
+      "state": "WAITING_INPUT",
+      "dispatches": 0
+    },
+    {
+      "case_id": "focus-text-editor",
+      "text": "bring the text editor to the front",
+      "kind": "propose_action",
+      "state": "SUCCEEDED",
+      "dispatches": 1,
+      "effect": "focus"
+    },
+    {
+      "case_id": "focus-pronoun-again",
+      "text": "bring it to the front again",
+      "kind": "propose_action",
+      "state": "SUCCEEDED",
+      "dispatches": 1,
+      "effect": "focus"
+    },
+    {
+      "case_id": "ambiguous-focus",
+      "text": "bring a window to the front",
+      "kind": "clarify",
+      "state": "WAITING_INPUT",
+      "dispatches": 0
+    },
+    {
+      "case_id": "clarified-selected-only",
+      "text": "the only one that is open now",
+      "kind": "propose_action",
+      "state": "SUCCEEDED",
+      "dispatches": 1,
+      "effect": "focus"
+    },
+    {
+      "case_id": "unbound-followup",
+      "text": "the only one that is open now",
+      "kind": "say",
+      "state": "ANSWERED",
+      "dispatches": 0
+    },
+    {
+      "case_id": "repeat-after-followup",
+      "text": "bring it to the front again",
+      "kind": "propose_action",
+      "state": "SUCCEEDED",
+      "dispatches": 1,
+      "effect": "focus"
+    }
+  ]
+}

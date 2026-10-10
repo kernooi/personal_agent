@@ -18,7 +18,7 @@ from jarvis.models import OllamaProfile
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="JARVIS local text assistant; desktop actions are SIMULATED"
+        description="JARVIS local text assistant; simulation default, explicit attended Notepad"
     )
     sub = parser.add_subparsers(dest="command", required=True)
     demo = sub.add_parser("demo", help="SIMULATED scenarios only")
@@ -28,19 +28,59 @@ def main() -> None:
         required=True,
     )
     demo.add_argument("--profile", type=Path, default=Path("config/defaults.toml"))
-    for command in ("doctor", "chat", "eval"):
-        child = sub.add_parser(command, help=f"M1 {command}; actions remain SIMULATED")
+    inspect = sub.add_parser("inspect-notepad", help="Observational Notepad metadata only")
+    inspect.add_argument("--registration", type=Path, required=True)
+    lab = sub.add_parser("test-notepad", help="Opt-in attended genuine Notepad broker tests")
+    lab.add_argument("--registration", type=Path, required=True)
+    lab.add_argument("--windows", action="store_true", required=True)
+    lab.add_argument("--attended", action="store_true", required=True)
+    lab.add_argument("--report", type=Path, required=True)
+    lab.add_argument("--interactive", action="store_true")
+    lab.add_argument("--takeover-only", action="store_true")
+    lab.add_argument("--prepared-synthetic", action="store_true")
+    for command in ("doctor", "chat", "eval", "eval-m2", "eval-m2-chat"):
+        child = sub.add_parser(command, help=f"Local {command}; real chat requires explicit opt-in")
         child.add_argument("--profile", type=Path, required=True)
         if command == "doctor":
             child.add_argument("--evaluation-report", type=Path)
-        if command == "eval":
+        if command == "chat":
+            child.add_argument("--real", action="store_true")
+            child.add_argument("--attended", action="store_true")
+            child.add_argument("--registration", type=Path)
+            child.add_argument("--model-report", type=Path)
+            child.add_argument("--conversation-report", type=Path)
+        if command in {"eval", "eval-m2", "eval-m2-chat"}:
             child.add_argument("--live", action="store_true", required=True)
+            child.add_argument("--report", type=Path)
+        if command == "eval":
             child.add_argument(
                 "--corpus", type=Path, default=Path("tests/fixtures/m1-corpus-v1.json")
             )
             child.add_argument("--repeats", type=int, choices=(1, 2, 3), default=1)
-            child.add_argument("--report", type=Path)
     args = parser.parse_args()
+    if args.command == "inspect-notepad":
+        import threading
+
+        from jarvis.notepad import WorkerTransport, load_registration
+
+        transport = WorkerTransport(load_registration(args.registration), threading.Event())
+        windows = transport.call("inventory")
+        print(
+            json.dumps(
+                {
+                    "notepad_version": transport.registration.notepad_version,
+                    "package": transport.registration.package_full_name,
+                    "visible_notepad_window_count": len(windows),
+                    "private_labels_read": False,
+                },
+                indent=2,
+            )
+        )
+        return
+    if args.command == "test-notepad":
+        from jarvis.notepad_lab import run_lab
+
+        raise SystemExit(run_lab(args))
     if args.command != "demo":
         live_command(args, parser)
         return
@@ -105,7 +145,32 @@ def live_command(args, parser):
         parser.error("Profile unavailable or invalid; see the strict M1 profile examples")
     if not isinstance(profile, OllamaProfile):
         parser.error("M1 commands require an explicit Ollama profile; no fake fallback")
+    if args.command in {"eval-m2", "eval-m2-chat"}:
+        from jarvis.m2_evaluation import evaluate_m2
+
+        if profile.decision_version != "decision-m2-v1" or args.report is None:
+            parser.error("eval-m2 requires an M2 profile and --report")
+        if args.command == "eval-m2-chat":
+            from jarvis.m2_conversation_evaluation import evaluate_conversation
+
+            report, code = evaluate_conversation(
+                profile,
+                Path(
+                    "tests/fixtures/m2-conversation-v2.json"
+                    if profile.prompt_version == "planner-m2-v10"
+                    else "tests/fixtures/m2-conversation-v1.json"
+                ),
+                args.report,
+            )
+        else:
+            report, code = evaluate_m2(
+                profile, Path("tests/fixtures/m2-corpus-v1.json"), args.report
+            )
+        print(json.dumps(report, indent=2))
+        raise SystemExit(code)
     if args.command == "eval":
+        if profile.decision_version != "decision-v1":
+            parser.error("M1 eval requires decision-v1; use eval-m2 for M2")
         result = evaluate(profile, args.corpus, args.repeats)
         if args.report:
             write_report(args.report, result.report)
@@ -144,21 +209,86 @@ def live_command(args, parser):
             f"Ollama not ready: {metadata.get('error', 'LOCAL_MODE_UNVERIFIED')}. "
             "No fake/cloud fallback; doctor is observational.\n",
         )
-    print(f"JARVIS | model={profile.model_identity} | provider=ollama | execution=SIMULATED")
-    print("Model unqualified for real actions; local-mode evidence is user/operator verified.")
+    if args.real:
+        from jarvis.m2_evaluation import qualified
+
+        if not args.attended or args.registration is None or args.model_report is None:
+            parser.error("Real chat requires --attended, --registration and --model-report")
+        if profile.decision_version != "decision-m2-v1" or not qualified(
+            args.model_report, profile, metadata
+        ):
+            parser.error(
+                "Matching passed M2 model qualification is required; no real effect enabled"
+            )
+        if profile.prompt_version in {
+            "planner-m2-v5",
+            "planner-m2-v6",
+            "planner-m2-v7",
+            "planner-m2-v8",
+            "planner-m2-v9",
+            "planner-m2-v10",
+        } and (
+            args.conversation_report is None
+            or not qualified(args.conversation_report, profile, metadata, conversation=True)
+        ):
+            parser.error("Matching passed multi-turn M2 qualification is also required")
+    elif args.registration or args.attended or args.model_report or args.conversation_report:
+        parser.error("Real-mode options require --real; no implicit Windows activation")
+    mode = "WINDOWS" if args.real else "SIMULATED"
+    targets = "notepad" if profile.decision_version == "decision-m2-v1" else "text_editor"
+    print(
+        f"JARVIS | model={profile.model_identity} | provider=ollama | "
+        f"execution={mode} | targets={targets}"
+    )
+    if args.real:
+        print("Attended Notepad only. Ctrl+Alt+Shift+F10 stops new effects globally.")
+        print(
+            "Use /windows to inspect selection; "
+            "/confirm-empty confirms your empty disposable test window."
+        )
+    else:
+        print("Model unqualified for real actions; local-mode evidence is user/operator verified.")
     data_home = Path(os.environ.get("LOCALAPPDATA", Path.home() / ".local/share")) / "Jarvis"
     data_home.mkdir(parents=True, exist_ok=True)
     try:
         broker = build(
-            data_home / "journal.sqlite", profile, provider=provider, session=str(uuid4())
+            data_home / ("m2-journal.sqlite" if args.real else "journal.sqlite"),
+            profile,
+            provider=provider,
+            session=str(uuid4()),
+            real=args.real,
+            registration=args.registration,
+            attended=args.attended,
         )
-    except (OSError, sqlite3.Error):
+    except (OSError, sqlite3.Error, ValueError):
         provider.close()
         parser.exit(2, "Private JARVIS journal unavailable; no execution or fallback.\n")
     try:
-        for result in broker.recover():
+        recovered = broker.recover()
+        waiting = [result for result in recovered if result.state == "NEEDS_REVIEW"]
+        if recovered and len(recovered) != len(waiting):
+            print("Earlier unfinished requests were ended safely; no actions were replayed.")
+        for result in waiting:
             print(result.message)
-        chat_loop(Conversation(broker), sys.stdin)
+        if args.real:
+            pending = broker.store.db.execute(
+                "SELECT DISTINCT a.task_id FROM actions a WHERE a.state='UNKNOWN' "
+                "AND NOT EXISTS (SELECT 1 FROM events e WHERE e.task_id=a.task_id "
+                "AND e.kind='manual_review_acknowledged')"
+            ).fetchall()
+            for row in pending:
+                if not any(result.task_id == row[0] for result in waiting):
+                    print(
+                        "Notepad actions are paused for an uncertain earlier outcome. "
+                        f"Inspect Notepad, then /review {row[0]} manually-handled."
+                    )
+        if args.real:
+            from jarvis.win_stop import StopHotkey
+
+            with StopHotkey(broker.desktop.stop):
+                chat_loop(Conversation(broker), sys.stdin)
+        else:
+            chat_loop(Conversation(broker), sys.stdin)
     finally:
         broker.store.close()
         provider.close()

@@ -26,19 +26,52 @@ class Conversation:
         self.broker = broker
         self.history: list[Message] = []
         self.pending_open = False
+        self.pending_window = None
 
     def submit(self, text: str, request_key: str | None = None):
         normalized = text.strip().casefold().rstrip(".!?")
         resolved = text
+        extended = self.broker.profile.prompt_version == "planner-m2-v10"
+        if extended and self.pending_window:
+            from jarvis.notepad_intent_v2 import selected_followup
+
+            effect, reference = self.pending_window
+            self.pending_window = None
+            desktop = self.broker.desktop
+            desktop.refresh_selection()
+            windows = desktop.inventory()
+            if (
+                selected_followup(text)
+                and desktop.selected_ref == reference
+                and len(windows) == 1
+                and windows[0]["window_ref"] == reference
+            ):
+                resolved = {
+                    "open": "Open Notepad",
+                    "focus": "Focus Notepad",
+                    "close": "Close Notepad",
+                }[effect]
         if self.pending_open and normalized == "text editor":
             resolved = "Open my text editor."
         request = UserRequest(request_key or str(uuid4()), self.broker.grant.session, resolved)
-        if self.broker.registry.scope_for(request.session, resolved).app_id == "text_editor":
+        if self.broker.registry.scope_for(request.session, resolved).app_id in {
+            "text_editor",
+            "notepad",
+        }:
             self.broker.grant = replace(
                 self.broker.grant,
                 expires_at=self.broker.clock.now() + self.broker.profile.task_seconds,
             )
         result = self.broker.converse(request, tuple(self.history))
+        if extended:
+            intent = self.broker.registry.intent
+            if (
+                result.decision_kind == "clarify"
+                and intent is not None
+                and intent.target in {"ambiguous", "selected"}
+                and self.broker.desktop.selected_ref
+            ):
+                self.pending_window = (intent.effect, self.broker.desktop.selected_ref)
         self.pending_open = result.state == State.WAITING_INPUT and normalized in {
             "open my editor",
             "open an editor",

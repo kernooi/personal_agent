@@ -456,6 +456,24 @@ def test_chat_loop_finite_input(broker, runtime, reply_text):
     zero_effects(broker)
 
 
+def test_chat_console_enter_has_no_empty_assistant_label(broker, runtime, monkeypatch, capsys):
+    import jarvis.terminal as terminal
+
+    class ConsoleInput(TerminalInput):
+        def _read(self):
+            # Reproduce Windows' manual echo and Enter notice without real keys.
+            print("hello", end="", flush=True)
+            self.notice("")
+            self._deliver("hello")
+            self.closed.set()
+
+    runtime.decision = {"kind": "say", "text": "Hello!"}
+    monkeypatch.setattr(terminal, "TerminalInput", ConsoleInput)
+    terminal.chat_loop(Conversation(broker), io.StringIO())
+    assert capsys.readouterr().out.endswith("You> hello\nJARVIS: Hello!\nYou> ")
+    zero_effects(broker)
+
+
 def test_terminal_discards_entire_overlong_line():
     notices = []
     reader = TerminalInput(

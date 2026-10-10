@@ -292,7 +292,7 @@ class OllamaProvider:
                 if len(raw) > profile.max_output_bytes:
                     raise ProviderError("RESPONSE_TOO_LARGE")
                 try:
-                    parse_decision(raw)
+                    parse_decision(raw, profile.decision_version)
                 except ValueError as exc:
                     raise ProviderError("INVALID_DECISION") from exc
                 tokens = data.get("eval_count")
