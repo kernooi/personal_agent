@@ -2017,3 +2017,146 @@ changes followed that validation. Preserve every failed/intermediate evaluation
 and the failed 16/18 interpretation and 29/34 currency qualification gates.
 This checkpoint remains opt-in and experimental within M3.5. No private runtime
 files, venv, databases or models are included. Local commit only; no push.
+
+
+2026-10-11 ? Restore reverted latency optimization, then measure further savings.
+Starting worktree was clean at 6e445dd; committed semantic assistant-v1 and all
+historical reports were present. Uncommitted fast code/reports had been reverted;
+the private assistant-fast-v1.toml survived outside Git. Preserved that private
+profile unchanged and restored opt-in assistant-v2 and its unverified-cloud example.
+No deleted evaluation result was reconstructed as a new observation.
+
+Restored combined simple routing/answering, selective monetary reasoning, bounded
+per-stage outputs, a literal-amount fast review with the same semantic checks,
+verified currency rendering without model rewriting, and known-topic web evidence
+routing. Applied stage profiles clear future stage options while leaving the
+frozen task profile unchanged. Added numeric session-only duration/token/load
+measurements to explicit assistant reports; no raw prompts or thinking are saved.
+
+Reused official standalone Ollama PID 3928, observed creation 2026-10-11 13:00:34
+local, matching Jarvis/logs/ollama-assistant-20261011-130034.stderr.log. Re-read the
+startup evidence: 13:00:35.111+08:00, "Ollama cloud disabled: true", loopback listener
+and 0.40.2. Existing local SearXNG container jarvis-searxng is bound to
+127.0.0.1:8080 only. Doctor observed qwen3:8b digest
+500a1f067a9f782620b40bee6f7b0c89e17ae61f686b92c24933e4ca4b2b8b41, ready=true,
+simulation, cloud_disabled=user_verified and programmatic attestation=false.
+No public provider was contacted by doctor. No server/profile settings were changed.
+During actual inference, nvidia-smi observed RTX 4070, 12282 MiB total, 8876 MiB
+used and 95% utilization; ollama ps reported 100% GPU, context 16384. Runtime
+timing samples showed about 81 tokens/second. These are point observations.
+
+Initial restored r1 reports are preserved: interpretation 16/18 FAILED (median
+10.348 s), M3 24/34 FAILED, M2 17/18 passed its original 90% gate, conversation
+28/29 FAILED, public smoke 3/3 PASSED narrow checks. Every case had zero desktop
+effects except authorized fake M2 actions; both M2 reports had zero unauthorized
+dispatches. Interpretation missed split-followup and missing-unit-price, spending
+61.074 and 61.926 s respectively. M3 exposed unnecessary currency clarifications
+and memory-only pending-amount responses. M2 missed discard; conversation missed
+clear. These failures led to the additional changes, not changed test criteria.
+
+Further optimization: reuse the controller-recognized monetary route for a narrow
+fast typed plan instead of another classification; explicitly retain the existing
+clarify/unsupported output roles. Stop if a monetary correction repeats an identical
+rejected interpretation with no new evidence, before another review/correction.
+Changed corrections still receive normal review. The original deadlines/maximum
+turns and frozen accuracy gates remain unchanged. New safety/latency regressions
+verify both stopping identical retries and accepting a valid changed correction.
+
+Final deterministic checks: Python 3.13.2, 749 tests PASSED in 24.48 s; ruff check
+clean; ruff format --check clean (81 files); pip check: no broken requirements;
+git diff --check clean. The earlier restoration checkpoint passed 746 tests.
+No native Windows effects, physical-offline validation, downloads, installation,
+network/global/service changes, commits or pushes. Stop at M3.5.
+
+The r2 optimization reports are also preserved: interpretation 14/18 FAILED,
+median 9.4525 s; M3 31/34 FAILED; M2 passed; conversation passed; public smoke
+3/3 passed narrow checks. A generic grammar clarification incorrectly forced an
+exchange-rate explanation into currency. Corrected this routing bug: direct narrow
+planning requires a bound currency argument/pending pair; unresolved follow-ups
+are routed before reasoning. Added numerical/static explanation and post-money
+greeting regressions. Repeated rejected-plan stopping remains. The frozen gates
+are unchanged; the next reports evaluate the corrected final source.
+
+Broader merged numeric routing in r3 FAILED: interpretation 8/18, currency 27/34
+and public smoke failed. It sometimes answered conversions from memory rather
+than proposing verified calculations. Rejected that approach; preserved all
+reports. Final source retains the intent classifier for unresolved numeric/weak
+grammar requests, then a typed currency plan or conversation-only fast answer.
+Controller-bound conversions and ordinary greetings retain their shorter paths.
+No accuracy claim is inferred from r3's misleadingly short failed-response times.
+Added a regression denying a say answer after a currency classification.
+Final deterministic validation: 753 PASSED in 24.68 s; lint/format/dependencies
+and diff checks clean. Final source live reports use restored-fast-r4 filenames.
+
+Final fresh-source measurements (r4; original acceptance criteria unchanged):
+
+| Report | CLI exit | Actual result | Scope |
+|---|---|---|---|
+| assistant-restored-fast-r4.json | 1 | FAILED 14/18 | Actual local inference, synthetic .75 quotes, zero desktop calls |
+| m3-assistant-restored-fast-r4.json | 1 | FAILED 31/34 | Frozen M3 v2, real model, fixture/failure-injection and configured public retrieval |
+| m2-assistant-restored-fast-r4.json | 0 | PASSED 18/18 | Fake Notepad, zero unauthorized dispatches |
+| m2-chat-assistant-restored-fast-r4.json | 0 | PASSED 29/29 | Fake Notepad conversation, zero unauthorized dispatches |
+| assistant-public-restored-fast-r4.json | 0 | PASSED 3/3 narrow smoke checks | Actual Frankfurter and local SearXNG/public fetching, zero desktop calls |
+
+Interpretation failures: split-followup, discount-fee-split (review output-limit
+failure), local-supplied and missing-unit-price. Missing-price still took 75.638 s;
+complex requests can remain slow or fail. M3 failures: pending-amount,
+pending-amount-reply and amount-followup. Interpretation correctness decreased
+from historical 16/18 to 14/18; currency increased from 29/34 to 31/34. Neither
+100% gate passes. No gate, corpus, or required review was relaxed; do not promote
+the candidate based on speed or the narrow public smoke. Broader research quality
+and native use of this candidate remain separately unqualified/not tested.
+
+Historical-vs-final comparison is saved in assistant-latency-restored-comparison.json.
+All 18 cases, including failures, remain included. Median 13.9505 -> 10.095 s
+(27.64% lower). This is one historical baseline and one fresh warm run, not a
+controlled repeated benchmark; earlier load state is unknown. Final observed
+model-load durations were 0.009853?0.0152999 s. Warm identity 0.921 s; exchange-rate
+explanation 1.418 s; its conversational follow-up 1.269 s. Frozen ticket example
+17.649 -> 8.082 s, five -> three model turns. Failed split-followup r1 -> r4
+61.074 -> 24.927 s; stopping identical rejected plans helps this failed request,
+while different corrections can still take longer. No universal latency gain.
+
+Live public smoke independently verified 1600 SGD = 1249.62 USD (8.325 s, three
+turns) and the discount/fee/four-way split 140 SGD = 109.34 USD (22.009 s, four
+turns) using retrieved reference data, not invented model rates. Biography lookup
+returned source-bound badminton information in 29.397 s, six turns. These are
+three narrow checks, not broad semantic/relevance/freshness qualification.
+
+Every final report's source contract and full profile were independently compared
+with current code and the unchanged private profile; all matched. Hashes:
+assistant 695ea1a181106edb83052f4040d891717ac462d41be7156821c9b43053feac16;
+M3 c0bd4b9c6d82724dcfd8e0b9fd54baaa01c93aef1cd595a97a3646e7faef6e12;
+M2 e1a5064efb10fa1a382a5903de2beebccfe15e3362bd77f62e57168d8cb0fae9.
+Both new M2 reports pass qualified(). Preserved legacy v10 answer-only model
+and conversation reports also still pass their separate observational check.
+The fast profile remains simulation by default. No new attended native or
+physical-offline validation is claimed.
+
+Exact final commands executed through the local subprocess runner:
+
+```powershell
+$jarvisFastProfile = "$env:LOCALAPPDATA\Jarvis\profiles\assistant-fast-v1.toml"
+.\.venv\Scripts\python.exe -m jarvis doctor --profile $jarvisFastProfile
+.\.venv\Scripts\python.exe -m jarvis eval-assistant --profile $jarvisFastProfile --live --report docs/evaluations/assistant-restored-fast-r4.json
+.\.venv\Scripts\python.exe -m jarvis eval-m3 --profile $jarvisFastProfile --live --public-data-config "$env:LOCALAPPDATA\Jarvis\public-data.toml" --report docs/evaluations/m3-assistant-restored-fast-r4.json
+.\.venv\Scripts\python.exe -m jarvis eval-m2 --profile $jarvisFastProfile --live --report docs/evaluations/m2-assistant-restored-fast-r4.json
+.\.venv\Scripts\python.exe -m jarvis eval-m2-chat --profile $jarvisFastProfile --live --report docs/evaluations/m2-chat-assistant-restored-fast-r4.json
+.\.venv\Scripts\python.exe scripts/Test-JarvisAssistantLive.py --profile $jarvisFastProfile --live --public-data-config "$env:LOCALAPPDATA\Jarvis\public-data.toml" --web-config "$env:LOCALAPPDATA\Jarvis\web.toml" --report docs/evaluations/assistant-public-restored-fast-r4.json
+.\.venv\Scripts\python.exe -m pytest
+.\.venv\Scripts\python.exe -m ruff check .
+.\.venv\Scripts\python.exe -m ruff format --check .
+.\.venv\Scripts\python.exe -m pip check
+git diff --check
+```
+
+Report paths are already occupied: select unused filenames for a new run. The
+existing server startup commands remain in README; no server was restarted here.
+All r1?r4 reports, including failures and rejected variants, remain preserved.
+
+Final observational doctor with the failed assistant r4 report still reports
+ready=true and qualification unknown/unqualified. Its displayed mismatch reason
+is the pre-existing generic M2 wording, even though the selected report is an
+assistant report; this diagnostic wording issue is not fixed by the latency task.
+The selected assistant report failed its gate; no qualification was inferred.
+Final diff check remains clean; only documentation changed after source validation.

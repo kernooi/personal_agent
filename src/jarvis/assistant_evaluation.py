@@ -63,7 +63,7 @@ def qualification_summary(path, profile, metadata):
 
 
 def evaluate(profile, report_path):
-    if profile.assistant_version != "assistant-v1" or report_path.exists():
+    if profile.assistant_version not in {"assistant-v1", "assistant-v2"} or report_path.exists():
         raise ValueError("Select an assistant-v1 profile and a new report path")
     corpus_bytes = CORPUS.read_bytes()
     corpus = json.loads(corpus_bytes)
@@ -160,6 +160,7 @@ def evaluate(profile, report_path):
                             "final_answer": answer,
                             "correct": bool(correct),
                             "model_turns": broker.model_turns,
+                            "model_stages": broker.model_metrics[:],
                             "latency_seconds": round(time.monotonic() - started, 3),
                             "desktop_execution_calls": broker.desktop.execution_calls,
                         }

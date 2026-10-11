@@ -1,5 +1,36 @@
 # JARVIS local text assistant
 
+The latency optimization has been restored as an opt-in `assistant-v2` candidate.
+Use the existing private fast profile on this PC; it keeps Windows effects simulated:
+
+```powershell
+.\.venv\Scripts\python.exe -m jarvis chat `
+  --profile "$env:LOCALAPPDATA\Jarvis\profiles\assistant-fast-v1.toml" `
+  --public-data-config "$env:LOCALAPPDATA\Jarvis\public-data.toml" `
+  --web-config "$env:LOCALAPPDATA\Jarvis\web.toml"
+```
+
+Restart chat to load the restored code. Keep the manually started local Ollama and
+SearXNG servers running. Simple ordinary conversation uses one model turn; common
+conversions need three turns instead of five. Uncertain numeric requests retain a separate intent
+classifier before planning or answering. Complex monetary interpretation retains
+reasoning, and all conversions retain semantic review and
+broker verification. Verified currency answers no longer receive a redundant
+model rewrite. Stage output limits and ten-minute model residency are profile
+settings. `config/examples/assistant-fast.toml` is an unverified-cloud template
+for other PCs; do not copy this PC's setup evidence or qualification.
+
+This remains experimental: final interpretation scored 14/18 (earlier 16/18),
+and currency scored 31/34. Both failed their unchanged 100% gates. Notepad
+simulation/conversation passed 18/18 and 29/29; public smoke passed three narrow
+checks. The frozen ticket example took 8.08 seconds; overall median was 10.10
+seconds versus the historical 13.95-second run. These are single-run observations,
+with varying accuracy and complex-request delays, not a universal speed guarantee.
+Fresh results and per-stage timing measurements are in
+`docs/evaluations/*restored-fast-r4.json` and `docs/BUILD_LOG.md`. The frozen gates
+remain unchanged. Historical reports cannot qualify changed assistant code or
+profiles. The older candidate and commands below remain available.
+
 An opt-in conversation candidate now uses local model interpretation for currency
 requests, bounded arithmetic plans and same-session numerical follow-ups. It also
 renders verified tool results naturally. Its profile is separately qualified;

@@ -104,6 +104,8 @@ def parse_decision(raw: bytes, version: str = "decision-v1") -> Decision:
             "assistant-repair-v1",
             "assistant-intent-v1",
             "assistant-check-v1",
+            "assistant-check-fast-v2",
+            "assistant-route-v2",
             "assistant-answer-v1",
             "web-summary-v1",
             "web-summary-check-v1",
@@ -161,7 +163,7 @@ class BaseProfile(StrictRecord):
     context_bytes: int = Field(default=16384, ge=1024, le=65536)
     max_output_bytes: int = Field(default=32768, ge=1, le=32768)
     task_seconds: int = Field(default=30, ge=1, le=120)
-    assistant_version: Literal["legacy", "assistant-v1"] = "legacy"
+    assistant_version: Literal["legacy", "assistant-v1", "assistant-v2"] = "legacy"
     max_model_turns: int = Field(default=8, ge=3, le=12)
 
 
@@ -176,6 +178,10 @@ class Profile(BaseProfile):
 class ProviderOptions(StrictRecord):
     think: bool | Literal["low", "medium", "high"] | None = None
     keep_alive: str = Field(default="2m", pattern=r"^(?:0|[1-9][0-9]?[sm])$")
+
+
+class StageOptions(ProviderOptions):
+    max_output_tokens: int | None = Field(default=None, ge=128, le=4096)
 
 
 class OllamaProfile(BaseProfile):
@@ -218,11 +224,13 @@ class OllamaProfile(BaseProfile):
             "assistant-plan-v1",
             "assistant-repair-v1",
             "assistant-check-v1",
+            "assistant-check-fast-v2",
+            "assistant-route-v2",
             "assistant-answer-v1",
             "web-summary-v1",
             "web-summary-check-v1",
         ],
-        ProviderOptions,
+        StageOptions,
     ] = Field(default_factory=dict)
 
     @model_validator(mode="after")
@@ -233,6 +241,12 @@ class OllamaProfile(BaseProfile):
             raise ValueError("Output and safety reservations exhaust context")
         if self.cloud_disabled_verified and not self.cloud_disabled_evidence.strip():
             raise ValueError("User-verified local-only setup needs an evidence note")
+        if any(
+            options.max_output_tokens is not None
+            and options.max_output_tokens > self.max_output_tokens
+            for options in self.stage_options.values()
+        ):
+            raise ValueError("Stage output exceeds the profile ceiling")
         return self
 
 
@@ -274,6 +288,8 @@ class ModelRequest:
             "assistant-repair-v1",
             "assistant-intent-v1",
             "assistant-check-v1",
+            "assistant-check-fast-v2",
+            "assistant-route-v2",
             "assistant-answer-v1",
             "web-summary-v1",
             "web-summary-check-v1",

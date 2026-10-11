@@ -1,0 +1,56 @@
+# Semantic conversation candidate. Qualify this exact profile on the current PC
+# before selecting real Windows mode. Use a private copy for verified cloud evidence.
+schema_version = 1
+profile_name = "assistant-fast-v1"
+provider = "ollama"
+execution_mode = "simulation"
+network_mode = "local_model_only"
+model_identity = "qwen3:8b"
+prompt_version = "planner-m2-v10"
+decision_version = "decision-m2-v1"
+assistant_version = "assistant-v2"
+max_model_turns = 8
+base_url = "http://127.0.0.1:11434"
+context_tokens = 16384
+context_bytes = 32768
+max_output_tokens = 4096
+task_seconds = 120
+read_timeout_seconds = 60.0
+cloud_disabled_verified = false
+cloud_disabled_evidence = ""
+
+[provider_options]
+think = false
+keep_alive = "10m"
+
+[stage_options.assistant-route-v2]
+think = false
+keep_alive = "10m"
+max_output_tokens = 1024
+
+[stage_options.assistant-check-fast-v2]
+think = false
+keep_alive = "10m"
+max_output_tokens = 512
+
+[stage_options.assistant-plan-v1]
+think = true
+keep_alive = "10m"
+
+[stage_options.assistant-repair-v1]
+think = false
+keep_alive = "10m"
+max_output_tokens = 1024
+
+[stage_options.assistant-check-v1]
+think = true
+keep_alive = "10m"
+
+[stage_options.web-summary-v1]
+think = false
+keep_alive = "10m"
+max_output_tokens = 1024
+
+[stage_options.web-summary-check-v1]
+think = true
+keep_alive = "10m"

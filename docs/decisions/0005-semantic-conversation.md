@@ -84,3 +84,47 @@ Final candidate interpretation 16/18 and currency 29/34 failed their unchanged
 100% gates. Notepad simulation 18/18 and conversation 29/29 passed. Three actual
 public smoke examples passed narrow checks; biography rendering used the excerpt
 fallback. The candidate remains experimental. See BUILD_LOG for exact reports.
+
+
+The opt-in assistant-v2 latency candidate uses a fast typed plan for a
+controller-bound currency request and a combined routing/answer call for simple
+ordinary conversation. Unresolved numeric requests or weak currency grammar
+matches retain the original intent classifier. Its currency branch uses a
+reasoning plan for complex calculations/follow-ups, or a fast narrow plan for a
+single input; its conversation branch uses a fast answer with a conversation-only
+schema. A classified monetary request cannot become a say answer instead of a
+calculation. General numerical explanations are not forced into monetary scope.
+A greeting after a conversion clears numerical context and needs one answer call.
+
+Every monetary plan retains the supplemental semantic calculation review. Only a
+single literal amount matching the controller's independently parsed arguments
+can select the faster review boundary. The same-model reviewer is not an
+independent correctness proof. Scope, revisions, grants, journaling, admission,
+cancellation and independent verification stay enforced. Known public-topic scopes
+retain their evidence path; they cannot become memory-only biography answers.
+
+The verified currency adapter already provides a natural conversion with exact
+Decimal amounts and required limitations. Assistant-v2 returns that answer without
+a redundant model rewrite. Simple conversation needs one model call, common
+conversions three, unresolved complex monetary wording usually four; corrections
+can require more. Original legacy/v1 behavior remains selectable. Stage output
+ceilings are profile-owned and cannot exceed the global ceiling. Applied stage
+profiles contain only that stage's effective options, without future stage options;
+the frozen task profile remains unchanged. This prevents later stage ceilings from
+invalidating a smaller current request ceiling.
+
+A correction repeating an identical rejected typed interpretation with no new
+evidence stops before another review or correction. A changed interpretation may
+still be checked and executed if every validation passes. This implements the
+specification's no-progress rule and shortens failed requests. It never turns a
+rejected plan into a success or retries an uncertain external effect. Original
+turn/deadline budgets and frozen acceptance gates remain unchanged.
+
+The example uses per-request ten-minute model residency, leaving server-wide
+settings unchanged. Numeric per-stage duration, output-token and model-load
+measurements are session-only, with a copy in explicitly invoked assistant
+reports. They contain no prompts, answers or thinking and are not displayed in
+chat. Reverted reports are not reconstructed as new observations. The restored
+candidate receives fresh qualification, remains opt-in and uses simulation for
+the documented testing command. Broader merged numeric routing failed live tests
+and was rejected; failures and measured limits are recorded in BUILD_LOG.

@@ -1,0 +1,178 @@
+{
+  "version": "assistant-latency-comparison-v1",
+  "method": "One historical run versus one fresh final run; not a controlled repeated benchmark. Final run was warm; earlier load state is unknown. All failed cases remain included and acceptance gates are unchanged.",
+  "baseline_report": "assistant-qwen3-8b-staged-v2-r3.json",
+  "final_report": "assistant-restored-fast-r4.json",
+  "corpus_sha256": "a64f39cb0ad670d1517780495ac508ae9cf81e07d64c8d0186cf0f848a86fa6c",
+  "baseline_correct": 16,
+  "final_correct": 14,
+  "total": 18,
+  "baseline_median_seconds": 13.9505,
+  "final_median_seconds": 10.094999999999999,
+  "median_reduction_percent": 27.64,
+  "final_contract_sha256": "695ea1a181106edb83052f4040d891717ac462d41be7156821c9b43053feac16",
+  "cases": [
+    {
+      "id": "identity",
+      "baseline_correct": true,
+      "final_correct": true,
+      "baseline_seconds": 5.675,
+      "final_seconds": 0.921,
+      "baseline_turns": 2,
+      "final_turns": 1
+    },
+    {
+      "id": "explanation",
+      "baseline_correct": true,
+      "final_correct": true,
+      "baseline_seconds": 3.663,
+      "final_seconds": 1.418,
+      "baseline_turns": 2,
+      "final_turns": 2
+    },
+    {
+      "id": "explanation-followup",
+      "baseline_correct": true,
+      "final_correct": true,
+      "baseline_seconds": 6.314,
+      "final_seconds": 1.269,
+      "baseline_turns": 2,
+      "final_turns": 1
+    },
+    {
+      "id": "ticket-original",
+      "baseline_correct": true,
+      "final_correct": true,
+      "baseline_seconds": 17.649,
+      "final_seconds": 8.082,
+      "baseline_turns": 5,
+      "final_turns": 3
+    },
+    {
+      "id": "quantity-novel",
+      "baseline_correct": true,
+      "final_correct": true,
+      "baseline_seconds": 12.697,
+      "final_seconds": 10.421,
+      "baseline_turns": 5,
+      "final_turns": 4
+    },
+    {
+      "id": "discount",
+      "baseline_correct": true,
+      "final_correct": true,
+      "baseline_seconds": 29.276,
+      "final_seconds": 39.051,
+      "baseline_turns": 5,
+      "final_turns": 6
+    },
+    {
+      "id": "fee",
+      "baseline_correct": true,
+      "final_correct": true,
+      "baseline_seconds": 14.007,
+      "final_seconds": 11.647,
+      "baseline_turns": 5,
+      "final_turns": 4
+    },
+    {
+      "id": "split",
+      "baseline_correct": true,
+      "final_correct": true,
+      "baseline_seconds": 14.278,
+      "final_seconds": 12.276,
+      "baseline_turns": 5,
+      "final_turns": 3
+    },
+    {
+      "id": "split-followup",
+      "baseline_correct": true,
+      "final_correct": false,
+      "baseline_seconds": 27.63,
+      "final_seconds": 24.927,
+      "baseline_turns": 5,
+      "final_turns": 4
+    },
+    {
+      "id": "discount-fee-split",
+      "baseline_correct": false,
+      "final_correct": false,
+      "baseline_seconds": 66.792,
+      "final_seconds": 65.463,
+      "baseline_turns": 3,
+      "final_turns": 3
+    },
+    {
+      "id": "two-items",
+      "baseline_correct": true,
+      "final_correct": true,
+      "baseline_seconds": 13.894,
+      "final_seconds": 45.516,
+      "baseline_turns": 5,
+      "final_turns": 8
+    },
+    {
+      "id": "decimal",
+      "baseline_correct": true,
+      "final_correct": true,
+      "baseline_seconds": 14.64,
+      "final_seconds": 9.769,
+      "baseline_turns": 5,
+      "final_turns": 4
+    },
+    {
+      "id": "local-supplied",
+      "baseline_correct": true,
+      "final_correct": false,
+      "baseline_seconds": 57.885,
+      "final_seconds": 26.419,
+      "baseline_turns": 7,
+      "final_turns": 4
+    },
+    {
+      "id": "same-currency",
+      "baseline_correct": true,
+      "final_correct": true,
+      "baseline_seconds": 13.576,
+      "final_seconds": 7.303,
+      "baseline_turns": 5,
+      "final_turns": 4
+    },
+    {
+      "id": "missing-unit-price",
+      "baseline_correct": false,
+      "final_correct": false,
+      "baseline_seconds": 60.868,
+      "final_seconds": 75.638,
+      "baseline_turns": 7,
+      "final_turns": 6
+    },
+    {
+      "id": "ambiguous-dollar",
+      "baseline_correct": true,
+      "final_correct": true,
+      "baseline_seconds": 4.956,
+      "final_seconds": 1.493,
+      "baseline_turns": 2,
+      "final_turns": 2
+    },
+    {
+      "id": "bare-no-context",
+      "baseline_correct": true,
+      "final_correct": true,
+      "baseline_seconds": 6.081,
+      "final_seconds": 0.008,
+      "baseline_turns": 2,
+      "final_turns": 0
+    },
+    {
+      "id": "no-purchase",
+      "baseline_correct": true,
+      "final_correct": true,
+      "baseline_seconds": 4.305,
+      "final_seconds": 0.782,
+      "baseline_turns": 2,
+      "final_turns": 1
+    }
+  ]
+}

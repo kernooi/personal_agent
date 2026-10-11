@@ -1,0 +1,493 @@
+{
+  "version": "assistant-live-smoke-v1",
+  "profile": {
+    "schema_version": 1,
+    "profile_name": "assistant-fast-v1",
+    "execution_mode": "simulation",
+    "model_identity": "qwen3:8b",
+    "role": "primary_text",
+    "prompt_version": "planner-m2-v10",
+    "decision_version": "decision-m2-v1",
+    "context_bytes": 32768,
+    "max_output_bytes": 32768,
+    "task_seconds": 120,
+    "assistant_version": "assistant-v2",
+    "max_model_turns": 8,
+    "provider": "ollama",
+    "network_mode": "local_model_only",
+    "base_url": "http://127.0.0.1:11434",
+    "response_mode": "json_schema",
+    "context_tokens": 16384,
+    "max_output_tokens": 4096,
+    "safety_tokens": 256,
+    "connect_timeout_seconds": 5.0,
+    "read_timeout_seconds": 60.0,
+    "max_envelope_bytes": 131072,
+    "temperature": 0.0,
+    "cloud_disabled_verified": true,
+    "cloud_disabled_evidence": "Operator observed official standalone Ollama 0.40.2 startup 2026-10-11T13:00:35.111+08:00: Ollama cloud disabled: true; listening on 127.0.0.1:11434; approved process-local settings. Private log: Jarvis/logs/ollama-assistant-20261011-130034.stderr.log. Earlier physical-offline evidence is snapshot-level only, not current attestation.",
+    "provider_options": {
+      "think": false,
+      "keep_alive": "10m"
+    },
+    "stage_options": {
+      "assistant-route-v2": {
+        "think": false,
+        "keep_alive": "10m",
+        "max_output_tokens": 1024
+      },
+      "assistant-check-fast-v2": {
+        "think": false,
+        "keep_alive": "10m",
+        "max_output_tokens": 512
+      },
+      "assistant-plan-v1": {
+        "think": true,
+        "keep_alive": "10m",
+        "max_output_tokens": null
+      },
+      "assistant-repair-v1": {
+        "think": false,
+        "keep_alive": "10m",
+        "max_output_tokens": 1024
+      },
+      "assistant-check-v1": {
+        "think": true,
+        "keep_alive": "10m",
+        "max_output_tokens": null
+      },
+      "web-summary-v1": {
+        "think": false,
+        "keep_alive": "10m",
+        "max_output_tokens": 1024
+      },
+      "web-summary-check-v1": {
+        "think": true,
+        "keep_alive": "10m",
+        "max_output_tokens": null
+      }
+    }
+  },
+  "contract_sha256": "a3810d441dce8e20aa3e0f18ea356393496ae6e141478b9ef6fc18278c94a02d",
+  "execution_mode": "simulation",
+  "scope": "fixed public smoke only; not broad research qualification",
+  "records": [
+    {
+      "id": "reported-tickets",
+      "state": "SUCCEEDED",
+      "error": null,
+      "final_answer": "1600 SGD = 1249.62 USD. Approximate conversion.",
+      "latency_seconds": 9.279662847518921,
+      "model_turns": 3,
+      "arguments": {
+        "base": "SGD",
+        "quote": "USD",
+        "amount": "1600",
+        "operation": "latest",
+        "supplied_rate": null,
+        "refresh": false
+      },
+      "quote": {
+        "source_id": "src_7c37d798e24c4b24bc733b75669a0792",
+        "adapter_version": "frankfurter-ecb-v2",
+        "provider": "Frankfurter v2 / ECB",
+        "provenance": "ECB reference rates, served and pair-derived by Frankfurter",
+        "source_url": "https://api.frankfurter.dev/v2/providers/ecb/rate/sgd/usd",
+        "original_source_url": "https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/index.en.html",
+        "base": "SGD",
+        "quote": "USD",
+        "rate": "0.78101",
+        "unit_base": 1,
+        "basis": "daily reference estimate; provider-derived pair",
+        "effective_date": "2026-10-09",
+        "effective_precision": "date",
+        "retrieved_at_utc": "2026-10-11T10:37:05.799461+00:00",
+        "expires_at_utc": "2026-10-11T11:37:05.799461+00:00",
+        "freshness": "latest_available_daily",
+        "validation": "validated",
+        "sensitivity": "public"
+      },
+      "connection_receipt": {
+        "connected_public_ip": "2606:4700:20::681a:f40",
+        "tls_hostname": "api.frankfurter.dev",
+        "tls_verification": true,
+        "redirects": false,
+        "environment_proxies": false
+      },
+      "correct": true
+    },
+    {
+      "id": "discount-fee-split",
+      "state": "SUCCEEDED",
+      "error": null,
+      "final_answer": "140 SGD = 109.34 USD. Approximate conversion.",
+      "latency_seconds": 24.59087324142456,
+      "model_turns": 3,
+      "arguments": {
+        "base": "SGD",
+        "quote": "USD",
+        "amount": "140",
+        "operation": "latest",
+        "supplied_rate": null,
+        "refresh": false
+      },
+      "quote": {
+        "source_id": "src_7c37d798e24c4b24bc733b75669a0792",
+        "adapter_version": "frankfurter-ecb-v2",
+        "provider": "Frankfurter v2 / ECB",
+        "provenance": "ECB reference rates, served and pair-derived by Frankfurter",
+        "source_url": "https://api.frankfurter.dev/v2/providers/ecb/rate/sgd/usd",
+        "original_source_url": "https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/index.en.html",
+        "base": "SGD",
+        "quote": "USD",
+        "rate": "0.78101",
+        "unit_base": 1,
+        "basis": "daily reference estimate; provider-derived pair",
+        "effective_date": "2026-10-09",
+        "effective_precision": "date",
+        "retrieved_at_utc": "2026-10-11T10:37:05.799461+00:00",
+        "expires_at_utc": "2026-10-11T11:37:05.799461+00:00",
+        "freshness": "latest_available_daily",
+        "validation": "validated",
+        "sensitivity": "public"
+      },
+      "connection_receipt": {
+        "connected_public_ip": "2606:4700:20::681a:f40",
+        "tls_hostname": "api.frankfurter.dev",
+        "tls_verification": true,
+        "redirects": false,
+        "environment_proxies": false
+      },
+      "correct": true
+    },
+    {
+      "id": "public-biography",
+      "state": "SUCCEEDED",
+      "error": null,
+      "final_answer": "Lee Zii Jia represents Malaysia in men's singles badminton and has established himself as one of the nation's finest players following the Lee Chong Wei era. Lee Zii Jia was born on 29 March 1998 in Alor Setar, the capital city of Kedah state in northern Malaysia. Lee Zii Jia was born in Alor Setar, Kedah on 29 March 1998. He went to primary school at SJK (C) Keat Hwa (H), where he was already showing great talent for badminton. He hails from a family of sportsmen with parents Lee Chee Hin and Leow Siet Peng both being former national basketball players. It was his father who first brought him to a badminton club in Kedah when Lee was 6 years old and handed him his first racquet.",
+      "latency_seconds": 31.474197149276733,
+      "model_turns": 6,
+      "sources": [
+        {
+          "source_id": "websrc_0bb63785425d48b091e52fd63ad789a9",
+          "search_result_id": "result_7c665b030b3a4fd79b180c3b86ed9620",
+          "provider": "searxng",
+          "url": "https://stbadmintonacademy.my/professional_players/lee-zii-jia/",
+          "canonical_url": "https://stbadmintonacademy.my/professional_players/lee-zii-jia/",
+          "domain": "stbadmintonacademy.my",
+          "title": "Lee Zii Jia Badminton Profile: Career, Style & Achievements",
+          "author": null,
+          "published_at": "2023-02-05T08:26:20+08:00",
+          "updated_at": "2025-11-21T09:10:23+08:00",
+          "retrieved_at": "2026-10-11T10:37:39.084636+00:00",
+          "content_type": "text/html",
+          "extraction_version": "public-extract-v1",
+          "chunks": [
+            "Lee Zii Jia represents Malaysia in men\u2019s singles badminton and has established himself as one of the nation\u2019s finest players following the Lee Chong Wei era. Born on 29 March 1998 in Alor Setar, Kedah, he started playing at age 6 and progressed through state and national junior programs before breaking through at senior level. His remarkable achievements include 2019 SEA Games men\u2019s singles gold medal in Manila defeating Singapore\u2019s Loh Kean Yew, 2021 All England Open championship where he defeated Viktor Axelsen in three games, 2022 Badminton Asia Championships men\u2019s singles title becoming the sixth Malaysian to win the Asian crown, multiple BWF World Tour titles including 2024 Thailand Open and Australian Open victories, and most notably a men\u2019s singles bronze medal at the Paris 2024 Olympic Games making him the third Malaysian men\u2019s singles player to earn Olympic badminton glory. With a career-high world ranking of No.2 achieved on 25 October 2022 and a playing style built on explosive jump smashes including a famous backhand smash, fast footwork and fearless attacking mentality, he continues to inspire fans and young players across Malaysia, Singapore and throughout Southeast Asia.",
+            "Lee Zii Jia was born on 29 March 1998 in Alor Setar, the capital city of Kedah state in northern Malaysia. He grew up in a sports-oriented family where both parents worked as school teachers and had competed as former national-level basketball players in Malaysia. This athletic background instilled strong values of discipline, hard work and competitive spirit from an early age. Starting badminton around age 6 at a local club in Kedah for health and physical activity, his natural talent quickly became apparent and he progressed through Kedah state training programs before joining Malaysia\u2019s national junior development structures.",
+            "Moving through Kedah state badminton programs, Lee Zii Jia developed solid technical foundations under coaches who recognized his potential. Training in local clubs and state facilities provided early competitive experience against strong regional juniors throughout northern Malaysia. His progress caught the attention of national selectors who brought him into Malaysia\u2019s youth training system where he would compete against the country\u2019s best young talents while representing Kedah at national age-group championships and regional competitions.",
+            "Lee Zii Jia a"
+          ],
+          "headings": [
+            "LEE Zii Jia (\u674e\u6893\u5609)",
+            "Player Event: Men\u2019s singles",
+            "Understanding LEE Zii Jia",
+            "(Malaysian Badminton Champion)",
+            "Early Life in Alor Setar and",
+            "Junior",
+            "Career",
+            "Kedah State",
+            "",
+            "Development",
+            "World Junior",
+            "Success",
+            "Senior",
+            "Transition",
+            "2019 SEA Games Men\u2019s Singles Gold",
+            "Medal",
+            "2021 All England Open Champion Defeating Viktor",
+            "Axelsen",
+            "2022 Badminton Asia Championships and Thailand Open",
+            "Titles"
+          ],
+          "task_id": "d1178f4e-c3cd-4b05-bfea-9790c52523f0",
+          "query_hash": "cc5231c7480aa04903e6ddbc1bf2512b44f3fa1c62e4aa88b873cb9a01f87575",
+          "provenance": "public HTTPS, independently fetched; external content is untrusted",
+          "freshness": "dated source; retrieval is not publication",
+          "reliability_notes": "Source assertions are evidence, not independently established truth."
+        },
+        {
+          "source_id": "websrc_829a9d920c074f779d46a27cc14fccad",
+          "search_result_id": "result_40fc0b87f5bc4a88b6c90df8f6b0e93e",
+          "provider": "searxng",
+          "url": "https://pantheon.world/profile/person/Lee_Zii_Jia",
+          "canonical_url": "https://pantheon.world/profile/person/Lee_Zii_Jia",
+          "domain": "pantheon.world",
+          "title": "Lee Zii Jia Biography | Pantheon",
+          "author": null,
+          "published_at": null,
+          "updated_at": null,
+          "retrieved_at": "2026-10-11T10:37:42.527817+00:00",
+          "content_type": "text/html",
+          "extraction_version": "public-extract-v1",
+          "chunks": [
+            "His biography is available in 21 different languages on Wikipedia. Lee Zii Jia is the 81st most popular badminton player (down from 43rd in 2024), the 84th most popular biography from Malaysia (down from 71st in 2019) and the 5th most popular Malaysian Badminton Player.",
+            "Lee Zii Jia's Wikipedia page drew 160k views over the past year, 5.2\u00d7 the average among Badminton Players.",
+            "Among badminton players, Lee Zii Jia ranks 81 out of 285. Before him are Tine Baun, Nova Widianto, Li Xuerui, Ge Fei, Ayaka Takahashi, and Lee Kyung-won. After him are Flandy Limpele, Nina Vislova, Maria Kristin Yulianti, Carsten Mogensen, Larisa Griga, and Pablo Abi\u00e1n.",
+            "Among people born in 1998, Lee Zii Jia ranks 317. Before him are Patrik Laine, Amber Frank, Markelle Fultz, Chermen Valiev, Manu Garc\u00eda, and Nathan Gamble. After him are Clairo, Jordan Lotomba, Michael Folorunsho, Fyodor Chalov, Pedrinho, and M\u00ebrgim Berisha.",
+            "Among people born in Malaysia, Lee Zii Jia ranks 84 out of 129. Before him are Nicholas Teo (1981), Julian Leow Beng Kim (1964), Shila Amzah (1990), Alex Edmondson (1993), Yeo Yann Yann (1977), and Yuna (1986). After him are Shauna Macdonald (1981), Fairuz Fauzy (1982), Moyuka Uchijima (2001), Nicol David (1983), Safee Sali (1984), and Pandelela Rinong (1993).",
+            "Among badminton players born in Malaysia, Lee Zii Jia ranks 5. Before him are Lee Chong Wei (1982), Rashid Sidek (1968), Razif Sidek (1962), and Jalani Sidek (1964). After him are Yap Kim Hock (1970), Goh Liu Ying (1989), Soh Wooi Yik (1998), Goh V Shem (1989), Chan Peng Soon (1988), Aaron Chia (1997), and Tan Wee Kiong (1989).",
+            "Lee Zii Jia",
+            "Page views of Lee Zii Jia by language",
+            "Lee Kyung-won",
+            "Lee Chong Wei",
+            "Badminton Player",
+            "Malaysian badminton player",
+            "1998 - today",
+            "EN.WIKIPEDIA PAGE VIEWS (PV)",
+            "Memorability Metrics",
+            "160k",
+            "Page Views",
+            "Past 12 months",
+            "39.31",
+            "HPI",
+            "Historical Popularity Index",
+            "Data Insights",
+            "5.2\u00d7",
+            "Loading...",
+            "Among Badminton Players",
+            "Most Popular Badminton Players in Wikipedia",
+            "Go to all Rankings",
+            "Tine Baun",
+            "1979 - Present",
+            "HPI: 39.65",
+            "Rank: 75",
+            "Nova Widianto",
+            "1977 - Present",
+            "HPI: 39.48",
+            "Rank: 76",
+            "Li Xuerui",
+            "1991 - Present",
+            "HPI: 39.45",
+            "Rank: 77",
+            "Ge Fei",
+            "1975 - Present",
+            "HPI: 39.40",
+            "Rank: 78",
+            "Ayaka Takahashi",
+            "1990 - Present",
+            "HPI: 39.35",
+            "Rank: 79",
+            "1980 - Present",
+            "HPI: 39.34",
+            "Rank: 80",
+            "1998 - Present",
+            "HPI: 39.31",
+            "Rank: 81",
+            "Flandy Limpele",
+            "1974 - Present",
+            "HPI: 39.21",
+            "Rank: 82",
+            "Nina Vislova",
+            "1986 - Present",
+            "HPI: 39.09",
+            "Rank: 83",
+            "Maria Kristin Yulianti",
+            "1985 - Present",
+            "Rank: 84",
+            "Carsten Mogensen",
+            "1983 - Present",
+            "HPI: 38.89",
+            "Rank:"
+          ],
+          "headings": [
+            "Badminton Player",
+            "Lee Zii Jia",
+            "",
+            "Most Popular Badminton Players in Wikipedia",
+            "Tine Baun",
+            "Nova Widianto",
+            "Li Xuerui",
+            "Ge Fei",
+            "Ayaka Takahashi",
+            "Lee Kyung-won",
+            "Flandy Limpele",
+            "Nina Vislova",
+            "Maria Kristin Yulianti",
+            "Carsten Mogensen",
+            "Larisa Griga",
+            "Pablo Abi\u00e1n",
+            "Others Born in 1998",
+            "Patrik Laine",
+            "Amber Frank",
+            "Markelle Fultz"
+          ],
+          "task_id": "d1178f4e-c3cd-4b05-bfea-9790c52523f0",
+          "query_hash": "cc5231c7480aa04903e6ddbc1bf2512b44f3fa1c62e4aa88b873cb9a01f87575",
+          "provenance": "public HTTPS, independently fetched; external content is untrusted",
+          "freshness": "publication time unknown",
+          "reliability_notes": "Source assertions are evidence, not independently established truth."
+        },
+        {
+          "source_id": "websrc_21064308b63545ca9874c06a71ea4d6f",
+          "search_result_id": "result_63969ccac741401197362d82e583dca6",
+          "provider": "searxng",
+          "url": "https://firstclasse.com.my/people/6-things-lee-zii-jia-malaysia-olympic-shuttler/",
+          "canonical_url": "https://firstclasse.com.my/people/6-things-lee-zii-jia-malaysia-olympic-shuttler/",
+          "domain": "firstclasse.com.my",
+          "title": "6 things to know about Malaysia Olympic shuttler Lee Zii Jia",
+          "author": null,
+          "published_at": "2021-07-29T05:19:51+00:00",
+          "updated_at": "2021-07-29T10:59:17+00:00",
+          "retrieved_at": "2026-10-11T10:37:44.476169+00:00",
+          "content_type": "text/html",
+          "extraction_version": "public-extract-v1",
+          "chunks": [
+            "Lee Zii Jia, Malaysia\u2019s only badminton singles representative in the Tokyo 2020 Olympics has been steadily climbing the ranks of badminton stardom since. After a straight win over Brice Leverdez of France in the Group M play-offs yesterday, he is set to meet Chen Long of China in today\u2019s Round of 16.",
+            "Lee was born in Alor Setar, Kedah on 29 March 1998. He went to primary school at SJK (C) Keat Hwa (H), where he was already showing great talent for badminton. At 13, he was drafted into the Bukit Jalil Sports School after sweeping the Under-12 competitions of his hometown.",
+            "He hails from a family of sportsmen with parents Lee Chee Hin and Leow Siet Peng both being former national basketball players. It was his father who first brought him to a badminton club in Kedah when Lee was 6 years old and handed him his first racquet. \u201cI started playing just for health reasons before improving better and better,\u201d he is quoted as saying on his Badminton World Federation profile.",
+            "Having gone professional since 13, and winning the Perak and Selangor Badminton Opens at 17, Lee is trained by various former national badminton champions, including Datuk Misbun Sidek and Datuk Tey Seu Bock. He also had a stint under former Indonesian badminton champion Hendrawan.",
+            "During badminton off-seasons, he unwinds by playing basketball, an influence from his parents who continue to coach the SMJK (C) Keat Hwa team in Kedah. Standing at 186 metres tall, Lee names the LA Lakers as his favourite NBA team, and Lebron James and the late Kobe Bryant as his favourite players.",
+            "Lee shared with the Olympics International Committee that he doesn\u2019t want to be compared to another Malaysian national shuttler Datuk Lee Chong Wei. \u201cI have my own journey,\u201d he told Channel News Asia. However, he has immense respect for his predecessor, whom he considers one of his role models and has on speed dial. He adds that Datuk Lee is always up for a call or a meet-up with helpful advice to share.",
+            "Lee\u2019s win at the March All England champhionships is a much welcomed one because the last time Malaysia won it was in 2017 by Datuk Lee Chong Wei. Lee joins only a few other shuttlers who has wins in the BWF Tour Super 1000 tournaments. They are Wong Peng Soon (1950, 1951, 1952, 1955), Datuk Eddy Choong (1953, 1954, 1956, 1957), Tan Aik Huang (1966), Muhammad Hafiz Hashim (2003), and Lee Chong Wei (2010, 2011, 2014, 2017).",
+            "Lee curre"
+          ],
+          "headings": [
+            "6 things to know about Malaysia Olympic shuttler Lee Zii Jia",
+            "Kedah-born, Malaysia-bred",
+            "Family of sportsmen",
+            "Trained by former champions",
+            "Basketball is also in his game",
+            "Datuk Lee Chong Wei on speed dial",
+            "First Malaysian to win the All-England since 2017",
+            "No.8 in the world, no.1 in our hearts",
+            "Related Articles",
+            "The FirstClasse Edit",
+            "FURTHER READING"
+          ],
+          "task_id": "d1178f4e-c3cd-4b05-bfea-9790c52523f0",
+          "query_hash": "cc5231c7480aa04903e6ddbc1bf2512b44f3fa1c62e4aa88b873cb9a01f87575",
+          "provenance": "public HTTPS, independently fetched; external content is untrusted",
+          "freshness": "dated source; retrieval is not publication",
+          "reliability_notes": "Source assertions are evidence, not independently established truth."
+        }
+      ],
+      "failures": [
+        "AUTHENTICATION_OR_SITE_BLOCK",
+        "AUTHENTICATION_OR_SITE_BLOCK",
+        "PAGE_BUDGET_REACHED"
+      ],
+      "network_receipts": [
+        {
+          "kind": "search",
+          "endpoint": "http://127.0.0.1:8080/search",
+          "redirects": false,
+          "environment_proxies": false,
+          "downloaded_bytes": 17239
+        },
+        {
+          "kind": "fetch",
+          "url": "https://stbadmintonacademy.my/professional_players/lee-zii-jia/",
+          "content_type": "text/html",
+          "hops": [
+            {
+              "url": "https://stbadmintonacademy.my/professional_players/lee-zii-jia/",
+              "peer": "2a02:4780:3:1493:0:3448:87a8:8"
+            }
+          ],
+          "tls_verified": true,
+          "environment_proxies": false,
+          "downloaded_bytes": 322402,
+          "decoded_bytes": 322402,
+          "content_encoding": "identity"
+        },
+        {
+          "kind": "fetch_failure",
+          "url": "https://badminton.fandom.com/wiki/Lee_Zii_Jia",
+          "error": "AUTHENTICATION_OR_SITE_BLOCK",
+          "downloaded_bytes": 0
+        },
+        {
+          "kind": "fetch_failure",
+          "url": "https://bwfbadminton.com/player/81561/lee-zii-jia",
+          "error": "AUTHENTICATION_OR_SITE_BLOCK",
+          "downloaded_bytes": 0
+        },
+        {
+          "kind": "fetch",
+          "url": "https://pantheon.world/profile/person/Lee_Zii_Jia",
+          "content_type": "text/html",
+          "hops": [
+            {
+              "url": "https://pantheon.world/profile/person/Lee_Zii_Jia",
+              "peer": "96.89.227.150"
+            }
+          ],
+          "tls_verified": true,
+          "environment_proxies": false,
+          "downloaded_bytes": 159838,
+          "decoded_bytes": 159838,
+          "content_encoding": "identity"
+        },
+        {
+          "kind": "fetch",
+          "url": "https://firstclasse.com.my/people/6-things-lee-zii-jia-malaysia-olympic-shuttler/",
+          "content_type": "text/html",
+          "hops": [
+            {
+              "url": "https://firstclasse.com.my/people/6-things-lee-zii-jia-malaysia-olympic-shuttler/",
+              "peer": "43.252.212.55"
+            }
+          ],
+          "tls_verified": true,
+          "environment_proxies": false,
+          "downloaded_bytes": 218701,
+          "decoded_bytes": 218701,
+          "content_encoding": "identity"
+        }
+      ],
+      "summary_bindings": [
+        {
+          "bindings": [
+            {
+              "excerpt_index": 0,
+              "source_id": "websrc_0bb63785425d48b091e52fd63ad789a9"
+            },
+            {
+              "excerpt_index": 1,
+              "source_id": "websrc_0bb63785425d48b091e52fd63ad789a9"
+            },
+            {
+              "excerpt_index": 1,
+              "source_id": "websrc_21064308b63545ca9874c06a71ea4d6f"
+            },
+            {
+              "excerpt_index": 2,
+              "source_id": "websrc_21064308b63545ca9874c06a71ea4d6f"
+            }
+          ]
+        }
+      ],
+      "correct": true
+    }
+  ],
+  "metadata": {
+    "available": true,
+    "model_present": true,
+    "identity": "qwen3:8b",
+    "digest": "500a1f067a9f782620b40bee6f7b0c89e17ae61f686b92c24933e4ca4b2b8b41",
+    "runtime_version": "0.40.2",
+    "transport_version": "ollama-chat-v2",
+    "text_generation": "supported",
+    "schema_constrained_output": "unknown",
+    "native_tool_calls": "supported",
+    "context_capacity": 40960,
+    "cloud_disabled": "user_verified",
+    "local_mode_programmatically_attested": false,
+    "ready": true,
+    "qualification": "unqualified; fake-execution evaluation only"
+  },
+  "checked_at_utc": "2026-10-11T10:36:56.529124+00:00",
+  "desktop_execution_calls": 0,
+  "passed": true
+}

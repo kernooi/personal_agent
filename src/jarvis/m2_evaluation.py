@@ -19,7 +19,7 @@ def contract_hash(profile):
     from jarvis.models import BOUNDARY_M2
 
     contract = {"prompt": TEMPLATES[profile.prompt_version], "schema": BOUNDARY_M2.json_schema()}
-    if profile.assistant_version == "assistant-v1":
+    if profile.assistant_version in {"assistant-v1", "assistant-v2"}:
         contract["assistant_version"] = profile.assistant_version
         contract["assistant_sources"] = {
             name: hashlib.sha256(Path(__file__).with_name(name + ".py").read_bytes()).hexdigest()

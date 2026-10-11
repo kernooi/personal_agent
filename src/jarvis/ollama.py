@@ -238,6 +238,8 @@ class OllamaProvider:
             "assistant-repair-v1",
             "assistant-intent-v1",
             "assistant-check-v1",
+            "assistant-check-fast-v2",
+            "assistant-route-v2",
             "assistant-answer-v1",
             "web-summary-v1",
             "web-summary-check-v1",

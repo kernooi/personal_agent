@@ -274,7 +274,7 @@ def live_command(args, parser):
             or (portable.exists() and any(portable.glob("ollama-*/bin/ollama.exe")))
         )
         selected_summary = read_evaluation_summary(args.evaluation_report, profile, metadata)
-        if profile.assistant_version == "assistant-v1" and args.evaluation_report:
+        if profile.assistant_version in {"assistant-v1", "assistant-v2"} and args.evaluation_report:
             from jarvis.assistant_evaluation import qualification_summary as assistant_summary
 
             candidate = assistant_summary(args.evaluation_report, profile, metadata)

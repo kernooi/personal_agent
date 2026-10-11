@@ -67,6 +67,8 @@ class SemanticModel:
                         "assistant-repair-v1",
                         "assistant-intent-v1",
                         "assistant-check-v1",
+                        "assistant-check-fast-v2",
+                        "assistant-route-v2",
                     }
                     else -1
                 ].text
@@ -79,6 +81,8 @@ class SemanticModel:
             "assistant-plan-v1",
             "assistant-repair-v1",
             "assistant-check-v1",
+            "assistant-check-fast-v2",
+            "assistant-route-v2",
         }:
             data["owner_request"] = request.messages[-1].text
         if request.decision_boundary == "assistant-intent-v1":
@@ -87,7 +91,11 @@ class SemanticModel:
                 "kind": "assistant_intent",
                 "route": "currency" if planned["kind"] == "currency" else "conversation",
             }
-        elif request.decision_boundary in {"assistant-plan-v1", "assistant-repair-v1"}:
+        elif request.decision_boundary in {
+            "assistant-plan-v1",
+            "assistant-repair-v1",
+            "assistant-route-v2",
+        }:
             data["owner_request"] = request.messages[-1].text
             value = self.meaning(data) if callable(self.meaning) else self.meaning
         elif request.decision_boundary == "currency-decision-v1":
@@ -105,7 +113,7 @@ class SemanticModel:
             }
         elif request.decision_boundary == "assistant-answer-v1":
             value = {"kind": "assistant_answer", "text": data["verified_answer"]}
-        elif request.decision_boundary == "assistant-check-v1":
+        elif request.decision_boundary in {"assistant-check-v1", "assistant-check-fast-v2"}:
             value = {"kind": "calculation_check", "supported": True, "question": ""}
         else:
             raise AssertionError(request.decision_boundary)
@@ -729,3 +737,326 @@ def test_private_query_never_reaches_search(stack, owner):
     )
     assert chat.submit(owner).state == State.FAILED
     assert not search.calls and not fetch.calls
+
+
+# Opt-in latency path: fewer model turns, with the same verification barriers.
+def install_fast(broker, plan, mutate=None):
+    chat = install(broker, plan, mutate)
+    broker.profile = broker.profile.model_copy(update={"assistant_version": "assistant-v2"})
+    return chat
+
+
+def test_fast_conversation_is_one_turn_and_metrics_contain_no_content(broker):
+    result = install_fast(broker, {"kind": "say", "text": "Hello!"}).submit("Hello")
+    assert result.state == State.ANSWERED
+    assert conversational_text(result) == "Hello!"
+    assert broker.model_turns == 1
+    assert broker.provider.requests[0].decision_boundary == "assistant-route-v2"
+    assert broker.model_metrics == [
+        {
+            "boundary": "assistant-route-v2",
+            "elapsed_seconds": 0.0,
+            "tokens": None,
+            "load_seconds": None,
+            "error": None,
+        }
+    ]
+    assert "Hello" not in json.dumps(broker.model_metrics)
+    assert not broker.currency.provider.calls
+
+
+@pytest.mark.parametrize(
+    "owner,expression,total,first,review",
+    [
+        ("40 SGD to USD", "n0", "40", "assistant-route-v2", "assistant-check-fast-v2"),
+        (
+            "40 tickets at 40 SGD each in USD",
+            "n0*n1",
+            "1600",
+            "assistant-route-v2",
+            "assistant-check-v1",
+        ),
+        (
+            "20 tickets at 30 SGD each, less 10%, plus a 20 SGD fee, split between 4 people in USD",
+            "(n0*n1*(1-n2/100)+n3)/n4",
+            "140",
+            "assistant-plan-v1",
+            "assistant-check-v1",
+        ),
+    ],
+)
+def test_fast_currency_retains_review_and_verified_answer(
+    broker, owner, expression, total, first, review
+):
+    result = install_fast(broker, meaning(expression)).submit(owner)
+    assert result.state == State.SUCCEEDED, result
+    args = CurrencyArguments.model_validate_json(broker.store.get(result.task_id).scope.window_ref)
+    assert Decimal(args.amount) == Decimal(total)
+    expected = [first, review, "currency-decision-v1"]
+    if first == "assistant-plan-v1":
+        # An unresolved topic is routed first, then receives full reasoning.
+        expected.insert(0, "assistant-intent-v1")
+    assert [r.decision_boundary for r in broker.provider.requests] == expected
+    assert broker.model_turns == len(expected)
+    assert broker.currency.execution_calls == 1
+    assert broker.currency.provider.calls == [("SGD", "USD")]
+    assert "Approximate" in conversational_text(result)
+
+
+@pytest.mark.parametrize("fault", ["revision", "identity", "cancel"])
+def test_fast_route_obsolete_reply_cannot_execute(broker, fault):
+    def mutate(request, reply):
+        if fault == "revision":
+            broker.store.revise(request.task_id)
+        elif fault == "cancel":
+            broker.store.cancel(request.task_id)
+        else:
+            reply = replace(reply, task_id="wrong")
+        return reply
+
+    result = install_fast(broker, meaning("n0"), mutate).submit("40 SGD in USD")
+    assert result.state in {State.FAILED, State.CANCELLED}
+    assert not broker.currency.provider.calls
+    assert broker.store.get(result.task_id).scope.app_id == "none"
+
+
+def test_fast_review_can_still_block_a_conversion(broker):
+    def mutate(request, reply):
+        if request.decision_boundary == "assistant-check-fast-v2":
+            return replace(
+                reply,
+                raw=(
+                    b'{"kind":"calculation_check","supported":false,'
+                    b'"question":"What amount?","issue":"missing_information"}'
+                ),
+            )
+        return reply
+
+    result = install_fast(broker, meaning("n0"), mutate).submit("40 SGD in USD")
+    assert result.state == State.WAITING_INPUT
+    assert not broker.currency.provider.calls
+    assert broker.currency.execution_calls == 0
+
+
+def test_fast_financial_amount_cannot_become_a_public_query(stack):
+    broker, chat, old, search, fetch = stack
+    install_fast(broker, {"kind": "research"})
+    result = chat.submit("Convert 1234 SGD to USD")
+    assert result.state == State.FAILED
+    assert not search.calls and not fetch.calls
+    assert broker.desktop.execution_calls == 0
+
+
+def test_fast_known_public_topic_keeps_evidence_path(stack):
+    broker, chat, old, search, fetch = stack
+    broker.profile = broker.profile.model_copy(update={"assistant_version": "assistant-v2"})
+    result = chat.submit("Who is Lee Zii Jia?")
+    assert result.state == State.SUCCEEDED, result
+    boundaries = [r.decision_boundary for r in old.requests]
+    assert boundaries[0] == "web-route-v1"
+    assert "assistant-route-v2" not in boundaries
+    assert search.calls and fetch.calls
+    assert broker.desktop.execution_calls == 0
+
+
+def test_stage_output_cannot_exceed_global_ceiling():
+    from jarvis.models import OllamaProfile
+
+    with pytest.raises(ValueError, match="ceiling"):
+        OllamaProfile(
+            profile_name="test",
+            provider="ollama",
+            network_mode="local_model_only",
+            model_identity="synthetic",
+            max_output_tokens=512,
+            stage_options={"assistant-route-v2": {"max_output_tokens": 1024}},
+        )
+
+
+@pytest.mark.parametrize(
+    "owner,plan",
+    [
+        (
+            "40 SGD in USD using a rate of 0.75",
+            meaning("n0", operation="supplied", supplied_operand="n1"),
+        ),
+        ("40 SGD in SGD", meaning("n0", quote="SGD", operation="identity")),
+    ],
+)
+def test_fast_supplied_and_identity_stay_local(broker, owner, plan):
+    result = install_fast(broker, plan).submit(owner)
+    assert result.state == State.SUCCEEDED, result
+    assert not broker.currency.provider.calls
+    assert broker.currency.execution_calls == 1
+
+
+@pytest.mark.parametrize(
+    "raw",
+    [
+        '{"kind":"research","query":"private"}',
+        '{"kind":"say","kind":"research","text":"Hello"}',
+        '{"kind":"propose_action","action":{"capability":"apps.open"}}',
+        '{"kind":"currency","base":"SGD","quote":"USD","expression":"n0","approved":true}',
+    ],
+)
+def test_combined_boundary_remains_strict(raw):
+    with pytest.raises(ValueError):
+        parse(raw, "assistant-route-v2")
+
+
+def test_effective_stage_profile_is_isolated_and_provider_valid(broker):
+    from jarvis.models import OllamaProfile
+
+    chat = install_fast(broker, meaning("n0"))
+    profile = OllamaProfile(
+        profile_name="stage-test",
+        provider="ollama",
+        network_mode="local_model_only",
+        model_identity="synthetic",
+        assistant_version="assistant-v2",
+        prompt_version="planner-m2-v10",
+        decision_version="decision-m2-v1",
+        max_output_tokens=1024,
+        stage_options={
+            "assistant-route-v2": {"think": False, "max_output_tokens": 512},
+            "assistant-check-fast-v2": {"think": False, "max_output_tokens": 256},
+        },
+    )
+    broker.profile = profile
+    result = chat.submit("40 SGD in USD")
+    assert result.state == State.SUCCEEDED, result
+    assert [r.profile.max_output_tokens for r in broker.provider.requests] == [512, 256, 1024]
+    for r in broker.provider.requests:
+        OllamaProfile.model_validate(r.profile.model_dump(), strict=True)
+        if r.profile.max_output_tokens < profile.max_output_tokens:
+            assert not r.profile.stage_options
+    assert profile.max_output_tokens == 1024 and profile.stage_options
+    assert broker.active_profile is None
+
+
+@pytest.mark.parametrize("owner", ["500", "What about 500?"])
+def test_fast_bare_amount_needs_context_before_inference(broker, owner):
+    result = install_fast(broker, meaning("n0")).submit(owner)
+    assert result.state == State.WAITING_INPUT
+    assert not broker.provider.requests and not broker.currency.provider.calls
+
+
+def test_fast_contextual_split_keeps_reasoning_and_owned_operands(broker):
+    chat = install_fast(broker, meaning("n0/n1"))
+    assert chat.submit("Split 800 SGD between 4 people in USD").state == State.SUCCEEDED
+
+    def revised(data):
+        assert data["current_operands"] == {"n2": "5"}
+        assert data["previous_expression"] == "n0/n1"
+        return meaning("n0/n2", use_context=True)
+
+    broker.provider.meaning = revised
+    result = chat.submit("What if there are 5 people instead?")
+    assert result.state == State.SUCCEEDED, result
+    assert broker.provider.requests[-3].decision_boundary == "assistant-plan-v1"
+    args = CurrencyArguments.model_validate_json(broker.store.get(result.task_id).scope.window_ref)
+    assert args.amount == "160"
+
+
+def test_failed_stage_has_numeric_metrics_and_preserves_error(broker):
+    def fail(request, reply):
+        broker.clock.advance(0.5)
+        raise ProviderError("TIMEOUT")
+
+    result = install_fast(broker, meaning("n0"), fail).submit("40 SGD in USD")
+    assert result.state == State.FAILED
+    assert broker.model_metrics[0]["error"] == "TIMEOUT"
+    assert broker.model_metrics[0]["elapsed_seconds"] == 0.5
+    assert not broker.currency.provider.calls
+
+
+def test_fast_known_currency_route_has_a_narrow_plan_schema(broker):
+    result = install_fast(broker, meaning("n0")).submit("40 SGD in USD")
+    assert result.state == State.SUCCEEDED
+    schema = broker.provider.requests[0].schema
+    assert set(schema["discriminator"]["mapping"]) == {"currency", "clarify", "unsupported"}
+
+
+def test_fast_repeated_rejected_plan_stops_without_another_review(broker):
+    def reject(request, reply):
+        if request.decision_boundary in {"assistant-check-fast-v2", "assistant-check-v1"}:
+            return replace(
+                reply,
+                raw=(
+                    b'{"kind":"calculation_check","supported":false,'
+                    b'"issue":"incorrect_plan","question":"The plan is incorrect."}'
+                ),
+            )
+        return reply
+
+    result = install_fast(broker, meaning("n0"), reject).submit("40 SGD in USD")
+    assert result.state == State.FAILED
+    assert [r.decision_boundary for r in broker.provider.requests] == [
+        "assistant-route-v2",
+        "assistant-check-fast-v2",
+        "assistant-plan-v1",
+    ]
+    assert broker.currency.execution_calls == 0 and not broker.currency.provider.calls
+
+
+def test_fast_changed_correction_can_still_succeed(broker):
+    def correct(request, reply):
+        if (
+            request.decision_boundary == "assistant-plan-v1"
+            and "REJECTED" in request.messages[0].text
+        ):
+            return replace(reply, raw=json.dumps(meaning("n0+n1")).encode())
+        return reply
+
+    result = install_fast(broker, meaning("n0"), correct).submit("40 SGD plus a 5 SGD fee in USD")
+    assert result.state == State.SUCCEEDED, result
+    args = CurrencyArguments.model_validate_json(broker.store.get(result.task_id).scope.window_ref)
+    assert args.amount == "45"
+    assert broker.currency.execution_calls == 1
+    assert len(broker.currency.provider.calls) == 1
+
+
+@pytest.mark.parametrize(
+    "owner",
+    [
+        "Explain why exchange rates change, in one sentence.",
+        "Explain why exchange rates can change between 100 and 200.",
+    ],
+)
+def test_fast_explanation_is_not_forced_into_currency(broker, owner):
+    result = install_fast(
+        broker, {"kind": "say", "text": "Exchange rates reflect supply and demand."}
+    ).submit(owner)
+    assert result.state == State.ANSWERED
+    assert broker.model_turns == 2
+    assert broker.provider.requests[0].decision_boundary == "assistant-intent-v1"
+    assert "say" in broker.provider.requests[-1].schema["discriminator"]["mapping"]
+    assert not broker.currency.provider.calls
+
+
+def test_fast_greeting_after_money_clears_context_in_one_call(broker):
+    chat = install_fast(broker, meaning("n0"))
+    assert chat.submit("40 SGD in USD").state == State.SUCCEEDED
+    broker.provider.meaning = {"kind": "say", "text": "Hello!"}
+    before = broker.currency.provider.calls[:]
+    result = chat.submit("Hello")
+    assert result.state == State.ANSWERED
+    assert broker.model_turns == 1
+    assert broker.assistant_memory is None and broker.registry.context is None
+    assert broker.currency.provider.calls == before
+
+
+def test_fast_unresolved_monetary_request_cannot_answer_instead_of_planning(broker):
+    def force_currency(request, reply):
+        if request.decision_boundary == "assistant-intent-v1":
+            return replace(reply, raw=b'{"kind":"assistant_intent","route":"currency"}')
+        return reply
+
+    result = install_fast(
+        broker, {"kind": "say", "text": "The conversion is 999 USD."}, force_currency
+    ).submit(
+        "20 tickets at 30 SGD each, less 10%, plus a 20 SGD fee, split between 4 people in USD"
+    )
+    assert result.state == State.FAILED
+    assert "999 USD" not in conversational_text(result)
+    assert not broker.currency.provider.calls and broker.currency.execution_calls == 0

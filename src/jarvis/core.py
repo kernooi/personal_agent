@@ -25,6 +25,7 @@ from jarvis.models import (
     ModelRequest,
     Provider,
     ProviderError,
+    ProviderOptions,
     TextProfile,
     parse_decision,
 )
@@ -61,6 +62,7 @@ class Broker:
         self.last_error: str | None = None
         self.last_reply: ModelReply | None = None
         self.model_turns = 0
+        self.model_metrics = []
         self.assistant_memory = None
         self.assistant_pending_memory = None
         self.active_profile = None
@@ -95,7 +97,7 @@ class Broker:
                 arguments.amount is None and re.search(NUM, request.text) is None
             )
         if (
-            self.profile.assistant_version == "assistant-v1"
+            self.profile.assistant_version in {"assistant-v1", "assistant-v2"}
             and getattr(self.registry, "intent", None) is None
             and not controller_read
             and scope.app_id not in {"notepad", "text_editor"}
@@ -104,15 +106,15 @@ class Broker:
             # requests are interpreted before binding a capability.
             from jarvis.web_data import WebArguments
 
-            if (
-                scope.app_id != "web"
-                or WebArguments.model_validate_json(scope.window_ref).operation == "research"
+            if scope.app_id != "web" or (
+                self.profile.assistant_version == "assistant-v1"
+                and WebArguments.model_validate_json(scope.window_ref).operation == "research"
             ):
                 scope = Scope(request.session, "none")
         return self._submit(request, scope, history)
 
     def generate_model(self, request, cancel):
-        if request.profile.assistant_version == "assistant-v1":
+        if request.profile.assistant_version in {"assistant-v1", "assistant-v2"}:
             if cancel() or self.clock.now() >= request.deadline:
                 raise ProviderError("CANCELLED_OR_EXPIRED")
             if self.model_turns >= request.profile.max_model_turns:
@@ -130,9 +132,40 @@ class Broker:
         options = getattr(request.profile, "stage_options", {}).get(request.decision_boundary)
         if options is not None:
             request = replace(
-                request, profile=request.profile.model_copy(update={"provider_options": options})
+                request,
+                profile=request.profile.model_copy(
+                    update={
+                        "provider_options": ProviderOptions.model_validate(
+                            options.model_dump(exclude={"max_output_tokens"})
+                        ),
+                        "max_output_tokens": options.max_output_tokens
+                        or request.profile.max_output_tokens,
+                        "stage_options": {},
+                    }
+                ),
             )
-        return self.provider.generate(request, cancel)
+        if request.profile.assistant_version != "assistant-v2":
+            return self.provider.generate(request, cancel)
+        started = self.clock.now()
+        reply = None
+        error = None
+        try:
+            reply = self.provider.generate(request, cancel)
+            return reply
+        except ProviderError as exc:
+            error = exc.code
+            raise
+        finally:
+            # Session-only numeric measurements; no messages, outputs or reasoning.
+            self.model_metrics.append(
+                {
+                    "boundary": request.decision_boundary or "planner",
+                    "elapsed_seconds": round(max(0.0, self.clock.now() - started), 4),
+                    "tokens": reply.tokens if reply else None,
+                    "load_seconds": reply.runtime_load_seconds if reply else None,
+                    "error": error,
+                }
+            )
 
     def _submit(self, request: UserRequest, scope: Scope, history: tuple[Message, ...] = ()):
         # A narrow trusted alias, not a scope inferred from the provider's proposal.
@@ -184,6 +217,7 @@ class Broker:
         self.last_error = None
         self.last_reply = None
         self.model_turns = 0
+        self.model_metrics = []
         self.assistant_pending_memory = None
         currency_route = getattr(self.registry, "route", None) if self.currency else None
         try:
@@ -192,7 +226,7 @@ class Broker:
             if self._cancelled(task.task_id):
                 return self._result(task.task_id)
             if (
-                profile.assistant_version == "assistant-v1"
+                profile.assistant_version in {"assistant-v1", "assistant-v2"}
                 and scope.app_id == "none"
                 and getattr(self.registry, "intent", None) is None
                 and getattr(currency_route, "unavailable_operation", None) is None
@@ -309,7 +343,7 @@ class Broker:
             self.store.transition(task.task_id, State.READY)
             result = self.dispatch(action, approval)
             if (
-                profile.assistant_version == "assistant-v1"
+                profile.assistant_version in {"assistant-v1", "assistant-v2"}
                 and scope.app_id == "currency"
                 and result.state == State.SUCCEEDED
             ):
@@ -317,7 +351,7 @@ class Broker:
 
                 result = finish_currency(self, self.store.get(task.task_id), result)
             elif (
-                profile.assistant_version == "assistant-v1"
+                profile.assistant_version in {"assistant-v1", "assistant-v2"}
                 and scope.app_id == "web"
                 and result.state == State.SUCCEEDED
             ):
@@ -351,7 +385,7 @@ class Broker:
             self.active_profile = None
             if self.currency is not None:
                 self.registry.completed(self.store.get(task.task_id), currency_route)
-            if profile.assistant_version == "assistant-v1":
+            if profile.assistant_version in {"assistant-v1", "assistant-v2"}:
                 finished = self.store.get(task.task_id)
                 self.assistant_memory = (
                     self.assistant_pending_memory
@@ -407,7 +441,10 @@ class Broker:
             return replace(
                 result, simulated=False, message=result.message.removeprefix("SIMULATED: ")
             )
-        if self.profile.assistant_version == "assistant-v1" and result.state == State.FAILED:
+        if (
+            self.profile.assistant_version in {"assistant-v1", "assistant-v2"}
+            and result.state == State.FAILED
+        ):
             return replace(
                 result,
                 display_message="I couldn't reliably interpret that request. No action was taken.",
@@ -442,7 +479,7 @@ class Broker:
             message=f"SIMULATED: {decision.kind}; no action verified. {decision.text}",
             decision_kind=decision.kind,
             display_message=decision.text
-            if self.profile.assistant_version == "assistant-v1"
+            if self.profile.assistant_version in {"assistant-v1", "assistant-v2"}
             else None,
         )
 

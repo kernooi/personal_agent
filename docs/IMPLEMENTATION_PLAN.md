@@ -453,3 +453,37 @@ retrieved biography evidence. Biography output fell back to verbose excerpts;
 broad research semantics, relevance and freshness remain unqualified. Preserve
 all failed/intermediate evidence. README exposes only opt-in simulation testing.
 No new physical-offline validation, model downloads, system changes or M4 work.
+
+
+2026-10-11: User accidentally reverted the latency changes. Clean starting
+worktree at 6e445dd confirmed; committed assistant-v1 and historical reports
+remain intact, while the private assistant-fast-v1 profile survives outside Git.
+Restored the opt-in assistant-v2 implementation and example: combined simple
+interpretation/answering, selective reasoning, strict literal-amount fast review,
+verified currency rendering without a model rewrite, owned web evidence routing,
+and bounded isolated stage output profiles. All authorization, cancellation,
+revision, independent verification and original deadlines remain enforced.
+Added session-only numeric stage timing/token/load measurements to diagnose
+remaining waits; explicitly invoked assistant reports preserve those measurements.
+22 new regression cases cover call reductions and unchanged safety boundaries.
+746 tests pass (21.80 seconds), with clean lint, formatting and dependency checks.
+Private profile and running Ollama/SearXNG were reused without modification.
+Fresh live evaluation is required; restored results will be recorded below.
+No native Windows effects, downloads, installation, global changes or M4 work.
+
+Restoration and further latency work finished on final r4 source: 753 passing
+tests (24.68 s), clean lint/format/dependency/diff checks. Kept a separate intent
+classifier for unresolved numeric/weak-grammar requests after broader merging
+failed live tests. Clear conversions and greetings retain shorter paths; typed
+no-progress stopping and numeric profiling are implemented. Actual median
+13.9505 -> 10.095 s (single historical comparison; current run warm). Interpretation
+14/18 and M3 31/34 FAILED unchanged 100% gates, including an interpretation
+accuracy regression versus historical 16/18. Candidate remains opt-in, experimental
+and not promoted. Model review, numerical follow-ups and missing-price behavior
+are accuracy blockers; complex inference remains slow. Final M2 simulation 18/18
+and conversation 29/29 pass; three actual public smoke checks pass narrowly.
+Final report source/profile hashes match independently; legacy M2 reports still
+match. All failed/rejected r1?r4 results are preserved. README documents the fast
+simulation command and qualification limits. No new native/physical-offline
+validation, system changes, installs, model downloads, commits or pushes. M3.5
+boundary retained. See BUILD_LOG for exact commands, measurements and limitations.

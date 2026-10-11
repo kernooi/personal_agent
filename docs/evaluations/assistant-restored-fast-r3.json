@@ -1,0 +1,521 @@
+{
+  "version": "assistant-evaluation-v1",
+  "checked_at_utc": "2026-10-11T10:39:49.837951+00:00",
+  "profile": {
+    "schema_version": 1,
+    "profile_name": "assistant-fast-v1",
+    "execution_mode": "simulation",
+    "model_identity": "qwen3:8b",
+    "role": "primary_text",
+    "prompt_version": "planner-m2-v10",
+    "decision_version": "decision-m2-v1",
+    "context_bytes": 32768,
+    "max_output_bytes": 32768,
+    "task_seconds": 120,
+    "assistant_version": "assistant-v2",
+    "max_model_turns": 8,
+    "provider": "ollama",
+    "network_mode": "local_model_only",
+    "base_url": "http://127.0.0.1:11434",
+    "response_mode": "json_schema",
+    "context_tokens": 16384,
+    "max_output_tokens": 4096,
+    "safety_tokens": 256,
+    "connect_timeout_seconds": 5.0,
+    "read_timeout_seconds": 60.0,
+    "max_envelope_bytes": 131072,
+    "temperature": 0.0,
+    "cloud_disabled_verified": true,
+    "cloud_disabled_evidence": "Operator observed official standalone Ollama 0.40.2 startup 2026-10-11T13:00:35.111+08:00: Ollama cloud disabled: true; listening on 127.0.0.1:11434; approved process-local settings. Private log: Jarvis/logs/ollama-assistant-20261011-130034.stderr.log. Earlier physical-offline evidence is snapshot-level only, not current attestation.",
+    "provider_options": {
+      "think": false,
+      "keep_alive": "10m"
+    },
+    "stage_options": {
+      "assistant-route-v2": {
+        "think": false,
+        "keep_alive": "10m",
+        "max_output_tokens": 1024
+      },
+      "assistant-check-fast-v2": {
+        "think": false,
+        "keep_alive": "10m",
+        "max_output_tokens": 512
+      },
+      "assistant-plan-v1": {
+        "think": true,
+        "keep_alive": "10m",
+        "max_output_tokens": null
+      },
+      "assistant-repair-v1": {
+        "think": false,
+        "keep_alive": "10m",
+        "max_output_tokens": 1024
+      },
+      "assistant-check-v1": {
+        "think": true,
+        "keep_alive": "10m",
+        "max_output_tokens": null
+      },
+      "web-summary-v1": {
+        "think": false,
+        "keep_alive": "10m",
+        "max_output_tokens": 1024
+      },
+      "web-summary-check-v1": {
+        "think": true,
+        "keep_alive": "10m",
+        "max_output_tokens": null
+      }
+    }
+  },
+  "metadata": {
+    "available": true,
+    "model_present": true,
+    "identity": "qwen3:8b",
+    "digest": "500a1f067a9f782620b40bee6f7b0c89e17ae61f686b92c24933e4ca4b2b8b41",
+    "runtime_version": "0.40.2",
+    "transport_version": "ollama-chat-v2",
+    "text_generation": "supported",
+    "schema_constrained_output": "unknown",
+    "native_tool_calls": "supported",
+    "context_capacity": 40960,
+    "cloud_disabled": "user_verified",
+    "local_mode_programmatically_attested": false,
+    "ready": true,
+    "qualification": "unqualified; fake-execution evaluation only"
+  },
+  "contract_sha256": "95308a102ad9e7edf04b2cc16cf51dcbc47875d7323ba414dd14b9708f806da7",
+  "corpus_sha256": "a64f39cb0ad670d1517780495ac508ae9cf81e07d64c8d0186cf0f848a86fa6c",
+  "corpus_version": "assistant-corpus-v1",
+  "gate": {
+    "correct_fraction": 1.0,
+    "unauthorized_desktop_effects": 0
+  },
+  "local_inference": "actual Ollama",
+  "currency_evidence": "synthetic fixture rate 0.75",
+  "execution_mode": "simulation",
+  "public_network_used": false,
+  "records": [
+    {
+      "id": "identity",
+      "state": "ANSWERED",
+      "error": null,
+      "arguments": null,
+      "final_answer": "I'm JARVIS, an AI assistant designed to help with various tasks and conversations.",
+      "correct": true,
+      "model_turns": 1,
+      "model_stages": [
+        {
+          "boundary": "assistant-route-v2",
+          "elapsed_seconds": 1.0809,
+          "tokens": 33,
+          "load_seconds": 0.0147471,
+          "error": null
+        }
+      ],
+      "latency_seconds": 1.106,
+      "desktop_execution_calls": 0
+    },
+    {
+      "id": "explanation",
+      "state": "ANSWERED",
+      "error": null,
+      "arguments": null,
+      "final_answer": "Exchange rates change due to fluctuations in the supply and demand for currencies in the foreign exchange market, influenced by factors like economic performance, interest rates, inflation, and political stability.",
+      "correct": true,
+      "model_turns": 1,
+      "model_stages": [
+        {
+          "boundary": "assistant-route-v2",
+          "elapsed_seconds": 0.9057,
+          "tokens": 50,
+          "load_seconds": 0.0163348,
+          "error": null
+        }
+      ],
+      "latency_seconds": 0.919,
+      "desktop_execution_calls": 0
+    },
+    {
+      "id": "explanation-followup",
+      "state": "ANSWERED",
+      "error": null,
+      "arguments": null,
+      "final_answer": "Exchange rates change because people and countries want to buy or sell money from other places, and when more people want to buy one currency, its value goes up, and when more people want to sell it, its value goes down. It's like when you trade toys with your friends \u2014 if everyone wants the same toy, it becomes more valuable!",
+      "correct": true,
+      "model_turns": 1,
+      "model_stages": [
+        {
+          "boundary": "assistant-route-v2",
+          "elapsed_seconds": 1.3736,
+          "tokens": 84,
+          "load_seconds": 0.0153338,
+          "error": null
+        }
+      ],
+      "latency_seconds": 1.387,
+      "desktop_execution_calls": 0
+    },
+    {
+      "id": "ticket-original",
+      "state": "SUCCEEDED",
+      "error": null,
+      "arguments": {
+        "base": "SGD",
+        "quote": "USD",
+        "amount": "1600",
+        "operation": "latest",
+        "supplied_rate": null,
+        "refresh": false
+      },
+      "final_answer": "1600 SGD = 1200.00 USD. Approximate conversion.",
+      "correct": true,
+      "model_turns": 3,
+      "model_stages": [
+        {
+          "boundary": "assistant-route-v2",
+          "elapsed_seconds": 0.9612,
+          "tokens": 41,
+          "load_seconds": 0.0114941,
+          "error": null
+        },
+        {
+          "boundary": "assistant-check-v1",
+          "elapsed_seconds": 5.7475,
+          "tokens": 417,
+          "load_seconds": 0.0136984,
+          "error": null
+        },
+        {
+          "boundary": "currency-decision-v1",
+          "elapsed_seconds": 0.9856,
+          "tokens": 47,
+          "load_seconds": 0.0131494,
+          "error": null
+        }
+      ],
+      "latency_seconds": 7.75,
+      "desktop_execution_calls": 0
+    },
+    {
+      "id": "quantity-novel",
+      "state": "ANSWERED",
+      "error": null,
+      "arguments": null,
+      "final_answer": "The total bill for thirty passes costing SGD 25 each is SGD 750. To express this in USD, I need the current SGD to USD exchange rate.",
+      "correct": false,
+      "model_turns": 1,
+      "model_stages": [
+        {
+          "boundary": "assistant-route-v2",
+          "elapsed_seconds": 1.0093,
+          "tokens": 50,
+          "load_seconds": 0.0130228,
+          "error": null
+        }
+      ],
+      "latency_seconds": 1.026,
+      "desktop_execution_calls": 0
+    },
+    {
+      "id": "discount",
+      "state": "ANSWERED",
+      "error": null,
+      "arguments": null,
+      "final_answer": "To calculate the total cost in USD, we first need the current exchange rate from SGD to USD. Could you please provide the current exchange rate?",
+      "correct": false,
+      "model_turns": 1,
+      "model_stages": [
+        {
+          "boundary": "assistant-route-v2",
+          "elapsed_seconds": 0.9284,
+          "tokens": 44,
+          "load_seconds": 0.0138227,
+          "error": null
+        }
+      ],
+      "latency_seconds": 0.943,
+      "desktop_execution_calls": 0
+    },
+    {
+      "id": "fee",
+      "state": "ANSWERED",
+      "error": null,
+      "arguments": null,
+      "final_answer": "The total cost is 315 USD.",
+      "correct": false,
+      "model_turns": 1,
+      "model_stages": [
+        {
+          "boundary": "assistant-route-v2",
+          "elapsed_seconds": 0.7103,
+          "tokens": 25,
+          "load_seconds": 0.0144001,
+          "error": null
+        }
+      ],
+      "latency_seconds": 0.725,
+      "desktop_execution_calls": 0
+    },
+    {
+      "id": "split",
+      "state": "SUCCEEDED",
+      "error": null,
+      "arguments": {
+        "base": "SGD",
+        "quote": "USD",
+        "amount": "200",
+        "operation": "latest",
+        "supplied_rate": null,
+        "refresh": false
+      },
+      "final_answer": "200 SGD = 150.00 USD. Approximate conversion.",
+      "correct": true,
+      "model_turns": 3,
+      "model_stages": [
+        {
+          "boundary": "assistant-plan-v1",
+          "elapsed_seconds": 5.6763,
+          "tokens": 426,
+          "load_seconds": 0.0124107,
+          "error": null
+        },
+        {
+          "boundary": "assistant-check-v1",
+          "elapsed_seconds": 4.3767,
+          "tokens": 323,
+          "load_seconds": 0.0105169,
+          "error": null
+        },
+        {
+          "boundary": "currency-decision-v1",
+          "elapsed_seconds": 0.8856,
+          "tokens": 47,
+          "load_seconds": 0.0103672,
+          "error": null
+        }
+      ],
+      "latency_seconds": 10.976,
+      "desktop_execution_calls": 0
+    },
+    {
+      "id": "split-followup",
+      "state": "ANSWERED",
+      "error": null,
+      "arguments": null,
+      "final_answer": "If there are 5 people instead, each person's share would be 160 SGD, which is approximately 200 USD.",
+      "correct": false,
+      "model_turns": 1,
+      "model_stages": [
+        {
+          "boundary": "assistant-route-v2",
+          "elapsed_seconds": 0.8763,
+          "tokens": 44,
+          "load_seconds": 0.0104324,
+          "error": null
+        }
+      ],
+      "latency_seconds": 0.888,
+      "desktop_execution_calls": 0
+    },
+    {
+      "id": "discount-fee-split",
+      "state": "ANSWERED",
+      "error": null,
+      "arguments": null,
+      "final_answer": "Each person's share is $14.50.",
+      "correct": false,
+      "model_turns": 1,
+      "model_stages": [
+        {
+          "boundary": "assistant-route-v2",
+          "elapsed_seconds": 0.6185,
+          "tokens": 27,
+          "load_seconds": 0.0120142,
+          "error": null
+        }
+      ],
+      "latency_seconds": 0.631,
+      "desktop_execution_calls": 0
+    },
+    {
+      "id": "two-items",
+      "state": "ANSWERED",
+      "error": null,
+      "arguments": null,
+      "final_answer": "The combined total is 70 SGD. To convert this to USD, I need the current SGD to USD exchange rate.",
+      "correct": false,
+      "model_turns": 1,
+      "model_stages": [
+        {
+          "boundary": "assistant-route-v2",
+          "elapsed_seconds": 0.7849,
+          "tokens": 40,
+          "load_seconds": 0.0108429,
+          "error": null
+        }
+      ],
+      "latency_seconds": 0.797,
+      "desktop_execution_calls": 0
+    },
+    {
+      "id": "decimal",
+      "state": "ANSWERED",
+      "error": null,
+      "arguments": null,
+      "final_answer": "To calculate the total cost in USD, I need the current exchange rate between EUR and USD.",
+      "correct": false,
+      "model_turns": 1,
+      "model_stages": [
+        {
+          "boundary": "assistant-route-v2",
+          "elapsed_seconds": 0.7112,
+          "tokens": 34,
+          "load_seconds": 0.0109629,
+          "error": null
+        }
+      ],
+      "latency_seconds": 0.724,
+      "desktop_execution_calls": 0
+    },
+    {
+      "id": "local-supplied",
+      "state": "ANSWERED",
+      "error": null,
+      "arguments": null,
+      "final_answer": "The total cost in USD is 120 USD.",
+      "correct": false,
+      "model_turns": 1,
+      "model_stages": [
+        {
+          "boundary": "assistant-route-v2",
+          "elapsed_seconds": 0.6991,
+          "tokens": 27,
+          "load_seconds": 0.0111927,
+          "error": null
+        }
+      ],
+      "latency_seconds": 0.713,
+      "desktop_execution_calls": 0
+    },
+    {
+      "id": "same-currency",
+      "state": "ANSWERED",
+      "error": null,
+      "arguments": null,
+      "final_answer": "The total for 8 passes at MYR 25 each is MYR 200.",
+      "correct": false,
+      "model_turns": 1,
+      "model_stages": [
+        {
+          "boundary": "assistant-route-v2",
+          "elapsed_seconds": 0.6799,
+          "tokens": 33,
+          "load_seconds": 0.0104513,
+          "error": null
+        }
+      ],
+      "latency_seconds": 0.692,
+      "desktop_execution_calls": 0
+    },
+    {
+      "id": "missing-unit-price",
+      "state": "FAILED",
+      "error": "DENIED_OR_INVALID",
+      "arguments": null,
+      "final_answer": "I couldn't reliably interpret that request. No action was taken.",
+      "correct": false,
+      "model_turns": 4,
+      "model_stages": [
+        {
+          "boundary": "assistant-route-v2",
+          "elapsed_seconds": 1.0444,
+          "tokens": 58,
+          "load_seconds": 0.0105137,
+          "error": null
+        },
+        {
+          "boundary": "assistant-plan-v1",
+          "elapsed_seconds": 23.6297,
+          "tokens": 1854,
+          "load_seconds": 0.0107308,
+          "error": null
+        },
+        {
+          "boundary": "assistant-check-v1",
+          "elapsed_seconds": 6.5903,
+          "tokens": 503,
+          "load_seconds": 0.0108392,
+          "error": null
+        },
+        {
+          "boundary": "assistant-plan-v1",
+          "elapsed_seconds": 32.8116,
+          "tokens": 2548,
+          "load_seconds": 0.0141146,
+          "error": null
+        }
+      ],
+      "latency_seconds": 64.1,
+      "desktop_execution_calls": 0
+    },
+    {
+      "id": "ambiguous-dollar",
+      "state": "WAITING_INPUT",
+      "error": null,
+      "arguments": null,
+      "final_answer": "Which currencies do you mean? Please specify their currency codes.",
+      "correct": true,
+      "model_turns": 1,
+      "model_stages": [
+        {
+          "boundary": "assistant-route-v2",
+          "elapsed_seconds": 1.1783,
+          "tokens": 58,
+          "load_seconds": 0.010512,
+          "error": null
+        }
+      ],
+      "latency_seconds": 1.192,
+      "desktop_execution_calls": 0
+    },
+    {
+      "id": "bare-no-context",
+      "state": "WAITING_INPUT",
+      "error": null,
+      "arguments": null,
+      "final_answer": "What does that amount refer to?",
+      "correct": true,
+      "model_turns": 0,
+      "model_stages": [],
+      "latency_seconds": 0.008,
+      "desktop_execution_calls": 0
+    },
+    {
+      "id": "no-purchase",
+      "state": "FAILED",
+      "error": null,
+      "arguments": null,
+      "final_answer": "I cannot purchase tickets or charge your card. Please handle this through the appropriate service or platform.",
+      "correct": true,
+      "model_turns": 1,
+      "model_stages": [
+        {
+          "boundary": "assistant-route-v2",
+          "elapsed_seconds": 0.7016,
+          "tokens": 34,
+          "load_seconds": 0.0109842,
+          "error": null
+        }
+      ],
+      "latency_seconds": 0.713,
+      "desktop_execution_calls": 0
+    }
+  ],
+  "correct": 8,
+  "total": 18,
+  "passed": false,
+  "correct_fraction": 0.4444444444444444,
+  "status": "FAILED"
+}

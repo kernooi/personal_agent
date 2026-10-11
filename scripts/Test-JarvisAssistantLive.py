@@ -25,8 +25,8 @@ def main():
     if args.report.exists():
         parser.error("Existing report is preserved; select a new path")
     profile = load_profile(args.profile, allow_ollama=True)
-    if profile.assistant_version != "assistant-v1":
-        parser.error("Select an assistant-v1 profile")
+    if profile.assistant_version not in {"assistant-v1", "assistant-v2"}:
+        parser.error("Select a semantic assistant profile")
     from jarvis.assistant_evaluation import contract_hash
 
     report = {
