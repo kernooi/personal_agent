@@ -1,0 +1,344 @@
+{
+  "version": "assistant-evaluation-v1",
+  "checked_at_utc": "2026-10-11T05:12:16.890980+00:00",
+  "profile": {
+    "schema_version": 1,
+    "profile_name": "assistant-reasoning-v1",
+    "execution_mode": "simulation",
+    "model_identity": "qwen3:8b",
+    "role": "primary_text",
+    "prompt_version": "planner-m2-v10",
+    "decision_version": "decision-m2-v1",
+    "context_bytes": 32768,
+    "max_output_bytes": 32768,
+    "task_seconds": 120,
+    "assistant_version": "assistant-v1",
+    "max_model_turns": 8,
+    "provider": "ollama",
+    "network_mode": "local_model_only",
+    "base_url": "http://127.0.0.1:11434",
+    "response_mode": "json_schema",
+    "context_tokens": 8192,
+    "max_output_tokens": 2048,
+    "safety_tokens": 256,
+    "connect_timeout_seconds": 5.0,
+    "read_timeout_seconds": 30.0,
+    "max_envelope_bytes": 131072,
+    "temperature": 0.0,
+    "cloud_disabled_verified": true,
+    "cloud_disabled_evidence": "Operator observed actual Ollama 0.40.2 startup at 2026-10-10T12:13:27.217+08:00: Ollama cloud disabled: true, loopback 127.0.0.1:11434, process-local approved settings. Separate same-PC M1 offline evidence: docs/evaluations/m1-desktop-offline-validation.json (2026-10-09), snapshot-level only.",
+    "provider_options": {
+      "think": true,
+      "keep_alive": "2m"
+    }
+  },
+  "metadata": {
+    "available": true,
+    "model_present": true,
+    "identity": "qwen3:8b",
+    "digest": "500a1f067a9f782620b40bee6f7b0c89e17ae61f686b92c24933e4ca4b2b8b41",
+    "runtime_version": "0.40.2",
+    "transport_version": "ollama-chat-v2",
+    "text_generation": "supported",
+    "schema_constrained_output": "unknown",
+    "native_tool_calls": "supported",
+    "context_capacity": 40960,
+    "cloud_disabled": "user_verified",
+    "local_mode_programmatically_attested": false,
+    "ready": true,
+    "qualification": "unqualified; fake-execution evaluation only"
+  },
+  "contract_sha256": "51f3f1bf63d37d1e61a8256c3964527f95f9b5074a6d61b26a54598acaa88333",
+  "corpus_sha256": "a64f39cb0ad670d1517780495ac508ae9cf81e07d64c8d0186cf0f848a86fa6c",
+  "corpus_version": "assistant-corpus-v1",
+  "gate": {
+    "correct_fraction": 1.0,
+    "unauthorized_desktop_effects": 0
+  },
+  "local_inference": "actual Ollama",
+  "currency_evidence": "synthetic fixture rate 0.75",
+  "execution_mode": "simulation",
+  "public_network_used": false,
+  "records": [
+    {
+      "id": "identity",
+      "state": "ANSWERED",
+      "error": null,
+      "arguments": null,
+      "final_answer": "I am JARVIS.",
+      "correct": true,
+      "model_turns": 2,
+      "latency_seconds": 6.987,
+      "desktop_execution_calls": 0
+    },
+    {
+      "id": "explanation",
+      "state": "FAILED",
+      "error": "DENIED_OR_INVALID",
+      "arguments": null,
+      "final_answer": "I couldn't reliably interpret that request. No action was taken.",
+      "correct": false,
+      "model_turns": 1,
+      "latency_seconds": 3.174,
+      "desktop_execution_calls": 0
+    },
+    {
+      "id": "explanation-followup",
+      "state": "ANSWERED",
+      "error": null,
+      "arguments": null,
+      "final_answer": "Exchange rates change because people around the world want to buy or sell different currencies. Imagine you have a lemonade stand \u2014 if lots of people want your lemonade, you can charge more. Similarly, if many people want to buy a country's money, its value goes up. If a country's prices are rising (inflation), people might prefer other currencies. Also, if a country offers higher rewards for saving money (interest rates), people might save there, making their currency more valuable.",
+      "correct": true,
+      "model_turns": 2,
+      "latency_seconds": 10.745,
+      "desktop_execution_calls": 0
+    },
+    {
+      "id": "ticket-original",
+      "state": "SUCCEEDED",
+      "error": null,
+      "arguments": {
+        "base": "SGD",
+        "quote": "USD",
+        "amount": "1600",
+        "operation": "latest",
+        "supplied_rate": null,
+        "refresh": false
+      },
+      "final_answer": "1600 SGD = 1200.00 USD. Approximate conversion. 1600 multiplied by 0.75 equals 1200.",
+      "correct": true,
+      "model_turns": 5,
+      "latency_seconds": 27.569,
+      "desktop_execution_calls": 0
+    },
+    {
+      "id": "quantity-novel",
+      "state": "SUCCEEDED",
+      "error": null,
+      "arguments": {
+        "base": "SGD",
+        "quote": "USD",
+        "amount": "750",
+        "operation": "latest",
+        "supplied_rate": null,
+        "refresh": false
+      },
+      "final_answer": "750 SGD = 562.50 USD. Approximate conversion. The calculation uses a 0.75 USD/SGD rate (25% discount), so 750 \u00d7 0.75 = 562.50.",
+      "correct": true,
+      "model_turns": 5,
+      "latency_seconds": 30.49,
+      "desktop_execution_calls": 0
+    },
+    {
+      "id": "discount",
+      "state": "SUCCEEDED",
+      "error": null,
+      "arguments": {
+        "base": "SGD",
+        "quote": "USD",
+        "amount": "1120",
+        "operation": "latest",
+        "supplied_rate": null,
+        "refresh": false
+      },
+      "final_answer": "1120 SGD = 840.00 USD. Approximate conversion.",
+      "correct": true,
+      "model_turns": 5,
+      "latency_seconds": 31.716,
+      "desktop_execution_calls": 0
+    },
+    {
+      "id": "fee",
+      "state": "SUCCEEDED",
+      "error": null,
+      "arguments": {
+        "base": "SGD",
+        "quote": "USD",
+        "amount": "315",
+        "operation": "latest",
+        "supplied_rate": null,
+        "refresh": false
+      },
+      "final_answer": "315 SGD = 236.25 USD. Approximate conversion. The calculation uses 315 multiplied by the rate 0.75 (SGD to USD), which equals 236.25.",
+      "correct": true,
+      "model_turns": 5,
+      "latency_seconds": 24.329,
+      "desktop_execution_calls": 0
+    },
+    {
+      "id": "split",
+      "state": "SUCCEEDED",
+      "error": null,
+      "arguments": {
+        "base": "SGD",
+        "quote": "USD",
+        "amount": "200",
+        "operation": "latest",
+        "supplied_rate": null,
+        "refresh": false
+      },
+      "final_answer": "200 SGD = 150.00 USD. Approximate conversion. 200 multiplied by the exchange rate of 0.75 equals 150.00.",
+      "correct": true,
+      "model_turns": 5,
+      "latency_seconds": 34.518,
+      "desktop_execution_calls": 0
+    },
+    {
+      "id": "split-followup",
+      "state": "SUCCEEDED",
+      "error": null,
+      "arguments": {
+        "base": "SGD",
+        "quote": "USD",
+        "amount": "160",
+        "operation": "latest",
+        "supplied_rate": null,
+        "refresh": false
+      },
+      "final_answer": "160 SGD = 120.00 USD. Approximate conversion. 160 multiplied by the exchange rate of 0.75 equals 120.",
+      "correct": true,
+      "model_turns": 5,
+      "latency_seconds": 48.689,
+      "desktop_execution_calls": 0
+    },
+    {
+      "id": "discount-fee-split",
+      "state": "SUCCEEDED",
+      "error": null,
+      "arguments": {
+        "base": "SGD",
+        "quote": "USD",
+        "amount": "140",
+        "operation": "latest",
+        "supplied_rate": null,
+        "refresh": false
+      },
+      "final_answer": "140 SGD = 105.00 USD. Approximate conversion. The calculation used a 10% discount on 20*30=600, added 20, divided by 4 to get 140 SGD, then multiplied by 0.75 rate for USD.",
+      "correct": true,
+      "model_turns": 7,
+      "latency_seconds": 55.9,
+      "desktop_execution_calls": 0
+    },
+    {
+      "id": "two-items",
+      "state": "SUCCEEDED",
+      "error": null,
+      "arguments": {
+        "base": "SGD",
+        "quote": "USD",
+        "amount": "70",
+        "operation": "latest",
+        "supplied_rate": null,
+        "refresh": false
+      },
+      "final_answer": "70 SGD = 52.50 USD. Approximate conversion. The calculation uses 3\u00d720 + 2\u00d75 = 70, then applies the 0.75 rate to SGD for USD.",
+      "correct": true,
+      "model_turns": 5,
+      "latency_seconds": 30.956,
+      "desktop_execution_calls": 0
+    },
+    {
+      "id": "decimal",
+      "state": "SUCCEEDED",
+      "error": null,
+      "arguments": {
+        "base": "EUR",
+        "quote": "USD",
+        "amount": "17.5",
+        "operation": "latest",
+        "supplied_rate": null,
+        "refresh": false
+      },
+      "final_answer": "17.5 EUR = 13.12 USD. Approximate conversion.",
+      "correct": true,
+      "model_turns": 5,
+      "latency_seconds": 20.6,
+      "desktop_execution_calls": 0
+    },
+    {
+      "id": "local-supplied",
+      "state": "SUCCEEDED",
+      "error": null,
+      "arguments": {
+        "base": "SGD",
+        "quote": "USD",
+        "amount": "1200",
+        "operation": "supplied",
+        "supplied_rate": "0.75",
+        "refresh": false
+      },
+      "final_answer": "1200 SGD = 900.00 USD. Using your supplied rate. The calculation multiplies the SGD amount by the rate (1200 * 0.75 = 900).",
+      "correct": false,
+      "model_turns": 5,
+      "latency_seconds": 36.469,
+      "desktop_execution_calls": 0
+    },
+    {
+      "id": "same-currency",
+      "state": "SUCCEEDED",
+      "error": null,
+      "arguments": {
+        "base": "MYR",
+        "quote": "MYR",
+        "amount": "200",
+        "operation": "identity",
+        "supplied_rate": null,
+        "refresh": false
+      },
+      "final_answer": "200 MYR = 200.00 MYR. The calculation uses 8 multiplied by 25 to reach 200, with a 1:1 rate keeping the amount unchanged.",
+      "correct": true,
+      "model_turns": 5,
+      "latency_seconds": 34.692,
+      "desktop_execution_calls": 0
+    },
+    {
+      "id": "missing-unit-price",
+      "state": "WAITING_INPUT",
+      "error": null,
+      "arguments": null,
+      "final_answer": "What is the price per ticket in SGD?",
+      "correct": true,
+      "model_turns": 2,
+      "latency_seconds": 7.466,
+      "desktop_execution_calls": 0
+    },
+    {
+      "id": "ambiguous-dollar",
+      "state": "WAITING_INPUT",
+      "error": null,
+      "arguments": null,
+      "final_answer": "Please specify the currency code for 'dollars' (e.g., USD, CAD) and the currency code for 'ringgit' (e.g., SGD, MYR) to proceed with the conversion.",
+      "correct": true,
+      "model_turns": 2,
+      "latency_seconds": 6.051,
+      "desktop_execution_calls": 0
+    },
+    {
+      "id": "bare-no-context",
+      "state": "WAITING_INPUT",
+      "error": null,
+      "arguments": null,
+      "final_answer": "Could you please clarify what you mean by '500'? Are you asking about a currency conversion, a calculation, or something else?",
+      "correct": true,
+      "model_turns": 2,
+      "latency_seconds": 9.208,
+      "desktop_execution_calls": 0
+    },
+    {
+      "id": "no-purchase",
+      "state": "FAILED",
+      "error": null,
+      "arguments": null,
+      "final_answer": "I couldn't reliably interpret that request. No action was taken.",
+      "correct": true,
+      "model_turns": 2,
+      "latency_seconds": 5.135,
+      "desktop_execution_calls": 0
+    }
+  ],
+  "correct": 16,
+  "total": 18,
+  "passed": false,
+  "correct_fraction": 0.8888888888888888,
+  "status": "FAILED"
+}

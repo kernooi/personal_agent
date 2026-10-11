@@ -34,6 +34,7 @@ class Route:
     arguments: CurrencyArguments | None = None
     message: str = ""
     pending_pair: tuple[str, str] | None = None
+    unavailable_operation: str | None = None
 
 
 def resolved(base, quote, amount=None, supplied=None, refresh=False):
@@ -229,6 +230,7 @@ def route(text, previous=None, context=None):
                 "unsupported",
                 message="Historical-date retrieval is not implemented; "
                 "request the latest available daily reference rate.",
+                unavailable_operation="historical_rate",
             )
         if quantity_request:
             return quantity_conversion(value, context) or Route(

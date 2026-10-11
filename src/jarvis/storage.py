@@ -127,6 +127,47 @@ class Store:
             self.event(task_id, "request_accepted")
         return self.get(task_id), True
 
+    def bind_read_scope(
+        self, task_id: str, revision: int, scope: Scope, *, task_seconds: float | None = None
+    ) -> Task:
+        """Bind a reviewed read interpretation before any proposal or effect exists."""
+        with self.db:
+            self.db.execute("BEGIN IMMEDIATE")
+            task = self.get(task_id)
+            if (
+                task.state != State.PLANNING
+                or task.cancelled
+                or task.revision != revision
+                or task.scope.app_id != "none"
+                or task.scope.session != scope.session
+                or self.clock.now() >= task.deadline
+                or scope.app_id not in {"currency", "web"}
+                or self.db.execute("SELECT 1 FROM actions WHERE task_id=?", (task_id,)).fetchone()
+            ):
+                raise Denied("Read interpretation cannot bind this task")
+            # get() validates canonical arguments and reviewed effect types inside
+            # this transaction. A rejected binding rolls back completely.
+            self.db.execute(
+                "UPDATE tasks SET scope_json=?,revision=revision+1,updated_at=? WHERE task_id=?",
+                (encode(asdict(scope)), self.clock.now(), task_id),
+            )
+            if task_seconds is not None:
+                if task_seconds <= 0:
+                    raise Denied("Invalid read-task deadline limit")
+                self.db.execute(
+                    "UPDATE tasks SET deadline=MIN(deadline,created_at+?) WHERE task_id=?",
+                    (task_seconds, task_id),
+                )
+            bound = self.get(task_id)
+            if self.clock.now() >= bound.deadline:
+                raise Denied("Read interpretation expired before binding")
+            self.event(
+                task_id,
+                "read_scope_bound",
+                payload={"app_id": scope.app_id, "effect": scope.effect},
+            )
+        return bound
+
     def get(self, task_id: str) -> Task:
         row = self.db.execute("SELECT * FROM tasks WHERE task_id=?", (task_id,)).fetchone()
         if row is None:

@@ -99,6 +99,18 @@ def parse_decision(raw: bytes, version: str = "decision-v1") -> Decision:
             from jarvis.currency_decisions import parse
 
             return parse(raw)
+        if version in {
+            "assistant-plan-v1",
+            "assistant-repair-v1",
+            "assistant-intent-v1",
+            "assistant-check-v1",
+            "assistant-answer-v1",
+            "web-summary-v1",
+            "web-summary-check-v1",
+        }:
+            from jarvis.assistant import gateway_parse
+
+            return gateway_parse(raw, version)
         if version in {"web-route-v1", "web-plan-v1", "web-select-v1", "web-answer-v1"}:
             from jarvis.web_decisions import gateway_parse
 
@@ -149,6 +161,8 @@ class BaseProfile(StrictRecord):
     context_bytes: int = Field(default=16384, ge=1024, le=65536)
     max_output_bytes: int = Field(default=32768, ge=1, le=32768)
     task_seconds: int = Field(default=30, ge=1, le=120)
+    assistant_version: Literal["legacy", "assistant-v1"] = "legacy"
+    max_model_turns: int = Field(default=8, ge=3, le=12)
 
 
 class Profile(BaseProfile):
@@ -189,15 +203,27 @@ class OllamaProfile(BaseProfile):
     )
     response_mode: Literal["json_schema"] = "json_schema"
     context_tokens: int = Field(default=4096, ge=1024, le=16384)
-    max_output_tokens: int = Field(default=512, ge=128, le=1024)
+    max_output_tokens: int = Field(default=512, ge=128, le=4096)
     safety_tokens: int = Field(default=256, ge=128, le=1024)
     connect_timeout_seconds: float = Field(default=5.0, gt=0, le=10)
-    read_timeout_seconds: float = Field(default=10.0, gt=0, le=30)
+    read_timeout_seconds: float = Field(default=10.0, gt=0, le=60)
     max_envelope_bytes: int = Field(default=131072, ge=1024, le=262144)
     temperature: float = Field(default=0.0, ge=0, le=1)
     cloud_disabled_verified: bool = False
     cloud_disabled_evidence: str = Field(default="", max_length=512)
     provider_options: ProviderOptions = Field(default_factory=ProviderOptions)
+    stage_options: dict[
+        Literal[
+            "assistant-intent-v1",
+            "assistant-plan-v1",
+            "assistant-repair-v1",
+            "assistant-check-v1",
+            "assistant-answer-v1",
+            "web-summary-v1",
+            "web-summary-check-v1",
+        ],
+        ProviderOptions,
+    ] = Field(default_factory=dict)
 
     @model_validator(mode="after")
     def safe_profile(self):
@@ -216,8 +242,9 @@ TextProfile = Profile | OllamaProfile
 class ProviderError(ValueError):
     """Normalized errors contain categories, never server bodies or prompts."""
 
-    def __init__(self, code: str):
+    def __init__(self, code: str, *, output_limit: bool = False):
         self.code = code
+        self.output_limit = output_limit
         super().__init__(code)
 
 
@@ -238,7 +265,18 @@ class ModelRequest:
     messages: tuple[Message, ...]
     decision_boundary: (
         Literal[
-            "currency-decision-v1", "web-route-v1", "web-plan-v1", "web-select-v1", "web-answer-v1"
+            "currency-decision-v1",
+            "web-route-v1",
+            "web-plan-v1",
+            "web-select-v1",
+            "web-answer-v1",
+            "assistant-plan-v1",
+            "assistant-repair-v1",
+            "assistant-intent-v1",
+            "assistant-check-v1",
+            "assistant-answer-v1",
+            "web-summary-v1",
+            "web-summary-check-v1",
         ]
         | None
     ) = None

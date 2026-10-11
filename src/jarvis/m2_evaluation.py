@@ -19,6 +19,12 @@ def contract_hash(profile):
     from jarvis.models import BOUNDARY_M2
 
     contract = {"prompt": TEMPLATES[profile.prompt_version], "schema": BOUNDARY_M2.json_schema()}
+    if profile.assistant_version == "assistant-v1":
+        contract["assistant_version"] = profile.assistant_version
+        contract["assistant_sources"] = {
+            name: hashlib.sha256(Path(__file__).with_name(name + ".py").read_bytes()).hexdigest()
+            for name in ("assistant", "core", "storage", "models", "ollama")
+        }
     if profile.prompt_version in {
         "planner-m2-v5",
         "planner-m2-v6",
@@ -177,6 +183,10 @@ def qualified(path, profile, metadata, *, conversation=False):
         for key, value in data.get("profile", {}).items()
         if key not in {"cloud_disabled_evidence", "profile_name"}
     }
+    # Historical profiles predate these fields and select legacy behavior only.
+    prior.setdefault("assistant_version", "legacy")
+    prior.setdefault("max_model_turns", 8)
+    prior.setdefault("stage_options", {})
     expected_corpus = Path(__file__).resolve().parents[2] / (
         "tests/fixtures/m2-conversation-v2.json"
         if conversation and profile.prompt_version == "planner-m2-v10"

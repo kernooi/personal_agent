@@ -1,5 +1,49 @@
 # JARVIS local text assistant
 
+An opt-in conversation candidate now uses local model interpretation for currency
+requests, bounded arithmetic plans and same-session numerical follow-ups. It also
+renders verified tool results naturally. Its profile is separately qualified;
+historical M2 reports do not authorize this new profile for Windows effects.
+See [the design decision](docs/decisions/0005-semantic-conversation.md) and the
+latest actual results in `docs/BUILD_LOG.md`. This remains within M3.5.
+
+On this PC, test the candidate with Windows actions simulated:
+
+```powershell
+.\.venv\Scripts\python.exe -m jarvis chat `
+  --profile "$env:LOCALAPPDATA\Jarvis\profiles\assistant-staged-v2.toml" `
+  --public-data-config "$env:LOCALAPPDATA\Jarvis\public-data.toml" `
+  --web-config "$env:LOCALAPPDATA\Jarvis\web.toml"
+```
+
+Try `40 tickets at 40 SGD each in USD`, a discount/fee/bill split, and then
+`make that 5 people instead`. Ask `who is Lee Zii Jia?` with the configured local
+SearXNG server running. General conversation uses the local model. Missing prices
+or ambiguous currencies should still prompt for clarification; unavailable or
+insufficient public evidence must not become a confident answer.
+The candidate is experimental: interpretation scored 16/18 and the frozen currency
+corpus scored 29/34. Both failed their unchanged 100% gates. Missing-price
+clarification, currency follow-ups and inference timeouts remain blockers.
+Notepad simulation passed 18/18 and conversation passed 29/29; no new attended
+Windows test is claimed. The three-case public smoke passed its narrow checks,
+but biography rendering fell back to lengthy excerpts. Broad research quality
+remains unqualified.
+For another PC, start from `config/examples/assistant.toml`; verify that PC's
+cloud-disabled startup evidence before creating a private profile.
+
+Evaluate without genuine Windows effects (choose unused report filenames):
+
+```powershell
+.\.venv\Scripts\python.exe -m jarvis eval-assistant `
+  --profile "$env:LOCALAPPDATA\Jarvis\profiles\assistant-staged-v2.toml" `
+  --live --report .\docs\evaluations\assistant-local-new.json
+```
+
+This explicitly runs real local inference against a synthetic currency fixture;
+it measures interpretation, rather than live exchange-rate availability. Separate
+`eval-m3`, `eval-m2` and `eval-m2-chat` checks remain required for their scopes.
+Do not append `--real` or reuse historical M2 reports with this candidate.
+
 M0's safe simulated core and M1's local Ollama integration are implemented from
 `JARVIS_Project_Specification.md`. **Simulation remains the default.**
 The real model proposes a decision; strict parsing, the reviewed registry,

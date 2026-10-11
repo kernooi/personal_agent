@@ -44,7 +44,16 @@ def main() -> None:
     currency.add_argument("--public-data-config", type=Path, required=True)
     currency.add_argument("--live", action="store_true", required=True)
     currency.add_argument("--report", type=Path, required=True)
-    for command in ("doctor", "chat", "eval", "eval-m2", "eval-m2-chat", "eval-m3", "eval-web"):
+    for command in (
+        "doctor",
+        "chat",
+        "eval",
+        "eval-m2",
+        "eval-m2-chat",
+        "eval-m3",
+        "eval-web",
+        "eval-assistant",
+    ):
         child = sub.add_parser(command, help=f"Local {command}; real chat requires explicit opt-in")
         child.add_argument("--profile", type=Path, required=True)
         if command in {"doctor", "chat", "eval-m3"}:
@@ -61,7 +70,7 @@ def main() -> None:
             child.add_argument("--registration", type=Path)
             child.add_argument("--model-report", type=Path)
             child.add_argument("--conversation-report", type=Path)
-        if command in {"eval", "eval-m2", "eval-m2-chat", "eval-m3", "eval-web"}:
+        if command in {"eval", "eval-m2", "eval-m2-chat", "eval-m3", "eval-web", "eval-assistant"}:
             child.add_argument("--live", action="store_true", required=True)
             child.add_argument("--report", type=Path)
         if command == "eval":
@@ -176,6 +185,17 @@ def live_command(args, parser):
             web_config = load_web_config(args.web_config)
         except (OSError, ValueError):
             parser.error("Web research configuration unavailable or invalid")
+    if args.command == "eval-assistant":
+        from jarvis.assistant_evaluation import evaluate as evaluate_assistant
+
+        if args.report is None:
+            parser.error("eval-assistant requires --report; failed evidence is preserved")
+        try:
+            report, code = evaluate_assistant(profile, args.report)
+        except (OSError, ValueError) as exc:
+            parser.error(str(exc))
+        print(json.dumps({k: v for k, v in report.items() if k != "records"}, indent=2))
+        raise SystemExit(code)
     if args.command == "eval-web":
         from jarvis.web_evaluation import evaluate_web
 
@@ -254,6 +274,12 @@ def live_command(args, parser):
             or (portable.exists() and any(portable.glob("ollama-*/bin/ollama.exe")))
         )
         selected_summary = read_evaluation_summary(args.evaluation_report, profile, metadata)
+        if profile.assistant_version == "assistant-v1" and args.evaluation_report:
+            from jarvis.assistant_evaluation import qualification_summary as assistant_summary
+
+            candidate = assistant_summary(args.evaluation_report, profile, metadata)
+            if candidate["status"] == "passed":
+                selected_summary = candidate
         if public_config and args.evaluation_report:
             from jarvis.m3_evaluation import qualification_summary
 

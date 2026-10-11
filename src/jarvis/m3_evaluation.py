@@ -35,6 +35,7 @@ def contract_hash():
         "ollama",
         "models",
         "m3_evaluation",
+        "assistant",
     )
     digest = hashlib.sha256()
     for name in names:
@@ -58,11 +59,15 @@ def qualification_summary(path, profile, metadata, config):
         report = json.loads(path.read_bytes())
         corpus_bytes = CORPUS.read_bytes()
         corpus = json.loads(corpus_bytes)
+        prior_profile = dict(report["profile"])
+        prior_profile.setdefault("assistant_version", "legacy")
+        prior_profile.setdefault("max_model_turns", 8)
+        prior_profile.setdefault("stage_options", {})
         if (
             report["version"] != "m3-evaluation-v2"
             or report["contract_sha256"] != contract_hash()
             or report["corpus_sha256"] != hashlib.sha256(corpus_bytes).hexdigest()
-            or report["profile"] != profile.model_dump()
+            or prior_profile != profile.model_dump()
             or report["config"] != config.model_dump()
             or report["gate"] != corpus["gate"]
             or report["passed"] is not True

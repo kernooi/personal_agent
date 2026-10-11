@@ -67,7 +67,7 @@ def parse(raw):
 
 
 def plan(broker, task, request):
-    profile = broker.profile
+    profile = broker.active_profile or broker.profile
     schema = CurrencyProposal.model_json_schema()
     arguments = json.loads(task.scope.window_ref)
     definition = schema["$defs"]["CurrencyArguments"]
@@ -101,7 +101,7 @@ def plan(broker, task, request):
         messages,
         decision_boundary="currency-decision-v1",
     )
-    reply = broker.provider.generate(model_request, lambda: broker._cancelled(task.task_id))
+    reply = broker.generate_model(model_request, lambda: broker._cancelled(task.task_id))
     broker.last_reply = reply
     current = broker.store.get(task.task_id)
     if (

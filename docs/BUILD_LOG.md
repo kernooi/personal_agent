@@ -1868,3 +1868,152 @@ pattern scan of source/config/docs/scripts/tests found no matches. This checkpoi
 preserves current implementation; it does not assert broad M3.5 semantic/freshness
 qualification or implement the subsequently discussed model-led conversation
 architecture. Commit is local only; no push authorized or performed.
+
+
+2026-10-11 ? Opt-in semantic conversation candidate after the M3.5 checkpoint.
+Read repository instructions and the complete specification before architecture
+changes. Added assistant-v1 local intent/typed interpretation, a bounded Decimal
+expression compiler, same-session numerical follow-ups, pre-effect correction and
+supplemental interpretation review, and natural rendering of verified results.
+Controller binding is read-only, revision checked, and retains the original deadline;
+all effects still pass the existing broker. No shell/code execution or M4 capability.
+Owner-only public queries retain the existing private-destination restrictions.
+A new frozen 18-case interpretation corpus requires 100%; historical M3 v2 and M2
+gates remain unchanged. Models/options remain profile configuration. All failed and
+intermediate reports are preserved. Same-model semantic review is not independent
+proof of interpretation or source entailment. Candidate is opt-in, not qualified
+for real Windows effects by historical reports.
+
+After overnight interruption, the approved standalone Ollama server was restarted
+manually. Fresh private startup log
+Jarvis/logs/ollama-assistant-20261011-130034.stderr.log contains
+2026-10-11T13:00:35.111+08:00 "Ollama cloud disabled: true" and a subsequent
+127.0.0.1:11434 listener/version 0.40.2. Process-local launch settings:
+OLLAMA_NO_CLOUD=1, OLLAMA_HOST=127.0.0.1:11434,
+OLLAMA_MODELS=%LOCALAPPDATA%/Jarvis/models, OLLAMA_CONTEXT_LENGTH=4096.
+Started %LOCALAPPDATA%/Jarvis/runtime/ollama-v0.40.2/bin/ollama.exe serve
+with Start-Process -WindowStyle Hidden and private stdout/stderr redirection.
+Only the existing qwen3:8b was used (digest
+500a1f067a9f782620b40bee6f7b0c89e17ae61f686b92c24933e4ca4b2b8b41).
+Private staged profile enables reasoning for interpretation/review, global think=false,
+8192 per-request context, 2048 output tokens, 8 model turns and 120-second deadline.
+Doctor observed ready=true, cloud user-verified, simulation, unqualified;
+it contacted neither public currency nor search providers.
+
+Existing Docker Desktop was restarted hidden; no installation or machine settings
+changed. Recreated the previously authorized ephemeral local SearXNG container
+using cached pinned image with --pull never, --rm, no restart policy and only
+127.0.0.1:8080:8080. docker inspect independently confirmed the loopback binding
+and RestartPolicy.Name=no. Exact launch:
+
+```powershell
+$jarvisSearchRoot = "$env:LOCALAPPDATA\Jarvis\searxng"
+docker run --pull never --name jarvis-searxng --rm -d `
+  --publish 127.0.0.1:8080:8080 `
+  --mount "type=bind,source=$jarvisSearchRoot\config,target=/etc/searxng" `
+  --mount "type=bind,source=$jarvisSearchRoot\data,target=/var/cache/searxng" `
+  docker.io/searxng/searxng@sha256:85492ba800a861e3e8ff6014c430e81369fe6ca766a9990595f616d1ce95b272
+```
+
+No genuine Windows effects or fresh physical-offline validation performed.
+Existing models, private registrations and legacy profiles preserved. No global
+settings, network settings, startup services, dependency installation, model
+downloads, commits or pushes. Offline regression suite: 705 passed in 24.93 seconds.
+Ruff lint/format (81 files) and pip check passed after correcting new fixture import
+lint and one overlong prompt example. Intermediate fixture regressions failed
+because their registry was built with an older prompt; corrected fixture setup
+matches v10 before testing controller-owned ambiguity. Live results follow below.
+
+
+Continuation: corrected controller routing for scope-none Notepad requests with a
+reviewed desktop intent. Added regressions for unselected close and ambiguous
+editor requests. Simplified currency parsing instructions; rate-clarification
+attempts are rejected and may be corrected before effects. Supplied-rate operands
+cannot also appear in the source amount expression. Unsupported explanations now
+remain visible instead of being replaced by a generic failure display.
+Latest pre-v2 full checks: 706 passed in 25.29 s, Ruff lint/format and pip check
+passed. assistant staged-r3 scored 16/18: discount and missing-unit-price returned
+INVALID_RESPONSE after about 27/29 seconds, consistent with truncated reasoning;
+no desktop effects. This is an intermediate source snapshot, not qualification.
+Corrected M2 staged-r2 passed 18/18 (100%), zero unauthorized dispatches, on its
+2048-token snapshot. The new staged-v2 profile separately reserves 4096 output /
+16384 context tokens and allows a bounded 60-second read, retaining the original
+120-second task deadline and eight turns. Prior profiles/results are preserved.
+New profile-specific qualification must be evaluated independently.
+
+
+2026-10-11 final continuation evidence (15:05-15:15 Asia/Kuala_Lumpur).
+Completed currency role/context isolation, ambiguous-symbol clarification,
+controller-owned financial-channel privacy, separate conversational prompts,
+typed missing-information versus incorrect-plan review, and one bounded
+output-limit-only interpretation repair. Invalid identity/envelope, transport,
+cancellation and revision changes cannot use that repair. Added a narrow web
+popularity-versus-sporting-rank paraphrase guard. Existing safety paths and frozen
+acceptance gates were retained; no source changes followed the final live batch.
+
+Final offline checks: 724 tests passed in 25.36 seconds; Ruff check passed;
+Ruff format --check passed (81 files); pip check found no broken requirements;
+git diff --check passed (Windows line-ending warnings only). Regression coverage
+includes numeric-role/context isolation, unsafe arithmetic rejection, bounded
+repair, financial query privacy and source qualifier handling. No dependencies
+were installed or changed.
+
+Actual qwen3:8b final private candidate profile:
+%LOCALAPPDATA%/Jarvis/profiles/assistant-staged-v2.toml, simulation, context 16384,
+output 4096, read timeout 60 seconds, eight model turns, original deadline 120
+seconds; global think=false with plan/check/web-summary-check stage think=true.
+Repair inherits global think=false. No other model was downloaded or used.
+The fresh cloud-disabled log and exact runtime/container setup above apply.
+Sequential final evaluations (no concurrent inference):
+
+| Report under docs/evaluations | Actual result | Scope |
+| --- | --- | --- |
+| assistant-qwen3-8b-staged-v2-r3.json | FAILED 16/18 | Actual local inference, synthetic rate 0.75; unchanged 100% gate |
+| m3-assistant-staged-v2-r2.json | FAILED 29/34 | Frozen M3 v2, unchanged 100% gate; injected provider failures, no physical disconnection |
+| m2-assistant-staged-v2-r2.json | PASSED 18/18 | Fake desktop; zero unauthorized dispatches |
+| m2-conversation-assistant-staged-v2-r2.json | PASSED 29/29 | Fake desktop conversation; zero unauthorized dispatches |
+| assistant-public-smoke-r4.json | PASSED 3/3 narrow checks | Actual Frankfurter and local SearXNG/public fetching; zero desktop calls |
+
+Interpretation misses: discount-fee-split INVALID_RESPONSE after 66.792 seconds
+(three turns); missing-unit-price DENIED_OR_INVALID after 60.868 seconds (seven
+turns), instead of clarification. Currency misses: convert-jpy-myr TIMEOUT;
+source-date misclassified into unavailable research; pending-amount denied,
+causing subsequent pending-amount-reply and amount-followup context failures.
+These are preserved failures, not qualifications. All final report contract
+hashes were independently recomputed and matched final code/profile:
+assistant 02937c6f56ff9429a48ecce1666261e6b12fbe88bd49d8b811b7fc1abbc24ca1;
+M3 dd77ad3fb94c8a0fcdbd11c7f3adee8e857f3ab594480bb317c2d66c63dbbe53;
+M2 6cb2462eb37523e25a354a57deda2831669e57ddcbab82a1f47c70827e9a57a9.
+Both candidate M2 reports passed qualified(); preserved legacy v10 answer-only
+model/conversation reports also still passed that observational check. No genuine
+Windows test of this candidate was performed or claimed.
+
+Public smoke independently checked 40 x 40 = 1600 SGD, then 1600 SGD = 1249.62 USD
+using retrieved rate 0.78101 (effective 2026-10-09), in 17.84 seconds. A discount,
+one-off fee and four-way split compiled to 140 SGD = 109.34 USD in 30.24 seconds.
+Lee Zii Jia lookup retrieved Pantheon evidence describing a Malaysian badminton
+player (30.73 seconds), but preferred sites were blocked and the concise summary
+was rejected, leaving a verbose exact-excerpt fallback with popularity statistics.
+The narrow biography check only establishes retrieved badminton evidence, not
+relevance, sporting rankings, freshness or broad research quality. Intermediate
+r3's unsupported sporting-rank paraphrase was caught during manual review; that
+report remains preserved and is not broad qualification.
+
+Doctor observed ready=true, actual Ollama 0.40.2/qwen3:8b, simulation and
+cloud_disabled=user_verified, local_mode_programmatically_attested=false. Selected
+failed assistant evidence remained unknown/unqualified; doctor currently displays
+the generic M2 mismatch reason for a failed assistant report. It contacted neither
+public provider. Candidate remains opt-in with interpretation, currency follow-up
+and research presentation/semantic qualification blockers. No native effects,
+new physical-offline test, network/global/service changes, machine installation,
+model downloads, commits or pushes. All earlier failed/intermediate reports remain.
+Stop at M3.5.
+
+2026-10-11 user-requested local commit of the semantic conversation candidate.
+Reviewed all 55 changed/new files; evaluation JSON parsed successfully and a
+private-key pattern scan found no matches. Existing completed validation remains
+724 passing tests plus clean lint, formatting and dependency checks; no source
+changes followed that validation. Preserve every failed/intermediate evaluation
+and the failed 16/18 interpretation and 29/34 currency qualification gates.
+This checkpoint remains opt-in and experimental within M3.5. No private runtime
+files, venv, databases or models are included. Local commit only; no push.

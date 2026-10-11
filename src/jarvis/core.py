@@ -60,6 +60,10 @@ class Broker:
         self.last_decision: Decision | None = None
         self.last_error: str | None = None
         self.last_reply: ModelReply | None = None
+        self.model_turns = 0
+        self.assistant_memory = None
+        self.assistant_pending_memory = None
+        self.active_profile = None
         self.currency = getattr(registry, "currency", None)
         self.web = getattr(registry, "web", None)
         if self.web is not None:
@@ -78,9 +82,57 @@ class Broker:
         ).fetchone()
         if prior:
             return self._submit(request, self.store.get(prior["task_id"]).scope, history)
-        return self._submit(
-            request, self.registry.scope_for(request.session, request.text), history
-        )
+        scope = self.registry.scope_for(request.session, request.text)
+        controller_read = False
+        if scope.app_id == "currency":
+            import re
+
+            from jarvis.currency_router import NUM
+            from jarvis.public_data import CurrencyArguments
+
+            arguments = CurrencyArguments.model_validate_json(scope.window_ref)
+            controller_read = arguments.operation == "source" or (
+                arguments.amount is None and re.search(NUM, request.text) is None
+            )
+        if (
+            self.profile.assistant_version == "assistant-v1"
+            and getattr(self.registry, "intent", None) is None
+            and not controller_read
+            and scope.app_id not in {"notepad", "text_editor"}
+        ):
+            # Explicit evidence inspection stays controller routed. All other read
+            # requests are interpreted before binding a capability.
+            from jarvis.web_data import WebArguments
+
+            if (
+                scope.app_id != "web"
+                or WebArguments.model_validate_json(scope.window_ref).operation == "research"
+            ):
+                scope = Scope(request.session, "none")
+        return self._submit(request, scope, history)
+
+    def generate_model(self, request, cancel):
+        if request.profile.assistant_version == "assistant-v1":
+            if cancel() or self.clock.now() >= request.deadline:
+                raise ProviderError("CANCELLED_OR_EXPIRED")
+            if self.model_turns >= request.profile.max_model_turns:
+                raise ProviderError("MODEL_TURN_BUDGET")
+            self.model_turns += 1
+            with self.store.db:
+                self.store.event(
+                    request.task_id,
+                    "model_turn",
+                    payload={
+                        "ordinal": self.model_turns,
+                        "boundary": request.decision_boundary or "planner",
+                    },
+                )
+        options = getattr(request.profile, "stage_options", {}).get(request.decision_boundary)
+        if options is not None:
+            request = replace(
+                request, profile=request.profile.model_copy(update={"provider_options": options})
+            )
+        return self.provider.generate(request, cancel)
 
     def _submit(self, request: UserRequest, scope: Scope, history: tuple[Message, ...] = ()):
         # A narrow trusted alias, not a scope inferred from the provider's proposal.
@@ -127,15 +179,41 @@ class Broker:
             self.store.transition(task.task_id, State.FAILED, "SIMULATED: planner is busy.")
             return self._result(task.task_id)
         self.busy = True
+        self.active_profile = profile
         self.last_decision = None
         self.last_error = None
         self.last_reply = None
+        self.model_turns = 0
+        self.assistant_pending_memory = None
         currency_route = getattr(self.registry, "route", None) if self.currency else None
         try:
             self.store.transition(task.task_id, State.PLANNING)
             task = self.store.get(task.task_id)
             if self._cancelled(task.task_id):
                 return self._result(task.task_id)
+            if (
+                profile.assistant_version == "assistant-v1"
+                and scope.app_id == "none"
+                and getattr(self.registry, "intent", None) is None
+                and getattr(currency_route, "unavailable_operation", None) is None
+            ):
+                from jarvis.assistant import bind_scope, interpret
+
+                meaning, research = interpret(self, task, request, history)
+                if isinstance(meaning, Decision):
+                    if meaning.kind != "clarify" or not getattr(
+                        currency_route, "pending_pair", None
+                    ):
+                        currency_route = None
+                    return self._non_action(task.task_id, meaning)
+                scope, currency_route = bind_scope(self, task, request, meaning, research)
+                task = self.store.bind_read_scope(
+                    task.task_id,
+                    task.revision,
+                    scope,
+                    task_seconds=self.web.config.task_seconds if scope.app_id == "web" else None,
+                )
+                self.grant = replace(self.grant, expires_at=task.deadline)
             route = currency_route
             if scope.app_id != "web" and route and route.kind in {"clarify", "unsupported"}:
                 return self._non_action(task.task_id, Decision(route.kind, text=route.message))
@@ -193,7 +271,7 @@ class Broker:
                     task.deadline,
                     messages,
                 )
-                reply = self.provider.generate(model_request, lambda: self._cancelled(task.task_id))
+                reply = self.generate_model(model_request, lambda: self._cancelled(task.task_id))
                 self.last_reply = reply
                 self._cancelled(task.task_id)
                 current = self.store.get(task.task_id)
@@ -229,7 +307,26 @@ class Broker:
             approval = self.approve(action)
             authorize(self.store.get(task.task_id), action, self.grant, approval, self.clock.now())
             self.store.transition(task.task_id, State.READY)
-            return self.dispatch(action, approval)
+            result = self.dispatch(action, approval)
+            if (
+                profile.assistant_version == "assistant-v1"
+                and scope.app_id == "currency"
+                and result.state == State.SUCCEEDED
+            ):
+                from jarvis.assistant import finish_currency
+
+                result = finish_currency(self, self.store.get(task.task_id), result)
+            elif (
+                profile.assistant_version == "assistant-v1"
+                and scope.app_id == "web"
+                and result.state == State.SUCCEEDED
+            ):
+                from jarvis.assistant import finish_web
+                from jarvis.web_data import WebArguments
+
+                if WebArguments.model_validate_json(scope.window_ref).operation != "sources":
+                    result = finish_web(self, self.store.get(task.task_id), result)
+            return result
         except Handoff as exc:
             self.last_error = "MANUAL_HANDOFF"
             self.store.transition(task.task_id, State.WAITING_INPUT, str(exc))
@@ -251,8 +348,16 @@ class Broker:
                 )
         finally:
             self.busy = False
+            self.active_profile = None
             if self.currency is not None:
                 self.registry.completed(self.store.get(task.task_id), currency_route)
+            if profile.assistant_version == "assistant-v1":
+                finished = self.store.get(task.task_id)
+                self.assistant_memory = (
+                    self.assistant_pending_memory
+                    if finished.scope.app_id == "currency" and finished.state == State.SUCCEEDED
+                    else None
+                )
         return self._result(task.task_id)
 
     def _result(self, task_id: str):
@@ -302,6 +407,11 @@ class Broker:
             return replace(
                 result, simulated=False, message=result.message.removeprefix("SIMULATED: ")
             )
+        if self.profile.assistant_version == "assistant-v1" and result.state == State.FAILED:
+            return replace(
+                result,
+                display_message="I couldn't reliably interpret that request. No action was taken.",
+            )
         return result
 
     def _cancelled(self, task_id: str) -> bool:
@@ -331,6 +441,9 @@ class Broker:
             self._result(task_id),
             message=f"SIMULATED: {decision.kind}; no action verified. {decision.text}",
             decision_kind=decision.kind,
+            display_message=decision.text
+            if self.profile.assistant_version == "assistant-v1"
+            else None,
         )
 
     def dispatch(self, action: PreparedAction, approval: Approval | None = None):

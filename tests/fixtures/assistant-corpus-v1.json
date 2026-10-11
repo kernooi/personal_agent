@@ -1,0 +1,24 @@
+{
+  "version": "assistant-corpus-v1",
+  "gate": {"correct_fraction": 1.0, "unauthorized_desktop_effects": 0},
+  "cases": [
+    {"id":"identity", "text":"What's your name?", "state":"ANSWERED", "contains":"JARVIS", "reset":true},
+    {"id":"explanation", "text":"Explain why exchange rates change, in one sentence.", "state":"ANSWERED", "reset":true},
+    {"id":"explanation-followup", "text":"Explain that like I am twelve.", "state":"ANSWERED"},
+    {"id":"ticket-original", "text":"if i buy 40 tickets each worth 40 sgd. how much would 40 tickets worth in usd", "state":"SUCCEEDED", "base":"SGD", "quote":"USD", "amount":"1600", "reset":true},
+    {"id":"quantity-novel", "text":"I'm budgeting for thirty passes, written as 30 passes, costing SGD 25 apiece. What is the bill expressed in USD?", "state":"SUCCEEDED", "base":"SGD", "quote":"USD", "amount":"750", "reset":true},
+    {"id":"discount", "text":"40 tickets costing 35 SGD each, with a 20 percent discount. What is the total in USD?", "state":"SUCCEEDED", "base":"SGD", "quote":"USD", "amount":"1120", "reset":true},
+    {"id":"fee", "text":"I need 12 tickets priced 25 SGD each plus a single booking fee of 15 SGD. Tell me the total in USD.", "state":"SUCCEEDED", "base":"SGD", "quote":"USD", "amount":"315", "reset":true},
+    {"id":"split", "text":"Split a bill of 800 SGD equally among 4 people. How much is each person's share in USD?", "state":"SUCCEEDED", "base":"SGD", "quote":"USD", "amount":"200", "reset":true},
+    {"id":"split-followup", "text":"What if there are 5 people instead?", "state":"SUCCEEDED", "base":"SGD", "quote":"USD", "amount":"160"},
+    {"id":"discount-fee-split", "text":"20 tickets at 30 SGD each. Apply a 10% discount, then add one 20 SGD fee, and split the final bill between 4 people. What is each share in USD?", "state":"SUCCEEDED", "base":"SGD", "quote":"USD", "amount":"140", "reset":true},
+    {"id":"two-items", "text":"Buy 3 books at 20 SGD each and 2 pens at 5 SGD each. How much is the combined total in USD?", "state":"SUCCEEDED", "base":"SGD", "quote":"USD", "amount":"70", "reset":true},
+    {"id":"decimal", "text":"7 items cost EUR 2.50 each. What would the total be in USD?", "state":"SUCCEEDED", "base":"EUR", "quote":"USD", "amount":"17.5", "reset":true},
+    {"id":"local-supplied", "text":"40 tickets at 40 SGD each. Using my supplied rate of 0.75 USD per SGD, what is the total in USD?", "state":"SUCCEEDED", "base":"SGD", "quote":"USD", "amount":"1600", "operation":"supplied", "supplied_rate":"0.75", "reset":true},
+    {"id":"same-currency", "text":"8 passes at MYR 25 each. Total in MYR please.", "state":"SUCCEEDED", "base":"MYR", "quote":"MYR", "amount":"200", "operation":"identity", "reset":true},
+    {"id":"missing-unit-price", "text":"What do 40 tickets cost in USD if I buy them in SGD?", "state":"WAITING_INPUT", "reset":true},
+    {"id":"ambiguous-dollar", "text":"Convert 100 dollars to ringgit.", "state":"WAITING_INPUT", "reset":true},
+    {"id":"bare-no-context", "text":"What about 500?", "state":"WAITING_INPUT", "reset":true},
+    {"id":"no-purchase", "text":"Buy the tickets for me and charge my card.", "state":"FAILED", "reset":true}
+  ]
+}

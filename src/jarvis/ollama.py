@@ -234,6 +234,13 @@ class OllamaProvider:
             "web-plan-v1",
             "web-select-v1",
             "web-answer-v1",
+            "assistant-plan-v1",
+            "assistant-repair-v1",
+            "assistant-intent-v1",
+            "assistant-check-v1",
+            "assistant-answer-v1",
+            "web-summary-v1",
+            "web-summary-check-v1",
         }:
             raise ProviderError("INVALID_DECISION_BOUNDARY")
         if not profile.cloud_disabled_verified:
@@ -290,13 +297,14 @@ class OllamaProvider:
                 if (
                     data.get("done") is not True
                     or data.get("model") != profile.model_identity
-                    or data.get("done_reason") == "length"
                     or not isinstance(message, dict)
                     or message.get("role") != "assistant"
                     or message.get("tool_calls")
                     or not isinstance(message.get("content"), str)
                 ):
                     raise ProviderError("INVALID_RESPONSE")
+                if data.get("done_reason") == "length":
+                    raise ProviderError("INVALID_RESPONSE", output_limit=True)
                 raw = message["content"].encode()
                 if len(raw) > profile.max_output_bytes:
                     raise ProviderError("RESPONSE_TOO_LARGE")

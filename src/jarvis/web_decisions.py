@@ -90,7 +90,7 @@ def generate(adapter, action, boundary, instructions, data):
     from jarvis.models import OllamaProfile
 
     size = len(json.dumps({"messages": [m.__dict__ for m in messages], "schema": schema}).encode())
-    profile = broker.profile
+    profile = broker.active_profile or broker.profile
     if size + 512 > profile.context_bytes or (
         isinstance(profile, OllamaProfile)
         and math.ceil(size / 3) + profile.max_output_tokens + profile.safety_tokens
@@ -108,7 +108,7 @@ def generate(adapter, action, boundary, instructions, data):
         messages,
         decision_boundary=boundary,
     )
-    reply = broker.provider.generate(request, adapter.cancel)
+    reply = broker.generate_model(request, adapter.cancel)
     broker.last_reply = reply
     adapter.check(action)
     current = broker.store.get(action.task_id)

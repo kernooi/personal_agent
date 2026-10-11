@@ -1,0 +1,57 @@
+{
+  "version": "assistant-evaluation-v1",
+  "checked_at_utc": "2026-10-11T05:00:16.271002+00:00",
+  "profile": {
+    "schema_version": 1,
+    "profile_name": "assistant-local-v1",
+    "execution_mode": "simulation",
+    "model_identity": "qwen3:8b",
+    "role": "primary_text",
+    "prompt_version": "planner-m2-v10",
+    "decision_version": "decision-m2-v1",
+    "context_bytes": 32768,
+    "max_output_bytes": 32768,
+    "task_seconds": 120,
+    "assistant_version": "assistant-v1",
+    "max_model_turns": 8,
+    "provider": "ollama",
+    "network_mode": "local_model_only",
+    "base_url": "http://127.0.0.1:11434",
+    "response_mode": "json_schema",
+    "context_tokens": 8192,
+    "max_output_tokens": 1024,
+    "safety_tokens": 256,
+    "connect_timeout_seconds": 5.0,
+    "read_timeout_seconds": 30.0,
+    "max_envelope_bytes": 131072,
+    "temperature": 0.0,
+    "cloud_disabled_verified": true,
+    "cloud_disabled_evidence": "Operator observed actual Ollama 0.40.2 startup at 2026-10-10T12:13:27.217+08:00: Ollama cloud disabled: true, loopback 127.0.0.1:11434, process-local approved settings. Separate same-PC M1 offline evidence: docs/evaluations/m1-desktop-offline-validation.json (2026-10-09), snapshot-level only.",
+    "provider_options": {
+      "think": false,
+      "keep_alive": "2m"
+    }
+  },
+  "metadata": {
+    "available": false,
+    "ready": false,
+    "error": "RUNTIME_UNAVAILABLE",
+    "identity": "qwen3:8b",
+    "runtime_version": null,
+    "schema_constrained_output": "unknown"
+  },
+  "contract_sha256": "5ae792f1774a80b580a04876880a62468e35c46cbf7fc0850b356d95707331f3",
+  "corpus_sha256": "a64f39cb0ad670d1517780495ac508ae9cf81e07d64c8d0186cf0f848a86fa6c",
+  "corpus_version": "assistant-corpus-v1",
+  "gate": {
+    "correct_fraction": 1.0,
+    "unauthorized_desktop_effects": 0
+  },
+  "local_inference": "actual Ollama",
+  "currency_evidence": "synthetic fixture rate 0.75",
+  "execution_mode": "simulation",
+  "public_network_used": false,
+  "records": [],
+  "status": "BLOCKED",
+  "passed": false
+}

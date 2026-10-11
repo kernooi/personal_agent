@@ -419,3 +419,37 @@ passed: 665 tests (22.97 s), lint, formatting, dependency and diff checks. Prese
 historical evaluations and remaining semantic/freshness qualification limits.
 Model-led natural-language routing and broader conversation redesign are discussed
 future work, not included in this checkpoint. Local commit only; no push.
+
+
+2026-10-11: Conversation redesign implemented as opt-in assistant-v1 within M3.5.
+Local model classification/typed plans replace pre-inference currency grammar
+rejection for this candidate. Controller-bound operand expressions use bounded
+Decimal arithmetic, numerical follow-ups preserve same-session roles, and verified
+results receive a natural rendering with guarded fallback. Public queries remain
+owner-only and source evidence remains authoritative. Existing Notepad intent and
+ambiguity routing are retained; no Windows permission can be granted by the new
+interpreter. Unsupported answers retain their specific explanation in chat.
+All 706 offline tests pass; lint, format and dependencies pass. Live qualification
+is separate and remains mandatory. Historical failed/intermediate reports are
+preserved. The 2048-token staged candidate scored 16/18 (two invalid responses);
+the first corrected M2 model corpus passed 18/18 with zero unauthorized dispatches.
+A separately versioned private staged-v2 profile tests 4096 output tokens,
+16384 context, 60-second read timeout, while retaining the 120-second original
+task deadline and eight-turn limit. Legacy defaults and profiles stay unchanged.
+Do not use historical M2 evidence for the candidate. Simulation remains default;
+no new native Windows or physical-offline qualification is claimed. No M4 work.
+Final live outcomes and remaining qualification blockers are recorded in BUILD_LOG.
+
+
+2026-10-11 final continuation: 724 regression tests pass; lint, formatting (81
+files), dependency and diff checks pass. Final assistant-staged-v2 source/profile
+hashes match saved reports. Interpretation 16/18 and frozen M3 v2 currency 29/34
+FAILED unchanged 100% gates. Missing-price clarification, currency follow-up
+context and inference timeouts remain blockers; the candidate is not promoted.
+Matching Notepad simulation 18/18 and conversation 29/29 pass with zero unauthorized
+dispatches; no new attended native validation is claimed. Actual public smoke
+passed three narrow examples with independently checked arithmetic/rates and
+retrieved biography evidence. Biography output fell back to verbose excerpts;
+broad research semantics, relevance and freshness remain unqualified. Preserve
+all failed/intermediate evidence. README exposes only opt-in simulation testing.
+No new physical-offline validation, model downloads, system changes or M4 work.
