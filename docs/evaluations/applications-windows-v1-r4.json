@@ -1,0 +1,106 @@
+{
+  "version": "applications-native-lab-v1",
+  "execution_mode": "windows",
+  "status": "passed",
+  "metadata": {
+    "available": true,
+    "model_present": true,
+    "identity": "qwen3:8b",
+    "digest": "500a1f067a9f782620b40bee6f7b0c89e17ae61f686b92c24933e4ca4b2b8b41",
+    "runtime_version": "0.40.2",
+    "transport_version": "ollama-chat-v2",
+    "text_generation": "supported",
+    "schema_constrained_output": "unknown",
+    "native_tool_calls": "supported",
+    "context_capacity": 40960,
+    "cloud_disabled": "user_verified",
+    "local_mode_programmatically_attested": false,
+    "ready": true,
+    "qualification": "unqualified; fake-execution evaluation only"
+  },
+  "cases": [
+    {
+      "case_id": "package-open",
+      "state": "SUCCEEDED",
+      "message": "The selected application window is open and ready.",
+      "latency_seconds": 6.714,
+      "passed": true
+    },
+    {
+      "case_id": "package-minimize",
+      "state": "SUCCEEDED",
+      "message": "The selected application window is minimized.",
+      "latency_seconds": 7.978,
+      "passed": true,
+      "independent_is_iconic": true
+    },
+    {
+      "case_id": "package-repeat-minimize",
+      "state": "SUCCEEDED",
+      "message": "The selected application window is minimized.",
+      "latency_seconds": 8.114,
+      "passed": true,
+      "independent_is_iconic": true
+    },
+    {
+      "case_id": "package-focus",
+      "state": "SUCCEEDED",
+      "message": "The selected application window is in the foreground.",
+      "latency_seconds": 8.475,
+      "passed": true,
+      "independent_is_iconic": false,
+      "independent_foreground_matches": true
+    },
+    {
+      "case_id": "package-close",
+      "state": "SUCCEEDED",
+      "message": "The selected application window is closed.",
+      "latency_seconds": 7.715,
+      "passed": true,
+      "independent_window_absent": true
+    },
+    {
+      "case_id": "exe-open",
+      "state": "SUCCEEDED",
+      "message": "The selected application window is open and ready.",
+      "latency_seconds": 6.79,
+      "passed": true
+    },
+    {
+      "case_id": "exe-minimize",
+      "state": "SUCCEEDED",
+      "message": "The selected application window is minimized.",
+      "latency_seconds": 7.898,
+      "passed": true,
+      "independent_is_iconic": true
+    },
+    {
+      "case_id": "exe-repeat-minimize",
+      "state": "SUCCEEDED",
+      "message": "The selected application window is minimized.",
+      "latency_seconds": 8.051,
+      "passed": true,
+      "independent_is_iconic": true
+    },
+    {
+      "case_id": "exe-focus",
+      "state": "SUCCEEDED",
+      "message": "The selected application window is in the foreground.",
+      "latency_seconds": 8.401,
+      "passed": true,
+      "independent_is_iconic": false,
+      "independent_foreground_matches": true
+    },
+    {
+      "case_id": "global-stop",
+      "state": "CANCELLED",
+      "zero_new_admissions": true,
+      "passed": true
+    }
+  ],
+  "preexisting_window_count": 3,
+  "remaining_lab_windows": 1,
+  "model_report": "applications-qwen3-8b-v1-r12.json",
+  "journal_retained": true,
+  "qualification": "attended two application launch types; not all installed apps"
+}

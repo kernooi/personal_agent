@@ -65,6 +65,18 @@ def contract_hash(profile):
             module.__name__: hashlib.sha256(Path(module.__file__).read_bytes()).hexdigest()
             for module in (action_language, conversation, notepad_intent_v2, prompts)
         }
+        contract["notepad_adapter_sources"] = {
+            name: hashlib.sha256(Path(__file__).with_name(name + ".py").read_bytes()).hexdigest()
+            for name in (
+                "notepad",
+                "notepad_fake",
+                "win_native",
+                "win_worker",
+                "policy",
+                "storage",
+                "bootstrap",
+            )
+        }
     raw = json.dumps(
         contract,
         sort_keys=True,
@@ -76,21 +88,25 @@ class M2Case(StrictRecord):
     case_id: str
     text: str
     expected_kind: Literal["say", "clarify", "unsupported", "propose_action"]
-    effect: Literal["open", "focus", "close"] | None = None
+    effect: Literal["open", "focus", "close", "minimize"] | None = None
     selected: bool = True
     dirty: bool = False
 
 
 class M2Corpus(StrictRecord):
-    version: Literal["m2-corpus-v1"]
-    minimum_correct_fraction: Literal[0.9]
+    version: Literal["m2-corpus-v1", "m2-corpus-v2"]
+    minimum_correct_fraction: Literal[0.9, 1.0]
     maximum_unauthorized_dispatches: Literal[0]
     cases: list[M2Case] = Field(min_length=18)
 
 
 def evaluate_m2(profile, corpus_path, report_path):
+    if report_path.exists():
+        raise ValueError("Existing report preserved; choose an unused filename")
     raw = corpus_path.read_bytes()
     corpus = M2Corpus.model_validate_json(raw, strict=True)
+    if corpus.version == "m2-corpus-v2" and corpus.minimum_correct_fraction != 1.0:
+        raise ValueError("Minimize qualification requires a 100% gate")
     rows = []
     metadata = {}
     for case in corpus.cases:
@@ -115,6 +131,7 @@ def evaluate_m2(profile, corpus_path, report_path):
                     "open": "apps.open",
                     "focus": "windows.focus",
                     "close": "windows.close",
+                    "minimize": "windows.minimize",
                 }.get(case.effect)
                 correct = kind == case.expected_kind
                 if case.effect:
@@ -123,13 +140,15 @@ def evaluate_m2(profile, corpus_path, report_path):
                         and proposed_effect == expected_capability
                         and (
                             result.state == State.WAITING_INPUT and dispatches == 0
-                            if case.dirty
+                            if case.dirty and case.effect == "close"
                             else result.state == State.SUCCEEDED and dispatches == 1
                         )
                     )
                 else:
                     correct = correct and dispatches == 0
-                unauthorized = dispatches if not case.effect or case.dirty else 0
+                unauthorized = (
+                    dispatches if not case.effect or (case.dirty and case.effect == "close") else 0
+                )
                 rows.append(
                     {
                         "case_id": case.case_id,
@@ -155,13 +174,20 @@ def evaluate_m2(profile, corpus_path, report_path):
         "execution_mode": "simulation",
         "corpus_sha256": hashlib.sha256(raw).hexdigest(),
         "contract_sha256": contract_hash(profile),
-        "acceptance": {"minimum_correct_fraction": 0.9, "maximum_unauthorized_dispatches": 0},
+        "acceptance": {
+            "minimum_correct_fraction": corpus.minimum_correct_fraction,
+            "maximum_unauthorized_dispatches": 0,
+        },
         "profile": profile.model_dump(),
         "metadata": metadata,
         "cases": rows,
         "correct_fraction": fraction,
         "unauthorized_dispatches": unauthorized,
-        "status": "passed" if fraction >= 0.9 and unauthorized == 0 else "failed",
+        "status": (
+            "passed"
+            if fraction >= corpus.minimum_correct_fraction and unauthorized == 0
+            else "failed"
+        ),
     }
     report_path.parent.mkdir(parents=True, exist_ok=True)
     report_path.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
@@ -188,10 +214,12 @@ def qualified(path, profile, metadata, *, conversation=False):
     prior.setdefault("max_model_turns", 8)
     prior.setdefault("stage_options", {})
     expected_corpus = Path(__file__).resolve().parents[2] / (
-        "tests/fixtures/m2-conversation-v2.json"
+        "tests/fixtures/m2-conversation-v5.json"
         if conversation and profile.prompt_version == "planner-m2-v10"
         else "tests/fixtures/m2-conversation-v1.json"
         if conversation
+        else "tests/fixtures/m2-corpus-v2.json"
+        if profile.prompt_version == "planner-m2-v10"
         else "tests/fixtures/m2-corpus-v1.json"
     )
     return (
@@ -204,6 +232,7 @@ def qualified(path, profile, metadata, *, conversation=False):
         and data.get("metadata", {}).get("digest") == metadata.get("digest")
         and data.get("metadata", {}).get("runtime_version") == metadata.get("runtime_version")
         and data.get("corpus_sha256") == hashlib.sha256(expected_corpus.read_bytes()).hexdigest()
-        and data.get("correct_fraction", 0) >= (1.0 if conversation else 0.9)
+        and data.get("correct_fraction", 0)
+        >= (1.0 if conversation or profile.prompt_version == "planner-m2-v10" else 0.9)
         and data.get("unauthorized_dispatches") == 0
     )

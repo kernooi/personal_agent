@@ -1,5 +1,40 @@
 # JARVIS implementation plan
 
+## Device-discovered applications (2026-10-12)
+
+User selected this Windows PC first with an extensible platform interface.
+Implemented dynamic AppsFolder catalog, desktop/package launch identity, generic
+open/focus/minimize/close controller, strict model boundary and existing broker
+integration. Added bounded supervised worker, same-user/session/process/binary
+identity, exact commit, desktop lease, independent state proof, single-use work
+review and unknown-outcome manual-review controls. Notepad's close boundary stays
+strict. Platform protocol and fake implementation are portable; other native
+platforms/devices are not implemented or qualified. Conservative catalog coverage
+is 145 supported launch entries, 51 unavailable; no all-app guarantee.
+
+Deterministic application/controller/native-boundary tests, frozen local-model
+gate, configuration, CLI controls and architecture decision are implemented.
+All four existing Notepad/conversation/media gates have refreshed passed reports;
+failed evidence and the 100% gates remain unchanged. Combined simulation startup
+works with currency, research and media configuration. Attended native r4 passed
+Calculator's four operations, repeated minimize, Character Map open/minimize/focus
+and physical global-stop cancellation with zero new admissions. Three existing
+windows preserved; Character Map left for manual cleanup after stop. Failed
+native r1-r3 remain with manually acknowledged uncertain outcomes, no replay.
+Host-frame and detached-content lifecycle verification were added and tested.
+EXE close remains simulation-tested, not covered in this native lab. Other apps
+need individual compatibility validation. No generic input, shell arguments,
+installer, remote device, other OS effects, commit or push are included.
+
+Final checks: 1015 tests passed; lint/format/dependencies/diff clean. Current
+application report r13 passes 28/28 with zero unauthorized effects; source/profile/
+actual-model qualification checks pass alongside refreshed original gates
+(24/24 Notepad, 34/34 conversation, 22/22 media, 12/12 Windows media). README has
+the combined startup command. Intermittent pre-existing currency fixture failures
+were observed and recorded; final unchanged full repeat passed, cause unresolved.
+Windows-first implementation and bounded native validation are complete; additional
+app compatibility and other native platforms remain future validation/work.
+
 ## Spotify Windows backend follow-up (2026-10-11)
 
 User explicitly selected Windows media controls instead of developer-app/OAuth
@@ -529,3 +564,98 @@ match. All failed/rejected r1?r4 results are preserved. README documents the fas
 simulation command and qualification limits. No new native/physical-offline
 validation, system changes, installs, model downloads, commits or pushes. M3.5
 boundary retained. See BUILD_LOG for exact commands, measurements and limitations.
+
+
+2026-10-11: Selected Notepad minimize extension in progress. Added strict
+windows.minimize proposals, exact selected scope/grants, native asynchronous
+minimize and independently observed minimized state, plus restoration on focus.
+No generic app control. Frozen m2-corpus-v2 (24 cases, 100%) and
+m2-conversation-v3 (34 cases, 100%) retain all historical cases and add minimize.
+Regression coverage includes unsaved/multi-tab minimize, target isolation, stale
+identity, stop/cancellation, user takeover, revocation, missing permission, modal
+handoff, unknown non-replay and completion-prose honesty. Fresh qualifications and
+attended native results are required before declaring real minimize validated.
+
+
+Final deterministic checks: 953 passed (29.89 s); lint, formatting (104 files),
+dependency and diff checks pass. Actual local model final minimize action 24/24,
+conversation 34/34, existing Chrome media 22/22 and Windows Spotify 12/12 gates
+pass with zero unauthorized effects. Four independent qualification checks return
+True for final reports. Failed r1/r2 ambiguous-editor results and intermediate
+passing reports remain preserved. Historical profiles do not grant minimize.
+README and BUILD_LOG contain current report filenames/launch commands. Attended
+native minimize validation remains pending the requested operator readiness; no
+Windows effect, native pass, commit or push is claimed for this extension.
+
+
+Attended native minimize validation completed after explicit operator readiness.
+Actual qualified qwen3:8b -> broker -> registered Windows Notepad passed all five
+checks: open, minimize, repeat minimize, restore/focus and safe close. Independently
+verified IsIconic=True on both minimize checks and IsIconic=False plus exact
+foreground HWND on restore. No pre-existing windows (preservation check True).
+Report m2-minimize-windows-v1-r1.json passed; persistent private journal retained.
+This supersedes pending readiness above. Selected Notepad minimize is implemented
+and validated on this PC. Other apps remain outside this window-effect scope.
+
+## 2026-10-12 - Owner-requested natural lifecycle correction
+
+Implemented OS AppsFolder activation, signed versioned/exact packaged runtime
+association and durable launch/runtime evidence. Natural authenticated close now
+binds a selected/sole verified window without extra confirmation; Notepad dirty,
+mixed, dialog and unknown protections remain. Multiple windows accept a number;
+current-profile bare/pronoun requests retain their controller route. Normal close
+to tray uses exact hidden-window proof and makes no termination claim.
+
+Live gates: apps 31/31, M2 decisions 24/24, conversation 41/41, media 22/22,
+Windows media 12/12. Current qualification helpers match. Failed reports retained.
+Attended Discord/Spotify/Notepad lifecycle passed across a linked zero-delivery
+continuation, preserving original windows and stopping new admissions. Earlier
+physical hotkey evidence retained. 1027 tests passed. Added one-command attended
+`scripts/Chat-JarvisAll.py` and updated full README command with refreshed reports;
+actual combined startup/quit smoke passed. Other application/platform compatibility
+needs separate validation; unverified delegates/elevated/tray-only apps remain
+unsupported. Netflix/account setup stays pending. No new installation, generic
+input, model downloads, global settings, commit or push.
+
+## 2026-10-12 - Steam compatibility correction
+
+Completed generic signed descendant runtime identity using bounded, revalidated
+native process ancestry instead of application-name rules. Read-only discovery
+and durable verification identify Steam's helper-owned window. Delivered open
+with a changed input timestamp now pauses and reconciles that exact window once,
+without new effects. Stable exact unique proof is required; takeover before
+admission, continuing input, changed identity, stop and genuine uncertainty remain
+fail-closed. No acceptance gate or historical test/result was weakened.
+
+1042 deterministic tests passed; lint/format/dependencies passed. Actual local
+application corpus remains 31/31 with zero unauthorized effects, current report
+applications-qwen3-8b-v3-r4.json. Existing M2/media gates still match. After attended
+readiness/manual reviews, Steam open/minimize/restore-focus/close and zero-admission
+stop passed in application-steam-windows-v1-r4.json. Three failed native reports
+and passive diagnostic observation are preserved. Original user-journal uncertainty
+was acknowledged through the controller using the owner's manual inspection;
+historical UNKNOWN remains, unresolved desktop count is zero, and no replay occurred.
+
+One-command combined launcher and README reference the current application gate;
+combined startup/quit succeeded. Steam normal close hides to tray. Operation latency
+was about 9-10 seconds; broader application coverage, orphan/exited delegates and
+other platforms remain separate compatibility work. Existing account/service
+setup limitations remain. No automatic commit or machine configuration changes.
+
+## 2026-10-12 - Interactive launch settling follow-up
+
+Corrected slow cold-start verification and overly brief activity settling. Open now
+allows 30 seconds of observation and up to three read-only epochs for the same exact
+unique window after releasing ownership. Continued input, identity changes, ambiguous
+or missing windows, cancellation and pre-admission takeover remain fail-closed. No
+effect replay; uncertain messages retain diagnostic cause. Historical failed evidence
+and the user's manual acknowledgements are preserved.
+
+1044 tests, lint, formatting and dependency checks passed. Actual qwen3:8b frozen
+application gate r5 passed 31/31 with zero unauthorized effects; all five qualification
+helpers match. Attended Steam/Photoshop open/minimize/focus/close and zero-admission
+cancellation passed all nine native checks in application-startup-windows-v1-r1.json.
+Baseline windows were preserved. Steam normal close hides to tray; Photoshop test
+window closed. Combined helper startup/quit accepted all qualifications; README/helper
+use r5. No document/account effects, installation, settings, commit or push. Individual
+compatibility coverage and operation latency limitations remain.

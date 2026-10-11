@@ -30,6 +30,7 @@ def main() -> None:
     demo.add_argument("--profile", type=Path, default=Path("config/defaults.toml"))
     inspect = sub.add_parser("inspect-notepad", help="Observational Notepad metadata only")
     inspect.add_argument("--registration", type=Path, required=True)
+    sub.add_parser("inspect-apps", help="Read Windows app catalog; no app launch")
     lab = sub.add_parser("test-notepad", help="Opt-in attended genuine Notepad broker tests")
     lab.add_argument("--registration", type=Path, required=True)
     lab.add_argument("--windows", action="store_true", required=True)
@@ -77,6 +78,7 @@ def main() -> None:
         "eval-assistant",
         "eval-media",
         "eval-windows-media",
+        "eval-apps",
     ):
         child = sub.add_parser(command, help=f"Local {command}; real chat requires explicit opt-in")
         child.add_argument("--profile", type=Path, required=True)
@@ -91,6 +93,10 @@ def main() -> None:
         if command == "doctor":
             child.add_argument("--evaluation-report", type=Path)
         if command == "chat":
+            child.add_argument("--applications-config", type=Path)
+            child.add_argument("--real-apps", action="store_true")
+            child.add_argument("--apps-attended", action="store_true")
+            child.add_argument("--applications-report", type=Path)
             child.add_argument("--real", action="store_true")
             child.add_argument("--attended", action="store_true")
             child.add_argument("--registration", type=Path)
@@ -112,6 +118,7 @@ def main() -> None:
             "eval-assistant",
             "eval-media",
             "eval-windows-media",
+            "eval-apps",
         }:
             child.add_argument("--live", action="store_true", required=True)
             child.add_argument("--report", type=Path)
@@ -121,6 +128,28 @@ def main() -> None:
             )
             child.add_argument("--repeats", type=int, choices=(1, 2, 3), default=1)
     args = parser.parse_args()
+    if args.command == "inspect-apps":
+        import threading
+
+        from jarvis.application_data import ApplicationsConfig
+        from jarvis.application_windows import WindowsApplicationPlatform
+
+        platform = WindowsApplicationPlatform(ApplicationsConfig(enabled=True), threading.Event())
+        records = platform.call("catalog")
+        print(
+            json.dumps(
+                {
+                    "supported_count": len(records["apps"]),
+                    "unsupported_count": records["unsupported_count"],
+                    "applications": [
+                        {"name": a["name"], "app_id": a["app_id"]} for a in records["apps"]
+                    ],
+                    "effects_sent": 0,
+                },
+                indent=2,
+            )
+        )
+        return
     if args.command == "test-media":
         from jarvis.media_lab import run_lab
 
@@ -267,6 +296,14 @@ def live_command(args, parser):
         parser.error("Profile unavailable or invalid; see the strict M1 profile examples")
     if not isinstance(profile, OllamaProfile):
         parser.error("M1 commands require an explicit Ollama profile; no fake fallback")
+    if args.command == "eval-apps":
+        from jarvis.application_evaluation import evaluate
+
+        if args.report is None:
+            parser.error("eval-apps requires --report; preserve existing results")
+        report, code = evaluate(profile, args.report)
+        print(json.dumps({k: v for k, v in report.items() if k != "cases"}, indent=2))
+        raise SystemExit(code)
     public_config = None
     web_config = None
     if getattr(args, "web_config", None) is not None:
@@ -343,7 +380,7 @@ def live_command(args, parser):
             report, code = evaluate_conversation(
                 profile,
                 Path(
-                    "tests/fixtures/m2-conversation-v2.json"
+                    "tests/fixtures/m2-conversation-v5.json"
                     if profile.prompt_version == "planner-m2-v10"
                     else "tests/fixtures/m2-conversation-v1.json"
                 ),
@@ -351,7 +388,13 @@ def live_command(args, parser):
             )
         else:
             report, code = evaluate_m2(
-                profile, Path("tests/fixtures/m2-corpus-v1.json"), args.report
+                profile,
+                Path(
+                    "tests/fixtures/m2-corpus-v2.json"
+                    if profile.prompt_version == "planner-m2-v10"
+                    else "tests/fixtures/m2-corpus-v1.json"
+                ),
+                args.report,
             )
         print(json.dumps(report, indent=2))
         raise SystemExit(code)
@@ -512,6 +555,32 @@ def live_command(args, parser):
     ):
         parser.error("Windows Spotify needs separate --real-media consent; no API fallback")
     mode = "WINDOWS" if args.real else "SIMULATED"
+    applications_config = None
+    if args.applications_config:
+        import tomllib
+
+        from jarvis.application_data import ApplicationsConfig
+
+        applications_config = ApplicationsConfig.model_validate(
+            tomllib.loads(args.applications_config.read_text(encoding="utf-8-sig")), strict=True
+        )
+    if args.real_apps:
+        from jarvis.application_evaluation import qualified as applications_qualified
+
+        if (
+            not args.apps_attended
+            or applications_config is None
+            or not applications_config.enabled
+            or args.applications_report is None
+            or profile.decision_version != "decision-m2-v1"
+            or not applications_qualified(args.applications_report, profile, metadata)
+        ):
+            parser.error(
+                "Real applications require enabled config, --apps-attended and matching "
+                "passed --applications-report; no application effect enabled"
+            )
+    elif args.apps_attended or args.applications_report:
+        parser.error("Application real-mode options require --real-apps")
     targets = "notepad" if profile.decision_version == "decision-m2-v1" else "text_editor"
     print(
         f"JARVIS | model={profile.model_identity} | provider=ollama | "
@@ -520,8 +589,7 @@ def live_command(args, parser):
     if args.real:
         print("Attended Notepad only. Ctrl+Alt+Shift+F10 stops new effects globally.")
         print(
-            "Use /windows to inspect selection; "
-            "/confirm-empty confirms your empty disposable test window."
+            "Ask naturally to open, focus, minimize or close Notepad. Unsaved work stays protected."
         )
     else:
         print("Notepad actions are simulated; local-mode evidence is user/operator verified.")
@@ -568,7 +636,11 @@ def live_command(args, parser):
         broker = build(
             data_home
             / (
-                "m4-journal.sqlite"
+                "applications-journal.sqlite"
+                if args.real_apps
+                else "applications-simulation-journal.sqlite"
+                if applications_config and applications_config.enabled
+                else "m4-journal.sqlite"
                 if args.real_browser or args.real_media
                 else "m2-journal.sqlite"
                 if args.real
@@ -592,6 +664,27 @@ def live_command(args, parser):
         provider.close()
         parser.exit(2, "Private JARVIS journal unavailable; no execution or fallback.\n")
     try:
+        conversation = Conversation(broker)
+        if applications_config and applications_config.enabled:
+            from jarvis.application_tools import attach
+
+            try:
+                conversation = attach(
+                    broker, applications_config, real=args.real_apps, attended=args.apps_attended
+                )
+            except (OSError, ValueError, RuntimeError):
+                parser.exit(2, "Application catalog unavailable; no execution or fallback.\n")
+            application_mode = "WINDOWS" if args.real_apps else "SIMULATED"
+            print(
+                f"Applications: device catalog | execution={application_mode} "
+                f"| supported={len(conversation.desktop.apps)} "
+                f"| unavailable={conversation.desktop.unsupported_count}."
+            )
+            print(
+                "Ask to open, focus, minimize or close an app by name. "
+                "A selected or sole verified window needs no extra confirmation. "
+                "Notepad text, unsaved changes and unknown state stay protected."
+            )
         recovered = broker.recover()
         waiting = [result for result in recovered if result.state == "NEEDS_REVIEW"]
         if recovered and len(recovered) != len(waiting):
@@ -611,16 +704,16 @@ def live_command(args, parser):
                         "Notepad actions are paused for an uncertain earlier outcome. "
                         f"Inspect Notepad, then /review {row[0]} manually-handled."
                     )
-        if args.real or args.real_browser or args.real_media:
+        if args.real or args.real_browser or args.real_media or args.real_apps:
             from jarvis.win_stop import StopHotkey
 
             stop = getattr(broker.desktop, "stop", browser_stop)
             if browser_provider:
                 browser_provider.stop = stop
             with StopHotkey(stop):
-                chat_loop(Conversation(broker), sys.stdin)
+                chat_loop(conversation, sys.stdin)
         else:
-            chat_loop(Conversation(broker), sys.stdin)
+            chat_loop(conversation, sys.stdin)
     finally:
         if broker.media:
             broker.media.close()

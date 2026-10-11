@@ -73,7 +73,7 @@ def test_open_focus_close_and_independent_evidence(broker):
 
 
 @pytest.mark.parametrize(
-    "change", ["empty", "tabs", "unknown", "dialog", "unconfirmed", "modified", "modified_unknown"]
+    "change", ["empty", "tabs", "unknown", "dialog", "modified", "modified_unknown"]
 )
 def test_close_handoff_before_effect_for_unsafe_window(broker, change):
     ref = opened(broker)
@@ -299,3 +299,12 @@ def test_lease_covers_native_effect_and_independent_observation(broker):
     assert submit(broker, "Open Notepad.").state == State.SUCCEEDED
     assert trace[-3:] == [("inventory", True), ("inspect", True), ("activity", True)]
     assert not lease.active and not broker.desktop.lease_held
+
+
+def test_clean_notepad_close_uses_owner_request_without_disposable_confirmation(broker):
+    ref = opened(broker)
+    broker.desktop.confirmed.clear()
+    result = submit(broker, "Close that Notepad window.", "windows.close", ref)
+    assert result.state == State.SUCCEEDED
+    assert broker.desktop.transport.records == []
+    assert broker.desktop.transport.calls == ["open", "close"]

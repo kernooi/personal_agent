@@ -2272,3 +2272,416 @@ is the pre-existing generic M2 wording, even though the selected report is an
 assistant report; this diagnostic wording issue is not fixed by the latency task.
 The selected assistant report failed its gate; no qualification was inferred.
 Final diff check remains clean; only documentation changed after source validation.
+
+
+## 2026-10-11 ? Selected Notepad minimize extension
+
+User requested minimize alongside open/close/focus. Starting HEAD 83a3294 had
+clean worktree; preserved historical sources/corpora/reports. Added strictly parsed
+windows.minimize, selected identity scope, grants, durable journal, native worker
+commit revalidation, ShowWindowAsync(SW_MINIMIZE), independent IsIconic observation,
+and natural verified completion. Focus restores with SW_RESTORE before activation.
+No arbitrary app control, document edits, saves/discards, installations or new deps.
+Minimize permits unsaved/multi-tab content without disposable-close confirmation;
+disabled/modal targets pause. Only planner-m2-v10 grants the new capability;
+historical profiles cannot gain an unevaluated effect. Adapter/grant source hashes
+now bind v10 qualification. Unknown outcomes are not replayed. Global stop and
+lease/admission machinery are retained.
+
+Frozen historical m2-corpus-v1/m2-conversation-v2 remain untouched. New
+m2-corpus-v2 includes the original 18 cases plus six minimize cases; new
+m2-conversation-v3 includes all original 29 plus five minimize/restore/repeat turns.
+Both require 100% correct and zero unauthorized dispatches. All failed results
+are retained. Model r1/r2 failed 23/24 on existing ambiguous-editor clarification
+(unsupported instead of clarify), with zero unauthorized dispatches; adding an
+explicit clarification example resolved it. Intermediate passing reports remain
+historical where source hashes changed; only final reports below qualify.
+
+Final checks, Python 3.13 project .venv:
+- .\.venv\Scripts\python.exe -m pytest -q: 953 passed in 29.89 seconds.
+- .\.venv\Scripts\python.exe -m ruff check .: passed.
+- .\.venv\Scripts\python.exe -m ruff format --check .: 104 files formatted.
+- .\.venv\Scripts\python.exe -m pip check: no broken requirements.
+- git diff --check: passed (existing Windows CRLF notices only).
+
+Actual local qwen3:8b/Ollama simulation evaluation commands (no Windows effects):
+```powershell
+.\.venv\Scripts\python.exe -m jarvis eval-m2 --live `
+  --profile "$env:LOCALAPPDATA\Jarvis\profiles\notepad-m2-v10.toml" `
+  --report docs/evaluations/m2-minimize-model-v1-r5.json
+.\.venv\Scripts\python.exe -m jarvis eval-m2-chat --live `
+  --profile "$env:LOCALAPPDATA\Jarvis\profiles\notepad-m2-v10.toml" `
+  --report docs/evaluations/m2-minimize-conversation-v1-r3.json
+.\.venv\Scripts\python.exe -m jarvis eval-media --live `
+  --profile "$env:LOCALAPPDATA\Jarvis\profiles\notepad-m2-v10.toml" `
+  --report docs/evaluations/m4-minimize-regression-v1-r2.json
+.\.venv\Scripts\python.exe -m jarvis eval-windows-media --live `
+  --profile "$env:LOCALAPPDATA\Jarvis\profiles\notepad-m2-v10.toml" `
+  --report docs/evaluations/m4-windows-minimize-regression-v1-r2.json
+```
+Final results: 24/24, 34/34, 22/22 and 12/12 respectively, zero unauthorized
+effects, all four qualification functions returned True against current sources,
+profile, model digest and runtime metadata independently. No new cloud-disabled
+startup or physical-offline evidence is claimed; private profile evidence retained.
+
+Final M2 contract SHA256: `5c13e011272d85fad711cba985963c47f37595273697a3d7837bd2aeb619fbdb`.
+Final M4 contract SHA256: `9aa547cf045cdfde40081f45b01a185561e58be0d3916751bffbce182e5b4835`.
+
+
+Native validation PENDING: AGENTS.md requires attended readiness, requested before
+new Windows effects. No readiness response received for this extension. Prepared
+scripts/Test-JarvisNotepadMinimize.py uses the actual qualified local model and
+broker, one isolated new empty single-tab Notepad, minimize/repeat/restore/safeclose,
+independent user32 IsIconic/foreground readings and persistent private journal.
+Pre-existing/uncertain windows receive no cleanup; unknown/failure requires review.
+Its exact command, only after operator readiness:
+```powershell
+.\.venv\Scripts\python.exe scripts/Test-JarvisNotepadMinimize.py --attended `
+  --profile "$env:LOCALAPPDATA\Jarvis\profiles\notepad-m2-v10.toml" `
+  --registration "$env:LOCALAPPDATA\Jarvis\notepad-registration.json" `
+  --model-report docs/evaluations/m2-minimize-model-v1-r5.json `
+  --conversation-report docs/evaluations/m2-minimize-conversation-v1-r3.json `
+  --report docs/evaluations/m2-minimize-windows-v1-r1.json
+```
+
+Combined chat command with current qualification reports (attended real modes
+explicit; public configs remain independent):
+```powershell
+.\.venv\Scripts\python.exe -m jarvis chat `
+  --profile "$env:LOCALAPPDATA\Jarvis\profiles\notepad-m2-v10.toml" `
+  --real --attended `
+  --registration "$env:LOCALAPPDATA\Jarvis\notepad-registration.json" `
+  --model-report .\docs\evaluations\m2-minimize-model-v1-r5.json `
+  --conversation-report .\docs\evaluations\m2-minimize-conversation-v1-r3.json `
+  --public-data-config "$env:LOCALAPPDATA\Jarvis\public-data.toml" `
+  --web-config "$env:LOCALAPPDATA\Jarvis\web.toml" `
+  --media-config "$env:LOCALAPPDATA\Jarvis\media-all-v1.toml" `
+  --real-browser --browser-attended `
+  --browser-registration "$env:LOCALAPPDATA\Jarvis\chrome-registration.json" `
+  --media-report .\docs\evaluations\m4-minimize-regression-v1-r2.json `
+  --real-media --media-attended `
+  --windows-media-report .\docs\evaluations\m4-windows-minimize-regression-v1-r2.json
+```
+No changes committed or pushed for this extension. Netflix and optional Spotify
+API setup remain pending from M4; these regressions do not qualify new services.
+
+
+### Attended minimize validation completed
+
+Operator replied "Ready for the minimize test" to the prepared scope. No running
+JARVIS chat was found. Ran the exact Test-JarvisNotepadMinimize.py command above,
+with --attended and final qualified model/conversation reports. Exit 0;
+docs/evaluations/m2-minimize-windows-v1-r1.json status passed. Actual local
+qwen3:8b -> broker -> installed Notepad 11.2607.14.0 results:
+- Open: SUCCEEDED, 5.158 seconds; one new known empty single-tab test window.
+- Minimize: SUCCEEDED, 3.204 seconds; independent user32 IsIconic=True.
+- Repeat "minimize it": SUCCEEDED, 3.037 seconds; independent IsIconic=True.
+- Restore/focus "bring it to the front": SUCCEEDED, 3.451 seconds;
+  independent IsIconic=False and foreground HWND equals the selected HWND.
+- Confirmed disposable safe close: SUCCEEDED, 2.861 seconds.
+Pre-existing window count 0; preservation check True. Durable private lab journal
+retained. Global stop registration succeeded throughout; no new physical hotkey
+press was requested or claimed in this bounded test. Prior stop regression tests
+remain passed. No pending/unknown outcome, save/discard, force-kill or cleanup of
+personal windows. This supersedes the pending native-validation entry above.
+README and IMPLEMENTATION_PLAN now record the actual pass. Only documentation
+changed after the 953-test/lint/format/dependency pass; no code changes or new
+model qualification required. No commit or push performed.
+
+## 2026-10-12: Device-discovered application controller
+
+User authorized open/focus/minimize/close for installed applications, Windows
+first with an extensible platform interface. Read repository instructions and the
+complete specification before architectural changes; preserved the uncommitted
+Notepad minimize work and every historical qualification/failure report.
+
+Added strict application metadata/configuration, catalog/name resolution,
+replaceable platform protocol, fake platform, isolated Windows worker and bounded
+transport. Discovery uses AppsFolder metadata and package manifests rather than
+per-application branches. Actual read-only inspection found 145 supported launch
+identities and 51 unavailable entries. Catalog presence is not all-app validation.
+No dependencies, machine installation, global settings or startup services changed.
+Created the private enabled applications.toml only when absent; public example
+remains disabled. The native adapter executes only a prepared local EXE with no
+arguments or a bound packaged-app AUMID, and explicit native window APIs.
+
+Application proposals use the existing broker's grants, approvals, durable
+journal, revisions, cancellation, admission and independent proof checks. Native
+targets bind process creation/user/session/package/HWND/class and executable hash.
+Worker checks before and after exact parent commit; no app is force-killed.
+Close requires one-use 60-second owner work review; Notepad independently retains
+empty/unmodified/single-tab/disposable restrictions. Close proof includes actual
+HWND absence so lost process metadata cannot claim success. Unknown outcomes
+require manual review without replay. Existing service routing is retained.
+
+Actual qwen3:8b / Ollama 0.40.2 frozen 28-case application evaluation:
+r1 failed 10/28 due to the omitted provider boundary allowlist entry; r2 failed
+27/28 due to an explanation reaching the old Notepad-only controller context.
+Both had zero unauthorized dispatches. Fixed the integration/context, retained
+the frozen corpus and failures. Later passing reports remain historical; only a
+report matching the final contract/profile/model/runtime authorizes real mode.
+Separate refreshed gates: m2-applications-model-v1-r1 failed 23/24 (discard
+clarified rather than refused), unchanged r2 passed 24/24. Conversation r1 passed
+34/34; original media and Windows media r1 passed 22/22 and 12/12. Qualification
+helpers independently returned True for these four final-source reports.
+
+Full regression run initially passed 981 tests; after native-boundary tests,
+one full run had 996 passed/1 failed in a pre-existing advertised-currency test.
+That test passed alone; the unchanged full repeat passed 997 in 30.18 seconds.
+Failure is recorded here; no requirement/test was relaxed. Ruff check passed,
+114 files formatted, pip check reported no broken requirements, diff check clean
+(existing Git LF/CRLF notices only). Combined simulation startup with application,
+currency, SearXNG and media configs succeeded and exited without effects.
+Doctor observed the actual local model ready; cloud-disabled evidence remains
+the prior same-PC operator verification, not a new programmatic attestation.
+
+Prepared scripts/Test-JarvisApplications.py for two explicitly selected new lab
+apps: packaged Calculator and desktop EXE Character Map. Read-only baseline
+showed neither open. Attended readiness requested and received; final-source
+qualification and native lab results follow below. No commit or push performed.
+
+Final application fake-execution qualification is
+applications-qwen3-8b-v1-r11.json: 28/28, zero unauthorized dispatches,
+matching final controller contract. r3-r10 passes remain historical snapshots;
+they do not authorize the final changed controller. The attended native r1
+preserved an uncertain Calculator open: the app launched, but its visible window
+belonged to Windows ApplicationFrameHost rather than the app process. User
+inspected/closed it manually. Added independent same-user/session host + package
+child association, bounded child enumeration, host/process creation/hash binding
+and tests for invalid/ambiguous associations. Native r2 opened successfully and
+actually minimized (independent IsIconic=True), but observation became uncertain
+when Windows detached package content during minimization. User restored/closed
+it manually. Both reports/journals remain; manual-review acknowledgments were
+recorded for their exact uncertain tasks with zero replay.
+
+Corrected minimized-frame observation requires the remembered original frame to
+be iconic and the original host/content processes, hashes, user/session, package
+and child HWND to remain verified. Other-root reparenting, process reuse and hash
+changes reject. Added deterministic lifecycle tests rather than relaxing proof.
+Final full checks: 1012 tests passed in 31.02 seconds; Ruff check passed, 114 files
+formatted, pip check clean. Attended native r3 follows under the existing explicit
+Calculator/Character Map scope, with prior uncertainty manually handled.
+
+Attended r3 passed open/minimize/repeat-minimize and independently reached the
+restored foreground, but native restore revalidation ran before child reattachment
+settled and preserved an unknown focus outcome. User inspected/closed Calculator;
+exact-task manual review recorded, no replay. Added bounded observation-only
+waiting after the single restore delivery; input takeover, changed identity or
+timeout still rejects. Deterministic tests cover delayed reattachment and aborts.
+Gate r12 passed 28/28 with zero unauthorized effects.
+
+Attended applications-windows-v1-r4.json PASSED all ten checks through actual
+qwen3:8b -> existing broker -> Windows: Calculator packaged open (6.714s),
+minimize (7.978s), repeat (8.114s), restore/focus (8.475s), reviewed close (7.715s);
+Character Map EXE open (6.790s), minimize (7.898s), repeat (8.051s), restore/focus
+(8.401s). Independent IsIconic/foreground/HWND-absence checks passed. Physical
+Ctrl+Alt+Shift+F10 while Character Map focused cancelled a new minimize request
+with zero new admissions. Three pre-existing discovered windows preserved. One
+new Character Map window intentionally remains for manual cleanup after stop;
+no effect was sent after stop. The EXE close path was not exercised in this native
+lab; simulation covers it. Results are bounded to these apps, not all 145 entries.
+
+Final full test attempt during model evaluation had 1014 passed/1 intermittent
+existing currency-fixture failure (expired catalogue refresh); earlier clean run
+had 1012 passes. An unchanged full repeat after evaluation, with diagnostic hooks
+available to expose broker failure categories, passed 1015 in 30.90 seconds.
+Cause of these intermittent fixture failures is not established; no currency code,
+tests or network restrictions were changed. They remain documented for follow-up.
+Ruff and pip checks passed; combined simulation startup now correctly reports
+145 supported and 51 unavailable entries. No public provider or Windows effect
+was used by startup/doctor. A final type-annotation consistency change adds the
+application boundary to ModelRequest's declared Literal; it does not change
+runtime decisions/effects. Source-bound application/media reports are refreshed
+after that annotation change; native effects are not replayed.
+
+Final source qualification checks against the actual running model returned True
+for applications-qwen3-8b-v1-r13 (28/28), m2-applications-model-v1-r2 (24/24),
+m2-applications-conversation-v1-r1 (34/34), m4-applications-regression-v1-r2
+(22/22), and m4-windows-applications-regression-v1-r2 (12/12). All 100% gates and
+zero-unauthorized requirements retained. Final normal full pytest passed 1015
+tests in 30.75 seconds; Ruff check, 114-file format check, pip check and diff check
+passed. Documentation now supplies the complete combined startup command using
+the current reports and separate permissions. No additional Windows effects,
+global settings, model downloads, dependency installation, commit or push.
+
+## 2026-10-12 - Natural close and launcher runtime correction
+
+The owner explicitly replaced separate window-reference/close/empty confirmation
+with natural close. Read instructions, README and the complete specification;
+preserved existing uncommitted work. AGENTS and decision 0009 record this change.
+Selected or sole verified window plus authenticated owner request binds the existing
+single-use broker approval. Multiple windows accept a number. Notepad still requires
+independent empty, unmodified, single-tab state; dirty/dialog/unknown states pause.
+No save/discard or forced termination. Current-profile bare/pronoun requests retain
+the correct controller route. Historical corpora remain: application v3 (31 cases)
+and M2 conversation v5 (41 cases) retain the 100%/zero unauthorized gates.
+
+The reported failures came from launch/UI identity mismatch. Desktop activation
+now invokes the trusted OS AppsFolder PIDL/open verb, without model paths or
+arguments. Discord's same-name versioned runtime beneath its dedicated installation
+root has the same locally verified leaf signing certificate as its launcher.
+Native cache-only verification confirmed both. Spotify UI has the exact OS
+application/package identity, separate from its SpotifyMigrator launch hash.
+Durable evidence separates launch/runtime hashes and validates their association.
+Cache-only signature checking does not establish fresh online revocation status.
+
+Attended readiness and explicit manual inspection/closure of previous Spotify and
+Discord windows preceded actual qwen3:8b -> broker -> native tests:
+
+- `application-launchers-windows-v1-r1.json`: retained failure. Discord open,
+  minimize and focus passed. Normal close hid its window to the tray. A separate
+  read-only native check revalidated that exact invisible window identity. The
+  verifier was corrected to accept absence or exact revalidated hidden state,
+  without claiming process termination. No unknown effect was replayed.
+- Native r2: Discord all four operations and Spotify open/minimize/focus passed.
+  Spotify close paused during planning after input/focus changed, before admission.
+  The failed report remains.
+- Native r3: passed continuation of the exact previously verified lab-owned Spotify
+  window, then new empty Notepad open/minimize/focus/close and cancellation before
+  admission. Thirteen successful checks across the linked run. IsIconic, foreground,
+  visibility or handle absence independently verified effects. Original windows
+  were preserved; only the owned continuation window was excluded from the baseline
+  preservation set. No extra close confirmation was used. Discord hid to the tray;
+  Spotify/Notepad handles became absent. Corrected operation times approximately
+  7.4-14.1 seconds. Stop-before-admission was software-triggered; earlier physical
+  global-hotkey evidence remains. No typing, playback commands, account mutation,
+  save/discard or process termination was performed by the controller.
+
+With no active JARVIS chat, the existing review controller recorded the owner's
+manual inspection acknowledgment for earlier Spotify uncertainty
+`f9498b61-ca16-4bb1-98a3-8c17dd41000b`. Unknown history stayed intact, no action
+replayed, and the desktop uncertainty latch cleared.
+
+Explicit live simulation commands all used `--live --profile
+"$env:LOCALAPPDATA\Jarvis\profiles\notepad-m2-v10.toml"`:
+
+- `eval-apps --report docs/evaluations/applications-qwen3-8b-v3-r1.json`: 31/31,
+  zero unauthorized. Earlier passed v2 snapshots are preserved.
+- `eval-m2 --report docs/evaluations/m2-natural-close-model-v1-r1.json`: failed
+  23/24 (discard clarified instead of unsupported), zero effects; preserved.
+  Unchanged rerun `m2-natural-close-model-v1-r2.json`: 24/24, zero unauthorized.
+- `eval-m2-chat --report docs/evaluations/m2-natural-close-conversation-v1-r1.json`:
+  41/41, zero unauthorized, including clean close and dirty bare close.
+- `eval-media --report docs/evaluations/m4-natural-close-regression-v1-r1.json`:
+  22/22, zero unauthorized.
+- `eval-windows-media --report
+  docs/evaluations/m4-windows-natural-close-regression-v1-r1.json`: 12/12,
+  zero unauthorized. These media checks used fake tools, not new service validation.
+
+All five qualification helpers returned True against the actual installed model,
+runtime, profile, current sources and frozen corpora. No inference fallback.
+`Chat-JarvisAll.py --print-command` emitted the exact updated arguments. Actual
+combined chat startup with piped `/quit` exited 0, accepted all qualifications and
+private configs, and displayed real Notepad/application/Chrome/Windows-media modes
+plus currency/SearXNG. No application effects were delivered. Netflix stays disabled.
+The private profile stays simulation by default; the helper adds attended real flags
+only to its invocation and changes no settings.
+
+Final full `python -m pytest -q`: 1027 passed in 29.13 seconds on Windows/Python 3.13
+in the project `.venv`. A new bare-close test initially constructed an older resolver;
+its setup was corrected to construct v10 explicitly, retaining clean-success and
+dirty-denial assertions. Production v10 live conversation qualification passed.
+`python -m pip check`: no broken requirements. Final lint/format results below.
+
+Final `python -m ruff check .` passed; `python -m ruff format --check .` passed
+(118 files). `git diff --check` passed with only existing LF/CRLF notices.
+
+## 2026-10-12 - Steam delegated-window identity and launch reobservation
+
+Operator reported Steam opened but was omitted from `/app-windows`, leaving task
+4153939e-521f-4541-94b8-f6af574d35ad UNKNOWN and blocking other desktop effects.
+Read-only native inspection established that the registered `steam.exe` launcher
+owns a signed `steamwebhelper.exe` descendant with the visible SDL_app window.
+The prior versioned same-filename rule excluded this relationship.
+
+Added generic signed descendant linkage beneath a dedicated installation root,
+with a bounded Tool Help snapshot, depth limit eight, exact live launcher ancestry,
+same user/session/certificate, creation-time ordering, process revalidation and
+durable launcher/runtime/ancestor hashes. No Steam labels or executable names are
+special-cased. Missing/reused/changed parents, outside roots and other publishers
+are rejected. Native read-only inspection then found exactly one verified Steam
+window and durable linkage passed validation.
+
+Attended readiness and manual reviews were obtained before effects. Native reports
+application-steam-windows-v1-r1/r2/r3.json failed and are retained. Each open was
+independently observed but a Windows last-input timestamp change invalidated its
+observation epoch. The operator reported no input during r2. A temporary passive
+keyboard/mouse hook observer during r3 saw zero events; it captured no keys, pointer
+coordinates or content and was removed after the lab. Its bounded diagnostic report
+is application-steam-input-observation-v1-r1.json. This does not identify the source
+of the timestamp change or authorize ignoring user input.
+
+Delivered open now releases ownership and reconciles once with read-only observation
+when its input epoch changes. It requires the exact same unique window and stable
+fresh activity across reobservation; no launch/focus/close replay occurs. Continued
+input, identity changes, ambiguity, disappearance and stop still prevent success.
+Pre-admission takeover still prevents every effect. Other effect boundaries remain.
+New deterministic tests cover these conditions and signed ancestry rejection.
+
+Final actual local qwen3:8b gate: applications-qwen3-8b-v3-r4.json, 31/31,
+zero unauthorized dispatches, unchanged frozen corpus and 100% acceptance gate.
+Earlier r2/r3 model reports are retained but superseded by current source hashes.
+All five qualification helpers returned True for the current profile/model/runtime;
+M2 and media reports still match their unchanged contracts.
+
+Final attended application-steam-windows-v1-r4.json passed all five checks:
+open (10.021s, signed-descendant-runtime, independently visible), minimize
+(9.862s, native IsIconic), restore/focus (10.201s, exact foreground HWND), close
+(8.966s, exact window independently hidden to tray), and software cancellation
+with zero new admissions. Baseline windows were preserved; no games, purchases,
+account changes, playback commands, arbitrary input or force-kill were sent.
+Physical stop evidence remains from earlier application labs; not remeasured here.
+
+Recorded the operator's manual closure of the original failed Steam task through
+the existing application controller review path after chat exit. Original UNKNOWN
+action/history remains; manual_review_acknowledged appended, zero unresolved desktop
+UNKNOWN tasks and blocked_unknown=False. No effects or inference were replayed.
+Combined helper startup/quit exited 0 and accepted all current private configs and
+qualifications. Piped control input was not consumed by its console reader, so
+manual acknowledgement was performed explicitly through the controller instead.
+
+Checks: full pytest 1042 passed in 33.86s; ruff check passed; format check passed
+(118 files); pip check reported no broken requirements. Helper/README now use the
+current application report. Steam's window lifecycle is validated on this PC,
+not all installed apps. Normal close hides Steam to tray and does not terminate
+its process. Native operations still took about 9-10 seconds. No new installations,
+global settings, model downloads, automatic commits or pushes.
+
+## 2026-10-12 - Launch settling follow-up for interactive Steam/Photoshop
+
+User reproduced uncertain opens despite successful later closes. Read-only inspection
+of private journal tasks 3e05a690-13db-4763-966c-b5bcfaa510bc and
+9bdf5c1a-4058-4b83-8400-33132a5b761f found Steam's verified descendant-owned
+window with an unsettled reconciliation epoch, and Photoshop with no unique window
+observed before the four-second limit. Both manual-review events were already
+recorded by the user; unresolved desktop UNKNOWN count was zero. Failed historical
+attempts/evidence remain unchanged.
+
+Launch observation now has a bounded 30-second settling period. After input changes,
+release ownership and allow at most three read-only reconciliation epochs; every
+successful epoch still requires unchanged activity and the same exact unique window.
+Continued input, changed identity, missing/multiple windows and stop remain denied.
+No launch or other effect is retried. Other window-effect budgets/guards are unchanged.
+Uncertain responses/evidence now distinguish no unique window from an unsettled
+identified window rather than returning only the generic review message.
+
+Added delayed cold-start and transient-versus-continuing input regressions; sustained
+takeover/identity/ambiguity/cancellation denial tests remain. Full pytest: 1044 passed
+in 33.39s; ruff check and format passed (118 files); pip check found no broken requirements.
+Actual local qwen3:8b application gate applications-qwen3-8b-v3-r5.json passed 31/31,
+zero unauthorized dispatches, unchanged frozen corpus and 100% gate. All five current
+application/M2/media qualification helpers returned True.
+
+After explicit attended readiness and confirmation both target windows were closed,
+application-startup-windows-v1-r1.json passed all nine checks through actual qwen3:8b
+and broker: Steam open/minimize/focus/close (10.130/10.148/10.388/9.461s), Photoshop
+open/minimize/focus/close (12.401/9.729/10.420/8.915s), plus software cancellation
+with zero admissions. Independent native visibility/Iconic/foreground/absence checks
+passed; baseline windows preserved. Steam close hid to tray; Photoshop's test HWND
+was absent. No documents, games, account changes, save/discard, force-kill or generic
+input were used. Physical hotkey evidence remains historical, not newly remeasured.
+
+README and Chat-JarvisAll.py reference the matching r5 application report. Combined
+helper startup with /quit exited 0, with no qualification errors or application effects.
+Compatibility evidence covers these applications and this PC, not every installed app.
+No machine settings, dependency/model installation, automatic commit or push.

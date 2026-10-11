@@ -66,11 +66,15 @@ def run(request):
     if operation == "inspect":
         send(request, "result", selected(native, config, payload["window"]))
         return
-    if operation not in {"open", "focus", "close"}:
+    if operation not in {"open", "focus", "close", "minimize"}:
         raise Denied("Unreviewed worker operation")
     current = None
     if operation != "open":
         current = selected(native, config, payload["window"])
+        if operation == "minimize" and (
+            current.get("enabled") is not True or current.get("owned_dialog") is not False
+        ):
+            raise Denied("Minimize target has a dialog or is unavailable")
         if operation == "close" and (
             not clean(current) or current["tab_ids"] != payload["window"]["tab_ids"]
         ):
@@ -89,6 +93,11 @@ def run(request):
     registration.revalidate()
     if operation != "open":
         actual = selected(native, config, payload["window"])
+        if operation == "minimize" and (
+            actual.get("enabled") is not True or actual.get("owned_dialog") is not False
+        ):
+            send(request, "rejected", {"reason": "Minimize scope changed before effect"})
+            return
         if operation == "close" and (
             not clean(actual) or actual["tab_ids"] != payload["window"]["tab_ids"]
         ):
@@ -104,7 +113,27 @@ def run(request):
         # The launcher PID is deliberately not treated as window identity/readiness.
         process.poll()
     elif operation == "focus":
+        hwnd = payload["window"]["hwnd"]
+        if native.user.IsIconic(hwnd):
+            if not native.user.ShowWindowAsync(hwnd, 9):  # SW_RESTORE
+                raise Denied("Restore delivery uncertain")
+            until = min(time.time() + 1, request["deadline"])
+            while native.user.IsIconic(hwnd) and time.time() < until:
+                time.sleep(0.01)
+            if native.user.IsIconic(hwnd):
+                raise Denied("Restore outcome uncertain")
+            # Restoring can change foreground legitimately, but never user input.
+            selected(native, config, payload["window"])
+            if (
+                time.time() >= request["deadline"]
+                or native.activity()["last_input"] != payload["activity"]["last_input"]
+            ):
+                raise Denied("User takeover after restore")
         native.user.SetForegroundWindow(payload["window"]["hwnd"])
+    elif operation == "minimize":
+        hwnd = payload["window"]["hwnd"]
+        if not native.user.IsIconic(hwnd) and not native.user.ShowWindowAsync(hwnd, 6):
+            raise Denied("Minimize delivery uncertain")
     else:
         if not native.user.PostMessageW(payload["window"]["hwnd"], 0x0010, 0, 0):
             raise Denied("Close delivery uncertain")

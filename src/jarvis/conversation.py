@@ -50,6 +50,7 @@ class Conversation:
                     "open": "Open Notepad",
                     "focus": "Focus Notepad",
                     "close": "Close Notepad",
+                    "minimize": "Minimize Notepad",
                 }[effect]
         if self.pending_open and normalized == "text editor":
             resolved = "Open my text editor."

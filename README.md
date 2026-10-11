@@ -1,5 +1,132 @@
 # JARVIS local text assistant
 
+## Installed applications on this Windows PC
+
+Application control now discovers targets from Windows AppsFolder metadata rather
+than a fixed app list. Windows is the first native platform; the platform interface
+can accept future native controllers. It cannot control other devices yet.
+Use `python -m jarvis inspect-apps` to list this PC's supported launch identities
+without effects. Discovery found 145 supported entries and 51 unavailable entries;
+that is catalog coverage, not a claim that every app's windows have been tested.
+
+The private `$env:LOCALAPPDATA\Jarvis\applications.toml` enables the catalog.
+The checked-in `config/examples/applications.toml` defaults to disabled.
+Restart chat to load changes. Application effects default to simulation and require
+separate real-mode flags and current local-model qualification:
+
+```powershell
+.\.venv\Scripts\python.exe -m jarvis chat `
+  --profile "$env:LOCALAPPDATA\Jarvis\profiles\notepad-m2-v10.toml" `
+  --applications-config "$env:LOCALAPPDATA\Jarvis\applications.toml" `
+  --real-apps --apps-attended `
+  --applications-report .\docs\evaluations\applications-qwen3-8b-v3-r5.json `
+  --public-data-config "$env:LOCALAPPDATA\Jarvis\public-data.toml" `
+  --web-config "$env:LOCALAPPDATA\Jarvis\web.toml"
+```
+
+Try `Open Calculator`, `Open Discord`, `Open Spotify`, `Minimize it`,
+`Bring it to the front`, or `Close Spotify`. A selected or sole verified window
+needs no reference or extra close confirmation. If several windows match, reply
+with the number JARVIS offers. `/apps` and `/app-windows` remain optional diagnostics.
+Notepad must still be independently empty, unmodified and single-tab; text,
+unsaved changes, dialogs and unknown state pause close without discarding work.
+Normal close uses the application's ordinary close operation. Some apps hide to
+the tray; that closes their visible window without terminating the background
+process or necessarily stopping playback.
+Unknown outcomes require manual inspection before further effects. Ctrl+Alt+Shift+F10
+stops new effects globally. Run one attended session at a time.
+
+See [natural close and launcher identity](docs/decisions/0009-natural-app-close.md).
+
+For the existing `my text editor` route, additionally use `--real --attended`,
+the Notepad registration, `m2-natural-close-model-v1-r2.json` as `--model-report`
+and `m2-natural-close-conversation-v1-r1.json` as `--conversation-report`.
+For real Chrome/Spotify, retain their separate flags/configuration and use
+`m4-natural-close-regression-v1-r1.json` and
+`m4-windows-natural-close-regression-v1-r1.json` respectively. Each execution mode
+is displayed separately; enabling applications does not authorize browser or media
+effects. See [the architecture decision](docs/decisions/0008-device-applications.md).
+
+Unsupported entries, elevated/tray-only apps, unverified launch delegates and portable apps
+absent from AppsFolder remain outside the verified path. No executable-path,
+argument, shell or generic typing/clicking fallback is provided.
+
+The attended [Windows application lab](docs/evaluations/applications-windows-v1-r4.json)
+passed Calculator open/minimize/repeat/restore/close, Character Map
+open/minimize/repeat/restore, independent Windows state checks and the physical
+stop hotkey with zero new admissions. Three pre-existing windows were preserved.
+Earlier failures remain recorded. EXE close is simulation-tested, not exercised
+in this native lab. Other app compatibility needs individual validation.
+
+The subsequent [launcher lab](docs/evaluations/application-launchers-windows-v1-r3.json)
+passed Discord, Spotify and Notepad open/minimize/focus/normal-close with independent
+Windows checks and no extra close confirmation. The linked run continued only its
+exact Spotify test window after a zero-delivery planning pause, preserved original
+windows, and verified cancellation with zero new admissions. Discord close hides
+to the tray; background termination is not claimed. Earlier failures are retained.
+
+Complete combined session with the existing private setup on this PC:
+
+```powershell
+.\.venv\Scripts\python.exe scripts\Chat-JarvisAll.py
+```
+
+This attended launcher uses the private configs and current reports below and
+changes no settings. Add `--print-command` to inspect its arguments without
+starting chat. Exit old chats first. The equivalent full command is:
+
+```powershell
+.\.venv\Scripts\python.exe -m jarvis chat `
+  --profile "$env:LOCALAPPDATA\Jarvis\profiles\notepad-m2-v10.toml" `
+  --real --attended `
+  --registration "$env:LOCALAPPDATA\Jarvis\notepad-registration.json" `
+  --model-report .\docs\evaluations\m2-natural-close-model-v1-r2.json `
+  --conversation-report .\docs\evaluations\m2-natural-close-conversation-v1-r1.json `
+  --applications-config "$env:LOCALAPPDATA\Jarvis\applications.toml" `
+  --real-apps --apps-attended `
+  --applications-report .\docs\evaluations\applications-qwen3-8b-v3-r5.json `
+  --public-data-config "$env:LOCALAPPDATA\Jarvis\public-data.toml" `
+  --web-config "$env:LOCALAPPDATA\Jarvis\web.toml" `
+  --media-config "$env:LOCALAPPDATA\Jarvis\media-all-v1.toml" `
+  --real-browser --browser-attended `
+  --browser-registration "$env:LOCALAPPDATA\Jarvis\chrome-registration.json" `
+  --media-report .\docs\evaluations\m4-natural-close-regression-v1-r1.json `
+  --real-media --media-attended `
+  --windows-media-report .\docs\evaluations\m4-windows-natural-close-regression-v1-r1.json
+```
+
+## Selected Notepad minimize
+
+With the desktop v10 profile, try `Minimize Notepad`, `Minimize my text editor`
+or `Minimize it` after opening or selecting the registered window. `Bring it to
+the front` restores a minimized window and focuses it. Minimize leaves unsaved
+work intact. Close no longer requires `/confirm-empty`, but retains independent
+empty/unmodified/single-tab checks. This older Notepad route is separate from the opt-in discovered-application
+controller above. Restart chat to load the new code.
+Older qualification reports are preserved but cannot authorize this changed code.
+
+Notepad-only real chat on this PC:
+
+```powershell
+.\.venv\Scripts\python.exe -m jarvis chat `
+  --profile "$env:LOCALAPPDATA\Jarvis\profiles\notepad-m2-v10.toml" `
+  --real --attended `
+  --registration "$env:LOCALAPPDATA\Jarvis\notepad-registration.json" `
+  --model-report .\docs\evaluations\m2-natural-close-model-v1-r2.json `
+  --conversation-report .\docs\evaluations\m2-natural-close-conversation-v1-r1.json
+```
+
+For the combined session, retain the public currency/web/media configuration flags
+and use `m4-natural-close-regression-v1-r1.json` as `--media-report` and
+`m4-windows-natural-close-regression-v1-r1.json` as `--windows-media-report`.
+Do not run two attended chat sessions simultaneously. The new attended lab is
+`scripts/Test-JarvisNotepadMinimize.py`; the attended local-model Windows run
+passed open, minimize, repeated minimize, restore/focus and safe close. Independent
+Windows state checks confirmed both minimize operations and restoration. See
+`docs/evaluations/m2-minimize-windows-v1-r1.json`. Fake/model qualification remains
+separate from this bounded Windows evidence.
+
+
 ## M4: dedicated Google Chrome and media
 
 M4 adds opt-in installed Chrome for YouTube and Netflix, and an official Spotify
@@ -17,7 +144,7 @@ token. Open the installed Spotify app and start a track manually, then run:
   --profile "$env:LOCALAPPDATA\Jarvis\profiles\notepad-m2-v10.toml" `
   --media-config "$env:LOCALAPPDATA\Jarvis\media-windows-v1.toml" `
   --real-media --media-attended `
-  --windows-media-report .\docs\evaluations\m4-windows-media-model-v1-r3.json
+  --windows-media-report .\docs\evaluations\m4-windows-natural-close-regression-v1-r1.json
 ```
 
 Try `What is playing on Spotify?`, `Pause Spotify`, `Resume Spotify`,
@@ -59,7 +186,7 @@ After explicit attended readiness, run the real YouTube lab:
 .\.venv\Scripts\python.exe -m jarvis test-media --windows --attended --interactive `
   --profile "$env:LOCALAPPDATA\Jarvis\profiles\notepad-m2-v10.toml" `
   --browser-registration "$env:LOCALAPPDATA\Jarvis\chrome-registration.json" `
-  --media-report .\docs\evaluations\m4-qwen3-8b-simulation-v1-r12.json `
+  --media-report .\docs\evaluations\m4-natural-close-regression-v1-r1.json `
   --report .\docs\evaluations\m4-user-youtube-r1.json
 ```
 
@@ -73,7 +200,7 @@ Interactive browser chat uses independent real-browser flags:
   --media-config "$env:LOCALAPPDATA\Jarvis\media-m4-v1.toml" `
   --real-browser --browser-attended `
   --browser-registration "$env:LOCALAPPDATA\Jarvis\chrome-registration.json" `
-  --media-report .\docs\evaluations\m4-qwen3-8b-simulation-v1-r12.json
+  --media-report .\docs\evaluations\m4-natural-close-regression-v1-r1.json
 ```
 
 Example separate turns: `Search YouTube for Rick Astley Never Gonna Give You Up`,
@@ -173,7 +300,7 @@ M0's safe simulated core and M1's local Ollama integration are implemented from
 The real model proposes a decision; strict parsing, the reviewed registry,
 authorization, durable intent, cancellation gates, fake execution, and independent
 observation determine the result. M2 adds explicit attended control of the installed
-Microsoft Notepad: registered open, selected-window focus and safe graceful close.
+Microsoft Notepad: registered open, selected-window minimize/focus and safe graceful close.
 See the M2 instructions below and `docs/NOTEPAD_COMPATIBILITY.md` for measured limits.
 
 M3 adds opt-in provider-supported currency reference quotes and conversions through
@@ -386,15 +513,16 @@ incompatible. SQLite schema version 1 has no migration/backup tooling yet.
 
 The approved target change is recorded in `docs/decisions/0002-notepad.md`.
 This PC uses packaged Notepad 11.2607.14.0 and the existing qwen3:8b model.
-M2's frozen 18-case model corpus uses the unchanged 90% / zero unauthorized
-dispatch gate. Failed prompt versions remain in `docs/evaluations/`. A matching
+The historical M2 v1 corpus retains its 90% / zero unauthorized dispatch gate.
+The current desktop v10 profile uses frozen m2-corpus-v2 (24 cases) and
+m2-conversation-v3 (34 cases), both requiring 100% and zero unauthorized dispatches. Failed prompt versions remain in `docs/evaluations/`. A matching
 passed M2 report, installation registration and attended selection are required
 for real chat. Model qualification is limited corpus evidence, not general
 permission to control applications. There is no automatic save/discard or force kill.
 
-After the answer-only chat change, the matching reports for the desktop v10 profile
-are `docs/evaluations/m2-qwen3-8b-simulation-v10-answer-only-r1.json` (18/18) and
-`docs/evaluations/m2-conversation-v10-answer-only-r1.json` (29/29). Use these as
+After the minimize extension, the matching reports for the desktop v10 profile
+are `docs/evaluations/m2-minimize-model-v1-r5.json` (24/24) and
+`docs/evaluations/m2-minimize-conversation-v1-r3.json` (34/34). Use these as
 `--model-report` and `--conversation-report` respectively. The older v10 reports
 remain historical evidence; their code fingerprint no longer matches current chat.
 

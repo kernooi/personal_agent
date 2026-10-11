@@ -350,20 +350,11 @@ class NotepadDesktop:
             raise Handoff("Select a specific Notepad window using /windows and /select first.")
         record = self.transport.call("inspect", {"window": self.windows[ref]})
         self.windows[ref] = record
-        if effect == "close" and (
-            not clean(record) or self.confirmed.get(ref) != record["tab_ids"]
+        if effect == "minimize" and (
+            record.get("enabled") is not True or record.get("owned_dialog") is not False
         ):
-            if self.real and clean(record):
-                raise Handoff(
-                    "Before I close it, check that the selected Notepad is your empty, "
-                    "unmodified, single-tab test window. Then enter /confirm-empty and "
-                    "ask me to close it again. No close was sent."
-                )
-            if not self.real and clean(record):
-                raise Handoff(
-                    "Confirm the selected empty test window with /confirm-empty, "
-                    "then ask me to close it again; no close was sent."
-                )
+            raise Handoff("Notepad has a dialog or is unavailable; no minimize was sent.")
+        if effect == "close" and not clean(record):
             raise Handoff(
                 "I can't safely close this Notepad window: it contains text or unsaved "
                 "changes, has multiple tabs, a dialog, or its safety is unknown. "
@@ -463,15 +454,23 @@ class NotepadDesktop:
                 elif matching:
                     actual = self.transport.call("inspect", {"window": expected})
                     same = identity(actual) == identity(expected)
-                    observed_identity = json.dumps(identity(actual), sort_keys=True)
+                    observed_identity = json.dumps(
+                        {**identity(actual), "minimized": actual.get("minimized")}, sort_keys=True
+                    )
                     running = same
                     postcondition = same and (
                         effect == "open"
-                        or self.transport.call("activity")["foreground"] == expected["hwnd"]
+                        or (effect == "minimize" and actual.get("minimized") is True)
+                        or (
+                            effect == "focus"
+                            and actual.get("minimized") is not True
+                            and self.transport.call("activity")["foreground"] == expected["hwnd"]
+                        )
                     )
                     if postcondition:
                         self.reference_clear = True
-                    break
+                    if postcondition or effect not in {"focus", "minimize"}:
+                        break
             if self.stop.is_set() or time.monotonic() >= until or not self.real:
                 if effect == "open":
                     self.blocked_unknown = True
@@ -498,9 +497,12 @@ class NotepadDesktop:
         )
 
     def success_message(self, action):
-        verb = {"open": "open and ready", "focus": "in the foreground", "close": "closed"}[
-            action.effects[0]
-        ]
+        verb = {
+            "open": "open and ready",
+            "focus": "in the foreground",
+            "close": "closed",
+            "minimize": "minimized",
+        }[action.effects[0]]
         prefix = "" if self.real else "SIMULATED: "
         return prefix + "The selected Notepad window is " + verb + "."
 
@@ -559,6 +561,7 @@ class NotepadRegistry(Registry):
             "bring notepad to the front",
         }
         closes = {"close that notepad window", "close notepad", "close my text editor"}
+        minimizes = {"minimize notepad", "minimize my text editor", "minimize that notepad window"}
         effect = (
             "open"
             if value in opens
@@ -566,6 +569,8 @@ class NotepadRegistry(Registry):
             if value in focus
             else "close"
             if value in closes
+            else "minimize"
+            if value in minimizes
             else None
         )
         if effect is None:
@@ -595,7 +600,12 @@ class NotepadRegistry(Registry):
         }
 
     def prepare(self, task, proposal, grant):
-        effects = {"apps.open": "open", "windows.focus": "focus", "windows.close": "close"}
+        effects = {
+            "apps.open": "open",
+            "windows.focus": "focus",
+            "windows.close": "close",
+            "windows.minimize": "minimize",
+        }
         if proposal.app_id != "notepad" or proposal.capability not in effects:
             raise Handoff("Unregistered application or operation; no Windows effect")
         effect = effects[proposal.capability]

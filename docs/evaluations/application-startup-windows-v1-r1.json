@@ -1,0 +1,109 @@
+{
+  "version": "application-launcher-lab-v1",
+  "status": "passed",
+  "execution_mode": "windows",
+  "metadata": {
+    "available": true,
+    "model_present": true,
+    "identity": "qwen3:8b",
+    "digest": "500a1f067a9f782620b40bee6f7b0c89e17ae61f686b92c24933e4ca4b2b8b41",
+    "runtime_version": "0.40.2",
+    "transport_version": "ollama-chat-v2",
+    "text_generation": "supported",
+    "schema_constrained_output": "unknown",
+    "native_tool_calls": "supported",
+    "context_capacity": 40960,
+    "cloud_disabled": "user_verified",
+    "local_mode_programmatically_attested": false,
+    "ready": true,
+    "qualification": "unqualified; fake-execution evaluation only"
+  },
+  "model_report": "applications-qwen3-8b-v3-r5.json",
+  "preexisting_windows": 3,
+  "cases": [
+    {
+      "application": "Steam",
+      "effect": "open",
+      "state": "SUCCEEDED",
+      "message": "The selected application window is open and ready.",
+      "seconds": 10.13,
+      "passed": true,
+      "runtime_association": "signed-descendant-runtime",
+      "independent_visible": true
+    },
+    {
+      "application": "Steam",
+      "effect": "minimize",
+      "state": "SUCCEEDED",
+      "message": "The selected application window is minimized.",
+      "seconds": 10.148,
+      "passed": true,
+      "independent_minimized": true
+    },
+    {
+      "application": "Steam",
+      "effect": "focus",
+      "state": "SUCCEEDED",
+      "message": "The selected application window is in the foreground.",
+      "seconds": 10.388,
+      "passed": true,
+      "independent_foreground": true
+    },
+    {
+      "application": "Steam",
+      "effect": "close",
+      "state": "SUCCEEDED",
+      "message": "The selected application window is closed.",
+      "seconds": 9.461,
+      "passed": true,
+      "independent_absent": false,
+      "independent_hidden": true
+    },
+    {
+      "application": "Adobe Photoshop 2025",
+      "effect": "open",
+      "state": "SUCCEEDED",
+      "message": "The selected application window is open and ready.",
+      "seconds": 12.401,
+      "passed": true,
+      "runtime_association": "direct",
+      "independent_visible": true
+    },
+    {
+      "application": "Adobe Photoshop 2025",
+      "effect": "minimize",
+      "state": "SUCCEEDED",
+      "message": "The selected application window is minimized.",
+      "seconds": 9.729,
+      "passed": true,
+      "independent_minimized": true
+    },
+    {
+      "application": "Adobe Photoshop 2025",
+      "effect": "focus",
+      "state": "SUCCEEDED",
+      "message": "The selected application window is in the foreground.",
+      "seconds": 10.42,
+      "passed": true,
+      "independent_foreground": true
+    },
+    {
+      "application": "Adobe Photoshop 2025",
+      "effect": "close",
+      "state": "SUCCEEDED",
+      "message": "The selected application window is closed.",
+      "seconds": 8.915,
+      "passed": true,
+      "independent_absent": true,
+      "independent_hidden": true
+    },
+    {
+      "effect": "cancel-before-admission",
+      "passed": true,
+      "zero_new_admissions": true
+    }
+  ],
+  "journal_retained": true,
+  "continuation_of": null,
+  "stop_test": "software cancellation; earlier physical global-hotkey evidence retained"
+}

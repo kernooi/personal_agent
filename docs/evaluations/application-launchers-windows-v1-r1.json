@@ -1,0 +1,69 @@
+{
+  "version": "application-launcher-lab-v1",
+  "status": "failed",
+  "execution_mode": "windows",
+  "metadata": {
+    "available": true,
+    "model_present": true,
+    "identity": "qwen3:8b",
+    "digest": "500a1f067a9f782620b40bee6f7b0c89e17ae61f686b92c24933e4ca4b2b8b41",
+    "runtime_version": "0.40.2",
+    "transport_version": "ollama-chat-v2",
+    "text_generation": "supported",
+    "schema_constrained_output": "unknown",
+    "native_tool_calls": "supported",
+    "context_capacity": 40960,
+    "cloud_disabled": "user_verified",
+    "local_mode_programmatically_attested": false,
+    "ready": true,
+    "qualification": "unqualified; fake-execution evaluation only"
+  },
+  "model_report": "applications-qwen3-8b-v2-r1.json",
+  "preexisting_windows": 3,
+  "cases": [
+    {
+      "application": "Discord",
+      "effect": "open",
+      "state": "SUCCEEDED",
+      "message": "The selected application window is open and ready.",
+      "seconds": 12.872,
+      "passed": true,
+      "runtime_association": "signed-versioned-runtime",
+      "independent_visible": true
+    },
+    {
+      "application": "Discord",
+      "effect": "minimize",
+      "state": "SUCCEEDED",
+      "message": "The selected application window is minimized.",
+      "seconds": 13.167,
+      "passed": true,
+      "independent_minimized": true
+    },
+    {
+      "application": "Discord",
+      "effect": "focus",
+      "state": "SUCCEEDED",
+      "message": "The selected application window is in the foreground.",
+      "seconds": 14.215,
+      "passed": true,
+      "independent_foreground": true
+    },
+    {
+      "application": "Discord",
+      "effect": "close",
+      "state": "FAILED",
+      "message": "The requested application state was not verified. No automatic retry.",
+      "seconds": 14.826,
+      "passed": false,
+      "independent_absent": false
+    },
+    {
+      "effect": "lab-paused",
+      "passed": false,
+      "error_type": "ValueError"
+    }
+  ],
+  "journal_retained": true,
+  "stop_test": "software cancellation; earlier physical global-hotkey evidence retained"
+}

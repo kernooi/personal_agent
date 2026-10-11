@@ -231,6 +231,7 @@ class OllamaProvider:
             None,
             "currency-decision-v1",
             "media-choice-v1",
+            "applications-choice-v1",
             "web-route-v1",
             "web-plan-v1",
             "web-select-v1",

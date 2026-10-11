@@ -38,7 +38,7 @@ admission, and verify independently. Unknown outcomes must never be blindly repl
 Model names/options belong in profiles, never policy or tools. Do not persist raw prompts.
 Local-only setup must have explicit evidence; loopback alone is not proof that
 cloud is disabled. Doctor is observational. Live evaluation is explicitly invoked.
-Never close personal, dirty, mixed-tab or unknown Notepad windows automatically.
+Never discard Notepad text or close dirty, mixed-tab or unknown Notepad windows automatically.
 Confirm readiness before attended Windows effects. Never force-kill Notepad or
 choose save/discard dialogs. A global stop must remain usable while Notepad has focus.
 
@@ -49,3 +49,14 @@ Checks: `.\.venv\Scripts\python.exe -m pytest`,
 `.\.venv\Scripts\python.exe -m ruff format --check .`.
 Record actual evidence in `docs/BUILD_LOG.md` and progress in
 `docs/IMPLEMENTATION_PLAN.md`; never weaken requirements/tests to obtain a pass.
+
+The user subsequently approved general application open/focus/minimize/close on
+this Windows PC, with an extensible platform interface. Discover installed targets
+from trusted OS metadata; never accept model-supplied paths, arguments or commands.
+Use the existing broker, attended consent and separate model qualification.
+The owner subsequently requested natural close with no extra reference or empty-window
+confirmation for a selected or sole verified window. The authenticated close request
+binds exact one-use broker approval. Notepad must still be independently empty,
+unmodified and single-tab. Normal close may hide a window to the tray; never infer
+process termination or discard/save work. See docs/decisions/0009-natural-app-close.md.
+No generic typing/clicking, arbitrary shell, remote control or other platform effects.

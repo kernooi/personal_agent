@@ -173,3 +173,67 @@ def test_registration_tampering_fails_closed(tmp_path, monkeypatch, change):
         data["launcher" if change == "launcher_path" else "executable"] = str(tmp_path / "evil.exe")
     with pytest.raises(Handoff):
         Registration.model_validate(data, strict=True).revalidate()
+
+
+@pytest.mark.parametrize("operation", ["minimize", "focus"])
+def test_native_minimize_and_restore_use_selected_handle_after_commit(monkeypatch, operation):
+    import time
+
+    import jarvis.win_worker as worker
+
+    record = FakeNotepadTransport().add()
+    iconic = operation == "focus"
+    calls = []
+
+    def show(hwnd, command):
+        nonlocal iconic
+        calls.append(("show", hwnd, command))
+        iconic = command == 6
+        return True
+
+    native = SimpleNamespace(
+        windows=lambda _: [record],
+        metadata=lambda row: row,
+        activity=lambda: {"foreground": 0, "last_input": 1},
+        user=SimpleNamespace(
+            IsIconic=lambda _: iconic,
+            ShowWindowAsync=show,
+            SetForegroundWindow=lambda hwnd: calls.append(("focus", hwnd)),
+        ),
+    )
+    monkeypatch.setattr(worker, "Native", lambda: native)
+    monkeypatch.setattr(Registration, "revalidate", lambda self: None)
+    registration = dict(
+        version="notepad-registration-v1",
+        app_id="notepad",
+        launcher="C:\\Windows\\System32\\notepad.exe",
+        launcher_sha256="a" * 64,
+        executable="C:\\Program Files\\WindowsApps\\Notepad.exe",
+        executable_sha256="a" * 64,
+        package_full_name="Microsoft.WindowsNotepad_11.2607.14.0_x64__8wekyb3d8bbwe",
+        notepad_version="11.0",
+        microsoft_signature_verified=True,
+    )
+    request = dict(
+        version=1,
+        request_id="test",
+        deadline=time.time() + 10,
+        operation=operation,
+        registration=registration,
+        payload={"window": record, "activity": native.activity()},
+    )
+    stages = []
+    monkeypatch.setattr(worker, "send", lambda request, stage, data: stages.append(stage))
+
+    def commit():
+        assert not calls and stages == ["ready"]
+        return {"version": 1, "request_id": "test", "commit": True}
+
+    monkeypatch.setattr(worker, "read", commit)
+    worker.run(request)
+    assert stages == ["ready", "result"]
+    assert calls == (
+        [("show", record["hwnd"], 6)]
+        if operation == "minimize"
+        else [("show", record["hwnd"], 9), ("focus", record["hwnd"])]
+    )

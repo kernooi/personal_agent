@@ -225,7 +225,7 @@ class Store:
                 if payload["app_id"] == "web"
                 else {"public_read", "local_calculate", "read_evidence"}
                 if payload["app_id"] == "currency"
-                else {"open", "focus", "close"}
+                else {"open", "focus", "close", "minimize"}
             )
             or not isinstance(payload.get("window_ref", ""), str)
             or row["revision"] < 1
@@ -424,6 +424,8 @@ class Store:
                     in {
                         "notepad-windows-v1",
                         "notepad-fake-v1",
+                        "applications-windows-v1",
+                        "applications-fake-v1",
                         "currency-adapter-v1",
                         "web-adapter-v1",
                         "media-adapter-v1",
@@ -442,6 +444,35 @@ class Store:
                     or evidence.authority != "tool_output"
                 ):
                     raise Denied("Stored currency evidence authority is invalid")
+            if action.adapter_version in {"applications-windows-v1", "applications-fake-v1"}:
+                from jarvis.application_data import valid_runtime_proof
+                from jarvis.application_tools import identity
+
+                observed = json.loads(evidence.observed_identity)
+                target = json.loads(action.target_identity)
+                effect = action.effects[0]
+                if (
+                    evidence.source != "application-observer-v1"
+                    or evidence.kind != "application_window_state"
+                    or evidence.authority != "tool_output"
+                    or observed.get("app_id") != action.app_id
+                    or (target["window"] and identity(observed) != identity(target["window"]))
+                    or (
+                        effect == "close"
+                        and observed.get("present") is not False
+                        and observed.get("visible") is not False
+                    )
+                    or (effect == "minimize" and observed.get("minimized") is not True)
+                    or (
+                        effect == "focus"
+                        and (
+                            observed.get("minimized") is not False
+                            or observed.get("foreground") != observed.get("hwnd")
+                        )
+                    )
+                    or not valid_runtime_proof(observed, target)
+                ):
+                    raise Denied("Stored application evidence is invalid")
             if action.adapter_version == "media-adapter-v1":
                 from jarvis.media_data import MediaArguments
 

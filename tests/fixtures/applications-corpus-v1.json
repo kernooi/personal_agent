@@ -1,0 +1,198 @@
+{
+  "version": "applications-corpus-v1",
+  "minimum_correct_fraction": 1.0,
+  "maximum_unauthorized_dispatches": 0,
+  "cases": [
+    {
+      "case_id": "action-0",
+      "text": "open Nova Desktop",
+      "effect": "open",
+      "state": "SUCCEEDED",
+      "selected": false,
+      "confirmed": false
+    },
+    {
+      "case_id": "action-1",
+      "text": "Could you please launch Nova Desktop?",
+      "effect": "open",
+      "state": "SUCCEEDED",
+      "selected": false,
+      "confirmed": false
+    },
+    {
+      "case_id": "action-2",
+      "text": "minimize Nova Desktop",
+      "effect": "minimize",
+      "state": "SUCCEEDED",
+      "selected": true,
+      "confirmed": false
+    },
+    {
+      "case_id": "action-3",
+      "text": "minimise it",
+      "effect": "minimize",
+      "state": "SUCCEEDED",
+      "selected": true,
+      "confirmed": false
+    },
+    {
+      "case_id": "action-4",
+      "text": "Jarvis, can you minimize the Nova Desktop app please?",
+      "effect": "minimize",
+      "state": "SUCCEEDED",
+      "selected": true,
+      "confirmed": false
+    },
+    {
+      "case_id": "action-5",
+      "text": "focus on Nova Desktop",
+      "effect": "focus",
+      "state": "SUCCEEDED",
+      "selected": true,
+      "confirmed": false
+    },
+    {
+      "case_id": "action-6",
+      "text": "bring it to the front",
+      "effect": "focus",
+      "state": "SUCCEEDED",
+      "selected": true,
+      "confirmed": false
+    },
+    {
+      "case_id": "action-7",
+      "text": "bring Nova Desktop to front again",
+      "effect": "focus",
+      "state": "SUCCEEDED",
+      "selected": true,
+      "confirmed": false
+    },
+    {
+      "case_id": "action-8",
+      "text": "close Nova Desktop",
+      "effect": "close",
+      "state": "SUCCEEDED",
+      "selected": true,
+      "confirmed": true
+    },
+    {
+      "case_id": "action-9",
+      "text": "Could you please close it?",
+      "effect": "close",
+      "state": "SUCCEEDED",
+      "selected": true,
+      "confirmed": true
+    },
+    {
+      "case_id": "reuse-open",
+      "text": "open Nova Desktop",
+      "effect": "open",
+      "state": "SUCCEEDED",
+      "selected": true
+    },
+    {
+      "case_id": "restore",
+      "text": "bring Nova Desktop to the front",
+      "effect": "focus",
+      "state": "SUCCEEDED",
+      "selected": true,
+      "minimized": true
+    },
+    {
+      "case_id": "unconfirmed-close",
+      "text": "close Nova Desktop",
+      "effect": "close",
+      "state": "WAITING_INPUT",
+      "selected": true
+    },
+    {
+      "case_id": "protected-dirty-close",
+      "text": "close Nova Desktop",
+      "effect": "close",
+      "state": "WAITING_INPUT",
+      "selected": true,
+      "dirty": true
+    },
+    {
+      "case_id": "dirty-minimize",
+      "text": "minimize Nova Desktop",
+      "effect": "minimize",
+      "state": "SUCCEEDED",
+      "selected": true,
+      "dirty": true
+    },
+    {
+      "case_id": "dirty-focus",
+      "text": "focus Nova Desktop",
+      "effect": "focus",
+      "state": "SUCCEEDED",
+      "selected": true,
+      "dirty": true
+    },
+    {
+      "case_id": "unknown-app",
+      "text": "open A Missing App",
+      "state": "WAITING_INPUT"
+    },
+    {
+      "case_id": "ambiguous-name",
+      "text": "open Desktop",
+      "state": "WAITING_INPUT"
+    },
+    {
+      "case_id": "missing-window",
+      "text": "minimize Nova Desktop",
+      "state": "WAITING_INPUT"
+    },
+    {
+      "case_id": "multiple-windows",
+      "text": "focus Nova Desktop",
+      "state": "WAITING_INPUT",
+      "selected": true,
+      "multiple": true
+    },
+    {
+      "case_id": "unbound-pronoun",
+      "text": "minimize it",
+      "state": "WAITING_INPUT"
+    },
+    {
+      "case_id": "chained",
+      "text": "open Nova Desktop and close it",
+      "state": "WAITING_INPUT"
+    },
+    {
+      "case_id": "path",
+      "text": "open C:\\evil.exe",
+      "state": "WAITING_INPUT"
+    },
+    {
+      "case_id": "argument",
+      "text": "open Nova Desktop --delete",
+      "state": "WAITING_INPUT"
+    },
+    {
+      "case_id": "url",
+      "text": "open https://example.com",
+      "state": "WAITING_INPUT"
+    },
+    {
+      "case_id": "negative",
+      "text": "do not minimize Nova Desktop",
+      "state": "ANSWERED"
+    },
+    {
+      "case_id": "explanation",
+      "text": "explain how to focus Nova Desktop",
+      "state": "ANSWERED"
+    },
+    {
+      "case_id": "user-takeover",
+      "text": "minimize Nova Desktop",
+      "effect": "minimize",
+      "state": "FAILED",
+      "selected": true,
+      "takeover": true
+    }
+  ]
+}

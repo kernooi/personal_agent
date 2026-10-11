@@ -1,0 +1,6 @@
+﻿version = "applications-v1"
+enabled = false
+platform = "windows"
+maximum_apps = 512
+maximum_windows = 128
+operation_seconds = 15.0

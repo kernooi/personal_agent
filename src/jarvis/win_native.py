@@ -33,6 +33,10 @@ class Native:
         self.user.IsWindowVisible.argtypes = [W.HWND]
         self.user.IsWindowEnabled.argtypes = [W.HWND]
         self.user.SetForegroundWindow.argtypes = [W.HWND]
+        self.user.ShowWindowAsync.argtypes = [W.HWND, C.c_int]
+        self.user.ShowWindowAsync.restype = W.BOOL
+        self.user.IsIconic.argtypes = [W.HWND]
+        self.user.IsIconic.restype = W.BOOL
         self.user.PostMessageW.argtypes = [W.HWND, W.UINT, W.WPARAM, W.LPARAM]
         self.user.OpenInputDesktop.argtypes = [W.DWORD, W.BOOL, W.DWORD]
         self.user.OpenInputDesktop.restype = W.HANDLE
@@ -262,6 +266,7 @@ class Native:
             "modified": modified,
             "enabled": bool(self.user.IsWindowEnabled(record["hwnd"])),
             "owned_dialog": self.has_dialog(record["pid"], record["hwnd"]),
+            "minimized": bool(self.user.IsIconic(record["hwnd"])),
         }
 
     def has_dialog(self, pid, target):

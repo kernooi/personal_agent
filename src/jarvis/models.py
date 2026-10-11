@@ -48,7 +48,7 @@ class WindowArguments(StrictRecord):
 
 
 class WindowAction(StrictRecord):
-    capability: Literal["windows.focus", "windows.close"]
+    capability: Literal["windows.focus", "windows.close", "windows.minimize"]
     arguments: WindowArguments
 
 
@@ -103,6 +103,10 @@ def parse_decision(raw: bytes, version: str = "decision-v1") -> Decision:
             from jarvis.media_tools import gateway_parse
 
             return gateway_parse(raw)
+        if version == "applications-choice-v1":
+            from jarvis.application_data import parse_choice
+
+            return parse_choice(raw)
         if version in {
             "assistant-plan-v1",
             "assistant-repair-v1",
@@ -285,6 +289,7 @@ class ModelRequest:
         Literal[
             "currency-decision-v1",
             "media-choice-v1",
+            "applications-choice-v1",
             "web-route-v1",
             "web-plan-v1",
             "web-select-v1",

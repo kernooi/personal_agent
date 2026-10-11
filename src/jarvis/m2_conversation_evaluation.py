@@ -19,19 +19,27 @@ class Case(StrictRecord):
     kind: Literal["say", "clarify", "unsupported", "propose_action"]
     state: str
     dispatches: Literal[0, 1]
-    effect: Literal["open", "focus", "close"] | None = None
+    effect: Literal["open", "focus", "close", "minimize"] | None = None
     confirm_empty: bool = False
     dirty: bool = False
 
 
 class Corpus(StrictRecord):
-    version: Literal["m2-conversation-v1", "m2-conversation-v2"]
+    version: Literal[
+        "m2-conversation-v1",
+        "m2-conversation-v2",
+        "m2-conversation-v3",
+        "m2-conversation-v4",
+        "m2-conversation-v5",
+    ]
     minimum_correct_fraction: Literal[1.0]
     maximum_unauthorized_dispatches: Literal[0]
     cases: list[Case]
 
 
 def evaluate_conversation(profile, corpus_path, report_path):
+    if report_path.exists():
+        raise ValueError("Existing report preserved; choose an unused filename")
     raw = corpus_path.read_bytes()
     corpus = Corpus.model_validate_json(raw, strict=True)
     rows = []
@@ -60,6 +68,7 @@ def evaluate_conversation(profile, corpus_path, report_path):
                     "open": "apps.open",
                     "focus": "windows.focus",
                     "close": "windows.close",
+                    "minimize": "windows.minimize",
                 }.get(case.effect)
                 correct = (
                     decision is not None

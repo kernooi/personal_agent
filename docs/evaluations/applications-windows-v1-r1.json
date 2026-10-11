@@ -1,0 +1,40 @@
+{
+  "version": "applications-native-lab-v1",
+  "execution_mode": "windows",
+  "status": "failed",
+  "metadata": {
+    "available": true,
+    "model_present": true,
+    "identity": "qwen3:8b",
+    "digest": "500a1f067a9f782620b40bee6f7b0c89e17ae61f686b92c24933e4ca4b2b8b41",
+    "runtime_version": "0.40.2",
+    "transport_version": "ollama-chat-v2",
+    "text_generation": "supported",
+    "schema_constrained_output": "unknown",
+    "native_tool_calls": "supported",
+    "context_capacity": 40960,
+    "cloud_disabled": "user_verified",
+    "local_mode_programmatically_attested": false,
+    "ready": true,
+    "qualification": "unqualified; fake-execution evaluation only"
+  },
+  "cases": [
+    {
+      "case_id": "package-open",
+      "state": "NEEDS_REVIEW",
+      "message": "The application outcome is uncertain. Inspect it manually, then /app-review 6d375cc6-be8b-436d-b54e-299fb10ccfde manually-handled. No automatic replay.",
+      "latency_seconds": 9.754,
+      "passed": false
+    },
+    {
+      "case_id": "lab-blocked",
+      "passed": false,
+      "error_type": "ValueError"
+    }
+  ],
+  "preexisting_window_count": 3,
+  "remaining_lab_windows": -3,
+  "model_report": "applications-qwen3-8b-v1-r8.json",
+  "journal_retained": true,
+  "qualification": "attended two application launch types; not all installed apps"
+}

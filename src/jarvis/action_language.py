@@ -8,13 +8,14 @@ def unverified_completion(text):
     return bool(
         re.search(
             r"\b(?:i(?:'ve| have| just)?|we(?:'ve| have)?)\s+(?:(?:successfully|already|just)\s+)?"
-            r"(?:opened|closed|launched|focused|activated|brought|moved|switched|cleared|saved|discarded)\b"
+            r"(?:opened|closed|launched|focused|minimized|minimised|activated|brought|moved|switched|cleared|saved|discarded)\b"
             r"|\b(?:notepad|(?:the |your |selected )?(?:window|text editor))\s+"
             r"(?:has been|was|is now)\s+"
-            r"(?:opened|closed|focused|launched|activated|in the foreground)\b"
+            r"(?:opened|closed|focused|minimized|minimised|launched|activated|in the foreground)\b"
             r"|\b(?:notepad(?: window)?|(?:the |your |selected )*"
             r"(?:notepad )?(?:window|text editor))\s+"
-            r"is\s+(?:(?:already|now)\s+)?(?:open|closed|focused|running|in the foreground)\b",
+            r"is\s+(?:(?:already|now)\s+)?"
+            r"(?:open|closed|focused|minimized|minimised|running|in the foreground)\b",
             value,
         )
     )
@@ -29,6 +30,6 @@ def non_action_text(decision, intent):
     if unverified_completion(decision.text):
         return (
             "I haven't performed an action for that message. "
-            "Please ask me to open, focus or close the selected Notepad."
+            "Please ask me to open, focus, minimize or close the selected Notepad."
         )
     return decision.text

@@ -146,6 +146,7 @@ def build(
         else frozenset({"text_editor"}),
         clock.now() + profile.task_seconds + 60,
         effects=frozenset({"open", "focus", "close"})
+        | (frozenset({"minimize"}) if profile.prompt_version == "planner-m2-v10" else frozenset())
         if profile.decision_version == "decision-m2-v1"
         else frozenset({"open"}),
     )

@@ -180,18 +180,16 @@ def test_explanations_negation_compounds_and_unregistered_targets_have_no_scope(
     "text",
     ["close it", "close that window", "close the notepad window", "close the selected notepad"],
 )
-def test_close_paraphrases_keep_disposable_confirmation(broker, text):
+def test_close_paraphrases_use_owner_request_without_extra_confirmation(broker, text):
     assert request(broker, "Open Notepad", "apps.open").state == State.SUCCEEDED
     result = request(broker, text, "windows.close")
-    assert result.state == State.WAITING_INPUT and "/confirm-empty" in result.message
-    assert broker.desktop.transport.calls == ["open"]
-    broker.desktop.select(broker.desktop.selected_ref, confirm_disposable=True)
-    result = request(broker, text, "windows.close", key="confirmed-close")
     assert result.state == State.SUCCEEDED and not broker.desktop.transport.records
+    assert broker.desktop.transport.calls == ["open", "close"]
 
 
 def test_transcript_focus_variations_and_repeat_survive_close_handoff(broker):
     request(broker, "Open Notepad", "apps.open")
+    broker.desktop.transport.records[0]["modified"] = True
     request(broker, "close it", "windows.close")
     ref = broker.desktop.selected_ref
     for index, text in enumerate(
@@ -281,3 +279,25 @@ def test_controller_context_contains_no_native_ids_labels_or_documents(broker):
     context = json.dumps(broker.registry.planner_context())
     assert all(key not in context for key in ["hwnd", "pid", "exe_sha256", "tab_ids", "document"])
     assert '"verified": true' in context
+
+
+def test_bare_close_uses_selected_notepad_and_preserves_dirty_work(tmp_path):
+    profile = Profile(
+        profile_name="bare-close",
+        model_identity="scripted",
+        prompt_version="planner-m2-v10",
+        decision_version="decision-m2-v1",
+        reply='{"kind":"say","text":"Hello"}',
+    )
+    broker = build(tmp_path / "bare.sqlite", profile, ManualClock())
+    try:
+        assert request(broker, "open notepad", "apps.open").state == State.SUCCEEDED
+        assert request(broker, "close", "windows.close").state == State.SUCCEEDED
+        request(broker, "open notepad", "apps.open", key="reopen-bare")
+        broker.desktop.transport.records[0]["modified"] = True
+        assert (
+            request(broker, "close", "windows.close", key="dirty-bare").state == State.WAITING_INPUT
+        )
+        assert len(broker.desktop.transport.records) == 1
+    finally:
+        broker.store.close()

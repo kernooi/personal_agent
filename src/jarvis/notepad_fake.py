@@ -35,6 +35,7 @@ class FakeNotepadTransport:
             "modified": False,
             "enabled": True,
             "owned_dialog": False,
+            "minimized": False,
         }
         self.records.append(record)
         return record
@@ -64,6 +65,15 @@ class FakeNotepadTransport:
             return deepcopy(target)
         self.before_effect()
         gate()
+        if operation != "open":
+            from jarvis.notepad import identity
+
+            if target is None or identity(target) != identity(expected):
+                raise AdmissionRejected("Stale window")
+        if operation == "minimize" and (
+            target.get("enabled") is not True or target.get("owned_dialog") is not False
+        ):
+            raise AdmissionRejected("Unavailable minimize target")
         if self.call("activity") != payload["activity"]:
             raise AdmissionRejected("User takeover")
         if operation == "close" and (
@@ -80,7 +90,12 @@ class FakeNotepadTransport:
             if operation == "open":
                 self.add()
             elif operation == "focus":
+                target["minimized"] = False
                 self.focus = target["hwnd"]
+            elif operation == "minimize":
+                target["minimized"] = True
+                if self.focus == target["hwnd"]:
+                    self.focus = 0
             elif operation == "close":
                 if self.dialog:
                     target["owned_dialog"] = True

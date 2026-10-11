@@ -62,3 +62,18 @@ turn, and cannot guess or rebind targets. Unknown input-during-verification rema
 UNKNOWN; messages identify cause and exact review command. No automatic recovery
 acknowledgment or retry is introduced. The expanded frozen corpus is separate;
 prior corpus and failed/qualified results remain historical evidence.
+
+
+Selected-window minimize extension (2026-10-11): the user requested minimize in
+addition to open, close and focus. This extension is limited to registered Notepad,
+using windows.minimize with an exact broker-issued window reference. The existing
+broker grant, single-use approval, journal, desktop lease and worker commit gate
+apply. Native ShowWindowAsync(SW_MINIMIZE) is followed by an independent IsIconic
+observation on the same verified identity. Focus restores a minimized window with
+SW_RESTORE before attempting foreground activation; no injected input is used.
+Minimize does not discard work and needs no empty-disposable confirmation. Disabled
+windows or owned dialogs cause handoff. Other applications stay unregistered for
+this effect. Original frozen corpora/reports remain historical; the new minimize
+corpus and conversation corpus require 100% correct with zero unauthorized effects.
+ShowWindowAsync only acknowledges starting an operation, not completion:
+https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-showwindowasync

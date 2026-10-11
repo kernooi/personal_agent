@@ -20,6 +20,7 @@ def authorize(
             ("apps.open", ("open",)),
             ("windows.focus", ("focus",)),
             ("windows.close", ("close",)),
+            ("windows.minimize", ("minimize",)),
             ("currency.quote", ("public_read",)),
             ("currency.quote", ("local_calculate",)),
             ("currency.quote", ("read_evidence",)),

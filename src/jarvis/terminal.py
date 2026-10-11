@@ -132,6 +132,10 @@ def chat_loop(conversation: Conversation, stream: TextIO, output: Callable[[str]
         if media is not None and media.real
         else f"Actions use {mode} mode."
     )
+    applications = getattr(conversation.broker, "applications", None)
+    if applications is not None:
+        application_mode = "WINDOWS" if applications.desktop.real else "SIMULATED"
+        execution_label += f" Applications={application_mode}."
     output(f"Type /stop during inference; /quit to exit. {execution_label}")
     prompt()
     reader.thread.start()
@@ -148,6 +152,13 @@ def chat_loop(conversation: Conversation, stream: TextIO, output: Callable[[str]
             if not reader.begin(generation):
                 continue
             try:
+                applications = getattr(conversation.broker, "applications", None)
+                if applications is not None and text.startswith("/"):
+                    reply = applications.control(text)
+                    if reply is not None:
+                        output("JARVIS: " + reply)
+                        prompt()
+                        continue
                 currency = conversation.broker.currency
                 web = conversation.broker.web
                 media = conversation.broker.media

@@ -278,6 +278,14 @@ receipt can establish completion. A clarification answer isn't an action receipt
 The current request_target ambiguous means clarify, not unsupported. For permitted
 requests including the text editor, again, or a resolved clarification, propose
 the exact current action. No actions are inferred from your words.
+Selected Notepad minimize is also supported. When the permission ceiling allows
+minimize, always propose windows.minimize with exactly the current window_ref.
+Minimize leaves the app running and does not require disposable-close confirmation.
+Focus restores a minimized selected Notepad and brings it to the foreground.
+An ambiguous target is not an unavailable app. For example, 'open my editor'
+with request_target ambiguous needs:
+{"kind":"clarify","question":"Do you mean the registered Notepad text editor?"}
+Do not return unsupported for that case.
 """
 )
 
