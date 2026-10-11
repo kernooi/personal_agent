@@ -99,6 +99,10 @@ def parse_decision(raw: bytes, version: str = "decision-v1") -> Decision:
             from jarvis.currency_decisions import parse
 
             return parse(raw)
+        if version == "media-choice-v1":
+            from jarvis.media_tools import gateway_parse
+
+            return gateway_parse(raw)
         if version in {
             "assistant-plan-v1",
             "assistant-repair-v1",
@@ -280,6 +284,7 @@ class ModelRequest:
     decision_boundary: (
         Literal[
             "currency-decision-v1",
+            "media-choice-v1",
             "web-route-v1",
             "web-plan-v1",
             "web-select-v1",

@@ -1,5 +1,47 @@
 # JARVIS implementation plan
 
+## Spotify Windows backend follow-up (2026-10-11)
+
+User explicitly selected Windows media controls instead of developer-app/OAuth
+setup. Implemented and deterministic-tested the native Spotify-only adapter,
+replaceable backend configuration, broker/stop integration, bounded worker,
+independent verification, lease and historical API journal compatibility.
+Created private `media-windows-v1.toml`; simulation remains default, with separate
+`--real-media --media-attended --windows-media-report` for actual playback.
+Current local-model qualification passes 12/12 new frozen native cases and 22/22
+unchanged original media cases, zero unauthorized dispatches. Attended native
+current/pause/resume/next/previous and physical stop PASS in report r2; failed r1
+retained. Final checks: 927 tests pass, lint/format/dependency/diff checks clean.
+No API setup needed for this path; app launch, song search, volume and remote
+devices unsupported. Optional official API and Netflix setup remain pending.
+No automatic fallback, global media keys, broader UI control, commit or push.
+Overall M4 still NOT FULLY VERIFIED. See ADR 0007 and BUILD_LOG for exact evidence.
+
+## M4: approved Chrome and media slice (2026-10-11, NOT FULLY VERIFIED)
+
+The user's M4 attachment supersedes the preceding M3.5 stop boundary. Preserve all
+prior passed/failed evidence; the assistant-v2 interpretation/currency candidate
+remains unqualified. Do not begin M5 or generic M8 control.
+
+1. Baseline verified: clean 885c8ff, 753 deterministic tests, lint/format/pip checks.
+2. Installed signed stable Chrome inspected; private profile and pinned registration
+   implementation added. No ordinary Chrome profile reads/attachment.
+3. Implement semantic media registry on existing broker, persistent supervised
+   worker, strict references, grants/admission/journal, independent observations,
+   cancellation/takeover/unknown outcomes and independent configuration.
+4. Primary YouTube search/open/current/play/pause/resume; Netflix manual-login and
+   narrow title search/open; official Spotify API with OS-protected credentials,
+   scopes/device checks and truthful setup/entitlement restrictions. No fallback.
+5. Offline adversarial/fixture tests, frozen local-model qualification, opt-in
+   attended Chrome lab and compatibility/privacy/decision documentation implemented.
+6. Actual Chrome 154.0.8037.98 / Playwright 1.63.0 YouTube search/open/video identity,
+   play/pause/resume/current and physical hotkey passed in live v1-r6. Ads finished
+   naturally; no bypass or replay. Failed reports remain preserved.
+7. User explicitly left Spotify OAuth/account/device and Netflix manual login
+   pending. Normal-Chrome coexistence/live takeover also remain unverified. Stop
+   at M4 for review; never turn the partial platform evidence into overall PASS.
+
+
 Conversation echo correction complete (2026-10-09): remove repeated known internal
 non-action prefixes from both visible replies and assistant history; preserve
 broker/journal semantics and trusted simulation labels for actions. Two-turn echo

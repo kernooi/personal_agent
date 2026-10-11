@@ -1,5 +1,117 @@
 # Build evidence
 
+## 2026-10-11: M4 commit preparation
+
+User requested committing the current implementation. Reviewed all 63 modified/
+untracked files; no potential private-key, JWT or literal service-secret values
+were found by the scoped scan. Private browser profiles, API credentials, runtime
+journals and `%LOCALAPPDATA%\Jarvis\media-all-v1.toml` remain outside Git.
+The combined private media configuration enables YouTube and Windows Spotify,
+with Netflix disabled; existing currency and local SearXNG configs validated.
+Current M2 answer-only reports and both latest M4 qualification reports match.
+Ran the full test suite and lint/format/dependency/diff checks again before commit;
+all checks passed. Retained all failed historical evaluation/lab reports. User
+authorized a local commit; no push or additional real Windows effects performed.
+
+## 2026-10-11: user-selected Spotify Windows media backend
+
+The user explicitly selected Windows media control instead of API setup. Preserved
+the existing uncommitted M4 work and optional API adapter; added ADR 0007, an
+explicit backend binding, supervised Spotify-only native worker, independent
+state verification, shared desktop lease and separate real/attended/qualification
+flags. No global media keys, app launching, catalog search, account setup, API
+credentials, browser fallback, global settings, service setup, commit or push.
+
+Actual environment: Python 3.13.2; Windows 11 10.0.26200; installed Store package
+SpotifyAB.SpotifyMusic 1.304.258.0. The observational WinRT check succeeded and
+initially found zero Spotify sessions. The user manually opened Spotify and started
+playback. Added five PyWinRT 3.2.1 distributions to the project-local environment
+through generated hash-locked dependencies. Existing package versions retained.
+
+Commands actually run (all Python invocations use `.\.venv\Scripts\python.exe`):
+
+| Command/check | Actual result |
+| --- | --- |
+| `-m piptools compile --extra dev --extra windows --extra browser --extra media --strip-extras --allow-unsafe --generate-hashes --output-file requirements-dev.lock pyproject.toml` | Exit 0; regenerated lock |
+| `-m pip install --require-hashes -r requirements-dev.lock` | Exit 0; five WinRT distributions installed only in .venv |
+| `-m pip install --no-deps --no-build-isolation -e .` | Exit 0 |
+| `-m pytest -q` | Final exit 0; 927 passed in 27.61 s; preceding 924/926 runs preserved in this session |
+| `-m ruff check .` / `-m ruff format --check .` / `-m pip check` / `git diff --check` | Exit 0; clean; 102 Python files formatted |
+| `-m jarvis eval-windows-media --live --profile "$env:LOCALAPPDATA\Jarvis\profiles\notepad-m2-v10.toml" --report docs/evaluations/m4-windows-media-model-v1-r3.json` | Exit 0; current frozen 12/12, 100%, zero unauthorized calls; r1/r2 earlier-source passes preserved |
+| `-m jarvis eval-media --live --profile "$env:LOCALAPPDATA\Jarvis\profiles\notepad-m2-v10.toml" --report docs/evaluations/m4-qwen3-8b-simulation-v1-r12.json` | Exit 0; original frozen 22/22, 100%, zero unauthorized calls; r11 prior-source pass preserved |
+| `scripts/Test-JarvisWindowsMedia.py --attended --profile "$env:LOCALAPPDATA\Jarvis\profiles\notepad-m2-v10.toml" --model-report docs/evaluations/m4-windows-media-model-v1-r2.json --report docs/evaluations/m4-windows-spotify-v1-r2.json` | Exit 0; actual qwen3:8b -> broker -> native Windows Spotify current/pause/resume/next/previous and physical global stop PASS |
+| `-m jarvis doctor --profile "$env:LOCALAPPDATA\Jarvis\profiles\notepad-m2-v10.toml" --media-config "$env:LOCALAPPDATA\Jarvis\media-windows-v1.toml"` | Exit 0; local model ready; native config valid; no browser launch/public fetch |
+| README Spotify-only real chat command with piped `/quit` | Final exit 0; valid current report, existing journal recovery, no replay or media effect |
+
+Real lab final latencies: current 0.987 s, pause 0.526 s, resume 0.549 s, next
+0.706 s, previous 0.670 s. These are one warm-run measurements. Native state
+reported playing/paused and independently observed changed track fingerprints.
+User physically pressed Ctrl+Alt+Shift+F10 while Spotify was focused; subsequent
+pause was CANCELLED with zero new MediaAdapter admissions. No physical desktop
+input was generated and audible sound is not attested.
+
+Failures preserved: initial lab profile loader error and hotkey conflict caused
+zero playback effects (the user exited two old chat processes). Live report r1
+verified all five operations but FAILED the stop criterion because the lab omitted
+the broker cancel callback; worker rejected after stop, but task state was FAILED.
+Corrected the harness and retained r1. A startup smoke check exposed old API journal
+scopes lacking the new backend field. Fixed API canonical serialization to preserve
+their exact original meaning/digest; native scopes retain explicit `windows`.
+No journal rewrite or replay. Added a backwards-compatibility regression and
+reran both frozen model corpora on final source. The final API-only serialization
+fix did not alter the native Windows argument/worker path; attended evidence r2
+accurately retains its earlier model report, while current startup uses r3.
+
+Created new private `%LOCALAPPDATA%\Jarvis\media-windows-v1.toml` exclusively,
+without overwriting prior config. Existing API/YouTube reports, failures and M2
+work preserved. Native current/play/pause/resume/next/previous are tested; missing
+sessions, unsupported controls, ambiguous sources, replacement/takeover and
+unverified delivery fail closed. Windows exposes app metadata, not catalog identity
+or cryptographic entitlement evidence; identical metadata/restart-on-previous can
+remain unverified. Spotify API account/OAuth and Netflix login remain pending.
+Overall M4 remains NOT FULLY VERIFIED; no later milestone was implemented.
+
+Final model/source contract: `cd0ff08332600e0be9e07f90765ba8df80357fb492572fe7e4b53d3c6f74c5f3`.
+Model/runtime: qwen3:8b / Ollama 0.40.2; no model/server setting changed.
+
+2026-10-11 M4 implementation started from clean local commit 885c8ff.
+Read the user's M4 attachment, repository rules/specification and existing source,
+tests, milestone/compatibility/decision evidence. Prior assistant-v2 failed gates
+remain preserved and cannot qualify this new capability.
+Baseline actual commands: python -m pytest: 753 passed in 21.91 s; ruff check:
+clean; ruff format --check: 81 files clean; pip check: no broken requirements.
+Windows NT 10.0.26200.0; installed stable Chrome 154.0.8037.98 at the trusted
+Program Files location, valid Google LLC Authenticode signature; executable SHA256
+6849d2982038de9f9489a7b3858f3b785b7fec06a842c93c517281d21995c8ca.
+Observational inspection only: no browser launch or personal profile read.
+Generated lock with --extra browser/dev/windows and installed through
+--require-hashes, then editable --no-deps --no-build-isolation. Added Playwright
+1.63.0, greenlet 3.5.6 and pyee 13.0.1 only to the project .venv. No bundled browser
+download, Chrome repair, system change, account setup or M5/M8 capability.
+First M4 broker/security/API fixture suite: 93 passed in 1.89 s. Tests initially
+exposed missing durable media postcondition recognition; fixed the strict stored
+evidence branch rather than removing the assertion. Default tests launch no Chrome
+and perform no real networking.
+
+Final M4 evidence (2026-10-11): 909 deterministic tests passed in 23.06 s,
+Ruff lint exit 0, formatting exit 0 (98 files), pip check exit 0, diff check exit 0.
+Model fake-media r1 failed 8/22, r4 failed 21/22; all failed files retained. Final
+r10 passed 22/22, 100% gate/zero unauthorized effects, exact current source/profile/
+qwen3:8b digest/Ollama 0.40.2. Explicit readiness and manual review preceded real
+tests. Live YouTube r1-r5 preserve unknown/partial/advertisement failures; r6 exited
+0 with actual model -> Conversation -> broker -> installed Chrome. Search five
+results, selected official video ID/title dQw4w9WgXcQ, play/pause/resume/current
+verified; ad completed naturally with launch-only dedicated-profile autoplay.
+Physical Ctrl+Alt+Shift+F10 with Chrome focused cancelled the next request with
+zero new admissions. No ordinary Chrome attachment, account edits, ad skip, replay,
+Notepad effect or global setting changes. Spotify/Netflix setup explicitly left
+pending by user. Overall M4 NOT FULLY VERIFIED; normal-Chrome coexistence and live
+takeover also remain untested. Doctor exit 0 remained observational/no browser launch.
+Current M4 and existing legacy M2 model/conversation qualifications checked True.
+Full commands, versions, source hashes, latencies and limits: docs/M4_TEST_REPORT.md.
+No commit/push or M5/M8 work.
+
+
 ## Conversation history prefix echo correction — 2026-10-09
 
 User reported internal non-action boilerplate reappearing on later chat turns.

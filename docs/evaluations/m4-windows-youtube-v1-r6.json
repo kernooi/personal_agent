@@ -1,0 +1,203 @@
+{
+  "version": "m4-windows-lab-v1",
+  "mode": "real local model -> Conversation -> broker -> installed Chrome",
+  "profile": {
+    "schema_version": 1,
+    "profile_name": "notepad-m2-local",
+    "execution_mode": "simulation",
+    "model_identity": "qwen3:8b",
+    "role": "primary_text",
+    "prompt_version": "planner-m2-v10",
+    "decision_version": "decision-m2-v1",
+    "context_bytes": 16384,
+    "max_output_bytes": 32768,
+    "task_seconds": 120,
+    "assistant_version": "legacy",
+    "max_model_turns": 8,
+    "provider": "ollama",
+    "network_mode": "local_model_only",
+    "base_url": "http://127.0.0.1:11434",
+    "response_mode": "json_schema",
+    "context_tokens": 4096,
+    "max_output_tokens": 512,
+    "safety_tokens": 256,
+    "connect_timeout_seconds": 5.0,
+    "read_timeout_seconds": 30.0,
+    "max_envelope_bytes": 131072,
+    "temperature": 0.0,
+    "cloud_disabled_verified": true,
+    "cloud_disabled_evidence": "Operator observed actual Ollama 0.40.2 startup at 2026-10-10T12:13:27.217+08:00: Ollama cloud disabled: true, loopback 127.0.0.1:11434, process-local approved settings. Separate same-PC M1 offline evidence: docs/evaluations/m1-desktop-offline-validation.json (2026-10-09), snapshot-level only.",
+    "provider_options": {
+      "think": false,
+      "keep_alive": "2m"
+    },
+    "stage_options": {}
+  },
+  "metadata": {
+    "available": true,
+    "model_present": true,
+    "identity": "qwen3:8b",
+    "digest": "500a1f067a9f782620b40bee6f7b0c89e17ae61f686b92c24933e4ca4b2b8b41",
+    "runtime_version": "0.40.2",
+    "transport_version": "ollama-chat-v2",
+    "text_generation": "supported",
+    "schema_constrained_output": "unknown",
+    "native_tool_calls": "supported",
+    "context_capacity": 40960,
+    "cloud_disabled": "user_verified",
+    "local_mode_programmatically_attested": false,
+    "ready": true,
+    "qualification": "unqualified; fake-execution evaluation only"
+  },
+  "contract_sha256": "33a8b6d5e53a1903cf1af454cda17e3eaf9a8df38604dd1d8838fb22d6afdf35",
+  "windows_version": "Windows-11-10.0.26200-SP0",
+  "chrome_version": "154.0.8037.98",
+  "chrome_sha256": "6849d2982038de9f9489a7b3858f3b785b7fec06a842c93c517281d21995c8ca",
+  "automation_library": "Playwright",
+  "automation_version": "1.63.0",
+  "profile_classification": "dedicated private JARVIS profile outside Git; normal Chrome excluded",
+  "service": "youtube",
+  "adapter_version": "media-adapter-v1",
+  "records": [
+    {
+      "public_owner_request": "Search YouTube for Rick Astley Never Gonna Give You Up",
+      "state": "SUCCEEDED",
+      "error": null,
+      "latency_seconds": 5.17,
+      "verified": true,
+      "observed_video_id": "",
+      "observed_state": "results",
+      "observed_public_title": "",
+      "candidates": [
+        {
+          "id": "dQw4w9WgXcQ",
+          "title": "Rick Astley - Never Gonna Give You Up (Official Video) (4K Remaster)",
+          "creator": "Rick Astley Rick Astley"
+        },
+        {
+          "id": "7FwDP17XPlk",
+          "title": "Rick Astley - Never Gonna Give You Up",
+          "creator": "Amazing Lyrics Amazing Lyrics"
+        },
+        {
+          "id": "LLFhKaqnWwk",
+          "title": "Rick Astley - Never Gonna Give You Up (Official Animated Video)",
+          "creator": "Rick Astley Rick Astley"
+        },
+        {
+          "id": "E9de-cmycx8",
+          "title": "Rick Astley - Together Forever (Official HD Video)",
+          "creator": "Rick Astley Rick Astley"
+        },
+        {
+          "id": "XGxIE1hr0w4",
+          "title": "Never Gonna Give You Up | Rick Astley Rocks New Year's Eve - BBC",
+          "creator": "BBC BBC"
+        }
+      ],
+      "desktop_calls": 0
+    },
+    {
+      "public_owner_request": "Open the first result",
+      "state": "SUCCEEDED",
+      "error": null,
+      "latency_seconds": 2.68,
+      "verified": true,
+      "observed_video_id": "dQw4w9WgXcQ",
+      "observed_state": "ad",
+      "observed_public_title": "Rick Astley - Never Gonna Give You Up (Official Video) (4K Remaster)",
+      "candidates": [],
+      "desktop_calls": 0
+    },
+    {
+      "public_owner_request": "Play it",
+      "state": "SUCCEEDED",
+      "error": null,
+      "latency_seconds": 1.25,
+      "verified": true,
+      "observed_video_id": "dQw4w9WgXcQ",
+      "observed_state": "playing",
+      "observed_public_title": "Rick Astley - Never Gonna Give You Up (Official Video) (4K Remaster)",
+      "candidates": [],
+      "desktop_calls": 0
+    },
+    {
+      "public_owner_request": "Pause the video",
+      "state": "SUCCEEDED",
+      "error": null,
+      "latency_seconds": 1.116,
+      "verified": true,
+      "observed_video_id": "dQw4w9WgXcQ",
+      "observed_state": "paused",
+      "observed_public_title": "Rick Astley - Never Gonna Give You Up (Official Video) (4K Remaster)",
+      "candidates": [],
+      "desktop_calls": 0
+    },
+    {
+      "public_owner_request": "Resume it",
+      "state": "SUCCEEDED",
+      "error": null,
+      "latency_seconds": 1.149,
+      "verified": true,
+      "observed_video_id": "dQw4w9WgXcQ",
+      "observed_state": "playing",
+      "observed_public_title": "Rick Astley - Never Gonna Give You Up (Official Video) (4K Remaster)",
+      "candidates": [],
+      "desktop_calls": 0
+    },
+    {
+      "public_owner_request": "What video is currently open on YouTube?",
+      "state": "SUCCEEDED",
+      "error": null,
+      "latency_seconds": 0.733,
+      "verified": true,
+      "observed_video_id": "dQw4w9WgXcQ",
+      "observed_state": "playing",
+      "observed_public_title": "Rick Astley - Never Gonna Give You Up (Official Video) (4K Remaster)",
+      "candidates": [],
+      "desktop_calls": 0
+    },
+    {
+      "public_owner_request": "Pause the video",
+      "state": "CANCELLED",
+      "error": null,
+      "latency_seconds": 0.007,
+      "verified": true,
+      "observed_video_id": "dQw4w9WgXcQ",
+      "observed_state": "playing",
+      "observed_public_title": "Rick Astley - Never Gonna Give You Up (Official Video) (4K Remaster)",
+      "candidates": [],
+      "desktop_calls": 0
+    }
+  ],
+  "spotify": "NOT RUN / OAuth setup pending",
+  "netflix": "NOT RUN / manual login pending",
+  "passed": true,
+  "read_only_player_wait": [
+    {
+      "state": "ad",
+      "video_id": "dQw4w9WgXcQ"
+    },
+    {
+      "state": "ad",
+      "video_id": "dQw4w9WgXcQ"
+    },
+    {
+      "state": "ad",
+      "video_id": "dQw4w9WgXcQ"
+    },
+    {
+      "state": "ad",
+      "video_id": "dQw4w9WgXcQ"
+    },
+    {
+      "state": "playing",
+      "video_id": "dQw4w9WgXcQ"
+    }
+  ],
+  "stop": {
+    "native_hotkey_observed": true,
+    "cancelled": true,
+    "new_admissions": 0
+  }
+}

@@ -44,6 +44,28 @@ def main() -> None:
     currency.add_argument("--public-data-config", type=Path, required=True)
     currency.add_argument("--live", action="store_true", required=True)
     currency.add_argument("--report", type=Path, required=True)
+    chrome = sub.add_parser(
+        "inspect-chrome", help="Observe installed stable Google Chrome; no launch"
+    )
+    chrome.add_argument("--registration", type=Path)
+    register = sub.add_parser(
+        "register-chrome", help="Create private dedicated-profile Chrome registration"
+    )
+    register.add_argument("--output", type=Path, required=True)
+    spotify = sub.add_parser(
+        "spotify-store-token", help="Explicit private OS credential setup; no model/network"
+    )
+    spotify.add_argument("--expires-in", type=int, choices=range(1, 3601), required=True)
+    media_lab = sub.add_parser(
+        "test-media", help="Explicit attended installed-Chrome/local-model YouTube lab"
+    )
+    media_lab.add_argument("--windows", action="store_true", required=True)
+    media_lab.add_argument("--attended", action="store_true", required=True)
+    media_lab.add_argument("--profile", type=Path, required=True)
+    media_lab.add_argument("--browser-registration", type=Path, required=True)
+    media_lab.add_argument("--media-report", type=Path, required=True)
+    media_lab.add_argument("--report", type=Path, required=True)
+    media_lab.add_argument("--interactive", action="store_true")
     for command in (
         "doctor",
         "chat",
@@ -53,6 +75,8 @@ def main() -> None:
         "eval-m3",
         "eval-web",
         "eval-assistant",
+        "eval-media",
+        "eval-windows-media",
     ):
         child = sub.add_parser(command, help=f"Local {command}; real chat requires explicit opt-in")
         child.add_argument("--profile", type=Path, required=True)
@@ -60,6 +84,8 @@ def main() -> None:
             child.add_argument("--public-data-config", type=Path, required=command == "eval-m3")
         if command in {"doctor", "chat", "eval-web"}:
             child.add_argument("--web-config", type=Path, required=command == "eval-web")
+        if command in {"doctor", "chat"}:
+            child.add_argument("--media-config", type=Path)
         if command == "eval-web":
             child.add_argument("--owner-url-only", action="store_true")
         if command == "doctor":
@@ -70,7 +96,23 @@ def main() -> None:
             child.add_argument("--registration", type=Path)
             child.add_argument("--model-report", type=Path)
             child.add_argument("--conversation-report", type=Path)
-        if command in {"eval", "eval-m2", "eval-m2-chat", "eval-m3", "eval-web", "eval-assistant"}:
+            child.add_argument("--real-browser", action="store_true")
+            child.add_argument("--real-media", action="store_true")
+            child.add_argument("--media-attended", action="store_true")
+            child.add_argument("--windows-media-report", type=Path)
+            child.add_argument("--browser-attended", action="store_true")
+            child.add_argument("--browser-registration", type=Path)
+            child.add_argument("--media-report", type=Path)
+        if command in {
+            "eval",
+            "eval-m2",
+            "eval-m2-chat",
+            "eval-m3",
+            "eval-web",
+            "eval-assistant",
+            "eval-media",
+            "eval-windows-media",
+        }:
             child.add_argument("--live", action="store_true", required=True)
             child.add_argument("--report", type=Path)
         if command == "eval":
@@ -79,6 +121,55 @@ def main() -> None:
             )
             child.add_argument("--repeats", type=int, choices=(1, 2, 3), default=1)
     args = parser.parse_args()
+    if args.command == "test-media":
+        from jarvis.media_lab import run_lab
+
+        try:
+            report, code = run_lab(args)
+        except (OSError, ValueError) as exc:
+            parser.error(str(exc))
+        print(json.dumps({k: v for k, v in report.items() if k != "records"}, indent=2))
+        raise SystemExit(code)
+    if args.command in {"inspect-chrome", "register-chrome"}:
+        from jarvis.chrome_identity import create_registration, discover_chrome, load_registration
+
+        try:
+            identity = (
+                create_registration(args.output, Path.cwd())
+                if args.command == "register-chrome"
+                else load_registration(args.registration)
+                if args.registration
+                else discover_chrome()
+            )
+        except (OSError, ValueError) as exc:
+            parser.error(str(exc))
+        print(
+            json.dumps(
+                {
+                    **identity.model_dump(),
+                    "browser_launched": False,
+                    "profile_classification": "dedicated private JARVIS; ordinary Chrome excluded",
+                },
+                indent=2,
+            )
+        )
+        return
+    if args.command == "spotify-store-token":
+        import getpass
+        import time
+
+        from jarvis.spotify_api import SCOPES, store_token
+
+        if not sys.stdin.isatty():
+            parser.error("Use an attended terminal; never pass tokens as command-line arguments")
+        print(
+            "Store only an authorized Spotify access token with the documented playback scopes. "
+            "No refresh token or password is requested."
+        )
+        token = getpass.getpass("Authorized access token (hidden): ")
+        store_token(token, SCOPES, time.time() + args.expires_in)
+        print("Stored in Windows Credential Manager. Expiry still requires manual reauthorization.")
+        return
     if args.command == "currency-check":
         from jarvis.currency_tools import load_public_config
         from jarvis.m3_evaluation import provider_check
@@ -196,6 +287,16 @@ def live_command(args, parser):
             parser.error(str(exc))
         print(json.dumps({k: v for k, v in report.items() if k != "records"}, indent=2))
         raise SystemExit(code)
+    if args.command in {"eval-media", "eval-windows-media"}:
+        from jarvis.media_evaluation import evaluate as evaluate_media
+
+        if args.report is None:
+            parser.error("eval-media requires --report; existing reports are preserved")
+        report, code = evaluate_media(
+            profile, args.report, windows_media=args.command == "eval-windows-media"
+        )
+        print(json.dumps({k: v for k, v in report.items() if k != "records"}, indent=2))
+        raise SystemExit(code)
     if args.command == "eval-web":
         from jarvis.web_evaluation import evaluate_web
 
@@ -264,6 +365,14 @@ def live_command(args, parser):
         raise SystemExit(result.exit_code)
     provider = OllamaProvider(SystemClock())
     metadata = provider.inspect(profile)
+    media_config = None
+    if getattr(args, "media_config", None):
+        from jarvis.media_data import load_media_config
+
+        try:
+            media_config = load_media_config(args.media_config)
+        except (OSError, ValueError):
+            parser.error("Invalid media configuration")
     if args.command == "doctor":
         local_appdata = Path(os.environ.get("LOCALAPPDATA", Path.home() / ".local/share"))
         standard = local_appdata / "Programs/Ollama/ollama.exe"
@@ -299,6 +408,8 @@ def live_command(args, parser):
                     "public_provider_contacted": False,
                     "web_research": web_config.model_dump() if web_config else {"enabled": False},
                     "web_provider_contacted": False,
+                    "media": media_config.model_dump() if media_config else {"enabled": False},
+                    "browser_launched": False,
                     "last_evaluation": selected_summary,
                     **metadata,
                     "qualification": "M3 currency/chat passed; Windows qualification is separate"
@@ -343,6 +454,63 @@ def live_command(args, parser):
             parser.error("Matching passed multi-turn M2 qualification is also required")
     elif args.registration or args.attended or args.model_report or args.conversation_report:
         parser.error("Real-mode options require --real; no implicit Windows activation")
+    browser_provider = None
+    browser_stop = None
+    if args.real_browser:
+        import threading
+
+        from jarvis.browser_transport import BrowserWorkerProvider
+        from jarvis.media_evaluation import qualified as media_qualified
+
+        if (
+            not args.browser_attended
+            or args.browser_registration is None
+            or media_config is None
+            or not media_config.enabled
+            or args.media_report is None
+            or not media_qualified(args.media_report, profile, metadata)
+        ):
+            parser.error(
+                "Real Chrome requires enabled media config, --browser-attended, "
+                "--browser-registration and matching passed --media-report"
+            )
+        browser_stop = threading.Event()
+        browser_provider = BrowserWorkerProvider(
+            SystemClock(), args.browser_registration, media_config, browser_stop
+        )
+    elif args.browser_attended or args.browser_registration or args.media_report:
+        parser.error("Browser real-mode options require --real-browser")
+    if args.real_media:
+        import threading
+
+        from jarvis.media_evaluation import qualified as media_qualified
+        from jarvis.windows_media import MediaProviders, WindowsMediaProvider
+
+        if (
+            not args.media_attended
+            or media_config is None
+            or not media_config.enabled
+            or not media_config.spotify
+            or media_config.spotify_backend != "windows"
+            or args.windows_media_report is None
+            or not media_qualified(args.windows_media_report, profile, metadata, windows_media=True)
+        ):
+            parser.error(
+                "Windows Spotify requires enabled windows backend, --media-attended "
+                "and matching passed --windows-media-report"
+            )
+        browser_stop = browser_stop or threading.Event()
+        native = WindowsMediaProvider(SystemClock(), media_config, browser_stop)
+        browser_provider = MediaProviders(browser_provider, native, browser_stop)
+    elif args.media_attended or args.windows_media_report:
+        parser.error("Windows media real-mode options require --real-media")
+    if (
+        args.real_browser
+        and media_config.spotify
+        and media_config.spotify_backend == "windows"
+        and not args.real_media
+    ):
+        parser.error("Windows Spotify needs separate --real-media consent; no API fallback")
     mode = "WINDOWS" if args.real else "SIMULATED"
     targets = "notepad" if profile.decision_version == "decision-m2-v1" else "text_editor"
     print(
@@ -356,7 +524,7 @@ def live_command(args, parser):
             "/confirm-empty confirms your empty disposable test window."
         )
     else:
-        print("Model unqualified for real actions; local-mode evidence is user/operator verified.")
+        print("Notepad actions are simulated; local-mode evidence is user/operator verified.")
     data_home = Path(os.environ.get("LOCALAPPDATA", Path.home() / ".local/share")) / "Jarvis"
     data_home.mkdir(parents=True, exist_ok=True)
     if public_config:
@@ -374,11 +542,35 @@ def live_command(args, parser):
             "Web controls: /web-status, /web-enable, /web-disable, /sources, "
             "/web-cache, /web-cache-clear, /web-refresh."
         )
+    if media_config:
+        browser_label = (
+            "installed Google Chrome / dedicated JARVIS profile"
+            if args.real_browser
+            else "SIMULATED browser"
+        )
+        spotify_label = (
+            "Windows media controls"
+            if args.real_media
+            else "setup required"
+            if not browser_provider or not browser_provider.spotify_ready
+            else "OAuth configured"
+        )
+        print(
+            f"Media: {browser_label} | YouTube={media_config.youtube} | "
+            f"Netflix={media_config.netflix} | Spotify={spotify_label}."
+        )
+        print(
+            "Media controls: /media-status, /media-device <reference>, "
+            "/review-media <task> manually-handled. "
+            "Ctrl+Alt+Shift+F10 stops new real media actions."
+        )
     try:
         broker = build(
             data_home
             / (
-                "m2-journal.sqlite"
+                "m4-journal.sqlite"
+                if args.real_browser or args.real_media
+                else "m2-journal.sqlite"
                 if args.real
                 else "m3-journal.sqlite"
                 if public_config
@@ -393,6 +585,8 @@ def live_command(args, parser):
             public_config=public_config,
             cache_path=data_home / "public-quotes-v2.json" if public_config else None,
             web_config=web_config,
+            media_config=media_config,
+            browser_provider=browser_provider,
         )
     except (OSError, sqlite3.Error, ValueError):
         provider.close()
@@ -407,7 +601,7 @@ def live_command(args, parser):
         if args.real:
             pending = broker.store.db.execute(
                 "SELECT DISTINCT a.task_id FROM actions a WHERE a.state='UNKNOWN' "
-                "AND a.capability!='currency.quote' "
+                "AND a.capability NOT IN ('currency.quote','web.research','media.control') "
                 "AND NOT EXISTS (SELECT 1 FROM events e WHERE e.task_id=a.task_id "
                 "AND e.kind='manual_review_acknowledged')"
             ).fetchall()
@@ -417,13 +611,18 @@ def live_command(args, parser):
                         "Notepad actions are paused for an uncertain earlier outcome. "
                         f"Inspect Notepad, then /review {row[0]} manually-handled."
                     )
-        if args.real:
+        if args.real or args.real_browser or args.real_media:
             from jarvis.win_stop import StopHotkey
 
-            with StopHotkey(broker.desktop.stop):
+            stop = getattr(broker.desktop, "stop", browser_stop)
+            if browser_provider:
+                browser_provider.stop = stop
+            with StopHotkey(stop):
                 chat_loop(Conversation(broker), sys.stdin)
         else:
             chat_loop(Conversation(broker), sys.stdin)
     finally:
+        if broker.media:
+            broker.media.close()
         broker.store.close()
         provider.close()

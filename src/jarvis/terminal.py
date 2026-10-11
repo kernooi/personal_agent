@@ -120,9 +120,19 @@ def chat_loop(conversation: Conversation, stream: TextIO, output: Callable[[str]
 
     reader = TerminalInput(stream, notice)
     desktop_stop = getattr(conversation.broker.desktop, "stop", threading.Event())
-    conversation.broker.cancel_requested = lambda: reader.cancel.is_set() or desktop_stop.is_set()
+    media = conversation.broker.media
+    conversation.broker.cancel_requested = lambda: (
+        reader.cancel.is_set()
+        or desktop_stop.is_set()
+        or (media is not None and getattr(media.provider, "stop", desktop_stop).is_set())
+    )
     mode = "WINDOWS" if getattr(conversation.broker.desktop, "real", False) else "SIMULATED"
-    output(f"Type /stop during inference; /quit to exit. Actions use {mode} mode.")
+    execution_label = (
+        f"Notepad={mode}; media=real, Spotify={media.config.spotify_backend}."
+        if media is not None and media.real
+        else f"Actions use {mode} mode."
+    )
+    output(f"Type /stop during inference; /quit to exit. {execution_label}")
     prompt()
     reader.thread.start()
     try:
@@ -140,6 +150,13 @@ def chat_loop(conversation: Conversation, stream: TextIO, output: Callable[[str]
             try:
                 currency = conversation.broker.currency
                 web = conversation.broker.web
+                media = conversation.broker.media
+                if media is not None and text.startswith("/"):
+                    reply = media.control(text, conversation.broker.store)
+                    if reply is not None:
+                        output("JARVIS: " + reply)
+                        prompt()
+                        continue
                 if web is not None and text.startswith("/"):
                     reply = web.control(text)
                     if reply is not None:
@@ -210,7 +227,8 @@ def chat_loop(conversation: Conversation, stream: TextIO, output: Callable[[str]
                             store.event(task.task_id, "manual_review_acknowledged")
                         unresolved = store.db.execute(
                             "SELECT a.task_id FROM actions a WHERE a.state='UNKNOWN' "
-                            "AND a.capability NOT IN ('currency.quote','web.research') "
+                            "AND a.capability NOT IN "
+                            "('currency.quote','web.research','media.control') "
                             "AND NOT EXISTS "
                             "(SELECT 1 FROM events e WHERE e.task_id=a.task_id "
                             "AND e.kind='manual_review_acknowledged')"

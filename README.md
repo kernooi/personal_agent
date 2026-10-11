@@ -1,5 +1,98 @@
 # JARVIS local text assistant
 
+## M4: dedicated Google Chrome and media
+
+M4 adds opt-in installed Chrome for YouTube and Netflix, and an official Spotify
+API adapter. See [M4 results](docs/M4_TEST_REPORT.md),
+[browser compatibility](docs/BROWSER_COMPATIBILITY.md),
+[media setup](docs/MEDIA_COMPATIBILITY.md) and
+[private profile policy](docs/BROWSER_PROFILE_POLICY.md). Stop at M4; no M5.
+Browser, Notepad, currency and public research permissions remain independent.
+
+Spotify can now use Windows media controls without a developer account or API
+token. Open the installed Spotify app and start a track manually, then run:
+
+```powershell
+.\.venv\Scripts\python.exe -m jarvis chat `
+  --profile "$env:LOCALAPPDATA\Jarvis\profiles\notepad-m2-v10.toml" `
+  --media-config "$env:LOCALAPPDATA\Jarvis\media-windows-v1.toml" `
+  --real-media --media-attended `
+  --windows-media-report .\docs\evaluations\m4-windows-media-model-v1-r3.json
+```
+
+Try `What is playing on Spotify?`, `Pause Spotify`, `Resume Spotify`,
+`Next track on Spotify`, `Previous track on Spotify`. Song search, launching the
+app, remote-device selection and volume are outside this backend. Ctrl+Alt+Shift+F10
+stops new effects while Spotify has focus. Do not run another attended JARVIS chat
+at the same time. Native playback and physical stop passed in
+`docs/evaluations/m4-windows-spotify-v1-r2.json`; see
+[Spotify setup and limitations](docs/MEDIA_COMPATIBILITY.md). Notepad and browser
+actions remain simulated in this Spotify-only command. No API fallback occurs.
+
+The generated lock includes the `browser` extra. Do **not** run `playwright install`:
+production uses your installed stable Chrome. Inspect and register explicitly:
+
+```powershell
+.\.venv\Scripts\python.exe -m jarvis inspect-chrome
+.\.venv\Scripts\python.exe -m jarvis register-chrome `
+  --output "$env:LOCALAPPDATA\Jarvis\chrome-registration.json"
+```
+
+Registration creates an empty private profile and never overwrites existing data.
+Copy `config/examples/media.toml` to a new private
+`%LOCALAPPDATA%\Jarvis\media-m4-v1.toml`, set `enabled=true`, and enable only intended
+services. No auth values belong in that file. Evaluate the actual local model
+against frozen fake media before real effects:
+
+```powershell
+.\.venv\Scripts\python.exe -m jarvis eval-media --live `
+  --profile "$env:LOCALAPPDATA\Jarvis\profiles\notepad-m2-v10.toml" `
+  --report .\docs\evaluations\m4-user-model-r1.json
+```
+
+Use a new filename for every run. Reports must match the model, runtime, profile,
+frozen corpus and source contract, with 100% correctness and zero unauthorized
+dispatches. Fake qualification does not establish live Chrome compatibility.
+After explicit attended readiness, run the real YouTube lab:
+
+```powershell
+.\.venv\Scripts\python.exe -m jarvis test-media --windows --attended --interactive `
+  --profile "$env:LOCALAPPDATA\Jarvis\profiles\notepad-m2-v10.toml" `
+  --browser-registration "$env:LOCALAPPDATA\Jarvis\chrome-registration.json" `
+  --media-report .\docs\evaluations\m4-qwen3-8b-simulation-v1-r12.json `
+  --report .\docs\evaluations\m4-user-youtube-r1.json
+```
+
+The lab closes only its own dedicated context and pauses for a physical hotkey
+check. Ads, restrictions and uncertain outcomes stop rather than replaying.
+Interactive browser chat uses independent real-browser flags:
+
+```powershell
+.\.venv\Scripts\python.exe -m jarvis chat `
+  --profile "$env:LOCALAPPDATA\Jarvis\profiles\notepad-m2-v10.toml" `
+  --media-config "$env:LOCALAPPDATA\Jarvis\media-m4-v1.toml" `
+  --real-browser --browser-attended `
+  --browser-registration "$env:LOCALAPPDATA\Jarvis\chrome-registration.json" `
+  --media-report .\docs\evaluations\m4-qwen3-8b-simulation-v1-r12.json
+```
+
+Example separate turns: `Search YouTube for Rick Astley Never Gonna Give You Up`,
+`Open the first result`, `Play it`, `Pause the video`, `Resume it`,
+`What video is currently open on YouTube?`. Compound search-and-play currently
+requires separate turns and explicit selection. `/media-status` is observational;
+`/media-device <reference>` selects an observed Spotify device. Inspect uncertain
+effects manually before `/review-media <task> manually-handled`; no replay.
+
+Add existing `--public-data-config` and `--web-config` flags for currency/research.
+Real Notepad additionally requires its existing `--real --attended`, registration
+and matching M2 model/conversation reports. Real-browser flags alone keep Notepad
+simulated. Ctrl+Alt+Shift+F10 stops new effects while Chrome has focus; `/stop`
+cancels while the chat terminal is focused. Never run two attended sessions.
+The successful attended YouTube evidence is
+`docs/evaluations/m4-windows-youtube-v1-r6.json`. Spotify Windows playback is now
+live-tested; the optional Spotify API and Netflix setup remain pending.
+Overall M4 remains **NOT FULLY VERIFIED**.
+
 The latency optimization has been restored as an opt-in `assistant-v2` candidate.
 Use the existing private fast profile on this PC; it keeps Windows effects simulated:
 
@@ -279,7 +372,7 @@ To regenerate the generated lock after a deliberate dependency change:
 ```powershell
 # Bootstrap only if pip-tools is not already installed in .venv:
 .\.venv\Scripts\python.exe -m pip install pip-tools
-.\.venv\Scripts\python.exe -m piptools compile --extra dev --extra windows --strip-extras --allow-unsafe --generate-hashes --output-file requirements-dev.lock pyproject.toml
+.\.venv\Scripts\python.exe -m piptools compile --extra dev --extra windows --extra browser --extra media --strip-extras --allow-unsafe --generate-hashes --output-file requirements-dev.lock pyproject.toml
 .\.venv\Scripts\python.exe -m pip install --require-hashes -r requirements-dev.lock
 .\.venv\Scripts\python.exe -m pip install --no-deps --no-build-isolation -e .
 ```

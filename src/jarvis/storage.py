@@ -168,6 +168,42 @@ class Store:
             )
         return bound
 
+    def bind_media_target(self, task_id: str, revision: int, arguments: str) -> Task:
+        """Narrow only the result placeholder; service/effect/generation cannot change."""
+        from dataclasses import replace
+
+        from jarvis.media_data import MediaArguments, canonical
+
+        with self.db:
+            self.db.execute("BEGIN IMMEDIATE")
+            task = self.get(task_id)
+            old = MediaArguments.model_validate_json(task.scope.window_ref)
+            new = MediaArguments.model_validate_json(arguments)
+            if (
+                task.state != State.PLANNING
+                or task.cancelled
+                or task.revision != revision
+                or task.scope.app_id != "media"
+                or old.operation != "open"
+                or old.reference != "media_" + "0" * 32
+                or new.reference == old.reference
+                or old.model_copy(update={"reference": new.reference}) != new
+                or self.clock.now() >= task.deadline
+                or canonical(new) != arguments
+                or self.db.execute("SELECT 1 FROM actions WHERE task_id=?", (task_id,)).fetchone()
+            ):
+                raise Denied("Media target cannot bind this task")
+            self.db.execute(
+                "UPDATE tasks SET scope_json=?,revision=revision+1,updated_at=? WHERE task_id=?",
+                (
+                    encode(asdict(replace(task.scope, window_ref=arguments))),
+                    self.clock.now(),
+                    task_id,
+                ),
+            )
+            self.event(task_id, "media_target_bound", payload={"service": new.service})
+        return self.get(task_id)
+
     def get(self, task_id: str) -> Task:
         row = self.db.execute("SELECT * FROM tasks WHERE task_id=?", (task_id,)).fetchone()
         if row is None:
@@ -183,7 +219,9 @@ class Store:
             )
             or payload["effect"]
             not in (
-                {"web_public_read", "web_evidence"}
+                {"media_read", "media_visible"}
+                if payload["app_id"] == "media"
+                else {"web_public_read", "web_evidence"}
                 if payload["app_id"] == "web"
                 else {"public_read", "local_calculate", "read_evidence"}
                 if payload["app_id"] == "currency"
@@ -205,6 +243,15 @@ class Store:
             arguments = WebArguments.model_validate_json(payload.get("window_ref", ""))
             if canonical(arguments) != payload["window_ref"]:
                 raise Denied("Corrupt research argument binding")
+        if payload["app_id"] == "media":
+            from jarvis.media_data import MediaArguments, canonical, effect
+
+            arguments = MediaArguments.model_validate_json(payload.get("window_ref", ""))
+            if (
+                canonical(arguments) != payload["window_ref"]
+                or effect(arguments) != payload["effect"]
+            ):
+                raise Denied("Corrupt media scope")
         return Task(
             task_id,
             row["revision"],
@@ -379,6 +426,7 @@ class Store:
                         "notepad-fake-v1",
                         "currency-adapter-v1",
                         "web-adapter-v1",
+                        "media-adapter-v1",
                     }
                     else evidence.running
                 )
@@ -394,6 +442,24 @@ class Store:
                     or evidence.authority != "tool_output"
                 ):
                     raise Denied("Stored currency evidence authority is invalid")
+            if action.adapter_version == "media-adapter-v1":
+                from jarvis.media_data import MediaArguments
+
+                args = MediaArguments.model_validate_json(action.window_ref)
+                record = json.loads(
+                    evidence.observed_identity,
+                    object_pairs_hook=unique_object,
+                    parse_constant=reject_constant,
+                )
+                if (
+                    evidence.source != "media-observer-v1"
+                    or evidence.kind != "service_media_state"
+                    or evidence.authority != "tool_output"
+                    or record["service"] != args.service
+                    or not isinstance(record["generation"], int)
+                    or record["generation"] < args.generation
+                ):
+                    raise Denied("Stored media evidence authority is invalid")
             if action.adapter_version == "web-adapter-v1":
                 from jarvis.web_data import Source
                 from jarvis.web_decisions import ResearchAnswer, validate_answer

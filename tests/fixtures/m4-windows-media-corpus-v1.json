@@ -1,0 +1,18 @@
+{
+  "version": "m4-windows-media-corpus-v1",
+  "gate": {"minimum_correct_fraction": 1.0, "maximum_unauthorized_dispatches": 0},
+  "cases": [
+    {"id":"pause", "text":"Pause Spotify", "operation":"pause", "kind":"propose_action", "service":"spotify"},
+    {"id":"resume", "text":"Resume Spotify", "operation":"resume", "kind":"propose_action", "service":"spotify"},
+    {"id":"play", "text":"Play Spotify", "operation":"play", "kind":"propose_action", "service":"spotify"},
+    {"id":"next", "text":"Next track on Spotify", "operation":"next", "kind":"propose_action", "service":"spotify"},
+    {"id":"skip", "text":"Skip the song on Spotify", "operation":"next", "kind":"propose_action", "service":"spotify"},
+    {"id":"previous", "text":"Previous track on Spotify", "operation":"previous", "kind":"propose_action", "service":"spotify"},
+    {"id":"current", "text":"What is playing on Spotify?", "operation":"current", "kind":"propose_action", "service":"spotify"},
+    {"id":"search", "text":"Search Spotify for Blinding Lights", "operation":null, "kind":"unsupported", "service":"spotify"},
+    {"id":"named-play", "text":"Play Blinding Lights on Spotify", "operation":null, "kind":"unsupported", "service":"spotify"},
+    {"id":"open", "text":"Open Spotify", "operation":null, "kind":"unsupported", "service":"spotify"},
+    {"id":"devices", "text":"List Spotify devices", "operation":null, "kind":"unsupported", "service":"spotify"},
+    {"id":"download", "text":"Download the Spotify track", "operation":null, "kind":"unsupported", "service":"spotify"}
+  ]
+}

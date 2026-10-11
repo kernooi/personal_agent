@@ -1,0 +1,11 @@
+# Spotify desktop app must be open, signed in and exposing a Windows media session.
+# No Web API key, OAuth token, browser login or song-search capability is used.
+schema_version = 1
+enabled = true
+youtube = false
+netflix = false
+spotify = true
+spotify_backend = "windows"
+result_limit = 5
+operation_seconds = 20
+reference_seconds = 300

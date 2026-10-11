@@ -230,6 +230,7 @@ class OllamaProvider:
         if request.decision_boundary not in {
             None,
             "currency-decision-v1",
+            "media-choice-v1",
             "web-route-v1",
             "web-plan-v1",
             "web-select-v1",

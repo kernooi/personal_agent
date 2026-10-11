@@ -54,6 +54,8 @@ def build(
     web_config=None,
     search_provider=None,
     page_fetcher=None,
+    media_config=None,
+    browser_provider=None,
 ) -> Broker:
     if real and (
         not attended or registration is None or profile.decision_version != "decision-m2-v1"
@@ -163,10 +165,34 @@ def build(
             apps=grant.apps | {"web"},
             effects=grant.effects | {"web_public_read", "web_evidence"},
         )
+    if media_config is not None:
+        from dataclasses import replace
+
+        from jarvis.media_tools import MediaAdapter, MediaRegistry
+
+        if browser_provider is None:
+            from jarvis.media_fake import FakeBrowserProvider
+
+            browser_provider = FakeBrowserProvider(clock)
+        registry = MediaRegistry(registry, MediaAdapter(clock, media_config, browser_provider))
+        grant = replace(
+            grant,
+            apps=grant.apps | {"media"},
+            effects=grant.effects | {"media_read", "media_visible"},
+        )
+        registry.media.blocked_unknown = (
+            store.db.execute(
+                "SELECT 1 FROM actions a WHERE a.capability='media.control' AND a.state='UNKNOWN' "
+                "AND NOT EXISTS (SELECT 1 FROM events e WHERE e.task_id=a.task_id "
+                "AND e.kind='manual_review_acknowledged')"
+            ).fetchone()
+            is not None
+        )
     if real:
         unresolved = store.db.execute(
             "SELECT a.task_id FROM actions a WHERE a.state='UNKNOWN' "
-            "AND a.capability NOT IN ('currency.quote','web.research') AND NOT EXISTS "
+            "AND a.capability NOT IN ('currency.quote','web.research','media.control') "
+            "AND NOT EXISTS "
             "(SELECT 1 FROM events e WHERE e.task_id=a.task_id "
             "AND e.kind='manual_review_acknowledged')"
         ).fetchone()

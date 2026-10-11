@@ -68,6 +68,7 @@ class Broker:
         self.active_profile = None
         self.currency = getattr(registry, "currency", None)
         self.web = getattr(registry, "web", None)
+        self.media = getattr(registry, "media", None)
         if self.web is not None:
             self.web.broker = self
 
@@ -100,7 +101,7 @@ class Broker:
             self.profile.assistant_version in {"assistant-v1", "assistant-v2"}
             and getattr(self.registry, "intent", None) is None
             and not controller_read
-            and scope.app_id not in {"notepad", "text_editor"}
+            and scope.app_id not in {"notepad", "text_editor", "media"}
         ):
             # Explicit evidence inspection stays controller routed. All other read
             # requests are interpreted before binding a capability.
@@ -173,7 +174,7 @@ class Broker:
             raise Denied("Missing authenticated request identity")
         if len(request.request_key) > 128 or len(request.session) > 128:
             raise Denied("Request identity too long")
-        if scope.app_id in {"currency", "web"}:
+        if scope.app_id in {"currency", "web", "media"}:
             self.grant = replace(
                 self.grant, expires_at=self.clock.now() + self.profile.task_seconds
             )
@@ -251,7 +252,13 @@ class Broker:
             route = currency_route
             if scope.app_id != "web" and route and route.kind in {"clarify", "unsupported"}:
                 return self._non_action(task.task_id, Decision(route.kind, text=route.message))
-            if scope.app_id == "web":
+            if scope.app_id == "media":
+                from jarvis.media_tools import plan_media
+
+                decision = plan_media(self, task, request)
+                task = self.store.get(task.task_id)
+                scope = task.scope
+            elif scope.app_id == "web":
                 # The owner router binds the public topic. Local model planning and
                 # source selection happen inside the admitted, bounded read adapter.
                 from jarvis.web_decisions import plan_owner
@@ -396,6 +403,22 @@ class Broker:
 
     def _result(self, task_id: str):
         result = self.store.result(task_id)
+        if self.store.get(task_id).scope.app_id == "media":
+            if result.state == State.CANCELLED:
+                result = replace(
+                    result,
+                    display_message="Stopped. No further media action will be sent.",
+                )
+            if result.state == State.NEEDS_REVIEW:
+                self.media.blocked_unknown = True
+                result = replace(
+                    result,
+                    message=(
+                        f"The media outcome is uncertain. Inspect JARVIS Chrome manually, "
+                        f"then /review-media {task_id} manually-handled. No replay."
+                    ),
+                )
+            return replace(result, simulated=not self.media.real)
         if getattr(self.registry, "conversational", False):
             task = self.store.get(task_id)
             if task.scope.app_id == "notepad":
@@ -489,9 +512,11 @@ class Broker:
             if action.capability == "currency.quote"
             else self.web
             if action.capability == "web.research"
+            else self.media
+            if action.capability == "media.control"
             else self.desktop
         )
-        if action.capability in {"currency.quote", "web.research"}:
+        if action.capability in {"currency.quote", "web.research", "media.control"}:
             adapter.cancel = lambda: self._cancelled(action.task_id)
         self.registry.validate(action)
         auth = authorize(
@@ -550,6 +575,12 @@ class Broker:
                     "Currency lookup failed; no answer published.",
                 )
                 return self._result(action.task_id)
+            if action.capability == "media.control":
+                from jarvis.media_data import MediaError
+
+                self.last_error = (
+                    exc.code if isinstance(exc, MediaError) else "MEDIA_EXECUTION_FAILED"
+                )
             self.store.complete(
                 action_id,
                 "UNKNOWN",
@@ -577,6 +608,12 @@ class Broker:
                 )
                 return self._result(action.task_id)
             evidence = None
+            if action.capability == "media.control":
+                from jarvis.media_data import MediaError
+
+                self.last_error = (
+                    exc.code if isinstance(exc, MediaError) else "MEDIA_EVIDENCE_INVALID"
+                )
         current = self.store.get(action.task_id)
         matches = (
             evidence is not None
@@ -593,7 +630,7 @@ class Broker:
             if evidence
             and (
                 getattr(self.registry, "m2", False)
-                or action.capability in {"currency.quote", "web.research"}
+                or action.capability in {"currency.quote", "web.research", "media.control"}
             )
             else evidence.running
             if evidence
@@ -615,7 +652,9 @@ class Broker:
                 "FAILED",
                 evidence,
                 State.FAILED,
-                getattr(
+                adapter.failure_message(action)
+                if action.capability == "media.control"
+                else getattr(
                     self.desktop,
                     "failure_message",
                     "SIMULATED: verification failed; editor is not observed running.",
@@ -632,7 +671,11 @@ class Broker:
                     " A request already sent cannot be retracted."
                     if current.cancelled and action.capability in {"currency.quote", "web.research"}
                     else (
-                        adapter.success_message(action)
+                        (
+                            "Media action verified; private labels omitted from journal."
+                            if action.capability == "media.control"
+                            else adapter.success_message(action)
+                        )
                         if hasattr(adapter, "success_message")
                         else "SIMULATED: registered text editor observed running in fake state."
                     )
@@ -644,6 +687,8 @@ class Broker:
                 ),
             )
         result = self._result(action.task_id)
+        if action.capability == "media.control" and result.state == State.SUCCEEDED:
+            result = replace(result, display_message=adapter.success_message(action))
         if result.state == State.SUCCEEDED and hasattr(adapter, "concise_message"):
             result = replace(result, display_message=adapter.concise_message(action))
         return result
@@ -707,8 +752,19 @@ class Broker:
             self.desktop.blocked_unknown = (
                 self.store.db.execute(
                     "SELECT a.task_id FROM actions a WHERE a.state='UNKNOWN' "
-                    "AND a.capability NOT IN ('currency.quote','web.research') AND NOT EXISTS "
+                    "AND a.capability NOT IN ('currency.quote','web.research','media.control') "
+                    "AND NOT EXISTS "
                     "(SELECT 1 FROM events e WHERE e.task_id=a.task_id "
+                    "AND e.kind='manual_review_acknowledged')"
+                ).fetchone()
+                is not None
+            )
+        if self.media is not None:
+            self.media.blocked_unknown = (
+                self.store.db.execute(
+                    "SELECT 1 FROM actions a WHERE a.capability='media.control' "
+                    "AND a.state='UNKNOWN' "
+                    "AND NOT EXISTS (SELECT 1 FROM events e WHERE e.task_id=a.task_id "
                     "AND e.kind='manual_review_acknowledged')"
                 ).fetchone()
                 is not None

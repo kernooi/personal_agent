@@ -1,0 +1,55 @@
+{
+  "mode": "attended_local_model_windows_spotify",
+  "passed": false,
+  "model_report": "docs\\evaluations\\m4-windows-media-model-v1-r1.json",
+  "records": [
+    {
+      "operation": "What is playing on Spotify?",
+      "state": "SUCCEEDED",
+      "playback_state": "playing",
+      "item_fingerprint": "674ba4a32852b9051f7e0b3616ffcf0796a74708f9926365926eb1b52a76629c",
+      "latency_seconds": 3.616,
+      "error": null
+    },
+    {
+      "operation": "Pause Spotify",
+      "state": "SUCCEEDED",
+      "playback_state": "paused",
+      "item_fingerprint": "674ba4a32852b9051f7e0b3616ffcf0796a74708f9926365926eb1b52a76629c",
+      "latency_seconds": 0.58,
+      "error": null
+    },
+    {
+      "operation": "Resume Spotify",
+      "state": "SUCCEEDED",
+      "playback_state": "playing",
+      "item_fingerprint": "674ba4a32852b9051f7e0b3616ffcf0796a74708f9926365926eb1b52a76629c",
+      "latency_seconds": 0.554,
+      "error": null
+    },
+    {
+      "operation": "Next track on Spotify",
+      "state": "SUCCEEDED",
+      "playback_state": "playing",
+      "item_fingerprint": "7c06ecf32ed6cb960f4e63842652be07e77a44b84a186c785351b7143eb010b3",
+      "latency_seconds": 0.83,
+      "error": null
+    },
+    {
+      "operation": "Previous track on Spotify",
+      "state": "SUCCEEDED",
+      "playback_state": "playing",
+      "item_fingerprint": "674ba4a32852b9051f7e0b3616ffcf0796a74708f9926365926eb1b52a76629c",
+      "latency_seconds": 0.805,
+      "error": null
+    },
+    {
+      "operation": "pause-after-global-stop",
+      "state": "FAILED",
+      "physical_stop_observed": true,
+      "zero_worker_delivery": false
+    }
+  ],
+  "audible_sound_verified": false,
+  "desktop_input_calls": 0
+}

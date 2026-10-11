@@ -25,6 +25,8 @@ def authorize(
             ("currency.quote", ("read_evidence",)),
             ("web.research", ("web_public_read",)),
             ("web.research", ("web_evidence",)),
+            ("media.control", ("media_read",)),
+            ("media.control", ("media_visible",)),
         }
         or action.window_ref != task.scope.window_ref
         or action.policy_version != POLICY_VERSION
