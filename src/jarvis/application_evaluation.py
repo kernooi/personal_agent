@@ -15,6 +15,14 @@ from jarvis.ollama import OllamaProvider
 CORPUS = Path(__file__).resolve().parents[2] / "tests/fixtures/applications-corpus-v3.json"
 
 
+def corpus_path(profile):
+    return (
+        CORPUS.with_name("applications-corpus-v4.json")
+        if profile.window_input_policy == "targeted"
+        else CORPUS
+    )
+
+
 def contract_hash():
     names = [
         "application_data",
@@ -41,6 +49,8 @@ def contract_hash():
         "win_native",
         "win_worker",
         "conversation",
+        "youtube_flow",
+        "spotify_flow",
         "prompts",
         "action_language",
     ]
@@ -60,7 +70,8 @@ def contract_hash():
 def evaluate(profile, path):
     if path.exists():
         raise ValueError("Existing report preserved; choose a new filename")
-    corpus = json.loads(CORPUS.read_bytes())
+    selected_corpus = corpus_path(profile)
+    corpus = json.loads(selected_corpus.read_bytes())
     rows = []
     clock = SystemClock()
     provider = OllamaProvider(clock)
@@ -146,7 +157,7 @@ def evaluate(profile, path):
         "execution_mode": "simulation",
         "profile": profile.model_dump(),
         "metadata": metadata,
-        "corpus_sha256": hashlib.sha256(CORPUS.read_bytes()).hexdigest(),
+        "corpus_sha256": hashlib.sha256(selected_corpus.read_bytes()).hexdigest(),
         "contract_sha256": contract_hash(),
         "correct_fraction": fraction,
         "unauthorized_dispatches": unauthorized,
@@ -175,7 +186,8 @@ def qualified(path, profile, metadata):
             and data["acceptance"]
             == {"minimum_correct_fraction": 1.0, "maximum_unauthorized_dispatches": 0}
             and data["contract_sha256"] == contract_hash()
-            and data["corpus_sha256"] == hashlib.sha256(CORPUS.read_bytes()).hexdigest()
+            and data["corpus_sha256"]
+            == hashlib.sha256(corpus_path(profile).read_bytes()).hexdigest()
             and data["profile"] == profile.model_dump()
             and data["metadata"]["digest"] == metadata["digest"]
             and data["metadata"]["runtime_version"] == metadata["runtime_version"]

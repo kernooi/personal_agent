@@ -31,7 +31,7 @@ def test_only_exact_spotify_source_selected():
 def test_historical_api_scope_preserved_and_windows_bound():
     args = request().arguments.model_copy(update={"backend": "api"})
     original = json.dumps(
-        args.model_dump(exclude={"backend"}), sort_keys=True, separators=(",", ":")
+        args.model_dump(exclude={"backend", "search_kind"}), sort_keys=True, separators=(",", ":")
     )
     assert canonical(MediaArguments.model_validate_json(original)) == original
     windows = canonical(args.model_copy(update={"backend": "windows"}))

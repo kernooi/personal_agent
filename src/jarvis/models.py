@@ -173,6 +173,7 @@ class BaseProfile(StrictRecord):
     task_seconds: int = Field(default=30, ge=1, le=120)
     assistant_version: Literal["legacy", "assistant-v1", "assistant-v2"] = "legacy"
     max_model_turns: int = Field(default=8, ge=3, le=12)
+    window_input_policy: Literal["exclusive", "targeted"] = "exclusive"
 
 
 class Profile(BaseProfile):

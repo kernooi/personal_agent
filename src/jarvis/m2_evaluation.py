@@ -59,11 +59,25 @@ def contract_hash(profile):
             inspect.getsource(context_messages).encode()
         ).hexdigest()
     if profile.prompt_version == "planner-m2-v10":
-        from jarvis import action_language, conversation, notepad_intent_v2, prompts
+        from jarvis import (
+            action_language,
+            conversation,
+            notepad_intent_v2,
+            prompts,
+            spotify_flow,
+            youtube_flow,
+        )
 
         contract["usability_sources"] = {
             module.__name__: hashlib.sha256(Path(module.__file__).read_bytes()).hexdigest()
-            for module in (action_language, conversation, notepad_intent_v2, prompts)
+            for module in (
+                action_language,
+                conversation,
+                notepad_intent_v2,
+                prompts,
+                spotify_flow,
+                youtube_flow,
+            )
         }
         contract["notepad_adapter_sources"] = {
             name: hashlib.sha256(Path(__file__).with_name(name + ".py").read_bytes()).hexdigest()

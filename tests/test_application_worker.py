@@ -71,9 +71,24 @@ def test_launch_only_after_two_preflights_and_exact_commit(native_boundary):
     assert sent == ["ready", "result"] and len(effects) == 1
 
 
+def test_targeted_policy_keeps_exact_commit_with_concurrent_input(native_boundary, monkeypatch):
+    request, _, activity, sent, effects = native_boundary
+    request["payload"]["allow_concurrent_input"] = True
+
+    def commit():
+        activity.update(last_input=999, foreground=888)
+        return {"version": 1, "request_id": request["request_id"], "commit": True}
+
+    monkeypatch.setattr(worker, "read", commit)
+    worker.run(request)
+    assert sent == ["ready", "result"] and len(effects) == 1
+
+
 @pytest.mark.parametrize("failure", ["hash", "dirty", "expired", "unreviewed", "dialog"])
-def test_close_rejection_before_ready(native_boundary, failure):
+@pytest.mark.parametrize("concurrent", [False, True])
+def test_close_rejection_before_ready(native_boundary, failure, concurrent):
     request, row, _, sent, effects = native_boundary
+    request["payload"]["allow_concurrent_input"] = concurrent
     request["operation"] = "close"
     request["payload"].update(window=row, close_reviewed=True, review_expires_at=time.time() + 60)
     if failure == "hash":

@@ -8,20 +8,26 @@ from pathlib import Path
 from uuid import uuid4
 
 from jarvis.bootstrap import SystemClock, build
-from jarvis.domain import State, UserRequest
+from jarvis.domain import State
 from jarvis.media_data import MediaConfig, MediaItem, MediaObservation
 from jarvis.media_fake import FakeBrowserProvider
 from jarvis.models import reject_constant, unique_object
 from jarvis.ollama import OllamaProvider
 
-CORPUS = Path(__file__).resolve().parents[2] / "tests/fixtures/m4-corpus-v1.json"
+CORPUS = Path(__file__).resolve().parents[2] / "tests/fixtures/m4-corpus-v2.json"
 WINDOWS_CORPUS = CORPUS.with_name("m4-windows-media-corpus-v1.json")
+SPOTIFY_DESKTOP_CORPUS = CORPUS.with_name("m4-spotify-desktop-corpus-v1.json")
 
 
 def contract_hash():
     sources = [
         "media_data",
         "media_tools",
+        "conversation",
+        "youtube_flow",
+        "spotify_flow",
+        "spotify_desktop",
+        "spotify_accessibility",
         "media_evaluation",
         "media_fake",
         "browser_transport",
@@ -53,6 +59,15 @@ def contract_hash():
 def seed(broker, fake, case):
     service = case.get("service", "youtube")
     adapter = broker.media
+    if adapter.config.spotify_backend == "desktop":
+        fake.catalog = [
+            (
+                "a" * 22,
+                "Deep Focus" if case.get("playlist") else "Never Gonna Give You Up",
+                "Spotify" if case.get("playlist") else "Rick Astley",
+            ),
+            ("b" * 22, "Synthetic other result", "Test creator"),
+        ]
     adapter.activate_service(service)
     adapter.service = service
     adapter.owner_session = broker.grant.session
@@ -81,10 +96,12 @@ def seed(broker, fake, case):
         adapter.observation = observed
 
 
-def evaluate(profile, path, *, windows_media=False):
+def evaluate(profile, path, *, windows_media=False, spotify_desktop=False):
     if path.exists():
         raise ValueError("Existing report preserved; choose an unused filename")
-    corpus_raw = (WINDOWS_CORPUS if windows_media else CORPUS).read_bytes()
+    corpus_raw = (
+        SPOTIFY_DESKTOP_CORPUS if spotify_desktop else WINDOWS_CORPUS if windows_media else CORPUS
+    ).read_bytes()
     corpus = json.loads(corpus_raw)
     clock = SystemClock()
     provider = OllamaProvider(clock)
@@ -104,16 +121,25 @@ def evaluate(profile, path, *, windows_media=False):
                         youtube=True,
                         netflix=True,
                         spotify=True,
-                        spotify_backend="windows" if windows_media else "api",
+                        spotify_backend="desktop"
+                        if spotify_desktop
+                        else "windows"
+                        if windows_media
+                        else "api",
                     ),
                     browser_provider=fake,
                 )
                 seed(broker, fake, case)
+                from jarvis.conversation import Conversation
+
+                conversation = Conversation(broker)
                 started = time.monotonic()
                 try:
-                    result = broker.converse(
-                        UserRequest(case["id"], broker.grant.session, case["text"])
-                    )
+                    result = conversation.submit(case["text"], case["id"])
+                    for index, followup in enumerate(case.get("followups", [])):
+                        result = conversation.submit(
+                            followup, case["id"] + "/followup-" + str(index)
+                        )
                     decision = broker.last_decision
                     args = broker.media.pending["arguments"]
                     correct = (
@@ -122,12 +148,13 @@ def evaluate(profile, path, *, windows_media=False):
                         and (
                             result.state == State.SUCCEEDED
                             and args.operation == case["operation"]
-                            and fake.execution_count == 1
+                            and fake.execution_count == case.get("calls", 1)
                             if case["kind"] == "propose_action"
                             else fake.execution_count == 0
                         )
                     )
-                    unauthorized = fake.execution_count if case["kind"] != "propose_action" else 0
+                    authorized = case.get("calls", 1) if case["kind"] == "propose_action" else 0
+                    unauthorized = max(0, fake.execution_count - authorized)
                     rows.append(
                         {
                             "id": case["id"],
@@ -171,14 +198,20 @@ def evaluate(profile, path, *, windows_media=False):
     return report, 0 if passed else 1 if metadata.get("ready") else 2
 
 
-def qualified(path, profile, metadata, *, windows_media=False):
+def qualified(path, profile, metadata, *, windows_media=False, spotify_desktop=False):
     try:
         if path.stat().st_size > 262144:
             return False
         report = json.loads(
             path.read_bytes(), object_pairs_hook=unique_object, parse_constant=reject_constant
         )
-        corpus_raw = (WINDOWS_CORPUS if windows_media else CORPUS).read_bytes()
+        corpus_raw = (
+            SPOTIFY_DESKTOP_CORPUS
+            if spotify_desktop
+            else WINDOWS_CORPUS
+            if windows_media
+            else CORPUS
+        ).read_bytes()
         corpus = json.loads(corpus_raw)
         return (
             metadata.get("ready") is True
@@ -199,7 +232,7 @@ def qualified(path, profile, metadata, *, windows_media=False):
                 and (
                     r["state"] == State.SUCCEEDED
                     and r["operation"] == case["operation"]
-                    and r["fake_media_calls"] == 1
+                    and r["fake_media_calls"] == case.get("calls", 1)
                     if case["kind"] == "propose_action"
                     else r["fake_media_calls"] == 0
                 )

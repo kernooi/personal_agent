@@ -76,8 +76,10 @@ def test_catalog_driven_open_minimize_focus_close(setup):
 @pytest.mark.parametrize(
     "hook", ["cancel", "revoke", "revision", "takeover", "identity", "stop", "dialog", "host"]
 )
-def test_late_admission_zero_effect(setup, hook):
+@pytest.mark.parametrize("concurrent", [False, True])
+def test_late_admission_zero_effect(setup, hook, concurrent):
     broker, chat, platform, app = setup
+    chat.desktop.allow_concurrent_input = concurrent
     assert chat.submit("open " + app.name).state == State.SUCCEEDED
 
     def mutate():
@@ -104,8 +106,13 @@ def test_late_admission_zero_effect(setup, hook):
             broker.cancel_requested = chat.desktop.stop.is_set
 
     platform.before_effect = mutate
-    assert chat.submit("minimize it").state != State.SUCCEEDED
-    assert platform.calls == ["open"] and not platform.windows[0]["minimized"]
+    result = chat.submit("minimize it")
+    if concurrent and hook == "takeover":
+        assert result.state == State.SUCCEEDED
+        assert platform.calls == ["open", "minimize"] and platform.windows[0]["minimized"]
+    else:
+        assert result.state != State.SUCCEEDED
+        assert platform.calls == ["open"] and not platform.windows[0]["minimized"]
 
 
 @pytest.mark.parametrize(
@@ -167,6 +174,39 @@ def test_missing_permission(setup):
     broker.grant = replace(broker.grant, apps=frozenset({"notepad"}))
     assert chat.submit("open " + app.name).state == State.FAILED
     assert not platform.calls
+
+
+@pytest.mark.parametrize("effect", ["open", "minimize", "focus", "close"])
+def test_targeted_policy_allows_unrelated_input_through_planning_and_delivery(setup, effect):
+    broker, chat, platform, app = setup
+    chat.desktop.allow_concurrent_input = True
+    assert chat.submit("open " + app.name).state == State.SUCCEEDED
+    original = platform.windows[0]
+    unrelated_app = platform.add_app("Other User Application")
+    unrelated = platform.add_window(unrelated_app)
+    chat.desktop.load_catalog()
+
+    def user_activity():
+        platform.input_tick += 1
+        platform.foreground = unrelated["hwnd"]
+
+    broker.provider.mutate = lambda d: (user_activity(), d)[1]
+    platform.before_effect = user_activity
+    platform.after_effect = user_activity if effect != "focus" else lambda: None
+    result = chat.submit(effect + " " + app.name)
+    assert result.state == State.SUCCEEDED
+    assert unrelated in platform.windows
+    assert (original not in platform.windows) == (effect == "close")
+
+
+def test_targeted_close_still_rejects_text_added_during_planning(setup):
+    broker, chat, platform, app = setup
+    chat.desktop.allow_concurrent_input = True
+    assert chat.submit("open " + app.name).state == State.SUCCEEDED
+    row = platform.windows[0]
+    broker.provider.mutate = lambda d: (row.update(protected=True, close_safe=False), d)[1]
+    assert chat.submit("close " + app.name).state == State.WAITING_INPUT
+    assert platform.calls == ["open"]
 
 
 @pytest.mark.parametrize(

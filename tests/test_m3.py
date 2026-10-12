@@ -312,6 +312,7 @@ def test_m3_report_gate_matches_code_model_config_and_preserves_failures(tmp_pat
     record = json.loads(Path("docs/evaluations/m3-qwen3-8b-v1-r4.json").read_text())
     record["contract_sha256"] = contract_hash()
     profile = OllamaProfile.model_validate(record["profile"])
+    record["profile"] = profile.model_dump()
     config = PublicConfig.model_validate(record["config"])
     record["config"] = config.model_dump()
     corpus = json.loads(CORPUS.read_bytes())

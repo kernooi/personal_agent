@@ -398,6 +398,7 @@ winrt-runtime==3.2.1 \
     #   winrt-windows-foundation-collections
     #   winrt-windows-media
     #   winrt-windows-media-control
+    #   winrt-windows-system
 winrt-windows-foundation==3.2.1 \
     --hash=sha256:14d5191725301498e4feb744d91f5b46ce317bf3d28370efda407d5c87f4423b \
     --hash=sha256:2a8c1204db5c352f6a563130a5a41d25b887aff7897bb677d4ff0b660315aad4 \
@@ -481,6 +482,27 @@ winrt-windows-media-control==3.2.1 \
     --hash=sha256:e4cb9bdccb26aa2cc361a9eef6c40c1e933fda626883f7060680493ce0698eeb \
     --hash=sha256:ea183fe5fc1de937a4c76d7f9893197a079af56b416d40fb5bcbbf5e0c6f9874 \
     --hash=sha256:f2c8590f775679b068ef8d0df8f462387addf4cbf2ea0c406176046ee891e02a
+    # via jarvis-simulated-core (pyproject.toml)
+winrt-windows-system==3.2.1 \
+    --hash=sha256:15d313f75cdc1e3b0fdf241941d0a9d142358d1fb2921e721a20e26382e43efc \
+    --hash=sha256:2652e73b223d9655eeb23b6aaf4499f54f1ea44d5d6412fe4d2d92557eb3c495 \
+    --hash=sha256:2a1b04b026d103a3c107aed34f7c65f6d8b967135aeabf46d6168226643db6b5 \
+    --hash=sha256:353cf4e1b2279951818d06b7d22b0f431beb749136d4f55abcad4ea2e9f85293 \
+    --hash=sha256:4874f39a16f269e1793b26839c627f943df1856f206c7e5e7bc81d75ed529c9f \
+    --hash=sha256:579f69ae1be85b81aaed238d45cacdc41e7f4c9fc86c906260c423c24136c6e9 \
+    --hash=sha256:5d43722e3ca4ae57651b7568a2f1cfb7ad7e098959afbe0b546e4d017e055cfb \
+    --hash=sha256:5ed1f2d944dee5a03fd11bca40bc1fa588fc20e44a46d1aa53259488f55d2258 \
+    --hash=sha256:78fc2d870041a1d1bd5808d687fcf2c2c26848cbcf8f3540bb053e1dccc71627 \
+    --hash=sha256:7d4a20bbee26e822b6299ee1b04b1c660f8a1fc685ff63b0472179f9e6b9cc1e \
+    --hash=sha256:99cf1c4a369155f659f4405d93c72e51b0bc35089840d632040b1b28596252bf \
+    --hash=sha256:a67329b51815dd6ed96b3a31b4c720ada13cda37f4c51ae2e4f7f098962e3782 \
+    --hash=sha256:aa84fb0c94195843a80a0be5fcb3aae30c454336e7ae64c1bbe565decb96c8ab \
+    --hash=sha256:bf69fa6b453a31c5ac41556f21b3a4d944f2b460e57aab4a58b366a411ca89b3 \
+    --hash=sha256:cf11aa3504a616de625ccbaff9268e747e03d12ae04b56afa1495109a02307d0 \
+    --hash=sha256:d321ba76e43f0d15f544c858859007c6877f3a7e36542b8b5e76205431a41470 \
+    --hash=sha256:e005c3a5adac257f22a8e485af92f9d46d180672e68df3376d95566ee7952527 \
+    --hash=sha256:e0898d267974ef8d495df8a4593a7af968fc4b7a4cfadeadb4d6c899911860b1 \
+    --hash=sha256:e594e7a495b8eadc90da899cafb8165453e58ee8cd0b0dcf36c9c440cd764a65
     # via jarvis-simulated-core (pyproject.toml)
 
 # The following packages are considered to be unsafe in a requirements file:

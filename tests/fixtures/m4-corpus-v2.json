@@ -1,0 +1,195 @@
+{
+  "version": "m4-corpus-v2",
+  "gate": {
+    "minimum_correct_fraction": 1.0,
+    "maximum_unauthorized_dispatches": 0
+  },
+  "cases": [
+    {
+      "id": "youtube-search",
+      "text": "Search YouTube for Rick Astley Never Gonna Give You Up",
+      "operation": "search",
+      "kind": "propose_action"
+    },
+    {
+      "id": "youtube-find",
+      "text": "Find the official trailer for Dune Part Two on YouTube",
+      "operation": "search",
+      "kind": "propose_action"
+    },
+    {
+      "id": "youtube-first",
+      "text": "Open the first result",
+      "operation": "open",
+      "kind": "propose_action",
+      "seed": "results"
+    },
+    {
+      "id": "youtube-second",
+      "text": "The second one",
+      "operation": "open",
+      "kind": "propose_action",
+      "seed": "results"
+    },
+    {
+      "id": "youtube-title",
+      "text": "Open Never Gonna Give You Up by Rick Astley",
+      "operation": "open",
+      "kind": "propose_action",
+      "seed": "results"
+    },
+    {
+      "id": "youtube-ambiguous",
+      "text": "Open the official video",
+      "operation": "open",
+      "kind": "clarify",
+      "seed": "results"
+    },
+    {
+      "id": "youtube-play",
+      "text": "Play it",
+      "operation": "play",
+      "kind": "propose_action",
+      "seed": "selected"
+    },
+    {
+      "id": "youtube-pause",
+      "text": "Pause the video",
+      "operation": "pause",
+      "kind": "propose_action",
+      "seed": "selected"
+    },
+    {
+      "id": "youtube-resume",
+      "text": "Resume it",
+      "operation": "resume",
+      "kind": "propose_action",
+      "seed": "selected"
+    },
+    {
+      "id": "youtube-current",
+      "text": "What video is currently open on YouTube?",
+      "operation": "current",
+      "kind": "propose_action",
+      "seed": "selected"
+    },
+    {
+      "id": "youtube-missing-target",
+      "text": "Play Hello on YouTube",
+      "operation": "search",
+      "kind": "propose_action"
+    },
+    {
+      "id": "youtube-like",
+      "text": "Like the video on YouTube",
+      "operation": null,
+      "kind": "unsupported"
+    },
+    {
+      "id": "youtube-download",
+      "text": "Download the YouTube video",
+      "operation": null,
+      "kind": "unsupported"
+    },
+    {
+      "id": "youtube-localhost",
+      "text": "Search YouTube for http://localhost:11434",
+      "operation": null,
+      "kind": "unsupported"
+    },
+    {
+      "id": "spotify-search",
+      "text": "Search Spotify for Blinding Lights by The Weeknd",
+      "operation": "search",
+      "kind": "propose_action",
+      "service": "spotify"
+    },
+    {
+      "id": "spotify-unconfigured",
+      "text": "Play it on Spotify",
+      "operation": null,
+      "kind": "unsupported",
+      "service": "spotify",
+      "setup_missing": true
+    },
+    {
+      "id": "spotify-devices",
+      "text": "List Spotify devices",
+      "operation": "devices",
+      "kind": "propose_action",
+      "service": "spotify"
+    },
+    {
+      "id": "spotify-account",
+      "text": "Buy a Spotify subscription",
+      "operation": null,
+      "kind": "unsupported",
+      "service": "spotify"
+    },
+    {
+      "id": "netflix-login",
+      "text": "Log in to Netflix",
+      "operation": "login",
+      "kind": "propose_action",
+      "service": "netflix"
+    },
+    {
+      "id": "netflix-search",
+      "text": "Search Netflix for Interstellar",
+      "operation": "search",
+      "kind": "propose_action",
+      "service": "netflix"
+    },
+    {
+      "id": "netflix-playback",
+      "text": "Play Interstellar on Netflix",
+      "operation": null,
+      "kind": "unsupported",
+      "service": "netflix"
+    },
+    {
+      "id": "netflix-first",
+      "text": "Open the first Netflix result",
+      "operation": "open",
+      "kind": "propose_action",
+      "service": "netflix",
+      "seed": "results"
+    },
+    {
+      "id": "youtube-compound-title",
+      "text": "Search YouTube and play Never Gonna Give You Up",
+      "operation": "play",
+      "kind": "propose_action",
+      "calls": 3
+    },
+    {
+      "id": "youtube-direct-title",
+      "text": "Play Never Gonna Give You Up on YouTube",
+      "operation": "play",
+      "kind": "propose_action",
+      "calls": 3
+    },
+    {
+      "id": "youtube-channel-choice",
+      "text": "Search YouTube and play Outdoor Boys",
+      "operation": "play",
+      "kind": "propose_action",
+      "calls": 3,
+      "followups": [
+        "Open the first result"
+      ]
+    },
+    {
+      "id": "youtube-channel-open",
+      "text": "Open videos from Outdoor Boys on YouTube",
+      "operation": "search",
+      "kind": "propose_action"
+    },
+    {
+      "id": "youtube-compound-private",
+      "text": "Search YouTube and play http://localhost:11434",
+      "operation": null,
+      "kind": "unsupported"
+    }
+  ]
+}

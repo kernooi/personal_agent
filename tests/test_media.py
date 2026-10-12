@@ -10,8 +10,8 @@ import pytest
 
 from jarvis.bootstrap import ManualClock, build, load_profile
 from jarvis.browser_worker import public_browser_destination
-from jarvis.conversation import Conversation
-from jarvis.domain import Approval, State, UserRequest
+from jarvis.conversation import Conversation, conversational_text
+from jarvis.domain import Approval, Denied, State, UserRequest
 from jarvis.media_data import (
     MediaArguments,
     MediaConfig,
@@ -122,6 +122,139 @@ def test_enabled_media_does_not_launch_for_public_research(tmp_path, monkeypatch
         broker.store.close()
 
 
+@pytest.mark.parametrize(
+    "text",
+    [
+        "play never gonna give you up on youtube",
+        "search youtube and play never gonna give you up",
+        "Search YouTube for Never Gonna Give You Up and play it",
+    ],
+)
+def test_named_youtube_play_runs_three_separately_verified_phases(media_broker, text):
+    broker, fake, _ = media_broker
+    chat = Conversation(broker)
+    result = chat.submit(text, "compound")
+    assert result.state == State.SUCCEEDED
+    assert fake.execution_count == 3
+    assert broker.media.observation.state == "playing"
+    actions = broker.store.db.execute(
+        "SELECT state,prepared_json FROM actions ORDER BY rowid"
+    ).fetchall()
+    assert len(actions) == 3 and all(state == "VERIFIED" for state, _ in actions)
+    operations = [
+        MediaArguments.model_validate_json(json.loads(raw)["window_ref"]).operation
+        for _, raw in actions
+    ]
+    assert operations == ["search", "open", "play"]
+    assert chat.submit(text, "compound").task_id == result.task_id
+    assert fake.execution_count == 3
+
+
+def test_channel_request_requires_choice_and_remembers_play_intent(media_broker):
+    broker, fake, _ = media_broker
+    fake.catalog = [
+        ("aaaaaaaaaaa", "Winter Camping", "Outdoor Boys"),
+        ("bbbbbbbbbbb", "Alaska Trip", "Outdoor Boys"),
+    ]
+    chat = Conversation(broker)
+    result = chat.submit("search youtube and play outdoor boys")
+    assert result.state == State.SUCCEEDED and fake.execution_count == 1
+    assert "Which video should I play?" in result.display_message
+    result = chat.submit("1")
+    assert result.state == State.SUCCEEDED and fake.execution_count == 3
+    assert broker.media.observation.item_id == "aaaaaaaaaaa"
+
+
+def test_open_channel_videos_searches_without_implicit_play(media_broker):
+    broker, fake, _ = media_broker
+    chat = Conversation(broker)
+    assert chat.submit("open videos from outdoor boys on youtube").state == State.SUCCEEDED
+    assert fake.execution_count == 1
+    assert chat.submit("Open the first result").state == State.SUCCEEDED
+    assert fake.execution_count == 2
+
+
+def test_compound_stops_at_unverified_search(media_broker):
+    broker, fake, _ = media_broker
+    fake.override_observation = lambda observed: observed.model_copy(update={"state": "unknown"})
+    result = Conversation(broker).submit("play never gonna give you up on youtube")
+    assert result.state != State.SUCCEEDED and fake.execution_count == 1
+
+
+def test_cancel_between_phases_does_not_open_or_play(media_broker):
+    broker, fake, _ = media_broker
+    cancelled = []
+    broker.cancel_requested = lambda: bool(cancelled)
+    fake.after_execute = lambda: cancelled.append(True)
+    result = Conversation(broker).submit("play never gonna give you up on youtube")
+    assert result.state != State.SUCCEEDED
+    assert fake.execution_count == 1
+
+
+def test_play_flow_never_sends_private_url_or_paid_operation(media_broker):
+    broker, fake, _ = media_broker
+    chat = Conversation(broker)
+    assert chat.submit("play http://localhost:11434 on youtube").state != State.SUCCEEDED
+    assert chat.submit("search youtube and play outdoor boys then buy it").state != State.SUCCEEDED
+    assert fake.execution_count == 0
+
+
+def test_stale_youtube_choice_never_substitutes_new_results(media_broker):
+    broker, fake, _ = media_broker
+    chat = Conversation(broker)
+    chat.submit("Search YouTube and play Outdoor Boys")
+    broker.media.generation += 1
+    assert chat.submit("1").state == State.WAITING_INPUT
+    assert fake.execution_count == 1
+
+
+def test_reused_compound_identity_with_changed_query_is_denied(media_broker):
+    from jarvis.domain import Denied
+
+    broker, fake, _ = media_broker
+    chat = Conversation(broker)
+    chat.submit("Search YouTube and play Outdoor Boys", "same")
+    with pytest.raises(Denied):
+        chat.submit("Play Never Gonna Give You Up on YouTube", "same")
+    assert fake.execution_count == 1
+
+
+def test_ad_after_open_does_not_trigger_play_or_bypass(media_broker):
+    broker, fake, _ = media_broker
+
+    def ad():
+        if fake.execution_count == 2:
+            fake.states["youtube"] = fake.states["youtube"].model_copy(update={"state": "ad"})
+
+    fake.after_execute = ad
+    result = Conversation(broker).submit("Play Never Gonna Give You Up on YouTube")
+    assert result.state == State.SUCCEEDED
+    assert fake.execution_count == 2 and broker.media.observation.state == "ad"
+    assert "advertisement" in result.display_message
+
+
+def test_cancel_after_open_prevents_play_phase(media_broker):
+    broker, fake, _ = media_broker
+    stopped = []
+    broker.cancel_requested = lambda: bool(stopped)
+    fake.after_execute = lambda: stopped.append(True) if fake.execution_count == 2 else None
+    result = Conversation(broker).submit("Play Never Gonna Give You Up on YouTube")
+    assert result.state == State.NEEDS_REVIEW and fake.execution_count == 2
+    assert [r[0] for r in broker.store.db.execute("SELECT state FROM actions ORDER BY rowid")] == [
+        "VERIFIED",
+        "UNKNOWN",
+    ]
+
+
+def test_pending_play_deadline_does_not_resume_old_choice(media_broker):
+    broker, fake, _ = media_broker
+    chat = Conversation(broker)
+    chat.submit("Search YouTube and play Outdoor Boys")
+    broker.clock.advance(broker.profile.task_seconds + 1)
+    assert chat.submit("1").state == State.WAITING_INPUT
+    assert fake.execution_count == 1
+
+
 def test_enabled_media_preserves_local_supplied_currency_calculation(tmp_path, monkeypatch):
     from test_m3 import NOW, ask, payload
 
@@ -160,7 +293,9 @@ def test_enabled_media_preserves_local_supplied_currency_calculation(tmp_path, m
 
 
 @pytest.mark.parametrize(
-    "case", json.loads(CORPUS.read_bytes())["cases"], ids=lambda case: case["id"]
+    "case",
+    json.loads(CORPUS.with_name("m4-corpus-v1.json").read_bytes())["cases"],
+    ids=lambda case: case["id"],
 )
 def test_frozen_media_cases_through_broker(media_broker, case):
     broker, fake, provider = media_broker
@@ -170,6 +305,25 @@ def test_frozen_media_cases_through_broker(media_broker, case):
     if case["kind"] == "propose_action":
         assert result.state == State.SUCCEEDED
         assert fake.execution_count == 1
+    else:
+        assert fake.execution_count == 0
+    assert broker.desktop.execution_calls == 0
+
+
+@pytest.mark.parametrize(
+    "case", json.loads(CORPUS.read_bytes())["cases"], ids=lambda case: case["id"]
+)
+def test_frozen_media_v2_through_conversation(media_broker, case):
+    broker, fake, _ = media_broker
+    seed(broker, fake, case)
+    chat = Conversation(broker)
+    result = chat.submit(case["text"], case["id"])
+    for index, followup in enumerate(case.get("followups", [])):
+        result = chat.submit(followup, case["id"] + "/followup-" + str(index))
+    assert broker.last_decision.kind == case["kind"]
+    if case["kind"] == "propose_action":
+        assert result.state == State.SUCCEEDED
+        assert fake.execution_count == case.get("calls", 1)
     else:
         assert fake.execution_count == 0
     assert broker.desktop.execution_calls == 0
@@ -310,9 +464,98 @@ def test_worker_crash_stays_unknown_and_is_not_replayed(media_broker):
     first = broker.converse(UserRequest("crash", broker.grant.session, "Search YouTube for cats"))
     assert first.state == State.NEEDS_REVIEW
     second = broker.converse(UserRequest("again", broker.grant.session, "Search YouTube for cats"))
-    assert second.state == State.FAILED
+    assert second.state == State.WAITING_INPUT
+    assert f"/review-media {first.task_id} manually-handled" in conversational_text(second)
     assert fake.execution_count == 1
     assert broker.media.blocked_unknown
+
+
+@pytest.mark.parametrize(
+    "text",
+    ["Search YouTube and play Outdoor Boys", "Search YouTube and play never gonna give you up"],
+)
+def test_combined_restart_explains_unknown_without_model_or_replay(tmp_path, monkeypatch, text):
+    from jarvis.application_data import ApplicationsConfig
+    from jarvis.application_fake import FakeApplicationPlatform
+    from jarvis.application_tools import attach
+    from jarvis.models import Profile
+    from jarvis.public_data import PublicConfig
+    from jarvis.web_data import WebConfig
+
+    monkeypatch.setattr(socket, "socket", lambda *a, **k: pytest.fail("Unexpected network"))
+    monkeypatch.setattr(subprocess, "Popen", lambda *a, **k: pytest.fail("Unexpected process"))
+    profile = Profile(
+        profile_name="combined-recovery-fixture",
+        model_identity="scripted",
+        prompt_version="planner-m2-v10",
+        decision_version="decision-m2-v1",
+        window_input_policy="targeted",
+        reply='{"kind":"say","text":"Hello"}',
+    )
+    clock = ManualClock()
+    path = tmp_path / "combined.sqlite"
+
+    def session(name):
+        fake, model = FakeBrowserProvider(clock), ChoiceProvider()
+        broker = build(
+            path,
+            profile,
+            clock,
+            session=name,
+            provider=model,
+            public_config=PublicConfig(),
+            web_config=WebConfig(),
+            media_config=MediaConfig(enabled=True, spotify=True, spotify_backend="windows"),
+            browser_provider=fake,
+        )
+        chat = attach(broker, ApplicationsConfig(enabled=True), platform=FakeApplicationPlatform())
+        return broker, chat, fake, model
+
+    broker, chat, fake, _ = session("before-restart")
+    fake.after_execute = lambda: (_ for _ in ()).throw(RuntimeError("synthetic worker loss"))
+    first = chat.submit("Search YouTube for cats")
+    assert first.state == State.NEEDS_REVIEW
+    assert fake.execution_count == 1
+    broker.media.close()
+    broker.store.close()
+
+    broker, chat, fake, model = session("after-restart")
+    try:
+        broker.recover()
+        notices = broker.media.pending_reviews(broker.store)
+        assert len(notices) == 1 and notices[0][0] == first.task_id
+        assert "dedicated JARVIS Chrome" in notices[0][1]
+        result = chat.submit(text)
+        message = conversational_text(result)
+        assert result.state == State.WAITING_INPUT
+        assert f"/review-media {first.task_id} manually-handled" in message
+        assert "SIMULATED" not in message and "denied or invalid" not in message
+        assert model.requests == [] and fake.execution_count == 0
+        assert broker.store.db.execute("SELECT COUNT(*) FROM actions").fetchone()[0] == 1
+        with pytest.raises(Denied, match="after inspecting"):
+            broker.media.control("/review-media " + first.task_id, broker.store)
+        assert broker.media.blocked_unknown
+        broker.media.control("/review-media " + first.task_id + " manually-handled", broker.store)
+        assert broker.media.pending_reviews(broker.store) == []
+        assert not broker.media.blocked_unknown and fake.execution_count == 0
+        assert broker.store.db.execute("SELECT state FROM actions").fetchone()[0] == "UNKNOWN"
+        result = chat.submit("Search YouTube and play never gonna give you up")
+        assert result.state == State.SUCCEEDED and fake.execution_count == 3
+    finally:
+        broker.media.close()
+        broker.store.close()
+
+
+def test_real_media_invalid_proposal_has_no_simulation_label(media_broker):
+    broker, fake, provider = media_broker
+    broker.media.real = True  # Presentation flag only; the fixture remains entirely synthetic.
+    provider.override = b'{"kind":"media_choice","reference":"not-a-reference"}'
+    result = Conversation(broker).submit("Search YouTube for cats")
+    assert result.state == State.FAILED and not result.simulated
+    assert conversational_text(result) == (
+        "I couldn't validate that media request. No media action was sent."
+    )
+    assert fake.execution_count == 0
 
 
 @pytest.mark.parametrize("effect", ["revocation", "expiry", "approval"])

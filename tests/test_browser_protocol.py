@@ -181,7 +181,7 @@ def report(profile, metadata):
                 "kind": case["kind"],
                 "state": "SUCCEEDED",
                 "operation": case["operation"],
-                "fake_media_calls": 1 if case["kind"] == "propose_action" else 0,
+                "fake_media_calls": case.get("calls", 1) if case["kind"] == "propose_action" else 0,
             }
             for case in corpus["cases"]
         ],

@@ -1,0 +1,17 @@
+{
+  "version": "spotify-desktop-windows-v1",
+  "passed": false,
+  "records": [
+    {
+      "operation": "song-request",
+      "state": "NEEDS_REVIEW",
+      "observed_state": null,
+      "content_id": null,
+      "result_count": null,
+      "error": "BROWSER_WORKER_TIMEOUT"
+    }
+  ],
+  "audio_audibility_verified": false,
+  "ordinary_apps_controlled": false,
+  "spotify_left_open": true
+}

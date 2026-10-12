@@ -22,19 +22,20 @@ def main():
     root = Path(__file__).resolve().parents[1]
     private = Path(os.environ["LOCALAPPDATA"]) / "Jarvis"
     pairs = {
-        "--profile": private / "profiles/notepad-m2-v10.toml",
+        "--profile": private / "profiles/notepad-m2-concurrent-v1.toml",
         "--registration": private / "notepad-registration.json",
-        "--model-report": root / "docs/evaluations/m2-natural-close-model-v1-r2.json",
-        "--conversation-report": root / "docs/evaluations/m2-natural-close-conversation-v1-r1.json",
+        "--model-report": root / "docs/evaluations/m2-spotify-admission-model-v1-r1.json",
+        "--conversation-report": root
+        / "docs/evaluations/m2-spotify-admission-conversation-v1-r1.json",
         "--applications-config": private / "applications.toml",
-        "--applications-report": root / "docs/evaluations/applications-qwen3-8b-v3-r5.json",
+        "--applications-report": root
+        / "docs/evaluations/applications-spotify-admission-v4-r1.json",
         "--public-data-config": private / "public-data.toml",
         "--web-config": private / "web.toml",
-        "--media-config": private / "media-all-v1.toml",
+        "--media-config": private / "media-all-spotify-desktop-v1.toml",
         "--browser-registration": private / "chrome-registration.json",
-        "--media-report": root / "docs/evaluations/m4-natural-close-regression-v1-r1.json",
-        "--windows-media-report": root
-        / "docs/evaluations/m4-windows-natural-close-regression-v1-r1.json",
+        "--media-report": root / "docs/evaluations/m4-spotify-admission-browser-v2-r2.json",
+        "--windows-media-report": root / "docs/evaluations/m4-spotify-admission-desktop-v1-r2.json",
     }
     missing = [str(path) for path in pairs.values() if not path.is_file()]
     if missing:
@@ -58,7 +59,7 @@ def main():
         print(subprocess.list2cmdline(command))
         return 0
     print(
-        "Starting attended real Windows control. Stay at the PC; "
+        "Starting attended real Windows control. You may keep using other apps; "
         "Ctrl+Alt+Shift+F10 stops new effects.",
         flush=True,
     )

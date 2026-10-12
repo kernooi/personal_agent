@@ -30,6 +30,7 @@ def test_real_qualification_requires_matching_strict_conversation_report(tmp_pat
     from jarvis.models import OllamaProfile
 
     profile = OllamaProfile.model_validate(report["profile"])
+    report["profile"] = profile.model_dump()
     report["contract_sha256"] = contract_hash(profile)
     target = tmp_path / "report.json"
     target.write_text(json.dumps(report))

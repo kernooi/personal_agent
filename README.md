@@ -16,10 +16,10 @@ separate real-mode flags and current local-model qualification:
 
 ```powershell
 .\.venv\Scripts\python.exe -m jarvis chat `
-  --profile "$env:LOCALAPPDATA\Jarvis\profiles\notepad-m2-v10.toml" `
+  --profile "$env:LOCALAPPDATA\Jarvis\profiles\notepad-m2-concurrent-v1.toml" `
   --applications-config "$env:LOCALAPPDATA\Jarvis\applications.toml" `
   --real-apps --apps-attended `
-  --applications-report .\docs\evaluations\applications-qwen3-8b-v3-r5.json `
+  --applications-report .\docs\evaluations\applications-spotify-admission-v4-r1.json `
   --public-data-config "$env:LOCALAPPDATA\Jarvis\public-data.toml" `
   --web-config "$env:LOCALAPPDATA\Jarvis\web.toml"
 ```
@@ -38,12 +38,22 @@ stops new effects globally. Run one attended session at a time.
 
 See [natural close and launcher identity](docs/decisions/0009-natural-app-close.md).
 
+The combined launcher uses the private `notepad-m2-concurrent-v1.toml` profile with
+`window_input_policy = "targeted"`. You can keep using the keyboard/mouse and switch
+to other apps while a window command is planned or executed. Commands remain bound
+to their named/selected target. Explicit focus brings that window forward when it
+executes; actual foreground success still has to be observed. Unsaved Notepad work,
+stale identities, dialogs, locked desktops and stop still prevent effects. Older
+profiles default to exclusive input handling. This setting covers application and
+Notepad lifecycle only, without generic typing/clicking or browser target changes.
+See [concurrent window control](docs/decisions/0010-concurrent-window-control.md).
+
 For the existing `my text editor` route, additionally use `--real --attended`,
-the Notepad registration, `m2-natural-close-model-v1-r2.json` as `--model-report`
-and `m2-natural-close-conversation-v1-r1.json` as `--conversation-report`.
+the Notepad registration, `m2-spotify-admission-model-v1-r1.json` as `--model-report`
+and `m2-spotify-admission-conversation-v1-r1.json` as `--conversation-report`.
 For real Chrome/Spotify, retain their separate flags/configuration and use
-`m4-natural-close-regression-v1-r1.json` and
-`m4-windows-natural-close-regression-v1-r1.json` respectively. Each execution mode
+`m4-spotify-admission-browser-v2-r2.json` and
+`m4-spotify-admission-windows-v1-r2.json` respectively. Each execution mode
 is displayed separately; enabling applications does not authorize browser or media
 effects. See [the architecture decision](docs/decisions/0008-device-applications.md).
 
@@ -77,22 +87,22 @@ starting chat. Exit old chats first. The equivalent full command is:
 
 ```powershell
 .\.venv\Scripts\python.exe -m jarvis chat `
-  --profile "$env:LOCALAPPDATA\Jarvis\profiles\notepad-m2-v10.toml" `
+  --profile "$env:LOCALAPPDATA\Jarvis\profiles\notepad-m2-concurrent-v1.toml" `
   --real --attended `
   --registration "$env:LOCALAPPDATA\Jarvis\notepad-registration.json" `
-  --model-report .\docs\evaluations\m2-natural-close-model-v1-r2.json `
-  --conversation-report .\docs\evaluations\m2-natural-close-conversation-v1-r1.json `
+  --model-report .\docs\evaluations\m2-spotify-admission-model-v1-r1.json `
+  --conversation-report .\docs\evaluations\m2-spotify-admission-conversation-v1-r1.json `
   --applications-config "$env:LOCALAPPDATA\Jarvis\applications.toml" `
   --real-apps --apps-attended `
-  --applications-report .\docs\evaluations\applications-qwen3-8b-v3-r5.json `
+  --applications-report .\docs\evaluations\applications-spotify-admission-v4-r1.json `
   --public-data-config "$env:LOCALAPPDATA\Jarvis\public-data.toml" `
   --web-config "$env:LOCALAPPDATA\Jarvis\web.toml" `
-  --media-config "$env:LOCALAPPDATA\Jarvis\media-all-v1.toml" `
+  --media-config "$env:LOCALAPPDATA\Jarvis\media-all-spotify-desktop-v1.toml" `
   --real-browser --browser-attended `
   --browser-registration "$env:LOCALAPPDATA\Jarvis\chrome-registration.json" `
-  --media-report .\docs\evaluations\m4-natural-close-regression-v1-r1.json `
+  --media-report .\docs\evaluations\m4-spotify-admission-browser-v2-r2.json `
   --real-media --media-attended `
-  --windows-media-report .\docs\evaluations\m4-windows-natural-close-regression-v1-r1.json
+  --windows-media-report .\docs\evaluations\m4-spotify-admission-desktop-v1-r2.json
 ```
 
 ## Selected Notepad minimize
@@ -109,16 +119,16 @@ Notepad-only real chat on this PC:
 
 ```powershell
 .\.venv\Scripts\python.exe -m jarvis chat `
-  --profile "$env:LOCALAPPDATA\Jarvis\profiles\notepad-m2-v10.toml" `
+  --profile "$env:LOCALAPPDATA\Jarvis\profiles\notepad-m2-concurrent-v1.toml" `
   --real --attended `
   --registration "$env:LOCALAPPDATA\Jarvis\notepad-registration.json" `
-  --model-report .\docs\evaluations\m2-natural-close-model-v1-r2.json `
-  --conversation-report .\docs\evaluations\m2-natural-close-conversation-v1-r1.json
+  --model-report .\docs\evaluations\m2-spotify-admission-model-v1-r1.json `
+  --conversation-report .\docs\evaluations\m2-spotify-admission-conversation-v1-r1.json
 ```
 
 For the combined session, retain the public currency/web/media configuration flags
-and use `m4-natural-close-regression-v1-r1.json` as `--media-report` and
-`m4-windows-natural-close-regression-v1-r1.json` as `--windows-media-report`.
+and use `m4-spotify-admission-browser-v2-r2.json` as `--media-report` and
+`m4-spotify-admission-desktop-v1-r2.json` as `--windows-media-report` with the desktop config.
 Do not run two attended chat sessions simultaneously. The new attended lab is
 `scripts/Test-JarvisNotepadMinimize.py`; the attended local-model Windows run
 passed open, minimize, repeated minimize, restore/focus and safe close. Independent
@@ -136,15 +146,40 @@ API adapter. See [M4 results](docs/M4_TEST_REPORT.md),
 [private profile policy](docs/BROWSER_PROFILE_POLICY.md). Stop at M4; no M5.
 Browser, Notepad, currency and public research permissions remain independent.
 
-Spotify can now use Windows media controls without a developer account or API
+The combined launcher now includes installed Spotify song and playlist search
+without developer API setup. Leave the signed-in Spotify main window visible
+(or ask the separate application controller to open/focus Spotify first). Try:
+
+```text
+Play Never Gonna Give You Up by Rick Astley on Spotify
+Play playlist Deep Focus by Spotify on Spotify
+Search Spotify for jazz
+Open the second result
+Pause Spotify
+Resume Spotify
+What is playing on Spotify?
+```
+
+Ambiguous play requests offer numbered results; replying with a number selects
+and plays within that request. A search-only request does not automatically play.
+An explicit artist or playlist owner must match actual retrieved creator metadata,
+not words in a different result's title. This tested adapter supports the official
+Windows Store Spotify package and English accessibility labels. Localized/EXE
+editions, private playlists absent from search, account/library edits, remote
+devices and volume control are not validated. See the
+[passed attended report](docs/evaluations/m4-spotify-desktop-windows-v1-r14.json).
+The earlier r13 pass is rejected by its retained
+[owner audit](docs/evaluations/m4-spotify-desktop-owner-audit-v1.json).
+
+For playback-only operation, Spotify can still use Windows media controls without a developer account or API
 token. Open the installed Spotify app and start a track manually, then run:
 
 ```powershell
 .\.venv\Scripts\python.exe -m jarvis chat `
-  --profile "$env:LOCALAPPDATA\Jarvis\profiles\notepad-m2-v10.toml" `
+  --profile "$env:LOCALAPPDATA\Jarvis\profiles\notepad-m2-concurrent-v1.toml" `
   --media-config "$env:LOCALAPPDATA\Jarvis\media-windows-v1.toml" `
   --real-media --media-attended `
-  --windows-media-report .\docs\evaluations\m4-windows-natural-close-regression-v1-r1.json
+  --windows-media-report .\docs\evaluations\m4-spotify-admission-windows-v1-r2.json
 ```
 
 Try `What is playing on Spotify?`, `Pause Spotify`, `Resume Spotify`,
@@ -173,7 +208,7 @@ against frozen fake media before real effects:
 
 ```powershell
 .\.venv\Scripts\python.exe -m jarvis eval-media --live `
-  --profile "$env:LOCALAPPDATA\Jarvis\profiles\notepad-m2-v10.toml" `
+  --profile "$env:LOCALAPPDATA\Jarvis\profiles\notepad-m2-concurrent-v1.toml" `
   --report .\docs\evaluations\m4-user-model-r1.json
 ```
 
@@ -184,9 +219,9 @@ After explicit attended readiness, run the real YouTube lab:
 
 ```powershell
 .\.venv\Scripts\python.exe -m jarvis test-media --windows --attended --interactive `
-  --profile "$env:LOCALAPPDATA\Jarvis\profiles\notepad-m2-v10.toml" `
+  --profile "$env:LOCALAPPDATA\Jarvis\profiles\notepad-m2-concurrent-v1.toml" `
   --browser-registration "$env:LOCALAPPDATA\Jarvis\chrome-registration.json" `
-  --media-report .\docs\evaluations\m4-natural-close-regression-v1-r1.json `
+  --media-report .\docs\evaluations\m4-spotify-admission-browser-v2-r2.json `
   --report .\docs\evaluations\m4-user-youtube-r1.json
 ```
 
@@ -196,19 +231,29 @@ Interactive browser chat uses independent real-browser flags:
 
 ```powershell
 .\.venv\Scripts\python.exe -m jarvis chat `
-  --profile "$env:LOCALAPPDATA\Jarvis\profiles\notepad-m2-v10.toml" `
+  --profile "$env:LOCALAPPDATA\Jarvis\profiles\notepad-m2-concurrent-v1.toml" `
   --media-config "$env:LOCALAPPDATA\Jarvis\media-m4-v1.toml" `
   --real-browser --browser-attended `
   --browser-registration "$env:LOCALAPPDATA\Jarvis\chrome-registration.json" `
-  --media-report .\docs\evaluations\m4-natural-close-regression-v1-r1.json
+  --media-report .\docs\evaluations\m4-spotify-admission-browser-v2-r2.json
 ```
 
 Example separate turns: `Search YouTube for Rick Astley Never Gonna Give You Up`,
 `Open the first result`, `Play it`, `Pause the video`, `Resume it`,
-`What video is currently open on YouTube?`. Compound search-and-play currently
-requires separate turns and explicit selection. `/media-status` is observational;
+`What video is currently open on YouTube?`. Named YouTube requests can search/open/play through separate broker tasks.
+Try `Play Never Gonna Give You Up on YouTube` or `Search YouTube and play Outdoor Boys`.
+A uniquely matching retrieved video proceeds; broad/ambiguous searches return numbered
+choices. Reply `1` or `Open the first result` to open and play your choice. Ads are
+not bypassed, and stale choices, stop, failed verification and expired requests halt
+the workflow. Search, selection and playback remain separately journaled and approved. `/media-status` is observational;
 `/media-device <reference>` selects an observed Spotify device. Inspect uncertain
 effects manually before `/review-media <task> manually-handled`; no replay.
+Pending media reviews survive restarting chat. Startup and subsequent media requests
+now show the exact review command; a historical uncertain search can block a new
+YouTube request even when no test window is currently open. Inspect and handle the
+dedicated window manually first, then acknowledge the displayed task. The original
+UNKNOWN record remains; acknowledging it sends no browser action. Restart chat if
+the old worker stopped. Public research and ordinary Chrome are separate.
 
 Add existing `--public-data-config` and `--web-config` flags for currency/research.
 Real Notepad additionally requires its existing `--real --attended`, registration
@@ -562,7 +607,7 @@ model/provider options, setting `prompt_version="planner-m2-v10"` and
 `config/examples/notepad-m2.toml` starts with cloud evidence unverified.
 
 ```powershell
-$m2Profile = "$env:LOCALAPPDATA\Jarvis\profiles\notepad-m2-v10.toml"
+$m2Profile = "$env:LOCALAPPDATA\Jarvis\profiles\notepad-m2-concurrent-v1.toml"
 $notepadRegistration = "$env:LOCALAPPDATA\Jarvis\notepad-registration.json"
 .\.venv\Scripts\python.exe -m jarvis chat --profile $m2Profile
 .\.venv\Scripts\python.exe -m jarvis eval-m2 --live --profile $m2Profile --report docs/evaluations/m2-new-run.json
@@ -667,7 +712,7 @@ Public data defaults to disabled when no config is selected. To retain a useful
 currency limitation while making supplied-rate calculations locally:
 
 ```powershell
-$jarvisProfile = "$env:LOCALAPPDATA\Jarvis\profiles\notepad-m2-v10.toml"
+$jarvisProfile = "$env:LOCALAPPDATA\Jarvis\profiles\notepad-m2-concurrent-v1.toml"
 .\.venv\Scripts\python.exe -m jarvis chat --profile $jarvisProfile `
   --public-data-config .\config\examples\public-data-disabled.toml
 ```
@@ -811,7 +856,7 @@ After your own local SearXNG has been set up and validated, preserve any existin
 private configuration and create a new one from the non-secret example:
 
 ```powershell
-$jarvisProfile = "$env:LOCALAPPDATA\Jarvis\profiles\notepad-m2-v10.toml"
+$jarvisProfile = "$env:LOCALAPPDATA\Jarvis\profiles\notepad-m2-concurrent-v1.toml"
 $jarvisWebConfig = "$env:LOCALAPPDATA\Jarvis\web.toml"
 if (Test-Path -LiteralPath $jarvisWebConfig) { throw 'Inspect existing web config first.' }
 Copy-Item -LiteralPath .\config\examples\web-searxng.toml -Destination $jarvisWebConfig
@@ -897,7 +942,7 @@ The explicit fixed-public-question diagnostics (simulation only) are repeatable:
 
 ```powershell
 .\.venv\Scripts\python.exe scripts/Test-JarvisSourceSelection.py --live `
-  --profile "$env:LOCALAPPDATA\Jarvis\profiles\notepad-m2-v10.toml" `
+  --profile "$env:LOCALAPPDATA\Jarvis\profiles\notepad-m2-concurrent-v1.toml" `
   --web-config "$env:LOCALAPPDATA\Jarvis\web.toml" `
   --report docs/evaluations/m3_5-source-selection-next.json
 ```

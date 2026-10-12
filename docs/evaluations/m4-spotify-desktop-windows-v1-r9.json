@@ -1,0 +1,25 @@
+{
+  "version": "spotify-desktop-windows-v1",
+  "passed": false,
+  "records": [
+    {
+      "operation": "song-request",
+      "state": "SUCCEEDED",
+      "observed_state": "results",
+      "content_id": "",
+      "result_count": 5,
+      "error": null
+    },
+    {
+      "operation": "select-and-play",
+      "state": "NEEDS_REVIEW",
+      "observed_state": "opened",
+      "content_id": "native_99b379c74e568f7ddd8145a873b72034",
+      "result_count": 0,
+      "error": "BROWSER_WORKER_TIMEOUT"
+    }
+  ],
+  "audio_audibility_verified": false,
+  "ordinary_apps_controlled": false,
+  "spotify_left_open": true
+}

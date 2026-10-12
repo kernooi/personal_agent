@@ -253,6 +253,7 @@ class NotepadDesktop:
         self.confirmed = {}
         self.selected_ref = ""
         self.activity = None
+        self.allow_concurrent_input = False
         self.last_window = ""
         self.execution_calls = 0
         self.observation_calls = 0
@@ -339,13 +340,20 @@ class NotepadDesktop:
             )
         if self.activity is None:
             self.begin()
-        if self.transport.call("activity") != self.activity:
+        if not self.allow_concurrent_input and self.transport.call("activity") != self.activity:
             raise Handoff(
                 "User activity or focus changed during planning; "
                 "please request the operation again."
             )
         if effect == "open" and not ref:
-            return json.dumps({"activity": self.activity, "window": None}, sort_keys=True)
+            return json.dumps(
+                {
+                    "activity": self.activity,
+                    "window": None,
+                    "allow_concurrent_input": self.allow_concurrent_input,
+                },
+                sort_keys=True,
+            )
         if ref not in self.windows:
             raise Handoff("Select a specific Notepad window using /windows and /select first.")
         record = self.transport.call("inspect", {"window": self.windows[ref]})
@@ -360,7 +368,14 @@ class NotepadDesktop:
                 "changes, has multiple tabs, a dialog, or its safety is unknown. "
                 "Please handle it manually; no close was sent."
             )
-        return json.dumps({"activity": self.activity, "window": record}, sort_keys=True)
+        return json.dumps(
+            {
+                "activity": self.activity,
+                "window": record,
+                "allow_concurrent_input": self.allow_concurrent_input,
+            },
+            sort_keys=True,
+        )
 
     def execute(self, action, admission_gate):
         if self.lease is not None:
@@ -478,7 +493,11 @@ class NotepadDesktop:
             time.sleep(0.05)
         # Effect-generated foreground transitions are expected, ordinary user
         # input during verification is not. Never claim verified completion then.
-        if self.transport.call("activity")["last_input"] != payload["activity"]["last_input"]:
+        current_activity = self.transport.call("activity")
+        if (
+            not payload.get("allow_concurrent_input", False)
+            and current_activity["last_input"] != payload["activity"]["last_input"]
+        ):
             self.verification_note = "Windows input changed while I was verifying the operation. "
             postcondition = None
             self.blocked_unknown = True

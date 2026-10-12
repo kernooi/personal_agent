@@ -45,7 +45,7 @@ def gateway_parse(raw):
     return Decision("say", text="Media proposal; not an action receipt.")
 
 
-def owner_operation(text):
+def owner_operation(text, *, allow_playlists=False):
     value = text.strip().casefold()
     if re.search(
         r"\b(?:do not|don't|not to|never (?:open|play|pause|resume)|how (?:do|can)|why|explain)\b",
@@ -58,9 +58,13 @@ def owner_operation(text):
     ):
         return "unsupported"
     if re.search(
-        r"\b(?:like|subscribe|comment|upload|download|buy|rent|playlist|password|javascript|click|type)\b",
+        r"\b(?:like|subscribe|comment|upload|download|buy|rent|password|javascript|click|type)\b",
         value,
     ):
+        return "unsupported"
+    if re.search(r"\bplaylist\b", value) and not allow_playlists:
+        return "unsupported"
+    if re.match(r"(?:please )?(?:create|delete|remove|edit|add|save|follow)\b", value):
         return "unsupported"
     if re.search(r"\b(?:search|find|look for)\b", value):
         return "search"
@@ -110,10 +114,15 @@ class MediaRegistry:
 
     def scope_for(self, session, text):
         self.media_active = False
-        operation = owner_operation(text)
         services = re.findall(r"\b(youtube|spotify|netflix)\b", text, re.I)
         services = set(s.casefold() for s in services)
         service = next(iter(services)) if len(services) == 1 else None
+        desktop_request = service == "spotify" and self.media.config.spotify_backend == "desktop"
+        operation = (
+            "search"
+            if desktop_request and re.fullmatch(r"(?:Search|Find) Spotify for .+", text, re.I)
+            else owner_operation(text, allow_playlists=desktop_request)
+        )
         if (
             not service
             and not services
@@ -144,6 +153,7 @@ class MediaRegistry:
         self.media.service = service
         self.media.route_error = None
         native = service == "spotify" and self.media.config.spotify_backend == "windows"
+        desktop = service == "spotify" and self.media.config.spotify_backend == "desktop"
         if native and (
             operation not in {"current", "play", "pause", "resume", "next", "previous"}
             or (
@@ -158,7 +168,19 @@ class MediaRegistry:
         ):
             self.media.route_error = "WINDOWS_MEDIA_BASIC_PLAYBACK_ONLY"
             operation = "current"
-        if operation in {"next", "previous"} and not native:
+        if (
+            desktop
+            and operation in {"play", "resume"}
+            and not re.fullmatch(
+                r"(?:please\s+)?(?:play|resume)"
+                r"(?:\s+(?:it|music|spotify|the (?:music|track|song)|on spotify))*[.!?]*",
+                text.strip(),
+                re.I,
+            )
+        ):
+            self.media.route_error = "SPOTIFY_NAMED_TARGET_REQUIRED"
+            operation = "current"
+        if operation in {"next", "previous"} and not (native or desktop):
             self.media.route_error = "UNSUPPORTED_MEDIA_OPERATION"
             operation = "current"
         if operation == "unsupported" or (
@@ -171,13 +193,34 @@ class MediaRegistry:
             operation = "current"
         query = ""
         try:
-            query = query_from_owner(text, service) if operation == "search" else ""
+            literal = (
+                re.fullmatch(r"(?:Search|Find) Spotify for (.+)", text, re.I) if desktop else None
+            )
+            query = (
+                safe_media_query(literal[1])
+                if literal
+                else query_from_owner(text, service)
+                if operation == "search"
+                else ""
+            )
+            if desktop and operation == "search":
+                query = safe_media_query(
+                    re.sub(r"(?i)^(?:(?:my|the|a) )?playlists? (?:named |called )?", "", query)
+                )
         except ValueError:
             self.media.route_error = "PRIVATE_OR_INVALID_QUERY"
+        if desktop and operation in {"devices", "login"}:
+            self.media.route_error = "UNSUPPORTED_MEDIA_OPERATION"
+            operation = "current"
         args = MediaArguments(
             service=service,
             operation=operation,
-            backend="windows" if native else "api",
+            backend="windows" if native else "desktop" if desktop else "api",
+            search_kind="playlist"
+            if desktop and operation == "search" and re.search(r"\bplaylists?\b", text, re.I)
+            else self.media.pending["arguments"].search_kind
+            if desktop and operation != "search" and self.media.pending
+            else "track",
             query_hash=text_hash(query) if operation == "search" else "",
             reference=("media_" + "0" * 32)
             if operation == "open"
@@ -249,11 +292,16 @@ class MediaRegistry:
 
 def plan_media(broker, task, request):
     adapter = broker.media
+    if adapter.blocked_unknown:
+        return Decision("clarify", text=adapter.review_message(broker.store))
     if adapter.route_error:
         return Decision(
-            "unsupported",
+            "clarify" if adapter.route_error == "SPOTIFY_NAMED_TARGET_REQUIRED" else "unsupported",
             text=(
-                "Windows Spotify control supports current-track information, "
+                "Which song or playlist should I find on Spotify? Include its name "
+                "and the artist or playlist owner when you know them."
+                if adapter.route_error == "SPOTIFY_NAMED_TARGET_REQUIRED"
+                else "Windows Spotify control supports current-track information, "
                 "play, pause, resume, next and previous. "
                 "Choose a song and open Spotify manually; "
                 "song search and app launching are unavailable."
@@ -275,7 +323,7 @@ def plan_media(broker, task, request):
     if (
         args.operation in {"play", "pause", "resume"}
         and not args.reference
-        and args.backend != "windows"
+        and args.backend not in {"windows", "desktop"}
     ):
         return Decision(
             "clarify", text="Search and open a media result first. Which item should I use?"
@@ -399,6 +447,39 @@ class MediaAdapter:
     evidence_source = "media-observer-v1"
     evidence_kind = "service_media_state"
 
+    admission_messages = {
+        "SPOTIFY_WINDOW_MINIMIZED": (
+            "Spotify is minimized. Restore its main window, then ask again. "
+            "No playback command was sent."
+        ),
+        "SPOTIFY_WINDOW_UNAVAILABLE": (
+            "Spotify's window is unavailable or has a dialog open. "
+            "Make its main window available, then ask again. No playback command was sent."
+        ),
+        "SPOTIFY_OPEN_ONE_VISIBLE_WINDOW": (
+            "Open Spotify and leave one main window visible, then ask again. "
+            "No playback command was sent."
+        ),
+        "SPOTIFY_INSTALLED_IDENTITY_UNAVAILABLE": (
+            "I couldn't verify a supported installed Spotify app. No playback command was sent."
+        ),
+        "SPOTIFY_SEARCH_CONTROL_UNAVAILABLE": (
+            "I couldn't find Spotify's supported search control. No playback command was sent."
+        ),
+        "SPOTIFY_SEARCH_READ_ONLY": (
+            "Spotify's search control is read-only. No playback command was sent."
+        ),
+    }
+
+    def admission_error_code(self, error):
+        code = str(error)
+        return code if code in self.admission_messages else "MEDIA_ADMISSION_REJECTED"
+
+    def admission_failure_message(self, code):
+        return self.admission_messages.get(
+            code, "The media controller couldn't accept this request. No media action was sent."
+        )
+
     def __init__(self, clock, config, provider):
         self.clock, self.config, self.provider = clock, config, provider
         self.real = provider.real
@@ -492,9 +573,14 @@ class MediaAdapter:
             pending["query"] if args.operation == "search" else "",
             action.expires_at,
         )
-        if args.backend == "windows":
-            self.expected_id = self.observation.item_id
-            self.expected_title = self.observation.title
+        if args.backend in {"windows", "desktop"}:
+            if (
+                args.backend == "windows"
+                or args.operation in {"current", "next", "previous"}
+                or (args.operation in {"play", "pause", "resume"} and not args.reference)
+            ):
+                self.expected_id = self.observation.item_id
+                self.expected_title = self.observation.title
             self.expected_device = self.observation.device_ref
         self.update_generation(self.observation)
         self.results = self.observation.results if args.operation == "search" else self.results
@@ -536,7 +622,11 @@ class MediaAdapter:
                 )
             )
             if args.service == "spotify":
-                device = self.expected_device if args.backend == "windows" else args.device_ref
+                device = (
+                    self.expected_device
+                    if args.backend in {"windows", "desktop"}
+                    else args.device_ref
+                )
                 post = post and bool(device) and observed.device_ref == device
         elif args.operation == "search":
             post = matches and observed.state == "results"
@@ -619,6 +709,35 @@ class MediaAdapter:
 
     def close(self):
         self.provider.close()
+
+    @staticmethod
+    def review_notice(task):
+        args = MediaArguments.model_validate_json(task.scope.window_ref)
+        target = (
+            "Spotify"
+            if args.service == "spotify" and args.backend in {"windows", "desktop"}
+            else "the dedicated JARVIS Chrome window"
+        )
+        return (
+            f"A previous {args.service.title()} operation has an uncertain outcome. "
+            f"Inspect {target} and handle it manually, then enter "
+            f"/review-media {task.task_id} manually-handled. No action was replayed."
+        )
+
+    def pending_reviews(self, store):
+        rows = store.db.execute(
+            "SELECT DISTINCT a.task_id FROM actions a WHERE a.capability='media.control' "
+            "AND a.state='UNKNOWN' AND NOT EXISTS (SELECT 1 FROM events e "
+            "WHERE e.task_id=a.task_id AND e.kind='manual_review_acknowledged') "
+            "ORDER BY a.task_id"
+        ).fetchall()
+        return [(row[0], self.review_notice(store.get(row[0]))) for row in rows]
+
+    def review_message(self, store):
+        return "\n".join(message for _, message in self.pending_reviews(store)) or (
+            "A previous media outcome is uncertain. Inspect it manually before requesting "
+            "another media action. No action was replayed."
+        )
 
     def control(self, text, store):
         if text == "/media-status":

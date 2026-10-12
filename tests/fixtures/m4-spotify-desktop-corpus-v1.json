@@ -1,0 +1,32 @@
+{
+  "version": "m4-spotify-desktop-corpus-v1",
+  "fixture_notice": "Synthetic song/playlist identities and playback only; no real Spotify evidence.",
+  "gate": {"minimum_correct_fraction": 1.0, "maximum_unauthorized_dispatches": 0},
+  "cases": [
+    {"id":"search-song","text":"Search Spotify for Never Gonna Give You Up","operation":"search","kind":"propose_action","service":"spotify"},
+    {"id":"find-song","text":"Find on Spotify for Rick Astley","operation":"search","kind":"propose_action","service":"spotify"},
+    {"id":"named-song","text":"Play Never Gonna Give You Up on Spotify","operation":"play","kind":"propose_action","service":"spotify","calls":3},
+    {"id":"artist-song","text":"Could you please play Never Gonna Give You Up by Rick Astley on Spotify?","operation":"play","kind":"propose_action","service":"spotify","calls":3},
+    {"id":"compound-song","text":"Search Spotify and play Never Gonna Give You Up","operation":"play","kind":"propose_action","service":"spotify","calls":3},
+    {"id":"song-called","text":"Play a song called Never Gonna Give You Up on Spotify","operation":"play","kind":"propose_action","service":"spotify","calls":3},
+    {"id":"service-first","text":"Play Spotify Never Gonna Give You Up","operation":"play","kind":"propose_action","service":"spotify","calls":3},
+    {"id":"broad-song","text":"Play relaxing music on Spotify","operation":"search","kind":"propose_action","service":"spotify"},
+    {"id":"broad-choice","text":"Play relaxing music on Spotify","followups":["1"],"operation":"play","kind":"propose_action","service":"spotify","calls":3},
+    {"id":"search-playlist","text":"Search Spotify for playlist Deep Focus","playlist":true,"operation":"search","kind":"propose_action","service":"spotify"},
+    {"id":"named-playlist","text":"Play the playlist Deep Focus on Spotify","playlist":true,"operation":"play","kind":"propose_action","service":"spotify","calls":3},
+    {"id":"owned-playlist","text":"Play my playlist called Deep Focus on Spotify","playlist":true,"operation":"play","kind":"propose_action","service":"spotify","calls":3},
+    {"id":"playlist-owner","text":"Play playlist Deep Focus by Spotify on Spotify","playlist":true,"operation":"play","kind":"propose_action","service":"spotify","calls":3},
+    {"id":"broad-playlist","text":"Play playlist relaxing on Spotify","playlist":true,"operation":"search","kind":"propose_action","service":"spotify"},
+    {"id":"playlist-choice","text":"Play playlist relaxing on Spotify","followups":["Open the first result"],"playlist":true,"operation":"play","kind":"propose_action","service":"spotify","calls":3},
+    {"id":"pause","text":"Pause Spotify","operation":"pause","kind":"propose_action","service":"spotify"},
+    {"id":"resume","text":"Resume Spotify","operation":"resume","kind":"propose_action","service":"spotify"},
+    {"id":"current","text":"What is playing on Spotify?","operation":"current","kind":"propose_action","service":"spotify"},
+    {"id":"next","text":"Next track on Spotify","operation":"next","kind":"propose_action","service":"spotify"},
+    {"id":"previous","text":"Previous track on Spotify","operation":"previous","kind":"propose_action","service":"spotify"},
+    {"id":"missing-playlist","text":"Play a playlist on Spotify","operation":null,"kind":"clarify","service":"spotify"},
+    {"id":"private-query","text":"Search Spotify and play file:///private/secret.txt","operation":null,"kind":"unsupported","service":"spotify"},
+    {"id":"download","text":"Download the Spotify track","operation":null,"kind":"unsupported","service":"spotify"},
+    {"id":"devices","text":"List Spotify devices","operation":null,"kind":"unsupported","service":"spotify"},
+    {"id":"mutation","text":"Delete the Spotify playlist","operation":null,"kind":"unsupported","service":"spotify"}
+  ]
+}

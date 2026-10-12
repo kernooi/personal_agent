@@ -1,0 +1,49 @@
+{
+  "version": "spotify-desktop-windows-v1",
+  "passed": false,
+  "records": [
+    {
+      "operation": "song-request",
+      "state": "SUCCEEDED",
+      "observed_state": "results",
+      "content_id": "",
+      "result_count": 5,
+      "error": null
+    },
+    {
+      "operation": "select-and-play",
+      "state": "SUCCEEDED",
+      "observed_state": "playing",
+      "content_id": "native_f0df7cf579af09c240af5cd845297d10",
+      "result_count": 0,
+      "error": null
+    },
+    {
+      "operation": "pause-song",
+      "state": "SUCCEEDED",
+      "observed_state": "paused",
+      "content_id": "native_f0df7cf579af09c240af5cd845297d10",
+      "result_count": 0,
+      "error": null
+    },
+    {
+      "operation": "resume-song",
+      "state": "SUCCEEDED",
+      "observed_state": "playing",
+      "content_id": "native_f0df7cf579af09c240af5cd845297d10",
+      "result_count": 0,
+      "error": null
+    },
+    {
+      "operation": "playlist-request",
+      "state": "NEEDS_REVIEW",
+      "observed_state": "playing",
+      "content_id": "native_f0df7cf579af09c240af5cd845297d10",
+      "result_count": 0,
+      "error": "SPOTIFY_SEARCH_CHANGED"
+    }
+  ],
+  "audio_audibility_verified": false,
+  "ordinary_apps_controlled": false,
+  "spotify_left_open": true
+}

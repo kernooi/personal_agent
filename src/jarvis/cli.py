@@ -78,6 +78,7 @@ def main() -> None:
         "eval-assistant",
         "eval-media",
         "eval-windows-media",
+        "eval-spotify-desktop",
         "eval-apps",
     ):
         child = sub.add_parser(command, help=f"Local {command}; real chat requires explicit opt-in")
@@ -118,6 +119,7 @@ def main() -> None:
             "eval-assistant",
             "eval-media",
             "eval-windows-media",
+            "eval-spotify-desktop",
             "eval-apps",
         }:
             child.add_argument("--live", action="store_true", required=True)
@@ -324,13 +326,16 @@ def live_command(args, parser):
             parser.error(str(exc))
         print(json.dumps({k: v for k, v in report.items() if k != "records"}, indent=2))
         raise SystemExit(code)
-    if args.command in {"eval-media", "eval-windows-media"}:
+    if args.command in {"eval-media", "eval-windows-media", "eval-spotify-desktop"}:
         from jarvis.media_evaluation import evaluate as evaluate_media
 
         if args.report is None:
             parser.error("eval-media requires --report; existing reports are preserved")
         report, code = evaluate_media(
-            profile, args.report, windows_media=args.command == "eval-windows-media"
+            profile,
+            args.report,
+            windows_media=args.command == "eval-windows-media",
+            spotify_desktop=args.command == "eval-spotify-desktop",
         )
         print(json.dumps({k: v for k, v in report.items() if k != "records"}, indent=2))
         raise SystemExit(code)
@@ -534,23 +539,34 @@ def live_command(args, parser):
             or media_config is None
             or not media_config.enabled
             or not media_config.spotify
-            or media_config.spotify_backend != "windows"
+            or media_config.spotify_backend not in {"windows", "desktop"}
             or args.windows_media_report is None
-            or not media_qualified(args.windows_media_report, profile, metadata, windows_media=True)
+            or not media_qualified(
+                args.windows_media_report,
+                profile,
+                metadata,
+                windows_media=media_config.spotify_backend == "windows",
+                spotify_desktop=media_config.spotify_backend == "desktop",
+            )
         ):
             parser.error(
-                "Windows Spotify requires enabled windows backend, --media-attended "
+                "Windows Spotify requires an enabled windows/desktop backend, --media-attended "
                 "and matching passed --windows-media-report"
             )
         browser_stop = browser_stop or threading.Event()
-        native = WindowsMediaProvider(SystemClock(), media_config, browser_stop)
+        if media_config.spotify_backend == "desktop":
+            from jarvis.spotify_desktop import SpotifyDesktopProvider
+
+            native = SpotifyDesktopProvider(SystemClock(), media_config, browser_stop)
+        else:
+            native = WindowsMediaProvider(SystemClock(), media_config, browser_stop)
         browser_provider = MediaProviders(browser_provider, native, browser_stop)
     elif args.media_attended or args.windows_media_report:
         parser.error("Windows media real-mode options require --real-media")
     if (
         args.real_browser
         and media_config.spotify
-        and media_config.spotify_backend == "windows"
+        and media_config.spotify_backend in {"windows", "desktop"}
         and not args.real_media
     ):
         parser.error("Windows Spotify needs separate --real-media consent; no API fallback")
@@ -617,7 +633,9 @@ def live_command(args, parser):
             else "SIMULATED browser"
         )
         spotify_label = (
-            "Windows media controls"
+            "Windows media controls / native Spotify search"
+            if args.real_media and media_config.spotify_backend == "desktop"
+            else "Windows media controls"
             if args.real_media
             else "setup required"
             if not browser_provider or not browser_provider.spotify_ready
@@ -691,6 +709,11 @@ def live_command(args, parser):
             print("Earlier unfinished requests were ended safely; no actions were replayed.")
         for result in waiting:
             print(result.message)
+        if broker.media:
+            reported = {result.task_id for result in waiting}
+            for task_id, message in broker.media.pending_reviews(broker.store):
+                if task_id not in reported:
+                    print(message)
         if args.real:
             pending = broker.store.db.execute(
                 "SELECT DISTINCT a.task_id FROM actions a WHERE a.state='UNKNOWN' "

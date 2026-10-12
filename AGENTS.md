@@ -60,3 +60,24 @@ binds exact one-use broker approval. Notepad must still be independently empty,
 unmodified and single-tab. Normal close may hide a window to the tray; never infer
 process termination or discard/save work. See docs/decisions/0009-natural-app-close.md.
 No generic typing/clicking, arbitrary shell, remote control or other platform effects.
+
+The owner approved concurrent PC use during targeted app/Notepad lifecycle requests.
+Trusted profiles may explicitly select window_input_policy="targeted"; legacy profiles
+default to "exclusive". In targeted mode, unrelated input/focus changes do not revoke
+the named or selected exact-window operation. Still revalidate identity, registration,
+grants, expiry, cancellation, desktop availability and dirty/dialog state at admission.
+Verify actual postconditions; never retarget to the foreground window or force focus
+through synthetic input. This exception covers lifecycle tools only, not generic UI.
+See docs/decisions/0010-concurrent-window-control.md.
+
+The owner additionally approved Spotify-specific installed-app song/playlist search
+and playback without developer API setup. An explicitly selected desktop Spotify
+backend may use the verified app's labelled accessibility search/filter controls and
+exact Play controls of fresh retrieved results, through the media broker. This is
+not a generic input/UI capability. No credential extraction, account/library/playlist
+mutation, arbitrary selectors, keyboard/mouse injection or web-player fallback.
+Search may use only a fixed encoded spotify:search URI, addressed by WinRT to the
+exact verified Spotify package family; no default-handler or generic URI tool.
+Use separate desktop-search qualification and attended consent. Verify selected
+content/context with accessibility plus independent Windows playback state; never
+infer catalog identity or audible sound from GSMTC alone. See decision 0012.

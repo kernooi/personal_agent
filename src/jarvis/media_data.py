@@ -37,7 +37,7 @@ class MediaConfig(StrictRecord):
     youtube: bool = True
     netflix: bool = False
     spotify: bool = False
-    spotify_backend: Literal["api", "windows"] = "api"
+    spotify_backend: Literal["api", "windows", "desktop"] = "api"
     result_limit: int = Field(default=5, ge=1, le=5)
     operation_seconds: int = Field(default=20, ge=2, le=30)
     reference_seconds: int = Field(default=300, ge=10, le=600)
@@ -54,6 +54,8 @@ def canonical(value):
     # Windows scopes always carry the explicit new backend field.
     if data.get("backend") == "api":
         del data["backend"]
+    if data.get("search_kind") == "track":
+        del data["search_kind"]
     return json.dumps(data, sort_keys=True, separators=(",", ":"))
 
 
@@ -62,9 +64,20 @@ def text_hash(value):
 
 
 def safe_media_query(value):
-    from jarvis.web_data import safe_query
+    from jarvis.web_data import WebError, safe_query
 
-    value = safe_query(value)
+    # Reuse disclosure rejection, but do not apply web conversational stop words
+    # to literal music/video titles ("You", "Up", "The", "Please", etc.).
+    try:
+        safe_query(value)
+    except WebError as exc:
+        if exc.code != "QUERY_SCOPE_EMPTY_OR_TOO_LARGE" or not value or len(value) > 256:
+            raise
+    if any(ord(c) < 32 or 127 <= ord(c) <= 159 for c in value):
+        raise MediaError("PRIVATE_OR_URL_QUERY")
+    value = " ".join(value.split())
+    if not value or len(value) > 256:
+        raise MediaError("PRIVATE_OR_URL_QUERY")
     if re.search(r"https?://|file:|localhost|127\.0\.0|cookie|password|token=", value, re.I):
         raise MediaError("PRIVATE_OR_URL_QUERY")
     return value
@@ -102,7 +115,8 @@ def item_id(service, url):
 class MediaArguments(StrictRecord):
     service: Service
     operation: Operation
-    backend: Literal["api", "windows"] = "api"
+    backend: Literal["api", "windows", "desktop"] = "api"
+    search_kind: Literal["track", "playlist"] = "track"
     query_hash: str = Field(default="", pattern=r"^(?:|[0-9a-f]{64})$")
     reference: str = Field(default="", pattern=r"^(?:|media_[0-9a-f]{32})$")
     device_ref: str = Field(default="", pattern=r"^(?:|device_[0-9a-f]{32})$")
@@ -121,6 +135,12 @@ class MediaArguments(StrictRecord):
             raise ValueError("Devices belong to Spotify")
         if self.operation in {"next", "previous"} and self.service != "spotify":
             raise ValueError("Track skipping belongs to Spotify Windows media")
+        if self.search_kind == "playlist" and (
+            self.service != "spotify" or self.backend != "desktop"
+        ):
+            raise ValueError("Playlist search belongs to the Spotify desktop controller")
+        if self.backend == "desktop" and self.service != "spotify":
+            raise ValueError("The desktop media controller belongs to Spotify")
         return self
 
 
@@ -131,6 +151,7 @@ class MediaItem(StrictRecord):
     creator: str = Field(default="", max_length=160)
     duration: str = Field(default="", max_length=32)
     url: str = Field(default="", max_length=400)
+    content_type: Literal["video", "track", "playlist"] = "video"
 
     @field_validator("title", "creator", "duration")
     @classmethod

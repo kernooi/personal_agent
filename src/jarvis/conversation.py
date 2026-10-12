@@ -27,8 +27,34 @@ class Conversation:
         self.history: list[Message] = []
         self.pending_open = False
         self.pending_window = None
+        from jarvis.youtube_flow import YouTubeFlow
+
+        self.youtube = YouTubeFlow(self)
+        from jarvis.spotify_flow import SpotifyFlow
+
+        self.spotify = SpotifyFlow(self)
 
     def submit(self, text: str, request_key: str | None = None):
+        from jarvis.media_tools import owner_operation
+        from jarvis.spotify_flow import named_spotify_request
+
+        media = self.broker.media
+        if (
+            media
+            and media.config.spotify_backend == "desktop"
+            and (
+                named_spotify_request(text)
+                or request_key in self.spotify.receipts
+                or self.spotify.pending
+                and owner_operation(text) == "open"
+            )
+        ):
+            self.youtube.pending = None
+            return self.spotify.submit(text, request_key)
+        self.spotify.pending = None
+        return self.youtube.submit(text, request_key)
+
+    def _submit_single(self, text: str, request_key: str | None = None):
         normalized = text.strip().casefold().rstrip(".!?")
         resolved = text
         extended = self.broker.profile.prompt_version == "planner-m2-v10"

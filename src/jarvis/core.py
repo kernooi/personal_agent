@@ -413,10 +413,23 @@ class Broker:
                 self.media.blocked_unknown = True
                 result = replace(
                     result,
-                    message=(
-                        f"The media outcome is uncertain. Inspect JARVIS Chrome manually, "
-                        f"then /review-media {task_id} manually-handled. No replay."
-                    ),
+                    message=self.media.review_notice(self.store.get(task_id)),
+                )
+            if result.state == State.FAILED and result.message.startswith(
+                "SIMULATED: request denied or invalid; zero execution."
+            ):
+                result = replace(
+                    result,
+                    display_message="I couldn't validate that media request. "
+                    "No media action was sent.",
+                )
+            elif (
+                result.state == State.FAILED
+                and result.message == "SIMULATED: adapter gate rejected; zero execution."
+            ):
+                result = replace(
+                    result,
+                    display_message=self.media.admission_failure_message(self.last_error),
                 )
             return replace(result, simulated=not self.media.real)
         if getattr(self.registry, "conversational", False):
@@ -547,7 +560,9 @@ class Broker:
                     raise AdmissionRejected("Adapter admission gate closed") from exc
 
             adapter.execute(action, gate)
-        except AdmissionRejected:
+        except AdmissionRejected as exc:
+            if action.capability == "media.control":
+                self.last_error = self.media.admission_error_code(exc)
             # The fake adapter's gate rejected before mutation, so absence of effect is known.
             current = self.store.get(action.task_id)
             self.store.transition(action.task_id, State.VERIFYING)

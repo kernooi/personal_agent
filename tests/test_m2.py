@@ -257,6 +257,19 @@ def test_user_takeover_during_verification_is_unknown_without_replay(broker):
     result = submit(broker, "Open Notepad.")
     assert result.state == State.NEEDS_REVIEW
     assert broker.desktop.blocked_unknown
+
+
+def test_targeted_notepad_policy_allows_input_but_protects_dirty_work(broker):
+    broker.desktop.allow_concurrent_input = True
+    transport = broker.desktop.transport
+    transport.before_effect = lambda: setattr(transport, "input_tick", transport.input_tick + 1)
+    transport.after_effect = lambda: setattr(transport, "input_tick", transport.input_tick + 1)
+    assert submit(broker, "Open Notepad.").state == State.SUCCEEDED
+    ref = broker.desktop.selected_ref
+    row = transport.records[0]
+    row.update(empty=False, modified=True)
+    assert submit(broker, "Close Notepad.", "windows.close", ref).state == State.WAITING_INPUT
+    assert transport.calls == ["open"]
     assert broker.desktop.transport.calls == ["open"]
 
 

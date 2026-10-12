@@ -1,0 +1,9 @@
+schema_version = 1
+enabled = false
+youtube = false
+netflix = false
+spotify = true
+spotify_backend = "desktop"
+result_limit = 5
+operation_seconds = 30
+reference_seconds = 300

@@ -1,0 +1,70 @@
+{
+  "version": "m2-minimize-native-lab-v1",
+  "execution_mode": "windows",
+  "provider": "ollama",
+  "status": "passed",
+  "metadata": {
+    "available": true,
+    "model_present": true,
+    "identity": "qwen3:8b",
+    "digest": "500a1f067a9f782620b40bee6f7b0c89e17ae61f686b92c24933e4ca4b2b8b41",
+    "runtime_version": "0.40.2",
+    "transport_version": "ollama-chat-v2",
+    "text_generation": "supported",
+    "schema_constrained_output": "unknown",
+    "native_tool_calls": "supported",
+    "context_capacity": 40960,
+    "cloud_disabled": "user_verified",
+    "local_mode_programmatically_attested": false,
+    "ready": true,
+    "qualification": "unqualified; fake-execution evaluation only"
+  },
+  "cases": [
+    {
+      "case_id": "open",
+      "state": "SUCCEEDED",
+      "latency_seconds": 15.654,
+      "message": "The selected Notepad window is open and ready.",
+      "passed": true
+    },
+    {
+      "case_id": "minimize",
+      "state": "SUCCEEDED",
+      "latency_seconds": 3.031,
+      "message": "The selected Notepad window is minimized.",
+      "passed": true,
+      "independent_is_iconic": true
+    },
+    {
+      "case_id": "repeat",
+      "state": "SUCCEEDED",
+      "latency_seconds": 3.117,
+      "message": "The selected Notepad window is minimized.",
+      "passed": true,
+      "independent_is_iconic": true
+    },
+    {
+      "case_id": "restore",
+      "state": "SUCCEEDED",
+      "latency_seconds": 3.46,
+      "message": "The selected Notepad window is in the foreground.",
+      "passed": true,
+      "independent_is_iconic": false,
+      "independent_foreground_matches": true
+    },
+    {
+      "case_id": "close",
+      "state": "SUCCEEDED",
+      "latency_seconds": 2.838,
+      "message": "The selected Notepad window is closed.",
+      "passed": true
+    }
+  ],
+  "preexisting_window_count": 0,
+  "preexisting_preserved": true,
+  "model_report": "m2-concurrent-input-model-v1-r2.json",
+  "conversation_report": "m2-concurrent-input-conversation-v1-r1.json",
+  "notepad_version": "11.2607.14.0",
+  "journal_retained": true,
+  "qualification": "attended bounded minimize and restore only"
+}

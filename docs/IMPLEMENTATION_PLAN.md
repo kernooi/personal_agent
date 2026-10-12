@@ -659,3 +659,169 @@ Baseline windows were preserved. Steam normal close hides to tray; Photoshop tes
 window closed. Combined helper startup/quit accepted all qualifications; README/helper
 use r5. No document/account effects, installation, settings, commit or push. Individual
 compatibility coverage and operation latency limitations remain.
+
+## 2026-10-12 - Runtime availability restored
+
+Recovered stopped standalone Ollama using the already approved process-local
+settings; verified actual cloud-disabled startup log, API version 0.40.2 and existing
+qwen3:8b. Combined startup/quit passed without effects. Ollama still requires manual
+startup after it stops or Windows restarts; no startup service or global setting added.
+
+## 2026-10-12 - Search endpoint restored
+
+Restored the previously approved dedicated SearXNG container using existing pinned
+image/configuration, loopback-only host port 8080 and manual lifecycle. The user's
+other container lacked host port publication. JSON API and JARVIS supervised adapter
+checks passed. Full end-to-end research was not reevaluated; no software download,
+global settings, source change, automatic service or commit.
+
+## 2026-10-12 - Concurrent-use targeted window policy
+
+Implemented the owner's explicit input/focus behavior change for app and Notepad
+lifecycle only. A trusted targeted profile permits continued PC use without revoking
+the exact named/selected window command; exclusive mode remains default for old
+profiles. Exact identity/scope, registration, dirty/dialog checks, grants, expiry,
+cancellation, secure-desktop rejection, independent state verification and no-replay
+requirements remain. No generic input, force-focus or browser target relaxation.
+See decision 0010. Private v10 profile and historical corpora/reports are preserved.
+
+1064 tests passed; lint/format/dependency checks passed. Current targeted gates:
+apps v4 31/31, M2 decisions 24/24, M2 conversation 41/41, media 22/22 and Windows
+media 12/12; all five qualified. Failed M2 first-run report retained without changing
+requirements. Calculator native test passed while operator input occurred during a
+paused actual-model minimize request, with independent state and zero-admission stop.
+Separately attended registered Notepad lifecycle passed all five native regressions,
+including clean-close and preserved existing windows. Combined startup/quit accepted
+new profile/current qualifications. Helper/README point to that setup. No installation,
+global settings, automatic commit/push or new UI capabilities.
+
+## 2026-10-12 - Natural YouTube request routing
+
+Implemented bounded conversation-level search/open/play through existing broker
+tasks. Named requests find their own results; broad channel requests ask which video
+and retain requested playback through an exact current selection. Owner/browser
+session, generation/deadline, scoped model choices, approvals, stop and independent
+verification remain. Ads stop automatic play; unknown effects never replay.
+Decision 0011 records this change, without new browser/account/UI permissions.
+
+1104 tests, lint/format/dependency checks passed. Actual local gates passed: M4 v2
+27/27, Windows Spotify 12/12, apps 31/31, M2 decisions 24/24 and conversation 41/41.
+All five qualification helpers match. Historical corpora/results and failed app
+explanation reports remain. Added missing informational catalog context without
+changing target authority. Helper/README use refreshed reports. Live Chrome retest
+is prepared but pending attended readiness and exit of the current chat, whose stop
+hotkey blocks a second real session. No new browser effects, install/settings or push.
+
+## 2026-10-12 - YouTube workflow native evidence
+
+Attended readiness received and previous chat exited. Real compound search, matching
+result selection with retained play goal, verified playback, pause/resume and
+zero-admission software stop passed in m4-youtube-flow-windows-v1-r2.json. Dedicated
+test context closed; ordinary Chrome excluded. First failed report is preserved:
+the lab did not copy a post-ad snapshot generation, causing zero-delivery pause
+rejection, not an uncertain action. Fixed harness bookkeeping via existing adapter
+method; production source/gates unchanged. Combined startup/quit passed. This
+supersedes pending live validation above; no sound-verification or general-all-videos
+claim, account changes, ad bypass, installation, global settings, commit or push.
+
+## 2026-10-12 - Combined-session media review visibility
+
+The reported compound requests were blocked by a historical UNKNOWN YouTube search
+in the combined private application journal, not by the new request grammar. Their
+records contain no prepared/admitted actions. Standalone native validation used a
+separate lab journal and did not resolve production history.
+
+Startup and blocked media requests now identify the pending review and exact command;
+no model/browser call occurs while blocked. Invalid media-proposal presentation no
+longer labels real-mode rejection as simulation. All admission/unknown-outcome
+protections remain. Combined-controller restart/review regression passed, as did
+1107 tests, lint/format and dependency checks. Isolated backup of the actual journal
+reproduced the block with the corrected explanation and zero model/media calls.
+Original journal was untouched during diagnosis. Owner later confirmed the dedicated
+window/chat closed; recorded the explicit manual-review event through existing control.
+No pending media reviews remain; the original UNKNOWN action remains unchanged.
+No browser launch/effect or replay was performed. Current local qualification reports
+passed all unchanged gates: M2 24/24, conversation 41/41, applications 31/31, media
+27/27 and Windows Spotify 12/12. Helper/README use the new media-review reports.
+Restart chat to load this fix. No new attended browser validation was performed.
+
+## 2026-10-12 - Spotify installed-app search extension
+
+Owner chose native Spotify song/playlist search without developer setup. Implemented
+Spotify-specific accessibility controls and a supervised worker through the existing
+media broker. Search, selection and play remain separate; metadata/context and unique
+Windows Spotify playback state verify results. No arbitrary UI, account mutation,
+credentials, API fallback or later milestone capabilities. Existing backends retained.
+
+Read-only native inspection confirms the Store app's search/control surfaces. 43
+new offline regressions and the full 1150-test suite passed. Desktop corpus v1 is
+frozen (25 cases, 100% gate). Actual model qualification is running. Native attended
+search/song/playlist verification is prepared in Test-JarvisSpotifySearch.py; readiness
+must be received before effects. Combined launcher will switch to a separate private
+desktop config only after validation; all affected qualifications require refresh.
+
+Follow-up: native search r1/r2 stopped before playback; owner reviewed both. Fixed
+literal title preservation and changed search activation to a locked Windows.System
+package-targeted spotify:search URI. Native r3 exposed a Python/WinRT overload error,
+reviewed by the owner and corrected with a regression test. Native r4 reached song
+results but stopped at the client's space-to-plus query readback and duplicate filter
+label; corrected exact representation matching/filter selection. Its required manual
+review and the corrected attended song/playlist playback test remain pending here.
+All failed results/UNKNOWN journal actions are retained; no playback was sent by
+those failed tests. Desktop qualification r3 failed 16/25 under GPU saturation;
+after owner freed the GPU, r4/r5/r6 passed 25/25 with the unchanged gate. Latest full
+suite: 1159 passed; lint/format/dependencies/diff checks passed. Refreshing all
+existing combined-launcher qualifications; desktop mode is not enabled there yet.
+
+All refreshed existing gates passed: M2 24/24, conversation 41/41, applications
+31/31, browser media 27/27, basic Windows Spotify 12/12; desktop r6 25/25. Every
+qualification helper validates the current sources/runtime/profile. Combined helper
+and README now use the refreshed existing-backend reports; startup then /quit
+passed without effects. Outstanding: owner review of native search r4, corrected
+attended song/playlist playback validation, then switching the helper to desktop
+configuration only if that validation passes. No commit was requested/performed.
+
+### Completed native search validation
+
+Corrected native URI encoding, both observed track-row layouts, active generic
+Pause context, fixed Search-form commit and stale optional filter handling. Native
+r10/r11 established correct song play/pause/resume; retained their later playlist
+search failures and explicit owner reviews. Rejected the r13 apparent pass after
+auditing a copied playlist whose title falsely satisfied requested owner words.
+The failed owner audit preserves that error. Selection and the native lab now
+check explicit title/creator separately; validated playlist-card owner links supply
+creator evidence, and decoy-title regressions prevent that substitution.
+
+Current model desktop v1-r15 passed 25/25 under unchanged frozen 100% gate. Corrected
+native v1-r14 passed song search/play/pause/resume, Spotify-owned Deep Focus
+search/play/pause and stop cancellation with zero new admissions. Spotify left
+open/paused. Full suite: 1167 passed. Combined helper switched to separate private
+desktop config; refreshing existing M2/conversation/app/browser/basic qualifications
+and verifying combined startup. Other Spotify editions/locales, private playlists
+missing from native search, remote-device/volume/account edits remain outside the
+measured path. Audible sound and service-API catalog attestation are not claimed.
+
+Completed final refresh: M2 model v1-r2 24/24, conversation v1-r2 41/41,
+applications v4-r2 31/31, browser media v2-r3 27/27, Windows playback-only v1-r3
+12/12; desktop model v1-r15 25/25. All six current qualification helpers passed.
+Combined launcher startup/quit passed with native Spotify search enabled. Final
+lint/format/dependency/diff checks passed; 1167 tests passed. Native extension is
+complete within its measured compatibility scope; no later milestone or commit.
+
+## 2026-10-13 - Spotify admission failure explanation
+
+Reported named-playlist failure was a zero-effect admission rejection mislabeled
+SIMULATED. Observational Windows check confirms Spotify is currently minimized.
+Added explicit minimized-window classification and allowlisted natural error hints
+through the broker; no automatic restore, effect replay or gate relaxation. Generic
+worker details remain private. Four regressions verify actual-mode presentation,
+known FAILED outcome and zero playback delivery. Full suite 1171 passed, targeted
+media suite 204 passed. Refreshing affected frozen model gates and launcher reports.
+This does not implement personal-library browsing or establish search availability
+for the owner's playlist. Restart chat and restore Spotify to try native search.
+
+Completed source-bound refresh: M2 24/24, conversation 41/41, applications 31/31,
+browser 27/27, Windows playback-only 12/12 and desktop 25/25, unchanged gates.
+All current qualification helpers, helper argument inspection, lint/format,
+dependencies and whitespace checks pass. Updated combined helper and docs; no
+native effect, private playlist discovery claim, automatic restore or commit.

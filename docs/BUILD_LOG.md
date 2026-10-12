@@ -2685,3 +2685,383 @@ README and Chat-JarvisAll.py reference the matching r5 application report. Combi
 helper startup with /quit exited 0, with no qualification errors or application effects.
 Compatibility evidence covers these applications and this PC, not every installed app.
 No machine settings, dependency/model installation, automatic commit or push.
+
+## 2026-10-12 - Manual local Ollama recovery
+
+Combined chat reported RUNTIME_UNAVAILABLE; inspection found no listener on 11434.
+Started the existing approved standalone Ollama 0.40.2 with process-local
+OLLAMA_NO_CLOUD=1, OLLAMA_HOST=127.0.0.1:11434,
+OLLAMA_MODELS=%LOCALAPPDATA%/Jarvis/models and OLLAMA_CONTEXT_LENGTH=4096.
+Actual private startup stderr log ollama-recovery-20261012-204348.stderr.log
+contained `Ollama cloud disabled: true`. Loopback API reported version 0.40.2 and
+only qwen3:8b. Combined helper startup/quit then exited 0 and accepted current
+qualifications/configurations. No application effects, downloads, persistent/global
+settings or startup services were used. This was runtime recovery, no source change.
+
+## 2026-10-12 - Local search container recovery
+
+User reported research unavailable after manually running a Docker container.
+Inspection found gallant_germain (searxng/searxng:latest) exposing only container
+8080/tcp, with no published host port; configured loopback /search was unreachable.
+Existing approved private SearXNG configuration/data and pinned official image were
+present. Started the documented jarvis-searxng container with --pull never, --rm,
+no restart policy, 127.0.0.1:8080:8080 and existing private bind mounts. Did not stop
+or alter the other container, install/download software or change global settings.
+Direct JSON POST returned HTTP 200 and 20 results for Python venv documentation;
+JARVIS's supervised SearXNG adapter independently returned three normalized public
+results. Port inspection confirmed loopback-only publication. This verifies search
+API connectivity, not a new complete research/model qualification. No source changes.
+
+## 2026-10-12 - Owner-approved concurrent PC use for lifecycle commands
+
+Owner explicitly requested that unrelated keyboard/mouse input and focus changes
+must not invalidate pending app commands. Added trusted profile window_input_policy:
+exclusive remains the default for historical/custom profiles, targeted explicitly
+enables this requested behavior for named/selected app and registered Notepad
+open/focus/minimize/normal close only. Created private notepad-m2-concurrent-v1.toml
+from this PC's v10 profile, preserving the old profile and simulation default. No
+model-provided control flag or path is accepted. The prepared action/approval binds
+the operator-selected flag, exact target and effect.
+
+Both parent/native layers permit unrelated input/focus in targeted mode. Default
+desktop availability, owner/session/process/window identity, registration/binary
+hashes, scope/revision/grant/expiry, cancellation, dialogs and clean single-tab
+Notepad checks remain. Verification still requires actual native state; focus success
+requires the exact foreground window. No synthetic input or force-focus fallback.
+Automation effects remain serialized and uncertain delivery is never replayed.
+Browser/media and public-tool target boundaries were not relaxed.
+
+Retained exclusive-mode tests and corpora/results. New frozen application corpus v4
+changes only the approved unrelated-input expectation and is selected only for
+targeted profiles. Added tests for other-window preservation across planning and
+delivery, actual targeted native commit with changed input, dirty work during
+planning, and cancellation/revocation/identity/dialog protections in both modes.
+Two historical qualification fixture tests initially lacked the new default profile
+field; synthetic current-code records now serialize their validated profile explicitly.
+Historical evidence and strict production matching were not changed.
+
+Full pytest: 1064 passed in 38.15s. Final ruff check passed; format check passed
+(119 files); pip check reported no broken requirements. Actual local qwen3:8b gates:
+applications-qwen3-8b-v4-r1.json 31/31, m2-concurrent-input-model-v1-r2.json 24/24,
+m2-concurrent-input-conversation-v1-r1.json 41/41,
+m4-concurrent-input-regression-v1-r1.json 22/22,
+m4-windows-concurrent-input-regression-v1-r1.json 12/12. All five qualification
+helpers matched current sources/profile/model/runtime. The first M2 model report
+failed 23/24 (discard request clarified rather than unsupported, zero dispatches);
+it is retained. An unchanged rerun passed, without changing the gate or corpus.
+
+After attended readiness, application-concurrent-input-windows-v1-r1.json passed
+all five Calculator checks. Actual model minimize proposal was paused before return
+to the broker; operator switched apps and used input, then explicitly released it.
+Native last-input change was measured before effect admission. Minimize succeeded
+and independently IsIconic=True; unrelated baseline windows preserved. Restore/focus
+and normal close passed, and software stop prevented new admissions. Minimize's
+82.455s includes the deliberate user pause; it is not an inference latency result.
+Other operations: open 10.733s, focus 13.288s, close 11.617s. Earlier physical hotkey
+evidence remains; this run did not remeasure it.
+
+After separate Notepad attended readiness, m2-concurrent-input-windows-v1-r1.json
+passed all five legacy native controller checks: open, minimize/repeat (independent
+IsIconic), restore (exact foreground), safe close of its verified empty single-tab
+test window. Existing windows excluded/preserved. No typing, save/discard or force-kill.
+
+Combined launcher and README use the new private profile and refreshed report paths.
+Actual combined startup/quit exited 0 without effects or qualification errors.
+No machine settings, install/download, cloud fallback, automatic commit or push.
+
+## 2026-10-12 - Natural YouTube request orchestration
+
+Owner examples were rejected before browser effects by separate-step routing.
+Added YouTubeFlow at Conversation: named requests search first, a unique matching
+retrieved video can open/play, broad searches ask for a number and retain the play
+goal. Every phase has a scoped model proposal, approval, journal, stop and independent
+verification. Continuation binds owner/browser session, results generation and
+original deadline. Stale choices, ads, expiry, cancellation and failed/unknown
+verification halt without replay or new browser capabilities. No account/DRM bypass.
+
+Retained M4 v1/raw-broker tests and froze v2's 27 conversation-entrypoint cases with
+exact one/three-effect counts and unchanged 100%/zero-unauthorized gate. Added phase
+order, choice, open-without-play, private/unsafe query, stale-result, reused-key, ad,
+expiry and cancellation tests. A newly added test initially expected CANCELLED after
+delivered open; corrected it to assert the existing UNKNOWN journal boundary and
+zero subsequent play. Protocol fixture report generation now uses exact v2 counts;
+strict qualification/tamper assertions remain intact.
+
+Final full pytest: 1104 passed in 28.90s. Ruff lint/format and pip dependency checks
+passed. Actual local qwen3:8b gates: m4-youtube-flow-v2-r3.json 27/27;
+m4-windows-youtube-flow-regression-v1-r3.json 12/12;
+applications-youtube-flow-regression-v4-r3.json 31/31;
+m2-youtube-flow-regression-model-v1-r1.json 24/24;
+m2-youtube-flow-regression-conversation-v1-r1.json 41/41.
+All five current qualification helpers returned True. Earlier media reports remain
+but final source/qualification updates supersede them. App r1/r2 failed 30/31 at the
+explanation case with zero dispatches: missing app catalog context made the model
+misinterpret the separate Notepad registration. Added bounded actual labels and
+separate-catalog context, treated as untrusted data; unchanged corpus then passed r3.
+Failed reports are retained, and no gate was weakened.
+
+Prepared attended scripts/Test-JarvisYouTubeFlow.py for dedicated Chrome, a harmless
+public test video, compound selection/play, pause/resume, natural ad wait, software
+stop and owned-context cleanup. Live validation is pending requested attended
+readiness. No browser effect was sent in this turn. Existing JARVIS chat still owns
+the global stop hotkey; combined startup/quit failed closed with that conflict,
+despite matching qualifications. The existing chat was not killed or changed and
+must exit with /quit before another real session. No new native-browser success claim.
+
+Helper/README point to current reports and document natural requests. No installation,
+model download, global settings, automatic commit or push.
+
+Final application report r4 also passed 31/31 after a formatting-only string split;
+helper/README use applications-youtube-flow-regression-v4-r4.json. Final lint and
+format checks passed (122 files). The last full-suite run passed 1104 in 28.90s;
+subsequent production change only split adjacent string literals without changing
+the informational context. Live browser readiness remains pending.
+
+## 2026-10-12 - Attended YouTube workflow validation completed
+
+Owner confirmed readiness and exited the previous chat. Ran the prepared actual
+local-model -> Conversation -> broker -> dedicated Chrome flow. First report
+m4-youtube-flow-windows-v1-r1.json failed after verified search/open and a natural
+advertisement wait: the lab copied the refreshed observation but not its browser
+generation back to the adapter, so pause failed before effect delivery. Private
+journal confirmed VERIFIED search, VERIFIED open, FAILED pause and zero UNKNOWN
+actions. Its owned context closed; failed report/journal remain. No blind replay.
+
+Corrected only the test harness to call the existing update_generation method after
+read-only snapshots. Production source/permissions and matching qualifications are
+unchanged. Continued within the same attended scope, without another confirmation
+because no uncertain effect remained. m4-youtube-flow-windows-v1-r2.json passed:
+compound search returned current choices, pinned Rick Astley video selection opened
+and automatically played through separate broker tasks, pause/resume verified player
+states, software stop blocked the next pause with zero new admissions. Expected
+video ID dQw4w9WgXcQ remained bound. Actual sound was not verified. No ad skipping,
+login, account changes, other-site navigation or ordinary-Chrome attachment occurred.
+Dedicated test context closed afterward. Physical hotkey code registered successfully;
+no new physical hotkey press was requested in this run (prior evidence remains).
+
+Combined helper startup/quit then exited 0 with no qualification or hotkey error and
+no browser/application effects. This supersedes the pending readiness/hotkey conflict
+above. Natural workflow is native-validated for this public test clip and this PC;
+other results still require unique matching or explicit current selection.
+
+## 2026-10-12 - Explain the combined session's pending media review
+
+Owner reported two compound YouTube requests returning a generic simulated denial.
+Read the private application journal in read-only mode: both requests had model
+proposals but zero prepared/admitted actions. An older YouTube search remained
+UNKNOWN without manual acknowledgement. The combined composition correctly loaded
+its stop against new media actions; the standalone lab used another journal and
+could not establish that this production-session review was resolved.
+
+Fixed presentation and recovery visibility, without clearing that history or
+relaxing admission. Startup enumerates unacknowledged media UNKNOWN tasks with exact
+manual-review commands. Planning returns that explanation before inference while
+blocked. Invalid media proposals use a natural zero-effect message rather than a
+misleading simulated execution label. Review messages identify Windows Spotify or
+the dedicated browser appropriately. Existing adapter revalidation remains.
+
+Offline regression builds currency/web/media/application controllers together,
+creates an uncertain search, restarts and checks both reported requests. It asserts
+zero new model calls/actions, rejects incomplete acknowledgement, preserves UNKNOWN
+after manual review, and admits a fresh synthetic search/open/play afterward. Also
+validated both requests against an isolated backup of the actual private journal:
+WAITING_INPUT with the pending review command, zero model calls and media effects.
+The original journal was opened read-only and is unchanged. Asked the owner for
+manual inspection and chat exit; no production acknowledgement or replay inferred.
+
+Full suite: 1107 passed in 66.94s. Ruff lint/format (122 files), pip check and diff
+whitespace checks passed. Targeted media suite: 140 passed. Actual local qwen3:8b
+M2 decision/conversation reports passed unchanged gates (24/24 and 41/41) under
+m2-media-review-model-v1-r1.json and m2-media-review-conversation-v1-r1.json.
+Additional matching app/media qualifications passed: applications 31/31 in
+applications-media-review-v4-r1.json, browser/media 27/27 in
+m4-media-review-v2-r1.json, Windows Spotify 12/12 in
+m4-windows-media-review-v1-r1.json. Helper/README use these current reports.
+No native browser
+effects were sent this turn; prior native evidence remains historical. No installation,
+settings change, cloud/fake substitution, commit or push.
+
+Owner subsequently replied "closed" to the manual-inspection/chat-exit request.
+Recorded manual_review_acknowledged through the existing media control method:
+zero pending media reviews, original action still UNKNOWN, zero effects, no worker
+or browser launch. No historical outcome was relabelled as successful or replayed.
+Fresh chat is required to load the presentation fix and current report paths.
+
+All five qualification helpers verified True against the current source/profile
+and observed qwen3:8b runtime metadata. After acknowledgement, used another isolated
+read-only backup of the actual journal with all private configurations and the
+native OS catalog. Actual local-model search passed scope/preparation/authorization;
+an explicit diagnostic dispatch interceptor prevented every effect. Zero pending
+media reviews, zero media effects, no browser process. Helper --print-command passed.
+Shorter new report paths required formatting the helper; final format check passed.
+
+## 2026-10-12 - Spotify installed-app song and playlist search
+
+Owner requested named music/playlist playback and explicitly selected the installed
+Spotify client without developer API setup. Read AGENTS/README and the complete
+specification in bounded sections before changing architecture. Preserved all earlier
+uncommitted work. Checked official Spotify documentation; no API/OAuth or Soloist
+setup was performed. Owner opened Spotify manually for read-only compatibility
+inspection. OS catalog identifies SpotifyAB.SpotifyMusic_zpdnekdrzrea0!Spotify,
+Store package version 1.304.258.0 with a signed SpotifyMigrator launcher and a verified
+Spotify runtime association. Accessibility exposes a main landmark, labelled search
+ValuePattern and official Spotify content-link values. No UI effects were sent by
+those probes, and no credentials/account data were persisted.
+
+Implemented an explicit desktop Spotify backend, a bounded supervised native worker,
+Spotify-specific search/filter/exact-result Play controls and independent Windows
+playback checks. Named song/playlist requests reuse broker search/selection/play
+phases; numbered ambiguity handling retains the requested play goal. No generic
+input injection, selectors, arbitrary URI launch, browser fallback, external API token, account
+or playlist mutation. Existing Windows playback-only/API backends stay separate.
+Decision 0012 and AGENTS record this approved extension; native support initially
+targets the official Store package and English semantic labels.
+
+Frozen desktop corpus v1 contains 25 cases at 100%/zero unauthorized calls. New tests
+cover combined application routing, follow-up idempotency, stale selection, invalid
+URIs, wrong native track/player, missing playlist context, and cancellation. Initial
+playlist cases exposed the old blanket playlist refusal; corrected the desktop-only
+route without removing cases. Wrong-playback fixtures retain one uncertain delivery
+and never replay. 43 new Spotify tests passed; full suite 1150 passed in 49.55s,
+lint/format (126 files at that point) and pip check passed. Actual-local-model desktop
+qualification and the prepared attended native lab remain pending at this entry.
+
+Follow-up validation: desktop model reports r1/r2 passed 25/25. Report r3 failed
+16/25 with nine inference timeouts while GPU use was 100% and VRAM 11462/12282 MiB;
+owner made the GPU available manually. Reports r4/r5/r6 each passed 25/25 under the
+unchanged frozen 100% gate. Failed reports remain retained. Native reports r1/r2
+stopped at search verification; ValuePattern changed visible text without reliably
+activating the client search. Owner inspected both queries and manual-review events
+were recorded without changing UNKNOWN actions or replaying them.
+
+Added locked winrt-Windows.System 3.2.1 in the local venv, with the documented
+pip-tools extra/hash workflow; no existing dependency version changed. Search now
+uses fixed encoded spotify:search navigation addressed to the verified Store
+package family, followed by accessibility result filtering/verification. Native r3
+exposed an incorrect Python/WinRT overload call; corrected it to
+launch_uri_with_options_async and added a mocked overload/package regression.
+Owner inspected that outcome; UNKNOWN history remains. Native r4 reached song
+results but stopped on the client's exact space-to-plus query representation;
+added strictly bounded readback equivalence and preferred the actual filter over
+its duplicate heading link. No failed native run selected a result or sent playback.
+Native r4 manual review and corrected live playback remain pending at this entry.
+
+After these fixes: 1159 tests passed in 36.77s; Ruff check and format (128 files)
+passed, pip check passed, and git diff --check passed. The combined launcher remains
+on the original playback-only configuration until native search/playback passes.
+
+Refreshed current-source actual qwen3:8b qualifications: m2-spotify-search-model-v1-r1
+24/24, m2-spotify-search-conversation-v1-r1 41/41, applications-spotify-search-v4-r1
+31/31, m4-spotify-search-browser-v2-r1 27/27, and
+m4-spotify-search-windows-basic-v1-r1 12/12, all passed. All six qualification helpers,
+including desktop r6, returned True against the observed runtime/current profile.
+Updated helper/README to the refreshed existing-backend reports. Helper
+--print-command and actual combined startup followed immediately by /quit passed
+(exit 0), with no application/browser/playback requests submitted. Catalog now
+reports 145 supported/52 unavailable entries; coverage is not per-app validation.
+Final lint/format checks passed. Native desktop remains pending manual review of
+task 72750194-40f6-46ea-be32-466b2f0daa38 followed by corrected attended test;
+no desktop-search success or audible-sound verification is claimed.
+
+### Spotify native validation follow-up
+
+Owner reviewed native r4; recorded the manual acknowledgement without changing its
+UNKNOWN action. Subsequent search failures r5-r8 exposed the Songs view's internal
+xpui.app.spotify.com artist links, track rows without catalog URLs, a second row
+layout with track URLs, and activation truncation with literal spaces. Corrected
+the fixed URI to Spotify's plus-encoded query convention (literal pluses remain
+%2B), preserving private-query rejection. Upstream URI codec source:
+https://github.com/TooTallNate/spotify-uri/blob/master/src/util.ts . Added mocked
+package-overload/encoding checks and both row-layout regressions. URI and semantic
+effects stayed inside the media broker; no generic keys, scripts, selectors or
+unreviewed target navigation were added.
+
+Native r9 played the correct Rick Astley song but final verification timed out:
+Spotify replaced the row's named Play button with generic Pause. Owner confirmed
+correct playback and paused manually; UNKNOWN retained, review recorded. Corrected
+read-only row identity using the exact More-options label or unique track link plus
+validated same-row artist links. Verified native_ identities explicitly remain
+controller row IDs, not fabricated track catalog IDs. Native r10/r11 passed song
+play/pause/resume but stopped at playlist search/filter verification. Owner reviewed
+each. r12 stopped before playback during stricter filter routing. Accessibility
+filter hrefs can remain from the previous search even when visible results/query
+have updated. The controller may commit the exact query using the labelled Search
+button inside its unique search form. It never invokes a stale filter; instead it
+reads the requested type from All and compares independent fresh result reads.
+Every r5-r12 UNKNOWN outcome was explicitly reviewed; none replayed or relabelled.
+
+Native r13 originally reported pass, but post-run audit found it played a copied
+Deep Focus playlist: title words had incorrectly satisfied the requested owner.
+The copy was paused by the lab. Preserved the original report and added failed
+m4-spotify-desktop-owner-audit-v1.json, explicitly rejecting that apparent pass.
+Corrected automatic selection to exact title and actual creator for explicit "by"
+requests. Read creator from the unique playlist card's validated public owner link;
+unknown/ambiguous owner cannot satisfy an explicit owner. Added decoy-title/owner
+regressions. The lab now asserts title AND creator after automatic selection as
+well as after numbered selection; frozen model cases/gates were not weakened.
+
+Current-source model report m4-spotify-desktop-model-v1-r15 passed 25/25. Corrected
+attended m4-spotify-desktop-windows-v1-r14 passed six checks: real song search/play,
+pause, resume; Spotify-owned Deep Focus search/play and pause; broker stop with
+zero new admissions. Independently checked returned playlist ID
+37i9dQZF1DWZeKCadgRdKQ and song ID 4PTG3Z6ehGkBFwjybzWkR8. Native worker observes
+Windows metadata/playback plus exact selected row/card context, not API attestation
+or audible sound. Spotify remains open and paused. Physical hotkey registration
+was active; this run used software stop, with earlier physical-hotkey evidence kept
+separately. All failed reports and the rejected apparent pass remain retained.
+
+Final full suite 1167 passed in 38.36s. Combined launcher now selects the separate
+private media-all-spotify-desktop-v1.toml; original media-all-v1.toml remains intact.
+README and compatibility docs distinguish native search from basic Windows/API
+backends and state Store/English/visible-window limits. Refreshing all affected
+source-bound qualifications before final combined-startup verification.
+
+Final refresh passed every unchanged gate: m2-spotify-search-model-v1-r2 24/24,
+m2-spotify-search-conversation-v1-r2 41/41, applications-spotify-search-v4-r2
+31/31, m4-spotify-search-browser-v2-r3 27/27, and
+m4-spotify-search-windows-basic-v1-r3 12/12; desktop v1-r15 remains 25/25. All six
+qualification helpers returned True against current source/profile and observed
+qwen3:8b/Ollama metadata. Actual combined helper startup then immediate /quit passed
+exit 0 with Spotify=desktop and native Spotify search enabled, no effect requests.
+Final Ruff lint/format (128 files), pip check and diff whitespace check passed.
+Existing public-data/web/application/YouTube capabilities remain configured;
+Netflix stays disabled. No credential setup, machine/global changes, additional
+model, commit or push was performed. Native desktop search validation is complete
+for the measured Store/English/visible-window path; stated compatibility limits
+remain, and every historical failure/rejected report is preserved.
+
+## 2026-10-13 - Actionable Spotify pre-effect rejections
+
+Owner reported a named-playlist request showing "[SIMULATED] adapter gate rejected;
+zero execution." Read current AGENTS/README and preserved existing work. Read-only
+production-journal inspection showed desktop search FAILED attempts with no native
+effect, but admission error codes were discarded. Current installed Spotify window
+was independently observed minimized. No search/playback/focus/restore command was
+sent during this diagnosis; older unknown actions and their reviews were retained.
+
+Split minimized-window rejection into SPOTIFY_WINDOW_MINIMIZED before URI admission.
+The broker now retains allowlisted media rejection classifications and presents
+specific restore/open/unavailable/search-control guidance. Other rejection text is
+redacted to a generic natural response; private diagnostics never reach chat.
+Known pre-effect failures stay FAILED with zero effects and require no unknown
+outcome review. Cancellation/unknown-effect checks and simulation flags are retained.
+The actual read-only native check returned SPOTIFY_WINDOW_MINIMIZED and the expected
+"Spotify is minimized. Restore its main window, then ask again. No playback command
+was sent." No claim was made about whether the owner's playlist appears in search.
+
+Four combined-controller regressions cover minimized/missing/dialog/generic private
+errors, correct real-mode presentation, FAILED journal outcome and zero delivery.
+Targeted media tests 204 passed; full suite 1171 passed in 37.91s. Lint, formatting
+and dependency checks passed after formatting-only corrections. Refreshing current
+source-bound model qualifications and updating helper/docs to the new reports.
+Native playback was not retested because this fix only classifies pre-effect
+rejection; previous successful playback and rejected historical reports remain.
+
+Final current-source qualifications passed: M2 model 24/24, conversation 41/41,
+applications 31/31, browser media 27/27, Windows playback-only 12/12 and Spotify
+desktop 25/25. Reports use spotify-admission names; media r2 reflects final source
+formatting, with earlier r1 results retained. All six qualification helpers returned
+True against observed qwen3:8b metadata and this PC's profile. Helper/docs now use
+the matching reports. Helper --print-command, final Ruff lint/format (128 files),
+pip check and git diff --check passed. No running owner chat was stopped or native
+operation sent; restart the chat to load the correction. No commit performed.

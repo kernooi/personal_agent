@@ -1,0 +1,14 @@
+{
+  "version": "spotify-desktop-owner-audit-v1",
+  "passed": false,
+  "rejected_report": "m4-spotify-desktop-windows-v1-r13.json",
+  "reason": "The original lab checked playback state but omitted the title/owner check after automatic selection. Query words in a copied playlist title incorrectly satisfied the requested owner.",
+  "requested_title": "Deep Focus",
+  "requested_owner": "Spotify",
+  "reported_played_playlist_id": "32vo7jyXzwPg0BEWG1lVeg",
+  "subsequent_accessibility_title": "(copy of) Deep Focus by Spotify 2019-0404",
+  "subsequent_accessibility_owner": "Shigeya Suzuki",
+  "playback_paused_by_lab": true,
+  "original_report_preserved": true,
+  "usable_as_native_qualification": false
+}

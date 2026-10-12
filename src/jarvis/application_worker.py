@@ -490,6 +490,9 @@ def run(request):
         raise Denied("Windows application platform not enabled")
     operation = request["operation"]
     payload = request["payload"]
+    concurrent = payload.get("allow_concurrent_input", False)
+    if type(concurrent) is not bool:
+        raise Denied("Invalid targeted window policy")
     if operation == "catalog":
         apps, unsupported = catalog(config)
         send(
@@ -565,7 +568,10 @@ def run(request):
             or (current["protected"] and current["close_safe"] is not True)
         ):
             raise Denied("Unsafe close")
-        if time.time() >= request["deadline"] or native.activity() != payload["activity"]:
+        activity = native.activity()  # Availability of this user's default desktop is mandatory.
+        if time.time() >= request["deadline"] or (
+            not concurrent and activity != payload["activity"]
+        ):
             raise Denied("User takeover before application effect")
 
     preflight()
@@ -585,10 +591,18 @@ def run(request):
         if native.user.IsIconic(hwnd):
             if not native.user.ShowWindowAsync(hwnd, 9):
                 raise Denied("Restore delivery uncertain")
-            wait_restored(native, app, expected, config, request["deadline"], payload["activity"])
-            if (
-                native.user.IsIconic(hwnd)
-                or native.activity()["last_input"] != payload["activity"]["last_input"]
+            wait_restored(
+                native,
+                app,
+                expected,
+                config,
+                request["deadline"],
+                payload["activity"],
+                concurrent=concurrent,
+            )
+            if native.user.IsIconic(hwnd) or (
+                not concurrent
+                and native.activity()["last_input"] != payload["activity"]["last_input"]
             ):
                 raise Denied("Restore or takeover uncertain")
         native.user.SetForegroundWindow(hwnd)
@@ -600,11 +614,12 @@ def run(request):
     send(request, "result", {})
 
 
-def wait_restored(native, app, expected, config, deadline, activity):
+def wait_restored(native, app, expected, config, deadline, activity, *, concurrent=False):
     """Wait only for observation after one restore; never resend the effect."""
     until = min(time.time() + 4, deadline)
     while time.time() < until:
-        if native.activity()["last_input"] != activity["last_input"]:
+        current = native.activity()
+        if not concurrent and current["last_input"] != activity["last_input"]:
             raise Denied("User takeover during restore")
         if not native.user.IsIconic(expected["hwnd"]):
             try:

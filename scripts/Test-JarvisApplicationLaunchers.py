@@ -27,12 +27,46 @@ def main():
     parser.add_argument("--apps", nargs="+", default=["Discord", "Spotify", "Notepad"])
     parser.add_argument("--continuation-report", type=Path)
     parser.add_argument("--continuation-journal", type=Path)
+    parser.add_argument("--input-ready-file", type=Path)
+    parser.add_argument("--input-continue-file", type=Path)
     args = parser.parse_args()
     if args.report.exists():
         parser.error("Report already exists; preserved")
     clock = SystemClock()
     profile = load_profile(args.profile, allow_ollama=True)
-    provider = OllamaProvider(clock)
+    if bool(args.input_ready_file) != bool(args.input_continue_file):
+        parser.error("Both input-check paths are required")
+    if args.input_ready_file and (
+        profile.window_input_policy != "targeted"
+        or args.input_ready_file.exists()
+        or args.input_continue_file.exists()
+    ):
+        parser.error("Targeted policy and unused input-check paths required")
+
+    class InputCheckProvider(OllamaProvider):
+        checked = False
+        input_changed = False
+
+        def generate(self, request, cancel):
+            reply = super().generate(request, cancel)
+            capability = request.schema.get("properties", {}).get("capability", {}).get("const")
+            if args.input_ready_file and not self.checked and capability == "windows.minimize":
+                self.checked = True
+                before_input = broker.applications.desktop.platform.call("activity")
+                args.input_ready_file.write_text("ready", encoding="utf-8")
+                print("READY_FOR_CONCURRENT_INPUT: switch to another application now.", flush=True)
+                until = min(time.time() + 90, request.deadline)
+                while not args.input_continue_file.exists() and time.time() < until:
+                    if cancel():
+                        raise ValueError("Input check cancelled")
+                    time.sleep(0.05)
+                if not args.input_continue_file.exists():
+                    raise ValueError("Input check timed out; no new delivery")
+                after_input = broker.applications.desktop.platform.call("activity")
+                self.input_changed = after_input["last_input"] != before_input["last_input"]
+            return reply
+
+    provider = InputCheckProvider(clock)
     metadata = provider.inspect(profile)
     if not qualified(args.model_report, profile, metadata):
         parser.error("Current passed application model qualification required")
@@ -139,6 +173,9 @@ def main():
                         row["independent_absent"] = not native.IsWindow(hwnd)
                         row["independent_hidden"] = not native.IsWindowVisible(hwnd)
                         row["passed"] &= row["independent_absent"] or row["independent_hidden"]
+                    if effect == "minimize" and args.input_ready_file:
+                        row["concurrent_input_observed"] = provider.input_changed
+                        row["passed"] &= row["concurrent_input_observed"]
                     cases.append(row)
                     print(json.dumps(row), flush=True)
                     if not row["passed"]:

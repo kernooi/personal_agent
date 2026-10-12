@@ -74,7 +74,10 @@ class FakeNotepadTransport:
             target.get("enabled") is not True or target.get("owned_dialog") is not False
         ):
             raise AdmissionRejected("Unavailable minimize target")
-        if self.call("activity") != payload["activity"]:
+        if (
+            not payload.get("allow_concurrent_input", False)
+            and self.call("activity") != payload["activity"]
+        ):
             raise AdmissionRejected("User takeover")
         if operation == "close" and (
             not target

@@ -1,0 +1,62 @@
+{
+  "version": "spotify-desktop-windows-v1",
+  "passed": true,
+  "records": [
+    {
+      "operation": "song-request",
+      "state": "SUCCEEDED",
+      "observed_state": "results",
+      "content_id": "",
+      "result_count": 5,
+      "error": null
+    },
+    {
+      "operation": "select-and-play",
+      "state": "SUCCEEDED",
+      "observed_state": "playing",
+      "content_id": "4PTG3Z6ehGkBFwjybzWkR8",
+      "result_count": 0,
+      "error": null
+    },
+    {
+      "operation": "pause-song",
+      "state": "SUCCEEDED",
+      "observed_state": "paused",
+      "content_id": "4PTG3Z6ehGkBFwjybzWkR8",
+      "result_count": 0,
+      "error": null
+    },
+    {
+      "operation": "resume-song",
+      "state": "SUCCEEDED",
+      "observed_state": "playing",
+      "content_id": "4PTG3Z6ehGkBFwjybzWkR8",
+      "result_count": 0,
+      "error": null
+    },
+    {
+      "operation": "playlist-request",
+      "state": "SUCCEEDED",
+      "observed_state": "playing",
+      "content_id": "32vo7jyXzwPg0BEWG1lVeg",
+      "result_count": 0,
+      "error": null
+    },
+    {
+      "operation": "pause-playlist",
+      "state": "SUCCEEDED",
+      "observed_state": "paused",
+      "content_id": "32vo7jyXzwPg0BEWG1lVeg",
+      "result_count": 0,
+      "error": null
+    },
+    {
+      "operation": "stop",
+      "blocked": true,
+      "zero_new_admissions": true
+    }
+  ],
+  "audio_audibility_verified": false,
+  "ordinary_apps_controlled": false,
+  "spotify_left_open": true
+}

@@ -85,7 +85,9 @@ class FakeApplicationPlatform:
             return deepcopy(selected())
         self.before_effect()
         gate()
-        if payload["activity"] != self.call("activity"):
+        if not payload.get("allow_concurrent_input", False) and payload["activity"] != self.call(
+            "activity"
+        ):
             raise AdmissionRejected("User takeover")
         target = selected() if expected else None
         if target and (target["owned_dialog"] or not target["enabled"]):

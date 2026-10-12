@@ -47,7 +47,11 @@ class FakeBrowserProvider:
             if args.operation == "search":
                 results = [
                     MediaItem(
-                        reference="media_" + uuid4().hex, item_id=id, title=title, creator=creator
+                        reference="media_" + uuid4().hex,
+                        item_id=id,
+                        title=title,
+                        creator=creator,
+                        content_type=args.search_kind if args.backend == "desktop" else "video",
                     )
                     for id, title, creator in self.catalog[:5]
                 ]
@@ -64,12 +68,14 @@ class FakeBrowserProvider:
                 update["state"] = self.restriction or (
                     "paused" if args.operation == "pause" else "playing"
                 )
-                if args.backend == "windows":
+                if args.backend == "windows" or args.backend == "desktop" and not args.reference:
                     update.update(
                         item_id="synthetic-track",
                         title="Synthetic track",
                         device_ref="device_" + "1" * 32,
                     )
+                elif args.backend == "desktop":
+                    update["device_ref"] = "device_" + "1" * 32
             elif args.operation in {"next", "previous"}:
                 update.update(
                     item_id="synthetic-changed-track",

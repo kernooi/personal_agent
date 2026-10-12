@@ -79,7 +79,11 @@ def run(request):
             not clean(current) or current["tab_ids"] != payload["window"]["tab_ids"]
         ):
             raise Denied("Whole-window close scope changed; handle manually")
-    if native.activity() != payload["activity"]:
+    concurrent = payload.get("allow_concurrent_input", False)
+    if type(concurrent) is not bool:
+        raise Denied("Invalid targeted window policy")
+    activity = native.activity()
+    if not concurrent and activity != payload["activity"]:
         raise Denied("User takeover or unexpected focus; operation paused")
     baseline = native.windows(config) if operation == "open" else []
     send(request, "ready", {})
@@ -103,7 +107,8 @@ def run(request):
         ):
             send(request, "rejected", {"reason": "Window scope changed before effect"})
             return
-    if time.time() >= request["deadline"] or native.activity() != payload["activity"]:
+    activity = native.activity()
+    if time.time() >= request["deadline"] or (not concurrent and activity != payload["activity"]):
         send(request, "rejected", {"reason": "User takeover before effect"})
         return
     if operation == "open":
@@ -124,9 +129,9 @@ def run(request):
                 raise Denied("Restore outcome uncertain")
             # Restoring can change foreground legitimately, but never user input.
             selected(native, config, payload["window"])
-            if (
-                time.time() >= request["deadline"]
-                or native.activity()["last_input"] != payload["activity"]["last_input"]
+            if time.time() >= request["deadline"] or (
+                not concurrent
+                and native.activity()["last_input"] != payload["activity"]["last_input"]
             ):
                 raise Denied("User takeover after restore")
         native.user.SetForegroundWindow(payload["window"]["hwnd"])

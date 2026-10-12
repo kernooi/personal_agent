@@ -104,6 +104,7 @@ def build(
             transport = FakeNotepadTransport()
             lease = None
         desktop = NotepadDesktop(clock, transport, real=real, lease=lease)
+        desktop.allow_concurrent_input = profile.window_input_policy == "targeted"
         if real:
             desktop.stop = stop
         registry = NotepadRegistry(
