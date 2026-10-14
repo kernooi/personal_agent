@@ -167,6 +167,7 @@ def test_shared_launcher_simulation_omits_every_real_grant(tmp_path, monkeypatch
     assert "--real" not in simulated and "--real-media" not in simulated
     assert "--registration" not in simulated and "--browser-registration" not in simulated
     assert "--profile" in simulated and "--web-config" in simulated
+    assert "--language-report" in real and "--language-report" not in simulated
 
 
 def test_gui_real_transport_keeps_every_combined_launcher_capability(tmp_path, monkeypatch):
@@ -207,6 +208,7 @@ def test_gui_real_transport_keeps_every_combined_launcher_capability(tmp_path, m
         "--applications-report",
         "--media-report",
         "--windows-media-report",
+        "--language-report",
         "--public-data-config",
         "--web-config",
         "--applications-config",

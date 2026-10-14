@@ -2,42 +2,13 @@
 
 import re
 
+from jarvis.media_language import named_media_request
 from jarvis.youtube_flow import YouTubeFlow
 
 
 def named_spotify_request(text):
-    value = text.strip().rstrip(".!?")
-    value = re.sub(r"(?i)^(?:please |(?:can|could|would) you (?:please )?)", "", value)
-    services = {s.casefold() for s in re.findall(r"(?i)\b(youtube|spotify|netflix)\b", value)}
-    if services != {"spotify"} or re.search(
-        r"(?i)^(?:do not|don't|how (?:do|can)|explain|like|follow|subscribe|upload|download|"
-        r"buy|click|type|delete|remove|save|add)\b|\b(?:password|javascript)\b",
-        value,
-    ):
-        return None
-    for goal, pattern in [
-        ("play", r"(?:search|open) spotify and play (.+)"),
-        ("play", r"(?:search|find) (?:on )?spotify for (.+?) (?:and|then) play(?: it)?"),
-        ("play", r"play (.+?) (?:on|in) spotify"),
-        ("play", r"play (?:on )?spotify (.+)"),
-        ("search", r"(?:search|find) (?:on )?spotify for (.+)"),
-    ]:
-        match = re.fullmatch(pattern, value, re.I)
-        if not match:
-            continue
-        query = match[1].strip()
-        if re.fullmatch(
-            r"(?i)(?:it|music|a song|a playlist|the song|the playlist|this|that)", query
-        ):
-            return None
-        if re.search(
-            r"(?i)\b(?:and|then)\s+(?:open|play|pause|resume|search|close|buy)\b|;", query
-        ):
-            return None
-        query = re.sub(r"(?i)^(?:a |the )?(?:song|track) (?:called |named )?", "", query)
-        query = re.sub(r"(?i)^(?:my |the |a )?playlist (?:called |named )?", "playlist ", query)
-        return goal, query
-    return None
+    meaning = named_media_request(text)
+    return (meaning.goal, meaning.query) if meaning and meaning.service == "spotify" else None
 
 
 class SpotifyFlow(YouTubeFlow):
@@ -45,6 +16,35 @@ class SpotifyFlow(YouTubeFlow):
     service_name = "Spotify"
     noun = "song or playlist"
     named_request = staticmethod(named_spotify_request)
+
+    def resolve_named(self, text):
+        # Spotify desktop is the sole registered playlist-search capability.
+        # Default only for explicitly named playlists, never arbitrary bare media.
+        config = self.chat.broker.media.config
+        default = (
+            "spotify"
+            if (
+                config.enabled
+                and config.spotify
+                and config.spotify_backend == "desktop"
+                and re.search(r"(?i)\bplaylist\b", text)
+            )
+            else None
+        )
+        meaning = named_media_request(text, default_service=default)
+        return (meaning.goal, meaning.query) if meaning and meaning.service == "spotify" else None
+
+    def matching_candidates(self, query, results):
+        title = re.sub(r"(?i)^playlist ", "", query)
+        parts = re.split(r"(?i)\s+by\s+", title)
+        title = " by ".join(parts[:-1]) if len(parts) > 1 else title
+        exact = [
+            i
+            for i, item in enumerate(results, 1)
+            if " ".join(title.split()).casefold() == " ".join(item.title.split()).casefold()
+            and self.matches_item(query, item)
+        ]
+        return exact or super().matching_candidates(query, results)
 
     def matches_item(self, query, item):
         query = re.sub(r"(?i)^playlist ", "", query)

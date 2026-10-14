@@ -419,7 +419,7 @@ class ApplicationRegistry:
                 ),
                 "effects": ["open", "focus", "minimize", "close"],
                 "targets": "device-discovered installed applications, not only Notepad",
-                "close": "explicit exact-window work review required",
+                "close": "normal close after independent unsaved-work and identity checks",
                 "explanations": "answer capability/how-to questions with say; no effect",
                 "authority": "separate app planner; current scope cannot execute those apps",
             },
@@ -449,10 +449,18 @@ class ApplicationConversation:
         self.pending_window = None
 
     def submit(self, text, request_key=None):
-        from jarvis.spotify_flow import named_spotify_request
+        from jarvis.request_language import normalize
 
+        interpreted = normalize(self.original, text, request_key)
+        if isinstance(interpreted, TaskResult):
+            return interpreted
+        text = interpreted
         media = self.broker.media
-        if media and media.config.spotify_backend == "desktop" and named_spotify_request(text):
+        if (
+            media
+            and media.config.spotify_backend == "desktop"
+            and self.original.spotify.resolve_named(text)
+        ):
             self.pending_window = None
             self.desktop.reference_clear = False
             self.broker.desktop.current = self.broker.desktop.original

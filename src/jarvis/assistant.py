@@ -88,6 +88,10 @@ class ResearchSummary(StrictRecord):
 
 
 def parse(raw, boundary):
+    if boundary == "request-language-v1":
+        from jarvis.request_language import parse as parse_request
+
+        return parse_request(raw)
     value = json.loads(raw, object_pairs_hook=unique_object, parse_constant=reject_constant)
     if boundary == "assistant-intent-v1":
         return AssistantIntent.model_validate(value, strict=True)

@@ -53,6 +53,9 @@ def contract_hash():
         "spotify_flow",
         "prompts",
         "action_language",
+        "media_language",
+        "request_language",
+        "assistant",
     ]
     return hashlib.sha256(
         json.dumps(

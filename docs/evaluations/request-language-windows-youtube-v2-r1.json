@@ -1,0 +1,36 @@
+{
+  "version": "youtube-flow-native-v1",
+  "passed": false,
+  "mode": "real local model -> Conversation -> broker -> dedicated Chrome",
+  "model_report": "m4-natural-language-browser-v2-r3.json",
+  "language_report": "request-language-v2-r1.json",
+  "metadata": {
+    "available": true,
+    "model_present": true,
+    "identity": "qwen3:8b",
+    "digest": "500a1f067a9f782620b40bee6f7b0c89e17ae61f686b92c24933e4ca4b2b8b41",
+    "runtime_version": "0.40.2",
+    "transport_version": "ollama-chat-v2",
+    "text_generation": "supported",
+    "schema_constrained_output": "unknown",
+    "native_tool_calls": "supported",
+    "context_capacity": 40960,
+    "cloud_disabled": "user_verified",
+    "local_mode_programmatically_attested": false,
+    "ready": true,
+    "qualification": "unqualified; fake-execution evaluation only"
+  },
+  "records": [
+    {
+      "state": "NEEDS_REVIEW",
+      "player_state": null,
+      "video_id": null,
+      "error": "CHROME_UPDATED_OR_IDENTITY_CHANGED_REREGISTER_MANUALLY"
+    },
+    {
+      "error_type": "ValueError",
+      "passed": false
+    }
+  ],
+  "journal_retained": true
+}

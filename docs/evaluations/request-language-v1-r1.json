@@ -1,0 +1,9 @@
+{
+  "version": "request-language-interrupted-evaluation-v1",
+  "passed": false,
+  "status": "incomplete",
+  "reason": "The new evaluator raised AttributeError when a capability answer used TaskResult.message without display_message. The run stopped before a qualification report was written. No actual Windows or browser effects were enabled. This failure is retained; no pass or partial case count is claimed.",
+  "failed_case": "capability-explanation",
+  "error": "AttributeError: NoneType has no attribute casefold",
+  "records": []
+}

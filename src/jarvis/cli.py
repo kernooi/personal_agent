@@ -80,6 +80,7 @@ def main() -> None:
         "eval-windows-media",
         "eval-spotify-desktop",
         "eval-apps",
+        "eval-language",
     ):
         child = sub.add_parser(command, help=f"Local {command}; real chat requires explicit opt-in")
         child.add_argument("--profile", type=Path, required=True)
@@ -98,6 +99,7 @@ def main() -> None:
             child.add_argument("--real-apps", action="store_true")
             child.add_argument("--apps-attended", action="store_true")
             child.add_argument("--applications-report", type=Path)
+            child.add_argument("--language-report", type=Path)
             child.add_argument("--real", action="store_true")
             child.add_argument("--attended", action="store_true")
             child.add_argument("--registration", type=Path)
@@ -121,6 +123,7 @@ def main() -> None:
             "eval-windows-media",
             "eval-spotify-desktop",
             "eval-apps",
+            "eval-language",
         }:
             child.add_argument("--live", action="store_true", required=True)
             child.add_argument("--report", type=Path)
@@ -298,6 +301,17 @@ def live_command(args, parser):
         parser.error("Profile unavailable or invalid; see the strict M1 profile examples")
     if not isinstance(profile, OllamaProfile):
         parser.error("M1 commands require an explicit Ollama profile; no fake fallback")
+    if args.command == "eval-language":
+        from jarvis.language_evaluation import evaluate as evaluate_language
+
+        if args.report is None:
+            parser.error("eval-language requires --report; preserve existing results")
+        try:
+            report, code = evaluate_language(profile, args.report)
+        except (OSError, ValueError) as error:
+            parser.error(str(error))
+        print(json.dumps({k: v for k, v in report.items() if k != "records"}, indent=2))
+        raise SystemExit(code)
     if args.command == "eval-apps":
         from jarvis.application_evaluation import evaluate
 
@@ -597,6 +611,13 @@ def live_command(args, parser):
             )
     elif args.apps_attended or args.applications_report:
         parser.error("Application real-mode options require --real-apps")
+    language_qualified = False
+    if args.language_report:
+        from jarvis.language_evaluation import qualified as language_gate
+
+        language_qualified = language_gate(args.language_report, profile, metadata)
+        if not language_qualified:
+            parser.error("Matching passed request-language qualification required; no real effect")
     targets = "notepad" if profile.decision_version == "decision-m2-v1" else "text_editor"
     print(
         f"JARVIS | model={profile.model_identity} | provider=ollama | "
@@ -682,6 +703,7 @@ def live_command(args, parser):
         provider.close()
         parser.exit(2, "Private JARVIS journal unavailable; no execution or fallback.\n")
     try:
+        broker.language_qualified = language_qualified
         conversation = Conversation(broker)
         if applications_config and applications_config.enabled:
             from jarvis.application_tools import attach

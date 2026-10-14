@@ -1,5 +1,35 @@
 # JARVIS implementation plan
 
+## Natural action wording (2026-10-14)
+
+Corrected the shared GUI/terminal legacy action path: service/title fields are
+parsed independently, unfamiliar wording gets bounded local-model extraction,
+and configured media/apps inform capability explanations. Unique exact titles
+outrank similar titles; ambiguous exact duplicates still ask. Media selection
+survives ordinary chat while pending multi-step continuations do not. YouTube
+artist text must match retrieved creator metadata, independently of title words.
+
+No new tool authority: existing controllers resolve all targets and the broker
+executes each phase. Literal owner text, reviewed operation ceilings, strict JSON,
+request/revision/deadline, controller snapshot, cancellation and single-use approval
+checks remain. Added separate 100% / zero-unauthorized-dispatch wording gate for
+real semantic fallback, retaining all existing frozen corpora and failed results.
+See decision 0016. The final wording v3 corpus passes 33/33 with actual qwen3:8b;
+Notepad 24/24, conversation 41/41, app 31/31, browser 27/27 and Spotify desktop 25/25
+also pass at their unchanged 100% gates. All six source/profile/runtime-matching
+reports authorize the shared launcher. Older wording corpora and failed runs remain.
+
+Attended song/playlist Spotify and YouTube wording regressions pass. Spotify's
+transient search-control rebuild is handled by bounded repeated reads, never repeated
+URI/value/click delivery; identity/window errors still stop. YouTube lab reobserves
+the same pinned video after the ad before playback controls. Ordinary Chrome stays
+excluded. Chrome's update to 155.0.8059.41 required operator-approved private
+registration refresh; the old identity and existing profile were preserved.
+
+Full suite: 1252 passed in 51.51s; lint, format (150 files), dependency and whitespace
+checks pass. Combined real startup and GUI worker both reach ready and quit cleanly
+with all existing features and new language qualification. No commit/push.
+
 ## Device-discovered applications (2026-10-12)
 
 User selected this Windows PC first with an extensible platform interface.

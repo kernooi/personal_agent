@@ -228,6 +228,9 @@ without developer API setup. Leave the signed-in Spotify main window visible
 ```text
 Play Never Gonna Give You Up by Rick Astley on Spotify
 Play playlist Deep Focus by Spotify on Spotify
+Play playlist Fav Jpop
+Play playlist Fav Jpop Spotify
+Could you put the playlist Fav Jpop on for me using Spotify?
 Search Spotify for jazz
 Open the second result
 Pause Spotify
@@ -237,6 +240,30 @@ What is playing on Spotify?
 
 Ambiguous play requests offer numbered results; replying with a number selects
 and plays within that request. A search-only request does not automatically play.
+One exact title takes priority over similar names; duplicate exact titles still
+need a choice. These examples are not required sentence templates. The shared GUI
+and terminal backend reads explicit service/title fields and uses bounded local
+model interpretation for unfamiliar action wording, such as `Pull up Calculator
+for me` or `Put Never Gonna Give You Up on YouTube for me`. An explicitly named
+playlist defaults to the configured Spotify desktop search backend; generic media
+without a service or selected controller state needs clarification. General browser
+page interaction remains outside the supported YouTube/Netflix media controller.
+
+The combined launcher includes the matching request-language qualification along
+with existing app/Notepad/media reports. To evaluate new wording with actual local
+inference and synthetic Windows/media state:
+
+```powershell
+.\.venv\Scripts\python.exe -m jarvis eval-language --live `
+  --profile "$env:LOCALAPPDATA\Jarvis\profiles\notepad-m2-concurrent-v1.toml" `
+  --report .\docs\evaluations\request-language-new-run.json
+```
+
+The frozen wording gate requires 100% correctness and zero unauthorized dispatches.
+Existing or failed reports are preserved; choose a new output path. Real semantic
+fallback requires a matching passed `--language-report`; this evidence alone does
+not qualify native UI compatibility. See [decision 0016](docs/decisions/0016-natural-action-interpretation.md).
+
 An explicit artist or playlist owner must match actual retrieved creator metadata,
 not words in a different result's title. This tested adapter supports the official
 Windows Store Spotify package and English accessibility labels. Localized/EXE

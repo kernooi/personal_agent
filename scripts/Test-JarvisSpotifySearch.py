@@ -22,6 +22,7 @@ def main():
     parser.add_argument("--attended", action="store_true", required=True)
     parser.add_argument("--profile", type=Path, required=True)
     parser.add_argument("--model-report", type=Path, required=True)
+    parser.add_argument("--language-report", type=Path)
     parser.add_argument("--report", type=Path, required=True)
     args = parser.parse_args()
     if args.report.exists():
@@ -33,6 +34,12 @@ def main():
     if not qualified(args.model_report, profile, metadata, spotify_desktop=True):
         model.close()
         parser.error("Current passed actual-local-model Spotify desktop gate required")
+    if args.language_report:
+        from jarvis.language_evaluation import qualified as language_gate
+
+        if not language_gate(args.language_report, profile, metadata):
+            model.close()
+            parser.error("Matching passed wording gate required")
     stop = threading.Event()
     config = MediaConfig(
         enabled=True, spotify=True, spotify_backend="desktop", operation_seconds=30
@@ -47,6 +54,7 @@ def main():
         journal, profile, clock, provider=model, media_config=config, browser_provider=native
     )
     broker.cancel_requested = stop.is_set
+    broker.language_qualified = args.language_report is not None
     chat = Conversation(broker)
     rows, passed = [], False
 
@@ -85,7 +93,10 @@ def main():
     try:
         with StopHotkey(stop):
             observed = submit(
-                "Play Never Gonna Give You Up by Rick Astley on Spotify", "song-request"
+                "Could you put Never Gonna Give You Up by Rick Astley on for me using Spotify?"
+                if args.language_report
+                else "Play Never Gonna Give You Up by Rick Astley on Spotify",
+                "song-request",
             )
             observed = choose_if_needed(observed, "Never Gonna Give You Up", "Rick Astley")
             if (
@@ -94,9 +105,17 @@ def main():
                 or observed.creator != "Rick Astley"
             ):
                 raise ValueError("Song playback unverified")
-            submit("Pause Spotify", "pause-song")
-            submit("Resume Spotify", "resume-song")
-            observed = submit("Play playlist Deep Focus by Spotify on Spotify", "playlist-request")
+            submit("Stop Spotify for me" if args.language_report else "Pause Spotify", "pause-song")
+            submit(
+                "Continue Spotify for me" if args.language_report else "Resume Spotify",
+                "resume-song",
+            )
+            observed = submit(
+                "Could you put the playlist Deep Focus by Spotify on for me using Spotify?"
+                if args.language_report
+                else "Play playlist Deep Focus by Spotify on Spotify",
+                "playlist-request",
+            )
             observed = choose_if_needed(observed, "Deep Focus", "Spotify")
             if (
                 observed.state != "playing"
@@ -130,6 +149,7 @@ def main():
             "audio_audibility_verified": False,
             "ordinary_apps_controlled": False,
             "spotify_left_open": True,
+            "language_report": args.language_report.name if args.language_report else None,
         }
         args.report.parent.mkdir(parents=True, exist_ok=True)
         with args.report.open("x", encoding="utf-8") as stream:

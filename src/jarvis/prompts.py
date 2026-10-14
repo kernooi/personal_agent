@@ -342,7 +342,22 @@ def context_messages(
     mandatory = (
         Message(
             "system",
-            TEMPLATES[profile.prompt_version] + scope_text,
+            TEMPLATES[profile.prompt_version]
+            + scope_text
+            + (
+                "\nThe configured_media and application_controller entries describe current "
+                "supported capabilities and override historical Notepad-only "
+                "capability descriptions. "
+                "Do not falsely say configured media/apps are unavailable. An unresolved request "
+                "needs clarification, not denial of an available capability. Only the current "
+                "action ceiling and trusted broker can authorize an effect; never claim execution."
+                if controller_context
+                and (
+                    controller_context.get("configured_media")
+                    or controller_context.get("application_controller")
+                )
+                else ""
+            ),
         ),
         Message("owner", text),
         Message("untrusted_data", untrusted),

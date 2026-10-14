@@ -112,8 +112,34 @@ class MediaRegistry:
     def intent(self):
         return None if self.media_active else getattr(self.underlying, "intent", None)
 
+    def planner_context(self):
+        config = self.media.config
+        return {
+            **self.underlying.planner_context(),
+            "configured_media": {
+                "enabled": config.enabled,
+                "youtube": config.enabled and config.youtube,
+                "netflix": config.enabled and config.netflix,
+                "spotify": config.enabled and config.spotify,
+                "spotify_backend": config.spotify_backend,
+                "spotify_search": config.spotify_backend == "desktop"
+                and config.enabled
+                and config.spotify,
+                "spotify_ready": self.media.spotify_ready,
+                "effects": "YouTube search/select/play/pause/resume; "
+                "Netflix search/select/manual login; "
+                "Spotify playback, plus song/playlist search with desktop backend.",
+                "authority": "Only the broker executes, within separately configured consent "
+                "and exact current scope.",
+            },
+        }
+
     def scope_for(self, session, text):
         self.media_active = False
+        from jarvis.media_language import capability_question, public_research_request
+
+        if capability_question(text) or public_research_request(text):
+            return self.underlying.scope_for(session, text)
         services = re.findall(r"\b(youtube|spotify|netflix)\b", text, re.I)
         services = set(s.casefold() for s in services)
         service = next(iter(services)) if len(services) == 1 else None
@@ -145,7 +171,6 @@ class MediaRegistry:
             ):
                 service = self.media.service
         if not service or not operation:
-            self.media.service = None
             return self.underlying.scope_for(session, text)
         self.media_active = True
         self.media.activate_service(service)

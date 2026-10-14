@@ -61,9 +61,14 @@ def contract_hash(profile):
     if profile.prompt_version == "planner-m2-v10":
         from jarvis import (
             action_language,
+            assistant,
             conversation,
+            media_language,
+            models,
             notepad_intent_v2,
+            ollama,
             prompts,
+            request_language,
             spotify_flow,
             youtube_flow,
         )
@@ -72,9 +77,14 @@ def contract_hash(profile):
             module.__name__: hashlib.sha256(Path(module.__file__).read_bytes()).hexdigest()
             for module in (
                 action_language,
+                assistant,
                 conversation,
+                media_language,
+                models,
                 notepad_intent_v2,
+                ollama,
                 prompts,
+                request_language,
                 spotify_flow,
                 youtube_flow,
             )

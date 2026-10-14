@@ -35,15 +35,20 @@ class Conversation:
         self.spotify = SpotifyFlow(self)
 
     def submit(self, text: str, request_key: str | None = None):
+        from jarvis.request_language import normalize
+
+        interpreted = normalize(self, text, request_key)
+        if isinstance(interpreted, TaskResult):
+            return interpreted
+        text = interpreted
         from jarvis.media_tools import owner_operation
-        from jarvis.spotify_flow import named_spotify_request
 
         media = self.broker.media
         if (
             media
             and media.config.spotify_backend == "desktop"
             and (
-                named_spotify_request(text)
+                self.spotify.resolve_named(text)
                 or request_key in self.spotify.receipts
                 or self.spotify.pending
                 and owner_operation(text) == "open"

@@ -5,42 +5,13 @@ from dataclasses import replace
 from uuid import uuid4
 
 from jarvis.domain import Denied, State, TaskResult
+from jarvis.media_language import named_media_request
 from jarvis.media_tools import owner_operation
 
 
 def named_request(text):
-    value = text.strip().rstrip(".!?")
-    value = re.sub(r"(?i)^(?:please |(?:can|could|would) you (?:please )?)", "", value)
-    services = {s.casefold() for s in re.findall(r"(?i)\b(youtube|spotify|netflix)\b", value)}
-    if services != {"youtube"} or re.search(
-        r"(?i)\b(?:do not|don't|how (?:do|can)|explain|like|subscribe|comment|upload|download|"
-        r"buy|rent|password|javascript|click|type)\b",
-        value,
-    ):
-        return None
-    patterns = [
-        ("play", r"search (?:on )?youtube and play (.+)"),
-        ("play", r"(?:search|find) (?:on )?youtube for (.+?) (?:and|then) play(?: it| the video)?"),
-        ("play", r"play (.+?) (?:on|in) youtube"),
-        ("open", r"open (?:videos? (?:from|by|of) )?(.+?) (?:on|in) youtube"),
-    ]
-    for goal, pattern in patterns:
-        match = re.fullmatch(pattern, value, re.I)
-        if not match:
-            continue
-        query = match[1].strip()
-        if re.fullmatch(
-            r"(?i)(?:it|this|that|the video|"
-            r"(?:the )?(?:first|second|third|[1-5]) (?:result|video))",
-            query,
-        ):
-            return None
-        if re.search(
-            r"(?i)\b(?:and|then)\s+(?:open|play|pause|resume|search|find|close|buy)\b|;", query
-        ):
-            return None
-        return goal, query
-    return None
+    meaning = named_media_request(text)
+    return (meaning.goal, meaning.query) if meaning and meaning.service == "youtube" else None
 
 
 class YouTubeFlow:
@@ -53,10 +24,44 @@ class YouTubeFlow:
         return set(re.findall(r"\w+", query.casefold()))
 
     def matches_item(self, query, item):
+        def normalize(value):
+            return " ".join(value.split()).casefold()
+
+        if normalize(query) == normalize(item.title):
+            return True
+        parts = re.split(r"(?i)\s+by\s+", query)
+        if len(parts) > 1:
+            title, creator = " by ".join(parts[:-1]), parts[-1]
+            title_words = set(re.findall(r"\w+", title.casefold()))
+            creator_words = set(re.findall(r"\w+", creator.casefold()))
+            return bool(title_words and creator_words) and (
+                title_words <= set(re.findall(r"\w+", item.title.casefold()))
+                and creator_words <= set(re.findall(r"\w+", item.creator.casefold()))
+            )
         words = self.matching_words(query)
         return bool(words) and words <= set(
             re.findall(r"\w+", (item.title + " " + item.creator).casefold())
         )
+
+    def resolve_named(self, text):
+        return self.named_request(text)
+
+    def matching_candidates(self, query, results):
+        matches = [i for i, item in enumerate(results, 1) if self.matches_item(query, item)]
+        title = query
+        if not any(
+            " ".join(query.split()).casefold() == " ".join(results[i - 1].title.split()).casefold()
+            for i in matches
+        ):
+            parts = re.split(r"(?i)\s+by\s+", query)
+            title = " by ".join(parts[:-1]) if len(parts) > 1 else query
+        exact = [
+            i
+            for i in matches
+            if " ".join(title.split()).casefold()
+            == " ".join(results[i - 1].title.split()).casefold()
+        ]
+        return exact or matches
 
     def __init__(self, conversation):
         self.chat = conversation
@@ -74,7 +79,7 @@ class YouTubeFlow:
                 raise Denied("Request identity reused with different content")
             return previous_result
         original_text = text
-        named = self.named_request(text)
+        named = self.resolve_named(text)
         pending = self.pending
         if named:
             self.pending = None
@@ -99,9 +104,7 @@ class YouTubeFlow:
                     adapter.owner_session,
                     deadline,
                 )
-                matches = [
-                    i for i, item in enumerate(adapter.results, 1) if self.matches_item(query, item)
-                ]
+                matches = self.matching_candidates(query, adapter.results)
                 if len(matches) == 1 and goal != "search":
                     self.pending = None
                     result = self._open_and_play(

@@ -103,6 +103,10 @@ def parse_decision(raw: bytes, version: str = "decision-v1") -> Decision:
             from jarvis.media_tools import gateway_parse
 
             return gateway_parse(raw)
+        if version == "request-language-v1":
+            from jarvis.request_language import gateway_parse
+
+            return gateway_parse(raw)
         if version == "applications-choice-v1":
             from jarvis.application_data import parse_choice
 
@@ -229,6 +233,7 @@ class OllamaProfile(BaseProfile):
     provider_options: ProviderOptions = Field(default_factory=ProviderOptions)
     stage_options: dict[
         Literal[
+            "request-language-v1",
             "assistant-intent-v1",
             "assistant-plan-v1",
             "assistant-repair-v1",
@@ -288,6 +293,7 @@ class ModelRequest:
     messages: tuple[Message, ...]
     decision_boundary: (
         Literal[
+            "request-language-v1",
             "currency-decision-v1",
             "media-choice-v1",
             "applications-choice-v1",

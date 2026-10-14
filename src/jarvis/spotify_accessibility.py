@@ -255,6 +255,19 @@ class SpotifyAccessibility:
             raise MediaError("SPOTIFY_SEARCH_SUBMIT_UNAVAILABLE")
         self.invoke(buttons[0], gate)
 
+    async def settled_search_value(self, gate):
+        """Read a temporarily rebuilding search control, without repeating delivery."""
+        import asyncio
+
+        while True:
+            gate()
+            try:
+                return self.search_field(self.root())[1].CurrentValue
+            except MediaError as error:
+                if error.code != "SPOTIFY_SEARCH_CONTROL_UNAVAILABLE":
+                    raise
+                await asyncio.sleep(0.1)
+
     async def search(self, query, kind, gate):
         from winrt.windows.foundation import Uri
         from winrt.windows.system import Launcher, LauncherOptions
@@ -276,7 +289,7 @@ class SpotifyAccessibility:
         await asyncio.sleep(0.5)
         while True:
             gate()
-            current = self.search_field(self.root())[1].CurrentValue
+            current = await self.settled_search_value(gate)
             if search_matches(current, query):
                 break
             await asyncio.sleep(0.05)
@@ -285,10 +298,10 @@ class SpotifyAccessibility:
         label = "Playlists" if kind == "playlist" else "Songs"
         while True:
             gate()
-            root = self.root()
-            if not search_matches(self.search_field(root)[1].CurrentValue, query):
+            if not search_matches(await self.settled_search_value(gate), query):
                 await asyncio.sleep(0.1)
                 continue
+            root = self.root()
             nodes = self.nodes(self.main(root), self.uia.CreatePropertyCondition(30005, label))
             if not any(
                 n.CurrentControlType == 50005 and filter_route_matches(self.uri(n), query, kind)

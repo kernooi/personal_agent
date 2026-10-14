@@ -3,6 +3,7 @@
 import argparse
 import json
 import os
+import re
 import threading
 import time
 from pathlib import Path
@@ -23,6 +24,7 @@ def main():
     parser.add_argument("--attended", action="store_true", required=True)
     parser.add_argument("--profile", type=Path, required=True)
     parser.add_argument("--media-report", type=Path, required=True)
+    parser.add_argument("--language-report", type=Path)
     parser.add_argument("--registration", type=Path, required=True)
     parser.add_argument("--report", type=Path, required=True)
     args = parser.parse_args()
@@ -34,6 +36,12 @@ def main():
     metadata = model.inspect(profile)
     if not qualified(args.media_report, profile, metadata):
         parser.error("Current passed actual-local-model media gate required")
+    if args.language_report:
+        from jarvis.language_evaluation import qualified as language_gate
+
+        if not language_gate(args.language_report, profile, metadata):
+            model.close()
+            parser.error("Matching passed wording gate required")
     stop = threading.Event()
     config = MediaConfig(enabled=True)
     browser = BrowserWorkerProvider(clock, args.registration, config, stop)
@@ -46,8 +54,23 @@ def main():
         journal, profile, clock, provider=model, media_config=config, browser_provider=browser
     )
     broker.cancel_requested = stop.is_set
+    broker.language_qualified = args.language_report is not None
     chat = Conversation(broker)
     rows, passed = [], False
+    native_error = [None]
+    original_call = browser.call
+
+    def observed_call(request, cancel):
+        try:
+            return original_call(request, cancel)
+        except Exception as error:
+            code = getattr(error, "code", str(error))
+            native_error[0] = (
+                code if re.fullmatch(r"[A-Z0-9_]{1,80}", code) else type(error).__name__
+            )
+            raise
+
+    browser.call = observed_call
 
     def submit(text):
         result = chat.submit(text)
@@ -57,6 +80,7 @@ def main():
             "player_state": observed.state if observed else None,
             "video_id": observed.item_id if observed else None,
             "error": broker.last_error,
+            "native_error": native_error[0],
         }
         rows.append(row)
         print("JARVIS: " + conversational_text(result), flush=True)
@@ -66,7 +90,11 @@ def main():
 
     try:
         with StopHotkey(stop):
-            observed = submit("Search YouTube and play Rick Astley Never Gonna Give You Up")
+            observed = submit(
+                "Could you put Never Gonna Give You Up by Rick Astley on YouTube for me?"
+                if args.language_report
+                else "Search YouTube and play Rick Astley Never Gonna Give You Up"
+            )
             if observed.state == "results":
                 choices = [
                     i for i, r in enumerate(broker.media.results, 1) if r.item_id == "dQw4w9WgXcQ"
@@ -95,13 +123,22 @@ def main():
                     raise ValueError("Player changed; no replay")
             if observed.state in {"ad", "loading"}:
                 raise ValueError("Ad/loading did not clear naturally")
+            observed = submit("What video is currently open on YouTube?")
+            if observed.item_id != "dQw4w9WgXcQ":
+                raise ValueError("Read-only reobservation found a different video")
             if observed.state != "playing":
                 observed = submit("Play it")
             if observed.state != "playing":
                 raise ValueError("Playback unverified")
-            if submit("Pause the video").state != "paused":
+            if (
+                submit("Pause it for me" if args.language_report else "Pause the video").state
+                != "paused"
+            ):
                 raise ValueError("Pause unverified")
-            if submit("Resume it").state != "playing":
+            if (
+                submit("Continue YouTube for me" if args.language_report else "Resume it").state
+                != "playing"
+            ):
                 raise ValueError("Resume unverified")
             before = broker.media.execution_calls
             stop.set()
@@ -126,6 +163,7 @@ def main():
                     "passed": passed,
                     "mode": "real local model -> Conversation -> broker -> dedicated Chrome",
                     "model_report": args.media_report.name,
+                    "language_report": args.language_report.name if args.language_report else None,
                     "metadata": metadata,
                     "records": rows,
                     "journal_retained": True,

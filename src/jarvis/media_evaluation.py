@@ -44,6 +44,11 @@ def contract_hash():
         "cli",
         "terminal",
         "media_lab",
+        "media_language",
+        "request_language",
+        "application_tools",
+        "assistant",
+        "prompts",
     ]
     return hashlib.sha256(
         json.dumps(

@@ -1,5 +1,78 @@
 # Build evidence
 
+## 2026-10-14: Natural action wording and attended media validation
+
+Owner reported different results for playlist requests differing only by a service
+suffix and brittle browser/app wording. The combined private profile is legacy;
+earlier assistant conversation/currency/research stages did not replace this media
+path. Preserved existing GUI/unrelated work from c5c7e18. Added shared service/title
+fields and one bounded local-model meaning stage for unfamiliar action wording.
+Reviewed owner verbs, literal target spans and controller-owned service/selection
+bound meanings; existing controllers/broker still authorize, journal and independently
+verify each phase. No new UI tool, generated selector/JavaScript, model path/command,
+download or cloud fallback. Private prompts/queries are not persisted.
+
+One exact retrieved title outranks similar titles; duplicate exact titles still ask.
+YouTube artist text must match creator metadata. Ordinary chat retains selected
+media, while pending multi-step continuation clears. Capability explanations receive
+actual configured media/apps. Public research/currency lookups are excluded from
+the action interpreter even when they mention media services. Cancellation, strict
+JSON, request/revision/deadline, controller snapshot and single-use approvals remain.
+Real fallback adds separately matching --language-report; existing gates stay required.
+
+Actual local qualification: Ollama 0.40.2, qwen3:8b digest
+500a1f067a9f782620b40bee6f7b0c89e17ae61f686b92c24933e4ca4b2b8b41,
+same-PC notepad-m2-concurrent-v1 profile, context 4096, think=false. Final reports:
+
+| Gate | Result | Report in docs/evaluations |
+| --- | --- | --- |
+| Wording | 33/33 | request-language-v3-r1.json |
+| Notepad model | 24/24 | m2-natural-language-model-v1-r4.json |
+| Notepad conversation | 41/41 | m2-natural-language-conversation-v1-r4.json |
+| Applications | 31/31 | applications-natural-language-v4-r4.json |
+| Browser | 27/27 | m4-natural-language-browser-v2-r4.json |
+| Spotify desktop | 25/25 | m4-natural-language-desktop-v1-r4.json |
+
+All six validators returned true for current code, frozen corpus, runtime/model digest
+and exact profile. Zero unauthorized dispatches. Shared GUI/terminal helper supplies
+these reports. Core/private profile simulation defaults and real grants remain.
+Qualification is bounded corpus evidence, not general intelligence. Existing frozen
+corpora are unchanged; new wording v1/v2/v3 corpora and every failed report remain.
+
+Preserved failures: wording v1-r1 harness AttributeError/incomplete; v1-r2 17/27
+(missing service/incorrect extraction); native Spotify v1-r1 title "Never" falsely
+treated as negation with zero effects, v2-r1 no visible installed app/no delivery,
+v2-r2 transient search-control absence after URI navigation; YouTube v2-r1 rejected
+stale Chrome identity, v3-r1 searched/opened the official video but rejected pause
+before delivery. Operator reviewed search state and confirmed test Chrome closed
+before further effects. No blind replay or weakened acceptance gate.
+
+Operator approved refreshing the private Chrome registration from 154.0.8037.98 to
+verified Google-signed 155.0.8059.41 at the same installed path. Current SHA256:
+9ca2beaa7a9fd1109f01e562788c22e045a01cec0f6015ade689325af7f8a521.
+Old registration backed up privately; existing browser profile preserved. No browser
+download or account changes. Spotify's labelled search control was observed rebuilding
+after navigation. Added bounded repeated reads of that field, with existing cancellation
+and deadline; URI/navigation/invocation still sends once. Identity/minimized/window
+errors stop immediately. Four dedicated tests cover settling, cancellation and errors.
+
+Final attended evidence: request-language-windows-spotify-v3-r1.json passed natural
+song search/play, pause/resume, Spotify Deep Focus playlist context/play, pause and
+stop with zero new admissions. Exact retrieved UI identity plus independent Windows
+playback state verified; audibility not claimed. Spotify remains open and paused.
+Personal Fav Jpop is covered by synthetic title tests, not an account-catalog claim.
+request-language-windows-youtube-v3-r2.json passed natural search, pinned official
+dQw4w9WgXcQ video, natural ad wait, explicit read-only reobservation of the same video,
+pause/resume and stop with zero new admissions. Dedicated test context closed;
+ordinary Chrome excluded. No ad bypass or audible-sound claim.
+
+Final full suite: 1252 passed in 51.51s (37 language and four settling regressions).
+Ruff lint/format (150 files), pip check and whitespace checks pass. Combined attended
+real startup exited 0 on /quit with all configured capabilities (144 supported apps,
+52 unavailable). Actual GUI worker with the shared command reached ready, emitted
+13 framed events, exited 0 with empty stderr and retained all real/language flags.
+No installation, global setting/startup entry, OS network change, commit or push.
+
 ## 2026-10-11: M4 commit preparation
 
 User requested committing the current implementation. Reviewed all 63 modified/
