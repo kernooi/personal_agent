@@ -825,3 +825,164 @@ browser 27/27, Windows playback-only 12/12 and desktop 25/25, unchanged gates.
 All current qualification helpers, helper argument inspection, lint/format,
 dependencies and whitespace checks pass. Updated combined helper and docs; no
 native effect, private playlist discovery claim, automatic restore or commit.
+
+## 2026-10-13 - Restore startup compatibility after owner revert
+
+The owner reverted abandonment code, leaving private configuration keys unsupported
+by the restored strict schemas: unknown_outcome_policy in the active combined
+profile and spotify_failure_policy in media configs. Backed up each affected private
+file and removed only those unsupported keys; all four affected files validate.
+Simulation profile default, targeted input policy, local inference, model settings,
+registration and permission gates remain intact. Did not reimplement the reverted
+feature. Existing M2/conversation/application qualifications match; restored media
+contract has no matching historical report, so refreshing unchanged frozen browser
+and native Spotify gates with actual local inference and simulated controllers.
+Combined helper points to new revert-compat reports. Helper lint/format passed.
+No native desktop/browser/playback effect, global setting, commit or push performed.
+
+Final validation: browser 27/27 and native Spotify 25/25 passed; both current-contract
+qualification helpers returned True. Combined helper startup and immediate /quit
+passed exit 0 without action requests. Restored review-mode code displayed four
+historical Spotify uncertainties; these remain unresolved and may block media
+requests. No human review was fabricated or old action replayed. Startup schema
+mismatch is fixed; restoring abandonment behavior was not requested this turn.
+
+## 2026-10-14 - Desktop chat presentation complete
+
+Owner-approved minimal native GUI reuses the existing combined private setup and
+CLI broker: simulation default, explicit attended-PC-controls selection, Start/End,
+Enter/Shift+Enter, thinking animation/elapsed time, Stop/Esc and global-stop display.
+Versioned JSON framing isolates complete replies from UI state. No raw reasoning,
+voice, vision, generic UI, HTTP server, new packages or hidden fallback. Closing is
+cooperative and no old task is replayed. Existing reverted recovery policy is retained.
+
+Implemented scripts/Chat-JarvisGUI.py, gui.py, gui_session.py and gui_worker.py;
+shared launcher preserves current terminal behavior. Added decision 0013 and README
+instructions. Private own-window visual inspection and actual local-model GUI chat
+passed; real effects were not sent. 12 GUI boundary tests and full 1183-test suite
+pass, along with lint, formatting, dependency and whitespace checks. Existing five
+capability qualification checks match. Ollama was manually started with the already
+approved process-local cloud-disabled settings for validation; GUI never auto-starts
+it. No later milestone, machine-level setup, commit or push is included.
+
+## 2026-10-14 - Automatic local GUI startup complete
+
+Owner-approved GUI opening now prepares registered standalone Ollama and the
+installed-profile model, installed local Docker Desktop if required, and approved
+cached/mounted loopback SearXNG, then connects automatically. Background stages,
+bounded waits, cancellation, existing-service reuse and optional search failure are
+implemented. No install/pull, global settings/startup policy or model-callable shell.
+Private gui-startup.toml contains registered service metadata; profiles/qualification
+remain separate. Real controls still require explicit attended checkbox selection;
+that choice reconnects automatically with a fresh context and all broker checks.
+
+Added gui_startup.py, startup/progress integration, decision 0014 and 33 targeted
+GUI/bootstrap regressions. Actual auto-opening, cached-container recreation, local
+reply and final-source reuse validation passed in simulation without real actions.
+Cold Windows daemon/Desktop startup was not forced; cold process/settings/log and
+Docker-start paths are mocked and clearly separate. Tk tests retain all assertions
+in isolated processes to match production. Full suite 1204 passed; final checks and
+qualification matching are recorded in BUILD_LOG. Existing manual-review/unsaved-work
+policies, frozen gates and native controls are untouched. No later milestone,
+dependency download, machine configuration, commit or push.
+
+Final current-source full suite: 1204 passed in 37.95s. All 33 GUI/bootstrap tests
+are retained; no skips or lowered gates. Ruff lint/format (137 files), dependency
+and diff whitespace checks pass. Final-source GUI auto-reopen report confirms
+simulation Ready with both local services reused; no Start click or real action.
+Five existing qualification helpers match current source/profile/runtime. Cold
+Docker Desktop/Ollama process start remains mocked evidence, not represented as
+an actual forced cold-host test. Current running services were left intact. No
+commit or push performed.
+
+### 2026-10-14 — Desktop title bar complete
+
+Owner-requested Docker-inspired navy branding is implemented with a matching
+native caption, custom JARVIS monogram, compact LOCAL badge and session controls.
+Native window management remains available; unsupported DWM colors fall back
+without replacing Windows chrome. Own-window visual inspection and lifecycle/
+minimum-size regression passed. Full suite: 1205 passed in 40.39s; lint, formatting
+and dependency checks passed. Existing auto-connect/bootstrap and attended broker
+behavior remain unchanged. See BUILD_LOG for evidence and initial test correction.
+
+### 2026-10-14 — Modern transcript scrollbar complete
+
+Chat now has a slim rounded thumb with hover/focus feedback, no arrow buttons or
+bright track, and no visible thumb when content fits. Drag, wheel, track paging,
+keyboard navigation and minimum-size layout were verified with real Tk widgets;
+own-window synthetic preview visually checked. Existing reading position stays
+stable when new replies arrive. Full suite: 1206 passed in 41.10s; lint, formatting,
+dependencies and whitespace passed. Presentation only; previous work is preserved.
+
+### 2026-10-14 — GUI combined-control mode parity
+
+Confirmed GUI uses current source and the terminal helper's same profile and
+capability settings. The reported difference was default simulation versus terminal
+attended real mode. Prominent explicit control toggle, persistent mode badge and
+preview/real status make that distinction clear. No automatic consent or replay.
+New exhaustive real-command parity test and actual Tk toggle regression pass;
+17 GUI tests passed. Real Windows/media effects were not invoked during validation.
+Default simulation and all existing registrations, grants and qualifications remain
+required. Full-suite and earlier scrollbar timing evidence are recorded in BUILD_LOG.
+
+Final suite: 1207 passed in 35.25s; lint, format, dependencies and whitespace passed.
+
+### 2026-10-14 — Real GUI default and redesigned chat complete
+
+Owner-selected GUI now auto-connects/restarts with all existing attended real
+controls, and animations are always enabled. Removed the toggles; kept visible
+attended/global-stop scope, existing qualification/registration gates and offline
+failure behavior. Ordinary CLI/profile defaults remain simulation. Decision 0015
+records the owner's explicit override of the earlier GUI selection requirement.
+
+Rounded growing composer, placeholder/focus styling, circular accessible Send,
+cleaner message spacing and welcome screen implemented without dependencies.
+Own-window synthetic previews inspected. 18 GUI tests passed, including automatic
+real single-flight startup, command parity, placeholder isolation, keyboard Send,
+growth/shrink, minimum-size layout, all animation phases and existing stop/scroll
+regressions. Final full suite: 1208 passed in 39.78s; lint, format, dependency and
+whitespace checks pass. No live app/media effects exercised for this UI change;
+all prior unrelated work preserved. No commit/push.
+
+### 2026-10-14 — Reference bubble GUI and focus correction complete
+
+Conversation area rebuilt with true left/right rounded message widgets, a light
+palette, selectable content, Copy message, Latest navigation and responsive width.
+Composer focus now hides the placeholder and visibly updates its border/caret;
+blur restores the placeholder only if empty. Header/native window management,
+automatic attended real startup, always-on animation and existing broker checks
+remain. Long-message previews and full-message reader bound widget geometry while
+retaining content; in-memory history is bounded and destroyed widgets are pruned.
+
+Normal/focused/compact own-window synthetic previews inspected. Existing scroll,
+single-flight, cancellation and stop assertions retained; added actual focus,
+alignment, selection, resize, long-reply and history regressions. Final suite:
+1210 passed in 43.59s, including all 20 GUI tests. Lint/format, dependencies and
+whitespace pass. No live app/media effects or new model capability; no commit/push.
+
+### 2026-10-14 — Dark slate theme and smooth branding complete
+
+Soft dark palette now covers the full GUI, preserving the bubble layout and focus
+behavior. New original core mark and send icon use cached, supersampled transparent
+PNG rendering without dependencies; native window icons match the header. Hover,
+keyboard, disabled states, automatic real control and animation behavior retained.
+Own-window and native-size artwork previews inspected; transparent edges verified.
+Existing 20 GUI tests pass. Final suite: 1210 passed in 44.38s; lint, formatting,
+dependencies and whitespace pass. No global theme/configuration, live app/media
+effect, new agent capability, dependency download, commit or push.
+
+### 2026-10-14 — Header badge removed
+
+Removed the text badge beside JARVIS at the owner's request. Real app/media startup
+is unchanged; readiness and attended/global-stop status remain elsewhere in the UI.
+Full suite: 1210 passed in 43.08s; lint, format, dependencies and whitespace pass.
+
+### 2026-10-14 — Smooth scrolling and wheel stalls fixed
+
+Wheel events now work on blank gaps, bubbles, floating controls and scrollbar.
+Fractional pixel targets ease at 16ms intervals; direct navigation and destruction
+cancel motion cleanly. New replies respect manual scrolling away from the bottom.
+Native Tk regression covers five mapped surfaces, partial deltas, actual endpoint,
+reply arrival, navigation cancellation and close. Existing scroll/stop tests retained.
+21 GUI tests pass; final full suite 1211 passed in 50.35s. Lint, formatting,
+dependency and whitespace checks pass. No real app/media actions or commit/push.

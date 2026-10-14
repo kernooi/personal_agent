@@ -1,0 +1,13 @@
+"""Soft slate desktop palette; this changes only JARVIS widgets."""
+
+BG = "#1c2533"
+PANEL = "#273345"
+INK = "#e8edf5"
+MUTED = "#a0adc1"
+ACCENT = "#a5baff"
+TITLE = "#1c2a40"
+BORDER = "#3c4c63"
+FOCUS = "#94b4ed"
+USER = "#354c6e"
+USER_BORDER = "#496487"
+SELECT = "#465f87"

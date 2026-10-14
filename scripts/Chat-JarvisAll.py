@@ -11,14 +11,8 @@ import sys
 from pathlib import Path
 
 
-def main():
-    parser = argparse.ArgumentParser(
-        description="Attended real JARVIS chat with all configured capabilities"
-    )
-    parser.add_argument(
-        "--print-command", action="store_true", help="Print arguments without starting chat"
-    )
-    args = parser.parse_args()
+def chat_command(*, real=True):
+    """Share this PC's existing configuration with terminal and desktop chat."""
     root = Path(__file__).resolve().parents[1]
     private = Path(os.environ["LOCALAPPDATA"]) / "Jarvis"
     pairs = {
@@ -34,27 +28,54 @@ def main():
         "--web-config": private / "web.toml",
         "--media-config": private / "media-all-spotify-desktop-v1.toml",
         "--browser-registration": private / "chrome-registration.json",
-        "--media-report": root / "docs/evaluations/m4-spotify-admission-browser-v2-r2.json",
-        "--windows-media-report": root / "docs/evaluations/m4-spotify-admission-desktop-v1-r2.json",
+        "--media-report": root / "docs/evaluations/m4-revert-compat-browser-v1-r1.json",
+        "--windows-media-report": root / "docs/evaluations/m4-revert-compat-desktop-v1-r1.json",
     }
+    if not real:
+        for option in (
+            "--registration",
+            "--model-report",
+            "--conversation-report",
+            "--applications-report",
+            "--browser-registration",
+            "--media-report",
+            "--windows-media-report",
+        ):
+            pairs.pop(option)
     missing = [str(path) for path in pairs.values() if not path.is_file()]
     if missing:
-        parser.error("Missing local setup or qualification files: " + ", ".join(missing))
+        raise ValueError("Missing local setup or qualification files: " + ", ".join(missing))
     command = [sys.executable, "-m", "jarvis", "chat"]
     for option, path in pairs.items():
         command.extend([option, str(path)])
-    command.extend(
-        [
-            "--real",
-            "--attended",
-            "--real-apps",
-            "--apps-attended",
-            "--real-browser",
-            "--browser-attended",
-            "--real-media",
-            "--media-attended",
-        ]
+    if real:
+        command.extend(
+            [
+                "--real",
+                "--attended",
+                "--real-apps",
+                "--apps-attended",
+                "--real-browser",
+                "--browser-attended",
+                "--real-media",
+                "--media-attended",
+            ]
+        )
+    return command
+
+
+def main():
+    parser = argparse.ArgumentParser(
+        description="Attended real JARVIS chat with all configured capabilities"
     )
+    parser.add_argument(
+        "--print-command", action="store_true", help="Print arguments without starting chat"
+    )
+    args = parser.parse_args()
+    try:
+        command = chat_command()
+    except ValueError as exc:
+        parser.error(str(exc))
     if args.print_command:
         print(subprocess.list2cmdline(command))
         return 0
@@ -63,7 +84,7 @@ def main():
         "Ctrl+Alt+Shift+F10 stops new effects.",
         flush=True,
     )
-    return subprocess.call(command, cwd=root, shell=False)
+    return subprocess.call(command, cwd=Path(__file__).resolve().parents[1], shell=False)
 
 
 if __name__ == "__main__":

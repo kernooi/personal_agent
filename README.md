@@ -1,5 +1,80 @@
 # JARVIS local text assistant
 
+## Desktop chat
+
+Open the minimal desktop chat window:
+
+```powershell
+.\.venv\Scripts\pythonw.exe scripts\Chat-JarvisGUI.py
+```
+
+The slate/navy header includes the JARVIS core logo, name and session controls.
+On Windows 11, the matching native title bar replaces the white caption while
+retaining Windows window controls, dragging, resizing and snapping. This uses
+[per-window DWM colors](https://learn.microsoft.com/windows/win32/api/dwmapi/ne-dwmapi-dwmwindowattribute),
+without changing your Windows theme. Older systems retain supported native styling.
+
+The GUI connects automatically. It starts the registered standalone Ollama server
+when needed, preloads the already installed model from your active profile, and
+starts your local SearXNG container. If Docker Desktop is stopped, it starts the
+installed Docker Desktop first. Existing running services are reused. The old
+ephemeral SearXNG container may have been removed when Docker stopped; the GUI can
+recreate it using the cached pinned image, existing private mounts and loopback-only
+port binding. Nothing is installed or downloaded, and no Windows startup entry or
+Docker restart policy is enabled. Services remain running after the GUI closes.
+
+The GUI uses the same private setup and attended real controls as `Chat-JarvisAll.py`.
+At the owner's explicit request, opening it automatically enables real app, Notepad,
+YouTube and Spotify controls. No control or animation toggle is needed. Stay at the
+PC during this attended session; exit other attended JARVIS chats first. Wait for
+**Ready** in the activity bar before requesting an action. No app or playback action happens
+merely from opening the GUI. Core/profile and ordinary CLI simulation defaults remain
+unchanged; missing registration or qualification fails startup without fallback.
+Existing registration, qualification and broker checks still apply. **End session**
+is intentional; after ending or a startup failure, **Start chat** retries connecting.
+
+The dark slate conversation uses rounded message bubbles: muted blue user bubbles
+on the right and softer slate JARVIS replies on the left. The composer, menus and
+full-message reader share the dark palette. The logo and circular send button use
+antialiased transparent artwork for smooth edges, with no extra dependency.
+Message text can be selected; right-click **Copy message** copies a whole bubble.
+Long replies have **Read full message** so large output stays readable without
+making the main view sluggish. **Latest** returns to new replies after scrolling up.
+
+The rounded message box grows for multiline input, with a compact arrow send
+button. Focusing the field hides its placeholder and shows a blue outline and
+blinking caret; leaving an empty field restores the placeholder. Placeholder text
+is never sent to the model. Enter sends; Shift+Enter
+adds a line. Always-on animated thinking dots and elapsed time show
+that JARVIS is working; they are activity indicators, not streamed model reasoning.
+The chat uses a slim rounded scrollbar that brightens on hover and disappears
+when everything fits. Drag, wheel, track paging and keyboard navigation work;
+wheel movement is eased in pixels and works over blank spaces, bubbles and the
+scrollbar, including small wheel deltas. New replies preserve your position when
+you are reading earlier messages. Direct scrollbar navigation cancels wheel motion.
+**Stop** or Esc cancels the current request through the existing cancellation path.
+Ctrl+Alt+Shift+F10 remains the global stop in attended mode; end that session before
+starting another after a global stop. **End session** and closing the window send
+stop/quit cooperatively, without force-killing apps or promising rollback.
+
+**Details** shows startup and connection diagnostics; normal replies appear in the
+chat. Existing slash commands work in the composer. Chat display and diagnostics
+remain in memory; the existing minimal action journal is unchanged. No GUI network
+server, additional dependency, cloud fallback, auto-start entry or installation is
+added. Startup progress appears in the activity bar; a search startup failure leaves
+local chat available with an explicit notice. Missing model/runtime/image artifacts
+are reported rather than downloaded. The GUI provides chat presentation only, without
+voice, vision or new application-control tools.
+
+Approved service startup metadata is private at `%LOCALAPPDATA%\Jarvis\gui-startup.toml`:
+registered Ollama executable/hash/version, local Docker context, owned container name
+and pinned SearXNG image. Model names/options remain in the text profile. Ollama
+starts with process-local cloud-disabled/loopback/model-directory/context settings;
+fresh server startup must log cloud disabled before loading. Preloading uses an empty
+request, as documented in [Ollama's FAQ](https://docs.ollama.com/faq#how-can-i-preload-a-model-into-ollama-to-get-faster-response-times).
+
+For visible development errors, use `python.exe` instead of `pythonw.exe`.
+
 ## Installed applications on this Windows PC
 
 Application control now discovers targets from Windows AppsFolder metadata rather

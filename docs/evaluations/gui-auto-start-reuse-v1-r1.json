@@ -1,0 +1,22 @@
+{
+  "version": "gui-auto-start-reuse-v1",
+  "automatically_connected": true,
+  "execution_mode": "simulation",
+  "startup_diagnostics": [
+    "Local web search ready.",
+    "Local model ready.",
+    "JARVIS | model=qwen3:8b | provider=ollama | execution=SIMULATED | targets=notepad",
+    "Notepad actions are simulated; local-mode evidence is user/operator verified.",
+    "Public currency data: enabled | provider=Frankfurter v2 / ECB.",
+    "Public-data controls: /cache, /cache-clear, /refresh-rate. Windows permission is separate.",
+    "Public web research: enabled | provider=searxng.",
+    "Web controls: /web-status, /web-enable, /web-disable, /sources, /web-cache, /web-cache-clear, /web-refresh.",
+    "Media: SIMULATED browser | YouTube=True | Netflix=False | Spotify=setup required.",
+    "Media controls: /media-status, /media-device <reference>, /review-media <task> manually-handled. Ctrl+Alt+Shift+F10 stops new real media actions.",
+    "Applications: device catalog | execution=SIMULATED | supported=144 | unavailable=52.",
+    "Ask to open, focus, minimize or close an app by name. A selected or sole verified window needs no extra confirmation. Notepad text, unsaved changes and unknown state stay protected.",
+    "Type /stop during inference; /quit to exit. Actions use SIMULATED mode. Applications=SIMULATED."
+  ],
+  "elapsed_seconds": 15.167,
+  "real_action_requests": 0
+}

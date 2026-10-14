@@ -1,0 +1,10 @@
+{
+  "version": "gui-local-chat-v1",
+  "execution_mode": "simulation",
+  "actual_local_inference": true,
+  "display_text": "YOU\nHello, what is your name?\n\nJARVIS\nHello, I am JARVIS.\n\n",
+  "returned_to_ready": true,
+  "thinking_animation_phases": 4,
+  "real_action_requests": 0,
+  "elapsed_seconds": 4.486
+}

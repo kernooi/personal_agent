@@ -1,0 +1,45 @@
+{
+  "version": "gui-auto-start-v1",
+  "automatically_connected": true,
+  "execution_mode": "simulation",
+  "display_text": "YOU\nHello, what is your name?\n\nJARVIS\nHello, I am JARVIS.\n\n",
+  "elapsed_seconds": 25.325,
+  "startup_diagnostics": [
+    "Local model ready.",
+    "Local web search ready.",
+    "JARVIS | model=qwen3:8b | provider=ollama | execution=SIMULATED | targets=notepad",
+    "Notepad actions are simulated; local-mode evidence is user/operator verified.",
+    "Public currency data: enabled | provider=Frankfurter v2 / ECB.",
+    "Public-data controls: /cache, /cache-clear, /refresh-rate. Windows permission is separate.",
+    "Public web research: enabled | provider=searxng.",
+    "Web controls: /web-status, /web-enable, /web-disable, /sources, /web-cache, /web-cache-clear, /web-refresh.",
+    "Media: SIMULATED browser | YouTube=True | Netflix=False | Spotify=setup required.",
+    "Media controls: /media-status, /media-device <reference>, /review-media <task> manually-handled. Ctrl+Alt+Shift+F10 stops new real media actions.",
+    "Applications: device catalog | execution=SIMULATED | supported=144 | unavailable=52.",
+    "Ask to open, focus, minimize or close an app by name. A selected or sole verified window needs no extra confirmation. Notepad text, unsaved changes and unknown state stay protected.",
+    "Type /stop during inference; /quit to exit. Actions use SIMULATED mode. Applications=SIMULATED."
+  ],
+  "container_running": true,
+  "container_ports": {
+    "8080/tcp": [
+      {
+        "HostIp": "127.0.0.1",
+        "HostPort": "8080"
+      }
+    ]
+  },
+  "container_restart_policy": "no",
+  "real_action_requests": 0,
+  "startup_statuses": [
+    "Connecting\u2026",
+    "Loading local model\u2026",
+    "Starting local web search\u2026",
+    "Thinking\u2026",
+    "Thinking\u2026  3s",
+    "Thinking\u2026  4s",
+    "Thinking\u2026  5s",
+    "Thinking\u2026  6s",
+    "Thinking\u2026  7s",
+    "Thinking\u2026  8s"
+  ]
+}

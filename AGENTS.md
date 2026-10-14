@@ -81,3 +81,22 @@ exact verified Spotify package family; no default-handler or generic URI tool.
 Use separate desktop-search qualification and attended consent. Verify selected
 content/context with accessibility plus independent Windows playback state; never
 infer catalog identity or audible sound from GSMTC alone. See decision 0012.
+
+The owner approved minimal desktop chat presentation and automatic GUI startup of
+existing local infrastructure: registered standalone Ollama, installed-profile model
+preload, installed Docker Desktop and owned local SearXNG container. Reuse running
+services; recreate a removed ephemeral container only from the approved cached
+pinned image/private mounts/loopback binding with --pull never. No installations,
+model/image downloads, OS startup entries, remote Docker engines or restart policies.
+Verify a fresh Ollama startup cloud-disabled log before recording verification.
+Service health checks are fixed bootstrap operations, not public-fetch permissions
+or model-callable tools. See decision 0014 for the original simulation-first GUI.
+
+The owner subsequently explicitly selected always-on real app/media controls for
+the GUI and always-on activity animations. Launching this dedicated GUI now selects
+the existing attended combined command, like Chat-JarvisAll.py; show the attended
+scope and global-stop reminder visibly. This GUI-specific selection supersedes its
+earlier simulation default and checkbox. Core/profile/ordinary CLI simulation
+defaults stay unchanged. No unqualified fallback, replay, new capability or weakened
+registration/approval/unsaved-work checks. Tests/previews must not launch a real
+backend or exercise Windows effects without attended readiness. See decision 0015.
