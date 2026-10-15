@@ -1,5 +1,197 @@
 # Build evidence
 
+## 2026-10-15: Restore GUI startup after the required-filter change
+
+Owner reported the real-Chrome startup qualification error after the code-only
+Spotify filter change. Read AGENTS/README and preserved existing work. Confirmed
+media configuration enabled, YouTube enabled, desktop Spotify selected and the
+attended browser flag present. Registered Google Chrome 155.0.8059.41 still matched
+the installed signed executable. Ollama 0.40.2 and the configured local model were
+ready. Browser, desktop Spotify and wording reports failed their current-source
+validation; the filter edit invalidated their shared contract hash.
+
+Regenerated only those three source-bound frozen local-model checks using actual
+local qwen3:8b with simulated controllers: browser 27/27, desktop Spotify 25/25,
+wording 33/33, all passed their unchanged 100%/zero-unauthorized-dispatch gates.
+New evidence: m4-required-filters-browser-v2-r1.json,
+m4-required-filters-desktop-v1-r1.json and
+request-language-required-filters-v3-r1.json. Historical reports remain untouched.
+Updated the shared Chat-JarvisAll/GUI launcher to these passing reports. All six
+launcher qualification validators now return True for the active profile/model.
+
+The GUI worker in simulation mode accepted /quit, reached Ready, exited 0 and had
+empty stderr. No real backend was launched, no app/browser/playback operation was
+sent, no native filter test or general unit-test suite was run. The required
+Songs/Playlists filter behavior remains unverified on the live Spotify client;
+the repaired startup qualification is distinct from native behavior evidence.
+No guard bypass, fabricated report, configuration/registration change, installation,
+download, global setting, commit or push.
+
+## 2026-10-15: Require Spotify category filters — untested owner-requested change
+
+Owner requested song searches use Songs and playlist searches use Playlists, with
+no tests or live actions. Preserved existing work and removed the explicit All
+fallback when filter links retain a previous query. Search now waits under its
+existing cancellation/deadline gate for the correct current-query filter. It
+requires visible enabled controls, invokes the filter at most once and re-reads
+its toggle/selection state before accepting the filtered results. Empty All
+results do not bypass category selection. Stale links are never invoked.
+
+No tests, lint/format/dependency checks, model evaluations, service startup or
+desktop effects were run for this change, as explicitly requested. No existing
+report was rewritten. The source-bound media and wording qualifications from the
+prior version are now stale; real combined startup requires fresh passing reports.
+Behavior and client-layout compatibility remain unverified for this change.
+
+## 2026-10-15: Combined media controller recovery
+
+Owner reported `play avid on spotify` returning a generic admission failure, with
+YouTube also failing. Read AGENTS/README and preserved the uncommitted optional
+currency/topic work. Recent shared-journal records show one uncertain Spotify search
+followed by a recorded operator review, app close/reopen, and immediate zero-effect
+Spotify rejections. YouTube's search succeeded, then open and another search were
+rejected. Historical records omitted native error reasons, so their precise first
+failure cannot be recovered. Current Ollama 0.40.2/qwen3:8b identity, all then-current
+qualification reports and Google-signed Chrome 155.0.8059.41 registration matched.
+
+Read-only Spotify inspection initially exposed no supported search field. After
+the operator restored the installed main window and confirmed attended readiness,
+both the expected search field and main region were available. No playback was
+sent during inspection. The cached native window identity was never refreshed for
+a new search after the app was reopened; fixed that rebind at an explicit fresh
+search, invalidating all old references. Window changes during an operation still
+reject delivery. Worker-start failures before any command is sent now have known
+zero delivery, rather than becoming uncertain outcomes.
+
+A combined synthetic regression reproduced a second defect: named workflows
+compared Spotify's generation against the independent browser generation, leaving
+YouTube at results instead of completing the requested playback. Compare only the
+requested provider's counter. Retain each service's selected content, result age,
+device and observation in session memory when switching services; fresh search
+invalidates that service's old selection even when the new navigation fails.
+Exact references, freshness, worker generations and independent postconditions
+remain enforced. No reobservation handoff or takeover check was bypassed.
+
+Admission failures now show specific recovery guidance for changed windows/pages,
+manual browser interaction, missing Spotify controls, registration changes and
+controller contention. Journal fixed allowlisted error codes and execute/observe
+stage; never raw exceptions, queries, DOM, titles or credentials. Unknown outcomes
+and no-replay rules remain. Added regressions for replacement-window pinning,
+combined service switching, reason retention/privacy and pre-send zero delivery.
+Initial test-harness profile omissions were corrected; 303 focused tests passed.
+The earlier full suite passed 1315 cases before the service-switch correction;
+final verification and attended combined evidence follow below.
+
+The combined native lab retained four unsuccessful reports. r1 verified Spotify
+and YouTube search/open, then blocked pause with USER_TAKEOVER_REOBSERVE_REQUIRED;
+the operator confirmed clicking Skip ad and switching to another Chrome window.
+r2 stopped after an ad remained active beyond its 90-second read-only wait. r3
+verified all playback/service-switch operations, but its stop assertion failed
+because the lab replaced terminal.chat_loop without its cancel_requested callback;
+the normal terminal/GUI callback already wires the stop. Fixed the harness and kept
+that failed report. r4 expired its operator handoff while the operator reported a
+frozen browser and closed the test window; no playback controls followed it.
+
+That attended idle interval exposed a real worker defect: main() blocked its
+Playwright owner thread in stdin.readline, starving the context's network route
+and page callbacks between chat turns. This matches the documented sync-API
+limitation in [Playwright's library guide](https://playwright.dev/python/docs/library#timesleep-leads-to-outdated-state).
+A bounded two-frame reader queue now handles pipe I/O on a separate thread. The
+original Playwright owner thread services callbacks through short waits on an
+existing owned page while idle. No context launch, navigation, script, click,
+reobservation handoff or media command occurs in this idle path. Existing network
+filtering, manual-input guard and verification lease remain; the watchdog also
+bounds idle callback processing. Closed pages are tolerated without reopening;
+other driver errors remain failures. An already-exited worker rejects a new
+command before pipe delivery. Thread/ordering, frame-limit, idle/no-launch/lease,
+close and failure regressions verify these boundaries without real effects.
+
+Final suite: 1323 passed in 56.25s; Ruff lint/format (155 files), pip check and
+whitespace checks pass. Current same-PC qwen3:8b qualifications all match: M2 model
+24/24, conversation 41/41, applications 31/31, wording 33/33, browser 27/27 and
+desktop Spotify 25/25. Gates remain 100%, zero unauthorized dispatches. Retained
+all historical and superseded evidence. Shared Chat-JarvisAll/GUI launcher now
+uses the current passing reports; model/profile/private registrations are unchanged.
+
+`combined-media-recovery-windows-v1-r5.json` passed all 13 attended checks through
+the actual shared CLI composition, genuine Notepad/app controllers (unused),
+enabled currency/web wrappers, native Spotify and dedicated registered Chrome.
+Used an isolated private lab journal. Operator confirmed that the corrected
+browser responded and the official Rick Astley video played after a manual ad
+skip. A broker current-video request explicitly refreshed that manual handoff;
+the guard was not suppressed. Independently verified requested Spotify song,
+pause/resume, YouTube's pinned dQw4w9WgXcQ video, pause/resume, another Spotify
+search/play, return to the previous YouTube selection and stop with zero new
+admissions. Spotify remains open and paused; only the owned Chrome context closed.
+No audible-sound claim, ordinary Chrome/app control, account/library mutation,
+automatic ad skip, replay, installation/download, global setting, commit or push.
+
+Final shared-launcher check started the actual attended real gui_worker backend,
+accepted `/quit`, exited 0, emitted Ready (14 framed events) and had empty stderr;
+it sent no app/media effect. 40 GUI/startup regressions passed in 11.54s after the
+launcher report update. Lint/format, dependency and whitespace checks still pass.
+
+## 2026-10-14: Currency is optional; release unrelated topics
+
+Owner reported non-currency questions becoming a repeated currency clarification,
+and explicitly requested currency only for related requests. Inspected the shared
+GUI/terminal backend and preserved committed work from 05c7085. Root cause:
+currency_router treated any "how much", "currency" substring and almost every
+"what about" as monetary intent. Quoted complaints could accidentally resolve a
+pair mentioned in an old response. Legacy routing bypassed the model for those
+false clarifications; semantic profiles also exposed previous monetary operands
+too broadly before deciding the current topic.
+
+Replaced broad triggers with explicit money/conversion/rate evidence. Corrections,
+explanations, unrelated numerical questions, ordinary unit conversions and weight
+"pounds" do not acquire currency scope. Validated cached provider metadata supplies
+generic code recognition without a new lookup or invented support list. Generic
+bare numbers without an active conversion ask their purpose. Legitimate same-task
+amount, reverse-rate and cited-source follow-ups remain; expiry/provenance semantics
+are unchanged, including reading an older session source without claiming freshness.
+
+CurrencyRegistry releases pair/quote context at an unrelated owner turn, before
+model interpretation. Conversation/application entrypoints also release semantic
+operands when directly switching controllers. Semantic classification/validation
+requires current owner currency intent; unrelated questions cannot authorize an
+invented pair. Controller context tells the narrator that currency is optional and
+inactive. Ordinary question candidates use say/clarify to explain uncertainty rather
+than labeling a normal question as an unsupported tool; unsupported operations keep
+their existing boundary. No scope, provider URL, permission, model/profile selection,
+single-use approval, cancellation, registration or unsaved-work gate was broadened.
+
+53 new deterministic tests cover the reported four-turn loop, pending/completed
+conversions, topic changes, generic numbers, quoted pairs, negative corrections,
+RAM/protein/weight/time/arithmetic questions, direct app requests, provider code
+metadata and assistant-v1/v2 operand isolation. Malicious currency misclassification
+is denied with zero provider calls. All historical tests/corpora remain unchanged.
+
+Actual same-profile qwen3:8b through Ollama 0.40.2 passed all 22 turns of the frozen
+tests/fixtures/currency-topics-v1.json, using explicitly synthetic rate 0.75 and
+fake app/media/Notepad observers; no public lookup or Windows effect. Final evidence
+docs/evaluations/currency-topics-v1-r3.json binds exact profile, runtime/model digest,
+corpus and implementation. This establishes routing, not medical guidance or observed
+hardware capacity. R1 (18/22) and r2 (21/22) remain. R1 evaluator incorrectly treated
+a legitimate missing-amount clarification as a failure; remaining failures exposed
+ordinary-question refusals and overly broad "conversion" wording. Corrected these
+and retained the 100%/zero-unauthorized-dispatch gate and original frozen cases.
+
+Refreshed existing actual-local-model qualification, all 100% with zero unauthorized
+dispatches: request-language-currency-topics-v3-r1.json 33/33;
+m2-currency-topics-model-v1-r1.json 24/24;
+m2-currency-topics-conversation-v1-r1.json 41/41;
+applications-currency-topics-v4-r1.json 31/31;
+m4-currency-topics-browser-v2-r1.json 27/27;
+m4-currency-topics-desktop-v1-r1.json 25/25.
+All six validators returned true against current profile/runtime/source. Shared
+Chat-JarvisAll helper selects these reports; GUI inherits the same arguments.
+
+Full suite: 1305 passed in 59.70s. Ruff lint/format (152 files), pip check and diff
+whitespace pass. Combined simulation startup and the actual GUI worker both reached
+ready/quit cleanly with exit 0 and empty stderr. Real argument parity remains covered
+by existing GUI tests; no real backend or Windows effect was started for this change.
+No dependency/model download, global settings/network/service change, commit or push.
+
 ## 2026-10-14: Natural action wording and attended media validation
 
 Owner reported different results for playlist requests differing only by a service

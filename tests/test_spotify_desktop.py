@@ -430,6 +430,10 @@ class UI:
     def root(self):
         return None
 
+    def begin_search(self):
+        self.bindings = {}
+        return self.root()
+
     async def search(self, query, kind, gate):
         gate()
         self.admitted = True

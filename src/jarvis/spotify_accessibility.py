@@ -169,6 +169,16 @@ class SpotifyAccessibility:
             raise MediaError("SPOTIFY_ACCESSIBILITY_LIMIT")
         return [nodes.GetElement(i) for i in range(nodes.Length)]
 
+    def begin_search(self):
+        # A new owner search may address the verified app after it was closed and
+        # reopened. Old result references never follow that replacement window.
+        # Pin its identity again here; every subsequent read/delivery still checks
+        # this exact window, including changes during the search itself.
+        self.window = None
+        self.query = ""
+        self.bindings = {}
+        return self.root()
+
     def main(self, root):
         nodes = self.nodes(root, self.uia.CreatePropertyCondition(30101, "main"))
         if len(nodes) != 1:
@@ -268,6 +278,19 @@ class SpotifyAccessibility:
                     raise
                 await asyncio.sleep(0.1)
 
+    def filter_selected(self, element):
+        if element.CurrentControlType == 50002:
+            pattern = element.GetCurrentPattern(10015).QueryInterface(
+                self.module.IUIAutomationTogglePattern
+            )
+            return pattern.CurrentToggleState == 1
+        if element.CurrentControlType in {50013, 50019}:
+            pattern = element.GetCurrentPattern(10010).QueryInterface(
+                self.module.IUIAutomationSelectionItemPattern
+            )
+            return bool(pattern.CurrentIsSelected)
+        return False
+
     async def search(self, query, kind, gate):
         from winrt.windows.foundation import Uri
         from winrt.windows.system import Launcher, LauncherOptions
@@ -296,6 +319,7 @@ class SpotifyAccessibility:
         self.commit_search(query, gate)
         await asyncio.sleep(0.5)
         label = "Playlists" if kind == "playlist" else "Songs"
+        filter_invoked = False
         while True:
             gate()
             if not search_matches(await self.settled_search_value(gate), query):
@@ -307,24 +331,28 @@ class SpotifyAccessibility:
                 n.CurrentControlType == 50005 and filter_route_matches(self.uri(n), query, kind)
                 for n in nodes
             ):
-                # Some client layouts retain old filter hrefs after a new search.
-                # Do not invoke them. Read the requested result type from All;
-                # exact query/result/selection verification still applies.
-                break
+                # Wait for a filter bound to this query. A stale link must never
+                # navigate to an earlier search, and All is not a fallback.
+                await asyncio.sleep(0.1)
+                continue
             controls = [
                 n
                 for n in nodes
                 if n.CurrentControlType in {50000, 50002, 50005, 50013, 50019}
+                and n.CurrentIsEnabled
                 and not n.CurrentIsOffscreen
             ]
             filters = [n for n in controls if n.CurrentControlType in {50002, 50013, 50019}]
             if filters:
                 controls = filters
             if len(controls) == 1:
-                self.invoke(controls[0], gate)
-                break
-            if self.no_results(self.main(root)):
-                break
+                if self.filter_selected(controls[0]):
+                    break
+                if not filter_invoked:
+                    self.invoke(controls[0], gate)
+                    filter_invoked = True
+                # Re-read selected state after the one allowed filter delivery.
+                # Empty All results do not bypass the requested category either.
             await asyncio.sleep(0.1)
 
     def uri(self, element):

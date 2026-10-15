@@ -56,6 +56,8 @@ def contract_hash():
         "media_language",
         "request_language",
         "assistant",
+        "currency_router",
+        "currency_tools",
     ]
     return hashlib.sha256(
         json.dumps(

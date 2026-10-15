@@ -1,0 +1,46 @@
+{
+  "version": "currency-topics-v1",
+  "gate": {"minimum_correct_fraction": 1.0, "maximum_unauthorized_dispatches": 0},
+  "cases": [
+    {"id": "reported-sleep-loop", "turns": [
+      {"text": "how much potential muscle gain did i lose by sleeping 6 hours instead of 8", "state": "ANSWERED", "currency_calls": 0},
+      {"text": "im not asking about a currency question", "state": "ANSWERED", "currency_calls": 0},
+      {"text": "im asking a question", "state": "ANSWERED", "currency_calls": 0},
+      {"text": "why did you reply Please specify one source and one destination currency, such as USD to MYR?", "state": "ANSWERED", "currency_calls": 0}
+    ]},
+    {"id": "unfinished-conversion-topic-change", "turns": [
+      {"text": "Convert USD to MYR", "state": "WAITING_INPUT", "currency_calls": 0},
+      {"text": "How much protein do I need?", "state": "ANSWERED", "currency_calls": 0},
+      {"text": "500", "state": "WAITING_INPUT", "currency_calls": 0}
+    ]},
+    {"id": "completed-conversion-topic-change", "turns": [
+      {"text": "Convert 100 SGD to USD", "state": "SUCCEEDED", "currency_calls": 1},
+      {"text": "How much RAM does my PC have?", "state": "ANSWERED", "currency_calls": 1},
+      {"text": "What about 500?", "state": "WAITING_INPUT", "currency_calls": 1}
+    ]},
+    {"id": "numeric-nonfinancial-followup", "turns": [
+      {"text": "What about sleeping 8 hours?", "state": "ANSWERED", "currency_calls": 0},
+      {"text": "Convert 7 hours to minutes", "state": "ANSWERED", "currency_calls": 0, "contains": "420"}
+    ]},
+    {"id": "weight-units", "turns": [
+      {"text": "Convert 50 pounds to kg", "state": "ANSWERED", "currency_calls": 0, "contains": "22"}
+    ]},
+    {"id": "money-explanation-is-chat", "turns": [
+      {"text": "Why do exchange rates change?", "state": "ANSWERED", "currency_calls": 0},
+      {"text": "What is currency?", "state": "ANSWERED", "currency_calls": 0}
+    ]},
+    {"id": "local-total-no-conversion", "turns": [
+      {"text": "What is the total for 40 tickets at 40 each?", "state": "ANSWERED", "currency_calls": 0, "contains": "1600"}
+    ]},
+    {"id": "explicit-conversion-after-correction", "turns": [
+      {"text": "I'm not asking about currency", "state": "ANSWERED", "currency_calls": 0},
+      {"text": "Convert 100 MYR to JPY", "state": "SUCCEEDED", "currency_calls": 1},
+      {"text": "What about 500?", "state": "SUCCEEDED", "currency_calls": 2},
+      {"text": "What about the moon?", "state": "ANSWERED", "currency_calls": 2}
+    ]},
+    {"id": "quoted-pair-is-not-a-conversion", "turns": [
+      {"text": "Why did you reply USD to MYR when I asked about sleep?", "state": "ANSWERED", "currency_calls": 0},
+      {"text": "I didn't ask you to convert USD to MYR", "state": "ANSWERED", "currency_calls": 0}
+    ]}
+  ]
+}

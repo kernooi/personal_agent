@@ -494,11 +494,145 @@ class MediaAdapter:
         "SPOTIFY_SEARCH_READ_ONLY": (
             "Spotify's search control is read-only. No playback command was sent."
         ),
+        "SPOTIFY_WINDOW_CHANGED": (
+            "Spotify's window changed during this request. Ask me to search again "
+            "with its main window visible. No media action was sent."
+        ),
+        "SPOTIFY_MAIN_VIEW_UNAVAILABLE": (
+            "Spotify's main view isn't available to its controller. "
+            "Restore the main Spotify window, then ask again. No media action was sent."
+        ),
+        "SPOTIFY_DESKTOP_STALE_GENERATION": (
+            "Spotify's search state changed. Ask me to search again; no media action was sent."
+        ),
+        "SPOTIFY_CHANGED_INSPECT_CURRENT": (
+            "Spotify's current track changed. Ask what's playing before controlling it. "
+            "No playback command was sent."
+        ),
+        "SPOTIFY_USER_TAKEOVER": (
+            "Spotify's playback changed during this request. Ask again for its current "
+            "state. No playback command was sent."
+        ),
+        "SPOTIFY_CONTROL_UNAVAILABLE": (
+            "Spotify doesn't expose the requested playback control in its current state. "
+            "No playback command was sent."
+        ),
+        "USER_TAKEOVER_REOBSERVE_REQUIRED": (
+            "The JARVIS browser was used manually. Ask what's currently open on "
+            "YouTube before sending another control request. No media action was sent."
+        ),
+        "STALE_NAVIGATION_GENERATION": (
+            "The JARVIS browser page changed. Ask what's currently open on YouTube, "
+            "then search again. No media action was sent."
+        ),
+        "RESULTS_CHANGED_RESEARCH_REQUIRED": (
+            "The browser search results changed. Search again before selecting a video. "
+            "No video was opened."
+        ),
+        "STALE_RESULT_REFERENCE": (
+            "That browser result is no longer current. Search again before selecting "
+            "a video. No video was opened."
+        ),
+        "STALE_MEDIA_REFERENCE": (
+            "The selected browser video is no longer current. Search and select it "
+            "again. No playback command was sent."
+        ),
+        "JARVIS_PAGE_CLOSED": (
+            "The dedicated JARVIS browser page was closed. End this chat and start "
+            "a new session before searching again. No media action was sent."
+        ),
+        "UNVERIFIED_BROWSER_STEP_PENDING": (
+            "The browser still has an unverified operation. Inspect its state before "
+            "starting another session; no new media action was sent."
+        ),
+        "SPOTIFY_DESKTOP_PENDING_VERIFICATION": (
+            "Spotify still has an unverified operation. Inspect its state before "
+            "starting another session; no new media action was sent."
+        ),
+        "CHROME_UPDATED_OR_IDENTITY_CHANGED_REREGISTER_MANUALLY": (
+            "Chrome changed since its registration. Its trusted registration needs "
+            "an approved refresh before YouTube control can resume. No browser was launched."
+        ),
+        "DESKTOP_INTERACTION_BUSY": (
+            "Another JARVIS operation is using the desktop controller. Let it finish, "
+            "then ask again. No media action was sent."
+        ),
+        "MEDIA_WORKER_RESTART_REQUIRED": (
+            "This media controller stopped. End this chat and start a new session "
+            "after reviewing any earlier uncertain outcome. No media action was sent."
+        ),
     }
 
+    error_aliases = {
+        "Desktop interaction lease is busy": "DESKTOP_INTERACTION_BUSY",
+        "Browser worker busy": "DESKTOP_INTERACTION_BUSY",
+        "SPOTIFY_DESKTOP_WORKER_RESTART_REQUIRED": "MEDIA_WORKER_RESTART_REQUIRED",
+        "WINDOWS_MEDIA_WORKER_RESTART_REQUIRED": "MEDIA_WORKER_RESTART_REQUIRED",
+        "BROWSER_WORKER_REQUIRES_MANUAL_RESTART": "MEDIA_WORKER_RESTART_REQUIRED",
+    }
+
+    diagnostic_codes = frozenset(
+        {
+            "SPOTIFY_SEARCH_FORM_CHANGED",
+            "SPOTIFY_SEARCH_SUBMIT_UNAVAILABLE",
+            "SPOTIFY_SEARCH_NAVIGATION_UNAVAILABLE",
+            "SPOTIFY_SEARCH_CHANGED",
+            "SPOTIFY_FILTER_QUERY_CHANGED",
+            "SPOTIFY_SEARCH_POSTCONDITION_CHANGED",
+            "SPOTIFY_RESULTS_LOADING",
+            "SPOTIFY_RESULT_CHANGED",
+            "SPOTIFY_RESULT_IDENTITY_AMBIGUOUS",
+            "SPOTIFY_RESULT_STRUCTURE_UNAVAILABLE",
+            "SPOTIFY_RESULT_LABEL_INVALID",
+            "SPOTIFY_SONG_ROW_IDENTITY_UNAVAILABLE",
+            "SPOTIFY_RESULT_REFERENCE_EXPIRED",
+            "SPOTIFY_SELECTION_CHANGED",
+            "SPOTIFY_EXACT_PLAY_CONTROL_UNAVAILABLE",
+            "SPOTIFY_PLAY_TARGET_AMBIGUOUS",
+            "SPOTIFY_PLAYLIST_OWNER_AMBIGUOUS",
+            "SPOTIFY_PLAYLIST_OWNER_CHANGED",
+            "SPOTIFY_PLAYBACK_STATE_UNAVAILABLE",
+            "SPOTIFY_PLAYBACK_POSTCONDITION_CHANGED",
+            "SPOTIFY_POSTCONDITION_CHANGED",
+            "SPOTIFY_COMMAND_NOT_ACCEPTED",
+            "SPOTIFY_DESKTOP_NATIVE_FAILURE",
+            "SPOTIFY_DESKTOP_STOPPED_OR_EXPIRED",
+            "SPOTIFY_ACCESSIBILITY_LIMIT",
+            "WINDOWS_MEDIA_NATIVE_FAILURE",
+            "WINDOWS_MEDIA_STALE_GENERATION",
+            "BROWSER_WORKER_TIMEOUT",
+            "BROWSER_WORKER_CRASH",
+            "BROWSER_WORKER_CLOSED",
+            "BROWSER_CANCELLED_AFTER_DELIVERY",
+            "BROWSER_OBSERVATION_MISSING",
+            "BROWSER_LOCATOR_OR_NAVIGATION_TIMEOUT",
+            "BROWSER_INVALID_EXTERNAL_METADATA",
+            "BROWSER_AMBIGUOUS_SEMANTIC_LOCATOR",
+            "BROWSER_NAVIGATION_FAILED",
+            "BROWSER_OPERATION_FAILED",
+            "BROWSER_NETWORK_POLICY_BLOCKED",
+            "BROWSER_PRIVATE_DESTINATION_REJECTED",
+            "BROWSER_DNS_FAILED",
+            "RESTORED_TABS_REQUIRE_MANUAL_REVIEW",
+            "OBSOLETE_BROWSER_REPLY",
+            "WORKER_DEADLINE",
+        }
+    )
+
+    def diagnostic_error_code(self, error):
+        code = getattr(error, "code", str(error))
+        if not isinstance(code, str):
+            return "MEDIA_EXECUTION_FAILED"
+        code = self.error_aliases.get(code, code)
+        return (
+            code
+            if code in self.admission_messages or code in self.diagnostic_codes
+            else "MEDIA_EXECUTION_FAILED"
+        )
+
     def admission_error_code(self, error):
-        code = str(error)
-        return code if code in self.admission_messages else "MEDIA_ADMISSION_REJECTED"
+        code = self.diagnostic_error_code(error)
+        return code if code != "MEDIA_EXECUTION_FAILED" else "MEDIA_ADMISSION_REJECTED"
 
     def admission_failure_message(self, code):
         return self.admission_messages.get(
@@ -512,6 +646,7 @@ class MediaAdapter:
         self.generation = 0
         self.browser_generation = 0
         self.spotify_generation = 0
+        self.service_contexts = {}
         self.active_service = None
         self.owner_session = None
         self.service = None
@@ -533,14 +668,27 @@ class MediaAdapter:
 
     def activate_service(self, service):
         if self.active_service != service:
+            if self.active_service is not None:
+                self.service_contexts[self.active_service] = (
+                    tuple(self.results),
+                    self.results_observed_at,
+                    self.current_reference,
+                    self.selected_device,
+                    self.observation,
+                )
             self.active_service = service
-            self.generation = (
-                self.spotify_generation if service == "spotify" else self.browser_generation
+            self.generation = self.generation_for(service)
+            results, observed_at, reference, device, observation = self.service_contexts.get(
+                service, ((), 0, "", "", None)
             )
-            self.results = []
-            self.current_reference = ""
-            self.selected_device = ""
-            self.observation = None
+            self.results = list(results)
+            self.results_observed_at = observed_at
+            self.current_reference = reference
+            self.selected_device = device
+            self.observation = observation
+
+    def generation_for(self, service):
+        return self.spotify_generation if service == "spotify" else self.browser_generation
 
     def update_generation(self, observed):
         self.generation = observed.generation
@@ -590,6 +738,12 @@ class MediaAdapter:
             target.title if target else self.observation.title if self.observation else ""
         )
         gate()
+        if args.operation == "search":
+            # A fresh search invalidates this service's previous choices even if
+            # navigation subsequently fails. Never offer a stale list as new data.
+            self.results = []
+            self.current_reference = ""
+            self.observation = None
         self.executed_at = self.clock.now()
         self.execution_calls += 1
         self.observation = self.call(

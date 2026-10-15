@@ -3,6 +3,7 @@
 import argparse
 import json
 import os
+import queue
 import re
 import socket
 import sys
@@ -13,6 +14,7 @@ from urllib.parse import urlencode, urljoin, urlsplit
 from uuid import uuid4
 
 from jarvis.chrome_identity import load_registration, private_browser_root, validate_profile
+from jarvis.domain import AdmissionRejected
 from jarvis.media_data import (
     MediaError,
     MediaItem,
@@ -23,6 +25,49 @@ from jarvis.media_data import (
     parse_record,
 )
 from jarvis.public_transport import public_address
+
+
+def worker_records(stream, idle):
+    """Read bounded pipe frames without blocking the Playwright owner thread."""
+    inbox = queue.Queue(maxsize=2)
+    finished = threading.Event()
+
+    def enqueue(value):
+        while not finished.is_set():
+            try:
+                inbox.put(value, timeout=0.1)
+                return
+            except queue.Full:
+                continue
+
+    def read():
+        try:
+            while not finished.is_set():
+                raw = stream.readline(8194)
+                if not raw or len(raw) > 8192 or not raw.endswith(b"\n"):
+                    break
+                enqueue(raw)
+        except (OSError, ValueError):
+            pass
+        finally:
+            enqueue(None)
+
+    reader = threading.Thread(target=read, daemon=True)
+    reader.start()
+    try:
+        while True:
+            try:
+                raw = inbox.get(timeout=0.05)
+            except queue.Empty:
+                idle()
+                continue
+            if raw is None:
+                break
+            yield raw
+    finally:
+        finished.set()
+        reader.join(timeout=0.2)
+
 
 # Purpose-specific trusted scripts. No strings from the model become scripts.
 # The first tracks genuine user input; the second observes player state only.
@@ -59,6 +104,8 @@ WAIT_VIDEO_METADATA = """() => {
 def safe_worker_error(exc):
     if isinstance(exc, MediaError):
         return exc.code
+    if isinstance(exc, AdmissionRejected) and str(exc) == "Desktop interaction lease is busy":
+        return "DESKTOP_INTERACTION_BUSY"
     # Classify trusted library failures without returning URLs, DOM or raw exceptions.
     if type(exc).__name__ == "TimeoutError":
         return "BROWSER_LOCATOR_OR_NAVIGATION_TIMEOUT"
@@ -275,6 +322,23 @@ class ChromeSession:
         if self.desktop_lease is not None:
             self.desktop_lease.__exit__(None, None, None)
             self.desktop_lease = None
+
+    def pump_idle(self):
+        # Synchronous Playwright dispatches route/page callbacks only while its
+        # owner thread is inside the API. A blocking stdin read freezes routed
+        # page resources between chat turns. Pump this existing owned page;
+        # no launch, navigation, script, input or media operation is sent here.
+        page = next((page for page in self.pages.values() if not page.is_closed()), None)
+        if page is None:
+            return
+        self.active_deadline = self.clock() + 30
+        try:
+            page.wait_for_timeout(50)
+        except Exception:
+            if not page.is_closed():
+                raise
+        finally:
+            self.active_deadline = None
 
     def new_page(self, page):
         # Explicit service tabs are added to self.pages immediately by the worker.
@@ -558,9 +622,7 @@ def main():
     threading.Thread(target=watchdog, daemon=True).start()
     seen = {}
     try:
-        while raw := sys.stdin.buffer.readline(8194):
-            if len(raw) > 8192 or not raw.endswith(b"\n"):
-                break
+        for raw in worker_records(sys.stdin.buffer, session.pump_idle):
             request_id = ""
             try:
                 request = parse_record(raw, WorkerRequest)

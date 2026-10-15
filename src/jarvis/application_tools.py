@@ -449,6 +449,7 @@ class ApplicationConversation:
         self.pending_window = None
 
     def submit(self, text, request_key=None):
+        self.original.begin_owner_turn(text)
         from jarvis.request_language import normalize
 
         interpreted = normalize(self.original, text, request_key)

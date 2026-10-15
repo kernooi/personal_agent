@@ -107,6 +107,20 @@ def test_stop_before_send_is_zero_worker_delivery(worker):
     assert worker.process.stdin.getvalue() == b""
 
 
+@pytest.mark.parametrize(
+    "code",
+    [
+        "CHROME_UPDATED_OR_IDENTITY_CHANGED_REREGISTER_MANUALLY",
+        "SPOTIFY_DESKTOP_WORKER_RESTART_REQUIRED",
+    ],
+)
+def test_failure_before_worker_command_is_known_zero_delivery(worker, code):
+    worker.start = lambda: (_ for _ in ()).throw(MediaError(code))
+    with pytest.raises(AdmissionRejected, match=code):
+        worker.call(request(), lambda: False)
+    assert worker.process.stdin.getvalue() == b""
+
+
 def test_stop_after_send_discards_pending_observation(worker):
     checks = []
 
@@ -125,6 +139,13 @@ def test_closed_worker_is_not_silently_restarted(worker):
     with pytest.raises(MediaError, match="CLOSED"):
         worker.call(request(), lambda: False)
     assert worker.dead
+
+
+def test_worker_already_exited_is_rejected_before_any_new_command(worker):
+    worker.process.poll = lambda: 74
+    with pytest.raises(AdmissionRejected, match="MANUAL_RESTART"):
+        worker.call(request(), lambda: False)
+    assert worker.dead and worker.process.stdin.getvalue() == b""
 
 
 def test_worker_timeout_is_bounded_and_no_automatic_retry(worker):

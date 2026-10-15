@@ -84,7 +84,7 @@ class YouTubeFlow:
         if named:
             self.pending = None
             goal, query = named
-            before = adapter.generation
+            before = adapter.generation_for(self.service)
             deadline = self.chat.broker.clock.now() + self.chat.broker.profile.task_seconds
             result = self.chat._submit_single(
                 "Search " + self.service_name + " for " + query, key + "/search"

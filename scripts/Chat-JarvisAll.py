@@ -18,18 +18,18 @@ def chat_command(*, real=True):
     pairs = {
         "--profile": private / "profiles/notepad-m2-concurrent-v1.toml",
         "--registration": private / "notepad-registration.json",
-        "--model-report": root / "docs/evaluations/m2-natural-language-model-v1-r4.json",
+        "--model-report": root / "docs/evaluations/m2-media-recovery-model-v1-r1.json",
         "--conversation-report": root
-        / "docs/evaluations/m2-natural-language-conversation-v1-r4.json",
+        / "docs/evaluations/m2-media-recovery-conversation-v1-r1.json",
         "--applications-config": private / "applications.toml",
-        "--applications-report": root / "docs/evaluations/applications-natural-language-v4-r4.json",
-        "--language-report": root / "docs/evaluations/request-language-v3-r1.json",
+        "--applications-report": root / "docs/evaluations/applications-media-recovery-v4-r2.json",
+        "--language-report": root / "docs/evaluations/request-language-required-filters-v3-r1.json",
         "--public-data-config": private / "public-data.toml",
         "--web-config": private / "web.toml",
         "--media-config": private / "media-all-spotify-desktop-v1.toml",
         "--browser-registration": private / "chrome-registration.json",
-        "--media-report": root / "docs/evaluations/m4-natural-language-browser-v2-r4.json",
-        "--windows-media-report": root / "docs/evaluations/m4-natural-language-desktop-v1-r4.json",
+        "--media-report": root / "docs/evaluations/m4-required-filters-browser-v2-r1.json",
+        "--windows-media-report": root / "docs/evaluations/m4-required-filters-desktop-v1-r1.json",
     }
     if not real:
         for option in (

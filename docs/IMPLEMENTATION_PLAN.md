@@ -1,5 +1,83 @@
 # JARVIS implementation plan
 
+## Required-filter startup qualification restored (2026-10-15)
+
+The reported GUI error came from source-stale media/wording reports after the
+code-only filter edit. Refreshed the frozen actual-local-model/simulated-controller
+qualifications: browser 27/27, desktop Spotify 25/25 and wording 33/33. Kept the
+100%/zero-unauthorized gates and historical evidence. The shared GUI/terminal
+launcher references the new required-filters reports; all six active qualification
+validators pass. Simulation GUI-worker startup reaches Ready and exits cleanly.
+
+No live controls or native Spotify filter validation performed. Live behavior
+verification remains pending; no general test suite was run for this startup fix.
+The earlier code-only validation restriction and historical results are retained
+below as the state of that earlier step. No qualification gate was bypassed.
+
+## Required Spotify search categories (2026-10-15)
+
+Code changed at the owner's request: song searches require Songs, playlist
+searches require Playlists; remove All fallback. Wait for a fresh current-query
+filter, deliver at most once and confirm its selected state under the existing
+cancellation/deadline bound. Existing query/window/result safety remains.
+
+Validation pending by explicit owner instruction: do not run any tests. No checks,
+model evaluations or live effects performed. Existing source-bound media/wording
+reports are preserved and stale; real combined startup needs refreshed passing
+qualification before use. No gate or report was weakened to permit untested code.
+
+## Combined Spotify/YouTube recovery (2026-10-15)
+
+Preserve optional currency changes. Fix native Spotify's window binding at a fresh
+owner search after close/reopen; stale selections do not survive that search.
+Fix named media generation comparisons and retain separate selected-content
+contexts when switching Spotify/YouTube. Keep exact target checks at delivery,
+result expiry, cancellation and unknown-outcome/no-replay policy unchanged.
+
+Specific pre-delivery failures have actionable messages; fixed allowlisted error
+classifications and execution/verification stage survive in the private journal.
+No raw exception text or authenticated content is recorded. Worker-start failures
+before any command are classified as known zero delivery.
+
+The attended test also exposed an idle browser freeze: blocking stdin reads
+starved synchronous Playwright's routing/page callbacks. Use a bounded pipe reader
+queue and pump the existing owned page on the original Playwright thread while
+idle. No launch, navigation, input or media operation is added; original network,
+takeover, cancellation, exact-target and verification checks remain.
+
+Complete: 1323 tests, lint/format, dependency and whitespace checks pass. All six
+current same-PC frozen local-model reports match at 100%/zero unauthorized calls.
+The shared GUI/terminal launcher references them. Final combined attended report
+`combined-media-recovery-windows-v1-r5.json` passes 13 checks, including real
+Spotify/YouTube playback/pause/resume, service switching and stop with zero new
+admissions. Operator confirmed responsive Chrome during the idle/manual-ad wait;
+current-video reobservation handled the manual skip before new playback controls.
+Retain failed r1-r4 and superseded model results. Spotify stays open/paused; owned
+Chrome context closes; ordinary Chrome and other apps are untouched. No commit/push.
+
+## Optional currency routing and topic changes (2026-10-14)
+
+Owner clarified that currency is not JARVIS's primary purpose and should activate
+only for explicit related requests. Removed generic “how much” and bare “currency”
+triggers. Unrelated “what about” questions, quoted complaints, negative corrections
+and explanations pass to normal chat. Ambiguous weight “pounds” stays outside the
+currency controller unless monetary context is explicit. Cached validated provider
+metadata can identify generic codes; no support list was invented.
+
+Release currency pair/quote/semantic operand context on unrelated owner turns,
+including direct application control. Preserve legitimate active conversion
+follow-ups and explicit source inspection. An unbound bare number gets a generic
+clarification. Semantic profiles enforce current financial intent before allowing
+currency interpretation; ordinary legacy questions can explain uncertainty with
+say/clarify rather than misclassifying a normal question as a failed tool operation.
+
+53 new offline regressions pass; actual same-profile qwen3:8b passes 22/22 turns in
+the frozen currency-topic corpus. Full suite: 1305 passed in 59.70s. Failed actual
+r1/r2 reports retained. Existing language 33/33, Notepad 24/24, conversation 41/41,
+apps 31/31, browser 27/27 and Spotify 25/25 qualification all pass with current
+profile/runtime/code. Shared launcher paths now select these matching reports.
+No Windows effects exercised for this routing change.
+
 ## Natural action wording (2026-10-14)
 
 Corrected the shared GUI/terminal legacy action path: service/title fields are

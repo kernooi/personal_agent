@@ -5,7 +5,7 @@ from datetime import datetime
 
 from jarvis.currency_cache import QuoteCache
 from jarvis.currency_provider import FixtureProvider, FrankfurterProvider
-from jarvis.currency_router import route
+from jarvis.currency_router import requests_currency_operation, route
 from jarvis.domain import Denied, Evidence, PreparedAction, Scope
 from jarvis.policy import POLICY_VERSION
 from jarvis.public_catalogue import CatalogueCache, parse_catalogue
@@ -26,6 +26,42 @@ class CurrencyRegistry:
         self.route = None
         self.context = None
         self.context_session = None
+
+    def clear_context(self):
+        self.context = self.context_session = None
+        self.currency.last_quote = None
+
+    def known_codes(self):
+        record = self.currency.catalogue_cache.get(self.currency.clock.now())
+        return record.currencies if record else ()
+
+    def begin_owner_turn(self, session, text):
+        if self.context_session != session:
+            self.clear_context()
+        if not requests_currency_operation(text, self.context, self.known_codes()):
+            self.clear_context()
+
+    def planner_context(self):
+        return {
+            **getattr(self.underlying, "planner_context", lambda: {})(),
+            "currency_operation_requested": bool(
+                self.route
+                and (self.route.arguments or self.route.kind == "clarify")
+                and getattr(self, "operation_requested", False)
+            ),
+        }
+
+    def schema_for(self, scope):
+        schema = self.underlying.schema_for(scope)
+        if scope.app_id == "none" and getattr(self, "ordinary_question", False):
+            # A question can be answered with an uncertainty/limitation explanation.
+            # Tool failure is reserved for an actual unsupported operation.
+            schema["oneOf"] = [
+                item for item in schema["oneOf"] if item.get("$ref") != "#/$defs/Unsupported"
+            ]
+            schema.get("discriminator", {}).get("mapping", {}).pop("unsupported", None)
+            schema.get("$defs", {}).pop("Unsupported", None)
+        return schema
 
     def completed(self, task, resolved):
         from jarvis.domain import State
@@ -50,9 +86,16 @@ class CurrencyRegistry:
         return getattr(self.underlying, "intent", None)
 
     def scope_for(self, session, text):
+        self.begin_owner_turn(session, text)
         previous = self.currency.last_quote if self.currency.session == session else None
         context = self.context if self.context_session == session else None
-        self.route = route(text, previous, context)
+        self.operation_requested = requests_currency_operation(text, context, self.known_codes())
+        self.route = route(text, previous, context, self.known_codes())
+        import re
+
+        self.ordinary_question = self.route.kind == "ordinary" and bool(
+            re.match(r"(?i)^(?:what|how|why|who|when|where|explain|define)\b", text.strip())
+        )
         if self.route.kind == "currency":
             args = self.route.arguments
             effect = {

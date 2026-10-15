@@ -96,7 +96,15 @@ class BrowserWorkerProvider:
         try:
             if cancel() or self.stop.is_set() or self.clock.now() >= request.deadline:
                 raise AdmissionRejected("Browser admission stopped")
-            self.start()
+            try:
+                self.start()
+            except MediaError as error:
+                # No command has reached the worker. A changed registration or
+                # stopped worker is a known zero-delivery failure, not uncertainty.
+                raise AdmissionRejected(error.code) from error
+            if self.process.poll() is not None:
+                self.dead = True
+                raise AdmissionRejected("BROWSER_WORKER_REQUIRES_MANUAL_RESTART")
             raw = request.model_dump_json().encode() + b"\n"
             if len(raw) > 8192:
                 raise AdmissionRejected("Browser request too large")

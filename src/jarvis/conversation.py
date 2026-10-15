@@ -35,6 +35,7 @@ class Conversation:
         self.spotify = SpotifyFlow(self)
 
     def submit(self, text: str, request_key: str | None = None):
+        self.begin_owner_turn(text)
         from jarvis.request_language import normalize
 
         interpreted = normalize(self, text, request_key)
@@ -58,6 +59,12 @@ class Conversation:
             return self.spotify.submit(text, request_key)
         self.spotify.pending = None
         return self.youtube.submit(text, request_key)
+
+    def begin_owner_turn(self, text):
+        if self.broker.currency:
+            self.broker.registry.begin_owner_turn(self.broker.grant.session, text)
+            if self.broker.registry.context is None:
+                self.broker.assistant_memory = None
 
     def _submit_single(self, text: str, request_key: str | None = None):
         normalized = text.strip().casefold().rstrip(".!?")

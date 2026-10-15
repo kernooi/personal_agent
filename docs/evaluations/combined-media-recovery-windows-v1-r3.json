@@ -1,0 +1,134 @@
+{
+  "version": "combined-media-windows-v1",
+  "mode": "shared GUI/terminal CLI -> actual local model -> broker -> native media",
+  "passed": false,
+  "journal": "combined-media-lab-2795147542394b05b485d578abe48e93.sqlite",
+  "records": [
+    {
+      "check": "spotify-song",
+      "task_id": "e435c72c-ebb4-47f4-96ce-bbda5656d0bb",
+      "state": "SUCCEEDED",
+      "service": "spotify",
+      "observed_state": "playing",
+      "generation": 3,
+      "error": null,
+      "latency_seconds": 10.979
+    },
+    {
+      "check": "spotify-pause",
+      "task_id": "cc6a7c4b-a087-477f-a233-93eaec9e7c80",
+      "state": "SUCCEEDED",
+      "service": "spotify",
+      "observed_state": "paused",
+      "generation": 4,
+      "error": null,
+      "latency_seconds": 1.372
+    },
+    {
+      "check": "spotify-resume",
+      "task_id": "7fa83812-c974-4068-8a5b-9cce82308146",
+      "state": "SUCCEEDED",
+      "service": "spotify",
+      "observed_state": "playing",
+      "generation": 5,
+      "error": null,
+      "latency_seconds": 1.496
+    },
+    {
+      "check": "spotify-before-youtube",
+      "task_id": "87aa60bd-872e-4fcc-ad57-d2ec08e95c2b",
+      "state": "SUCCEEDED",
+      "service": "spotify",
+      "observed_state": "paused",
+      "generation": 6,
+      "error": null,
+      "latency_seconds": 1.383
+    },
+    {
+      "check": "youtube-song",
+      "task_id": "b85aaeb2-4235-4e74-8dbe-1b6824c374eb",
+      "state": "SUCCEEDED",
+      "service": "youtube",
+      "observed_state": "results",
+      "generation": 2,
+      "error": null,
+      "latency_seconds": 5.383
+    },
+    {
+      "check": "youtube-select",
+      "task_id": "699b1eca-ed1d-4897-9d1a-abd0148c33de",
+      "state": "SUCCEEDED",
+      "service": "youtube",
+      "observed_state": "playing",
+      "generation": 5,
+      "error": null,
+      "latency_seconds": 7.546
+    },
+    {
+      "check": "youtube-pause",
+      "task_id": "b7d4e1e5-4562-4dbb-b7fd-3ec6e37e2d10",
+      "state": "SUCCEEDED",
+      "service": "youtube",
+      "observed_state": "paused",
+      "generation": 6,
+      "error": null,
+      "latency_seconds": 1.546
+    },
+    {
+      "check": "youtube-resume",
+      "task_id": "cbd9c5cc-248d-4804-b92a-2a4fe0788c51",
+      "state": "SUCCEEDED",
+      "service": "youtube",
+      "observed_state": "playing",
+      "generation": 7,
+      "error": null,
+      "latency_seconds": 1.436
+    },
+    {
+      "check": "spotify-song",
+      "task_id": "76783231-9493-4dc8-9963-2b8b06dfd1d8",
+      "state": "SUCCEEDED",
+      "service": "spotify",
+      "observed_state": "playing",
+      "generation": 9,
+      "error": null,
+      "latency_seconds": 7.819
+    },
+    {
+      "check": "spotify-final-pause",
+      "task_id": "1467114c-ed6f-4e9f-94b9-ec91f4d1f4cc",
+      "state": "SUCCEEDED",
+      "service": "spotify",
+      "observed_state": "paused",
+      "generation": 10,
+      "error": null,
+      "latency_seconds": 1.428
+    },
+    {
+      "check": "youtube-after-spotify",
+      "task_id": "1625073e-0d0c-4796-a8a6-b172efa0780a",
+      "state": "SUCCEEDED",
+      "service": "youtube",
+      "observed_state": "paused",
+      "generation": 8,
+      "error": null,
+      "latency_seconds": 1.607
+    },
+    {
+      "check": "stop",
+      "blocked": false,
+      "zero_new_admissions": false
+    }
+  ],
+  "audible_sound_verified": false,
+  "ordinary_chrome_excluded": true,
+  "spotify_left_open": true,
+  "qualification": {
+    "model-report": "m2-media-recovery-model-v1-r1.json",
+    "conversation-report": "m2-media-recovery-conversation-v1-r1.json",
+    "applications-report": "applications-media-recovery-v4-r2.json",
+    "language-report": "request-language-media-recovery-v3-r2.json",
+    "media-report": "m4-media-recovery-browser-v2-r2.json",
+    "windows-media-report": "m4-media-recovery-desktop-v1-r2.json"
+  }
+}

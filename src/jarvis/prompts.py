@@ -345,6 +345,18 @@ def context_messages(
             TEMPLATES[profile.prompt_version]
             + scope_text
             + (
+                "\nCurrency is an optional capability. currency_operation_requested=false "
+                "means this turn is not a conversion/rate request. Answer the current topic; "
+                "do not repeat an earlier currency clarification, ask for a currency pair, "
+                "or calculate a currency conversion. Explanations, corrections, ordinary "
+                "arithmetic and unit conversions belong to normal chat. Use say for ordinary "
+                "questions; if something cannot be observed, explain what is unknown and "
+                "how to check. Registered tool scope limits actions, not normal conversation."
+                if controller_context
+                and controller_context.get("currency_operation_requested") is False
+                else ""
+            )
+            + (
                 "\nThe configured_media and application_controller entries describe current "
                 "supported capabilities and override historical Notepad-only "
                 "capability descriptions. "

@@ -7,6 +7,7 @@ import sys
 import time
 from pathlib import Path
 
+from jarvis.domain import AdmissionRejected
 from jarvis.media_data import MediaError, MediaObservation, WorkerRequest, parse_record
 from jarvis.spotify_accessibility import normalized
 from jarvis.windows_media import (
@@ -72,7 +73,8 @@ class SpotifyDesktopSession:
             if request.command == "execute":
                 self.selected = self.expected_playback = None
                 self.basic.selected = None
-                self.ui.root()
+                self.results = []
+                self.ui.begin_search()
                 gate()
                 try:
                     await self.ui.search(request.query, args.search_kind, gate)
@@ -258,6 +260,9 @@ def main():
                     "observation": None,
                     "error": exc.code
                     if isinstance(exc, MediaError)
+                    else "DESKTOP_INTERACTION_BUSY"
+                    if isinstance(exc, AdmissionRejected)
+                    and str(exc) == "Desktop interaction lease is busy"
                     else "SPOTIFY_DESKTOP_NATIVE_FAILURE",
                 }
             sys.stdout.buffer.write(json.dumps(response).encode() + b"\n")

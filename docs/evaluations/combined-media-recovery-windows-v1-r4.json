@@ -1,0 +1,81 @@
+{
+  "version": "combined-media-windows-v1",
+  "mode": "shared GUI/terminal CLI -> actual local model -> broker -> native media",
+  "passed": false,
+  "journal": "combined-media-lab-08213a62d5bb46d89722fb8daeb02336.sqlite",
+  "records": [
+    {
+      "check": "spotify-song",
+      "task_id": "43473138-820a-4027-93a9-7e59340dbadd",
+      "state": "SUCCEEDED",
+      "service": "spotify",
+      "observed_state": "playing",
+      "generation": 3,
+      "error": null,
+      "latency_seconds": 8.459
+    },
+    {
+      "check": "spotify-pause",
+      "task_id": "d568c5cc-461f-4dd0-9c48-ba45aadb3b94",
+      "state": "SUCCEEDED",
+      "service": "spotify",
+      "observed_state": "paused",
+      "generation": 4,
+      "error": null,
+      "latency_seconds": 1.346
+    },
+    {
+      "check": "spotify-resume",
+      "task_id": "22b912b5-c6ee-40e7-aaa5-f3325d9dfefb",
+      "state": "SUCCEEDED",
+      "service": "spotify",
+      "observed_state": "playing",
+      "generation": 5,
+      "error": null,
+      "latency_seconds": 1.504
+    },
+    {
+      "check": "spotify-before-youtube",
+      "task_id": "1b1794b9-849e-4295-ae32-9488166efadd",
+      "state": "SUCCEEDED",
+      "service": "spotify",
+      "observed_state": "paused",
+      "generation": 6,
+      "error": null,
+      "latency_seconds": 1.344
+    },
+    {
+      "check": "youtube-song",
+      "task_id": "c681e8b4-4148-4304-b490-1190b3bc0475",
+      "state": "SUCCEEDED",
+      "service": "youtube",
+      "observed_state": "results",
+      "generation": 2,
+      "error": null,
+      "latency_seconds": 5.36
+    },
+    {
+      "check": "youtube-select",
+      "task_id": "c4b5ca17-58da-4520-bc47-67d8aa789dbf",
+      "state": "SUCCEEDED",
+      "service": "youtube",
+      "observed_state": "ad",
+      "generation": 4,
+      "error": null,
+      "latency_seconds": 5.334
+    }
+  ],
+  "audible_sound_verified": false,
+  "ordinary_chrome_excluded": true,
+  "spotify_left_open": true,
+  "qualification": {
+    "model-report": "m2-media-recovery-model-v1-r1.json",
+    "conversation-report": "m2-media-recovery-conversation-v1-r1.json",
+    "applications-report": "applications-media-recovery-v4-r2.json",
+    "language-report": "request-language-media-recovery-v3-r2.json",
+    "media-report": "m4-media-recovery-browser-v2-r2.json",
+    "windows-media-report": "m4-media-recovery-desktop-v1-r2.json"
+  },
+  "limitation": "OPERATOR_HANDOFF_NOT_COMPLETED",
+  "error_type": "ValueError"
+}

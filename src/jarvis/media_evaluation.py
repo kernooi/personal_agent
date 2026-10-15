@@ -49,6 +49,8 @@ def contract_hash():
         "application_tools",
         "assistant",
         "prompts",
+        "currency_router",
+        "currency_tools",
     ]
     return hashlib.sha256(
         json.dumps(

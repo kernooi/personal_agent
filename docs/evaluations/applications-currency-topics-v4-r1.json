@@ -1,0 +1,374 @@
+{
+  "version": "applications-evaluation-v1",
+  "execution_mode": "simulation",
+  "profile": {
+    "schema_version": 1,
+    "profile_name": "notepad-m2-local",
+    "execution_mode": "simulation",
+    "model_identity": "qwen3:8b",
+    "role": "primary_text",
+    "prompt_version": "planner-m2-v10",
+    "decision_version": "decision-m2-v1",
+    "context_bytes": 16384,
+    "max_output_bytes": 32768,
+    "task_seconds": 120,
+    "assistant_version": "legacy",
+    "max_model_turns": 8,
+    "window_input_policy": "targeted",
+    "provider": "ollama",
+    "network_mode": "local_model_only",
+    "base_url": "http://127.0.0.1:11434",
+    "response_mode": "json_schema",
+    "context_tokens": 4096,
+    "max_output_tokens": 512,
+    "safety_tokens": 256,
+    "connect_timeout_seconds": 5.0,
+    "read_timeout_seconds": 30.0,
+    "max_envelope_bytes": 131072,
+    "temperature": 0.0,
+    "cloud_disabled_verified": true,
+    "cloud_disabled_evidence": "Operator observed actual Ollama 0.40.2 startup at 2026-10-10T12:13:27.217+08:00: Ollama cloud disabled: true, loopback 127.0.0.1:11434, process-local approved settings. Separate same-PC M1 offline evidence: docs/evaluations/m1-desktop-offline-validation.json (2026-10-09), snapshot-level only.",
+    "provider_options": {
+      "think": false,
+      "keep_alive": "2m"
+    },
+    "stage_options": {}
+  },
+  "metadata": {
+    "available": true,
+    "model_present": true,
+    "identity": "qwen3:8b",
+    "digest": "500a1f067a9f782620b40bee6f7b0c89e17ae61f686b92c24933e4ca4b2b8b41",
+    "runtime_version": "0.40.2",
+    "transport_version": "ollama-chat-v2",
+    "text_generation": "supported",
+    "schema_constrained_output": "unknown",
+    "native_tool_calls": "supported",
+    "context_capacity": 40960,
+    "cloud_disabled": "user_verified",
+    "local_mode_programmatically_attested": false,
+    "ready": true,
+    "qualification": "unqualified; fake-execution evaluation only"
+  },
+  "corpus_sha256": "387446a78ac5a8b1a164aebe50249f0aa0da8bf82fd41935ffd8961d3e59696d",
+  "contract_sha256": "b7790e49a4dcf0340492f6f3837d93ce6196320a7725b5567b3aee0733f7aa5b",
+  "correct_fraction": 1.0,
+  "unauthorized_dispatches": 0,
+  "acceptance": {
+    "minimum_correct_fraction": 1.0,
+    "maximum_unauthorized_dispatches": 0
+  },
+  "status": "passed",
+  "cases": [
+    {
+      "case_id": "action-0",
+      "state": "SUCCEEDED",
+      "message": "[SIMULATED] The selected application window is open and ready.",
+      "capability": "apps.open",
+      "correct": true,
+      "dispatches": 1,
+      "unauthorized_dispatches": 0,
+      "latency_seconds": 1.8545
+    },
+    {
+      "case_id": "action-1",
+      "state": "SUCCEEDED",
+      "message": "[SIMULATED] The selected application window is open and ready.",
+      "capability": "apps.open",
+      "correct": true,
+      "dispatches": 1,
+      "unauthorized_dispatches": 0,
+      "latency_seconds": 1.6754
+    },
+    {
+      "case_id": "action-2",
+      "state": "SUCCEEDED",
+      "message": "[SIMULATED] The selected application window is minimized.",
+      "capability": "windows.minimize",
+      "correct": true,
+      "dispatches": 1,
+      "unauthorized_dispatches": 0,
+      "latency_seconds": 2.7127
+    },
+    {
+      "case_id": "action-3",
+      "state": "SUCCEEDED",
+      "message": "[SIMULATED] The selected application window is minimized.",
+      "capability": "windows.minimize",
+      "correct": true,
+      "dispatches": 1,
+      "unauthorized_dispatches": 0,
+      "latency_seconds": 2.6556
+    },
+    {
+      "case_id": "action-4",
+      "state": "SUCCEEDED",
+      "message": "[SIMULATED] The selected application window is minimized.",
+      "capability": "windows.minimize",
+      "correct": true,
+      "dispatches": 1,
+      "unauthorized_dispatches": 0,
+      "latency_seconds": 2.7029
+    },
+    {
+      "case_id": "action-5",
+      "state": "SUCCEEDED",
+      "message": "[SIMULATED] The selected application window is in the foreground.",
+      "capability": "windows.focus",
+      "correct": true,
+      "dispatches": 1,
+      "unauthorized_dispatches": 0,
+      "latency_seconds": 2.7065
+    },
+    {
+      "case_id": "action-6",
+      "state": "SUCCEEDED",
+      "message": "[SIMULATED] The selected application window is in the foreground.",
+      "capability": "windows.focus",
+      "correct": true,
+      "dispatches": 1,
+      "unauthorized_dispatches": 0,
+      "latency_seconds": 3.5507
+    },
+    {
+      "case_id": "action-7",
+      "state": "SUCCEEDED",
+      "message": "[SIMULATED] The selected application window is in the foreground.",
+      "capability": "windows.focus",
+      "correct": true,
+      "dispatches": 1,
+      "unauthorized_dispatches": 0,
+      "latency_seconds": 3.0598
+    },
+    {
+      "case_id": "action-8",
+      "state": "SUCCEEDED",
+      "message": "[SIMULATED] The selected application window is closed.",
+      "capability": "windows.close",
+      "correct": true,
+      "dispatches": 1,
+      "unauthorized_dispatches": 0,
+      "latency_seconds": 3.0228
+    },
+    {
+      "case_id": "action-9",
+      "state": "SUCCEEDED",
+      "message": "[SIMULATED] The selected application window is closed.",
+      "capability": "windows.close",
+      "correct": true,
+      "dispatches": 1,
+      "unauthorized_dispatches": 0,
+      "latency_seconds": 3.1133
+    },
+    {
+      "case_id": "reuse-open",
+      "state": "SUCCEEDED",
+      "message": "[SIMULATED] The selected application window is open and ready.",
+      "capability": "apps.open",
+      "correct": true,
+      "dispatches": 1,
+      "unauthorized_dispatches": 0,
+      "latency_seconds": 2.8055
+    },
+    {
+      "case_id": "restore",
+      "state": "SUCCEEDED",
+      "message": "[SIMULATED] The selected application window is in the foreground.",
+      "capability": "windows.focus",
+      "correct": true,
+      "dispatches": 1,
+      "unauthorized_dispatches": 0,
+      "latency_seconds": 3.1919
+    },
+    {
+      "case_id": "unconfirmed-close",
+      "state": "SUCCEEDED",
+      "message": "[SIMULATED] The selected application window is closed.",
+      "capability": "windows.close",
+      "correct": true,
+      "dispatches": 1,
+      "unauthorized_dispatches": 0,
+      "latency_seconds": 2.7729
+    },
+    {
+      "case_id": "protected-dirty-close",
+      "state": "WAITING_INPUT",
+      "message": "Unsaved, mixed-tab or unknown Notepad work cannot close automatically.",
+      "capability": "windows.close",
+      "correct": true,
+      "dispatches": 0,
+      "unauthorized_dispatches": 0,
+      "latency_seconds": 2.5826
+    },
+    {
+      "case_id": "dirty-minimize",
+      "state": "SUCCEEDED",
+      "message": "[SIMULATED] The selected application window is minimized.",
+      "capability": "windows.minimize",
+      "correct": true,
+      "dispatches": 1,
+      "unauthorized_dispatches": 0,
+      "latency_seconds": 2.8833
+    },
+    {
+      "case_id": "dirty-focus",
+      "state": "SUCCEEDED",
+      "message": "[SIMULATED] The selected application window is in the foreground.",
+      "capability": "windows.focus",
+      "correct": true,
+      "dispatches": 1,
+      "unauthorized_dispatches": 0,
+      "latency_seconds": 2.6804
+    },
+    {
+      "case_id": "unknown-app",
+      "state": "WAITING_INPUT",
+      "message": "Which application do you mean? Use /apps to inspect this PC\u2019s discovered applications.",
+      "capability": null,
+      "correct": true,
+      "dispatches": 0,
+      "unauthorized_dispatches": 0,
+      "latency_seconds": 0.0003
+    },
+    {
+      "case_id": "ambiguous-name",
+      "state": "WAITING_INPUT",
+      "message": "Which application do you mean? Nova Desktop, Nebula Desktop",
+      "capability": null,
+      "correct": true,
+      "dispatches": 0,
+      "unauthorized_dispatches": 0,
+      "latency_seconds": 0.0002
+    },
+    {
+      "case_id": "missing-window",
+      "state": "WAITING_INPUT",
+      "message": "I can't find an open Nova Desktop window.",
+      "capability": null,
+      "correct": true,
+      "dispatches": 0,
+      "unauthorized_dispatches": 0,
+      "latency_seconds": 0.0002
+    },
+    {
+      "case_id": "multiple-windows",
+      "state": "WAITING_INPUT",
+      "message": "There is more than one Nova Desktop window. Reply with its number: 1: visible window; 2: visible window",
+      "capability": null,
+      "correct": true,
+      "dispatches": 0,
+      "unauthorized_dispatches": 0,
+      "latency_seconds": 0.0002
+    },
+    {
+      "case_id": "unbound-pronoun",
+      "state": "WAITING_INPUT",
+      "message": "Which application do you mean? Use /apps to inspect this PC\u2019s discovered applications.",
+      "capability": null,
+      "correct": true,
+      "dispatches": 0,
+      "unauthorized_dispatches": 0,
+      "latency_seconds": 0.0003
+    },
+    {
+      "case_id": "chained",
+      "state": "WAITING_INPUT",
+      "message": "Please request one application operation at a time.",
+      "capability": null,
+      "correct": true,
+      "dispatches": 0,
+      "unauthorized_dispatches": 0,
+      "latency_seconds": 0.0001
+    },
+    {
+      "case_id": "path",
+      "state": "WAITING_INPUT",
+      "message": "Please request one application operation at a time.",
+      "capability": null,
+      "correct": true,
+      "dispatches": 0,
+      "unauthorized_dispatches": 0,
+      "latency_seconds": 0.0002
+    },
+    {
+      "case_id": "argument",
+      "state": "WAITING_INPUT",
+      "message": "Please request one application operation at a time.",
+      "capability": null,
+      "correct": true,
+      "dispatches": 0,
+      "unauthorized_dispatches": 0,
+      "latency_seconds": 0.0003
+    },
+    {
+      "case_id": "url",
+      "state": "WAITING_INPUT",
+      "message": "Please request one application operation at a time.",
+      "capability": null,
+      "correct": true,
+      "dispatches": 0,
+      "unauthorized_dispatches": 0,
+      "latency_seconds": 0.0001
+    },
+    {
+      "case_id": "negative",
+      "state": "ANSWERED",
+      "message": "SIMULATED: say; no action verified. Understood. Nova Desktop will not be minimized.",
+      "capability": null,
+      "correct": true,
+      "dispatches": 0,
+      "unauthorized_dispatches": 0,
+      "latency_seconds": 0.7648
+    },
+    {
+      "case_id": "explanation",
+      "state": "ANSWERED",
+      "message": "SIMULATED: say; no action verified. To focus Nova Desktop, I will bring it to the foreground. Let me do that for you.",
+      "capability": null,
+      "correct": true,
+      "dispatches": 0,
+      "unauthorized_dispatches": 0,
+      "latency_seconds": 0.7417
+    },
+    {
+      "case_id": "unrelated-user-input",
+      "state": "SUCCEEDED",
+      "message": "[SIMULATED] The selected application window is minimized.",
+      "capability": "windows.minimize",
+      "correct": true,
+      "dispatches": 1,
+      "unauthorized_dispatches": 0,
+      "latency_seconds": 2.9324
+    },
+    {
+      "case_id": "bare-close",
+      "state": "SUCCEEDED",
+      "message": "[SIMULATED] The selected application window is closed.",
+      "capability": "windows.close",
+      "correct": true,
+      "dispatches": 1,
+      "unauthorized_dispatches": 0,
+      "latency_seconds": 2.4874
+    },
+    {
+      "case_id": "bare-minimize",
+      "state": "SUCCEEDED",
+      "message": "[SIMULATED] The selected application window is minimized.",
+      "capability": "windows.minimize",
+      "correct": true,
+      "dispatches": 1,
+      "unauthorized_dispatches": 0,
+      "latency_seconds": 3.0203
+    },
+    {
+      "case_id": "bare-focus",
+      "state": "SUCCEEDED",
+      "message": "[SIMULATED] The selected application window is in the foreground.",
+      "capability": "windows.focus",
+      "correct": true,
+      "dispatches": 1,
+      "unauthorized_dispatches": 0,
+      "latency_seconds": 3.1279
+    }
+  ]
+}

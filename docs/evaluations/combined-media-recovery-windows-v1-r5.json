@@ -1,0 +1,145 @@
+{
+  "version": "combined-media-windows-v1",
+  "mode": "shared GUI/terminal CLI -> actual local model -> broker -> native media",
+  "passed": true,
+  "journal": "combined-media-lab-7fea7136c74e458d9295e7e5e0ab51c0.sqlite",
+  "records": [
+    {
+      "check": "spotify-song",
+      "task_id": "4599c35a-6aed-4195-97ef-23d187f266d8",
+      "state": "SUCCEEDED",
+      "service": "spotify",
+      "observed_state": "playing",
+      "generation": 3,
+      "error": null,
+      "latency_seconds": 9.078
+    },
+    {
+      "check": "spotify-pause",
+      "task_id": "1444d828-2db0-4f03-92b0-ce632ecdb57c",
+      "state": "SUCCEEDED",
+      "service": "spotify",
+      "observed_state": "paused",
+      "generation": 4,
+      "error": null,
+      "latency_seconds": 1.421
+    },
+    {
+      "check": "spotify-resume",
+      "task_id": "f50c495c-0e4e-4191-a3ba-69aa7dcfa4ac",
+      "state": "SUCCEEDED",
+      "service": "spotify",
+      "observed_state": "playing",
+      "generation": 5,
+      "error": null,
+      "latency_seconds": 1.525
+    },
+    {
+      "check": "spotify-before-youtube",
+      "task_id": "4bf56a7b-5282-4627-a4f3-2baa5f4e765a",
+      "state": "SUCCEEDED",
+      "service": "spotify",
+      "observed_state": "paused",
+      "generation": 6,
+      "error": null,
+      "latency_seconds": 1.378
+    },
+    {
+      "check": "youtube-song",
+      "task_id": "2f0eb2e5-4fd8-4e7c-b4ce-46d661ec4fe8",
+      "state": "SUCCEEDED",
+      "service": "youtube",
+      "observed_state": "results",
+      "generation": 2,
+      "error": null,
+      "latency_seconds": 5.763
+    },
+    {
+      "check": "youtube-select",
+      "task_id": "c81c7f3a-8d84-4192-83d6-f6d2949aa8f6",
+      "state": "SUCCEEDED",
+      "service": "youtube",
+      "observed_state": "ad",
+      "generation": 4,
+      "error": null,
+      "latency_seconds": 5.427
+    },
+    {
+      "check": "operator-reobserve",
+      "task_id": "4f5e41bf-500a-4c69-be8e-8c7570e65ece",
+      "state": "SUCCEEDED",
+      "service": "youtube",
+      "observed_state": "playing",
+      "generation": 4,
+      "error": null,
+      "latency_seconds": 0.865
+    },
+    {
+      "check": "youtube-pause",
+      "task_id": "37054f6c-5d63-49de-acef-a5905c2b8adc",
+      "state": "SUCCEEDED",
+      "service": "youtube",
+      "observed_state": "paused",
+      "generation": 5,
+      "error": null,
+      "latency_seconds": 1.403
+    },
+    {
+      "check": "youtube-resume",
+      "task_id": "8b2df29a-0607-48bd-9ef1-56b8ab9eb476",
+      "state": "SUCCEEDED",
+      "service": "youtube",
+      "observed_state": "playing",
+      "generation": 6,
+      "error": null,
+      "latency_seconds": 1.336
+    },
+    {
+      "check": "spotify-song",
+      "task_id": "cf382e1b-e5ec-4323-ad0a-fc9146ddde05",
+      "state": "SUCCEEDED",
+      "service": "spotify",
+      "observed_state": "playing",
+      "generation": 9,
+      "error": null,
+      "latency_seconds": 7.486
+    },
+    {
+      "check": "spotify-final-pause",
+      "task_id": "4e61c08a-0372-401f-a887-4a96b0dc9b14",
+      "state": "SUCCEEDED",
+      "service": "spotify",
+      "observed_state": "paused",
+      "generation": 10,
+      "error": null,
+      "latency_seconds": 1.333
+    },
+    {
+      "check": "youtube-after-spotify",
+      "task_id": "4aca5af1-7a6e-409f-9fd6-438c37233889",
+      "state": "SUCCEEDED",
+      "service": "youtube",
+      "observed_state": "paused",
+      "generation": 7,
+      "error": null,
+      "latency_seconds": 1.418
+    },
+    {
+      "check": "stop",
+      "blocked": true,
+      "zero_new_admissions": true
+    }
+  ],
+  "audible_sound_verified": false,
+  "ordinary_chrome_excluded": true,
+  "spotify_left_open": true,
+  "qualification": {
+    "model-report": "m2-media-recovery-model-v1-r1.json",
+    "conversation-report": "m2-media-recovery-conversation-v1-r1.json",
+    "applications-report": "applications-media-recovery-v4-r2.json",
+    "language-report": "request-language-media-recovery-v3-r3.json",
+    "media-report": "m4-media-recovery-browser-v2-r3.json",
+    "windows-media-report": "m4-media-recovery-desktop-v1-r3.json"
+  },
+  "operator_ad_handoff": true
+}

@@ -563,6 +563,13 @@ class Broker:
         except AdmissionRejected as exc:
             if action.capability == "media.control":
                 self.last_error = self.media.admission_error_code(exc)
+                with self.store.db:
+                    self.store.event(
+                        action.task_id,
+                        "media_admission_rejected",
+                        action_id=action_id,
+                        payload={"code": self.last_error},
+                    )
             # The fake adapter's gate rejected before mutation, so absence of effect is known.
             current = self.store.get(action.task_id)
             self.store.transition(action.task_id, State.VERIFYING)
@@ -591,11 +598,14 @@ class Broker:
                 )
                 return self._result(action.task_id)
             if action.capability == "media.control":
-                from jarvis.media_data import MediaError
-
-                self.last_error = (
-                    exc.code if isinstance(exc, MediaError) else "MEDIA_EXECUTION_FAILED"
-                )
+                self.last_error = self.media.diagnostic_error_code(exc)
+                with self.store.db:
+                    self.store.event(
+                        action.task_id,
+                        "media_execution_error",
+                        action_id=action_id,
+                        payload={"code": self.last_error, "stage": "execute"},
+                    )
             self.store.complete(
                 action_id,
                 "UNKNOWN",
@@ -624,11 +634,14 @@ class Broker:
                 return self._result(action.task_id)
             evidence = None
             if action.capability == "media.control":
-                from jarvis.media_data import MediaError
-
-                self.last_error = (
-                    exc.code if isinstance(exc, MediaError) else "MEDIA_EVIDENCE_INVALID"
-                )
+                self.last_error = self.media.diagnostic_error_code(exc)
+                with self.store.db:
+                    self.store.event(
+                        action.task_id,
+                        "media_execution_error",
+                        action_id=action_id,
+                        payload={"code": self.last_error, "stage": "observe"},
+                    )
         current = self.store.get(action.task_id)
         matches = (
             evidence is not None

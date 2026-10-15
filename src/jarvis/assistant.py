@@ -14,7 +14,14 @@ from uuid import uuid4
 
 from pydantic import Field, TypeAdapter
 
-from jarvis.currency_router import ALIASES, NUM, Route, resolved
+from jarvis.currency_router import (
+    ALIASES,
+    NUM,
+    Route,
+    currency_explanation_or_correction,
+    requests_currency_operation,
+    resolved,
+)
 from jarvis.currency_router import route as language_route
 from jarvis.domain import Decision, Denied, Scope, State
 from jarvis.models import (
@@ -388,6 +395,11 @@ def interpret(broker, task, request, history=()):
         memory = None
     owner_currencies = mentioned_currencies(request.text)
     owner_route = getattr(registry, "route", None) or language_route(request.text)
+    currency_requested = requests_currency_operation(
+        request.text, context, registry.known_codes() if broker.currency else ()
+    )
+    if not currency_requested:
+        context = memory = None
     binding = getattr(owner_route, "arguments", None)
     current_pair = (
         (binding.base, binding.quote)
@@ -427,6 +439,7 @@ def interpret(broker, task, request, history=()):
         "previous_expression": memory["expression"] if followup else None,
         "conversation": [{"role": m.role, "text": m.text} for m in history[-6:]],
         "currency_available": broker.currency is not None,
+        "currency_operation_requested": currency_requested,
         "public_research_available": broker.web is not None and broker.web.config.enabled,
     }
     optimized = broker.active_profile.assistant_version == "assistant-v2"
@@ -453,8 +466,13 @@ def interpret(broker, task, request, history=()):
         and ((followup and bool(values)) or (len(values) > 1 and binding is None))
     )
     meaning = None
-    needs_intent = not optimized or (
-        not known_currency and (bool(values) or owner_route.kind != "ordinary")
+    needs_intent = (
+        not optimized
+        or (not known_currency and (bool(values) or owner_route.kind != "ordinary"))
+        or (
+            currency_explanation_or_correction(request.text)
+            and re.search(r"(?i)\b(?:currency|exchange rates?|money)\b", request.text)
+        )
     )
     if needs_intent:
         intent = call(
@@ -462,6 +480,8 @@ def interpret(broker, task, request, history=()):
             task,
             "assistant-intent-v1",
             "Classify ONLY the current owner request. Return assistant_intent JSON. "
+            "Currency operations require currency_operation_requested=true. Corrections, "
+            "unrelated numeric questions and explanations never inherit currency intent. "
             "currency: requests for exchange rates, money conversion, costs in another currency, "
             "quantity times price, discounts, fees, splitting a bill, "
             "and their numeric follow-ups. "
@@ -522,6 +542,9 @@ def interpret(broker, task, request, history=()):
     if current_pair and set(current_pair) <= owner_currencies and values:
         # A recognized conversion's amounts stay local even if classification errs.
         intent = AssistantIntent(kind="assistant_intent", route="currency")
+    if not currency_requested and intent.route == "currency":
+        intent = AssistantIntent(kind="assistant_intent", route="conversation")
+        meaning = None
     if intent.route == "research":
         if broker.web is None or not broker.web.config.enabled:
             return Decision(
@@ -686,6 +709,8 @@ def asks_for_rate(question):
 def validate_currency(broker, request, meaning, values, available, context):
     if broker.currency is None:
         return Decision("unsupported", text="Currency retrieval is not configured."), None
+    if not requests_currency_operation(request.text, context, broker.registry.known_codes()):
+        raise Denied("No owner currency operation requested")
     if meaning.base == meaning.quote:
         meaning = meaning.model_copy(update={"operation": "identity"})
     if (

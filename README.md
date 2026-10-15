@@ -2,6 +2,31 @@
 
 ## Desktop chat
 
+Spotify desktop search needs its installed main window restored and visible.
+A new song/playlist search can bind to Spotify after it has been closed and reopened;
+old choices are discarded. Switching between Spotify and YouTube retains each
+service's selected content. Specific controller errors explain when to restore a
+window, inspect the current browser page, search again or restart the chat.
+Interacting with the dedicated browser can still require a current-page inspection
+before control resumes; unknown delivered effects are never automatically retried.
+After manually skipping an ad, ask `What video is currently open on YouTube?`
+before pause/resume. This refreshes the manual handoff through the broker.
+The dedicated browser keeps processing its network/page events between chat turns,
+including while waiting for your next message or manual login.
+
+Currency is an optional capability. JARVIS requests a rate or conversion only for
+a clear monetary request, such as `Convert 100 SGD to USD` or `USD to MYR rate`.
+Generic “how much” questions, unrelated numeric questions, explanations and
+corrections do not activate it. Changing topics releases a pending currency pair
+and calculation operands, including when switching to app or media control.
+`What about 500?` can continue the active conversion; after a topic change, it asks
+what you want to do with that number instead of assuming currency.
+
+Explicit currency queries, generic provider-discovered currencies, local supplied
+rates and source inspection remain supported. Currency symbols or incomplete money
+requests may still need clarification. Ordinary arithmetic and unit conversions
+remain normal chat. Both GUI and terminal use this routing.
+
 Open the minimal desktop chat window:
 
 ```powershell

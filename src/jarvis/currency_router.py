@@ -141,7 +141,78 @@ def pending_quantity_pair(value):
     return None
 
 
-def route(text, previous=None, context=None):
+def currency_explanation_or_correction(text):
+    value = " ".join(text.casefold().replace("’", "'").split())
+    return bool(
+        re.match(r"(?:why|explain|define|how (?:do|does|can|to)|what does)\b", value)
+        or re.search(
+            r"\b(?:not|isn't|is not|aren't|are not)\s+(?:asking(?:\s+you)?\s+)?"
+            r"(?:about\s+|for\s+|a\s+|an?\s+)?(?:currenc\w*|money|exchange rates?)\b"
+            r"|\b(?:stop|quit)\s+(?:asking|talking)\b.*\b(?:currenc\w*|exchange)\b"
+            r"|\b(?:didn't|did not|wasn't|was not)\s+(?:ask\w*|mean|request\w*)\b"
+            r".*\b(?:currenc\w*|convert|money|exchange)\b"
+            r"|^(?:you (?:said|replied)|(?:don't|do not) (?:convert|fetch|calculate))\b",
+            value,
+        )
+    )
+
+
+def requests_currency_operation(text, context=None, known_codes=()):
+    """Currency permission needs an owner money/rate request, not a generic question."""
+    value = " ".join(text.strip().casefold().rstrip(".!?").split())
+    if re.fullmatch(r"(?:explain |source |where did )?src_[a-z0-9]+(?: come from)?", value):
+        return True
+    if currency_explanation_or_correction(value):
+        return False
+    if re.search(r"\bsrc_[a-z0-9]+\b", value):
+        return True
+    if "that rate" in value or value in {
+        "refresh the rate",
+        "refresh",
+        "reverse rate",
+        "what's the reverse rate",
+        "what is the reverse rate",
+    }:
+        return True
+    if context and (
+        re.fullmatch(rf"(?:what about\s+)?(?:{NUM}|[-+0-9.,]+|nan|inf|infinity)", value)
+        or (
+            re.match(r"(?:what (?:if|about)|i (?:said|mean)|split)\b", value)
+            and re.search(NUM, value)
+            and re.search(r"\b(?:bill|split|fees?|discount|total|tickets?|people)\b", value)
+            and re.search(r"\b(?:instead|what if|what about|each|worth|costing|split)\b", value)
+        )
+    ):
+        return True
+    if re.search(r"\b(?:exchange rate|currency conversion|convert currenc\w*)\b", value):
+        return True
+    for name in sorted(ALIASES, key=len, reverse=True):
+        value = re.sub(rf"\b{re.escape(name)}\b", ALIASES[name].lower(), value)
+    pairs = re.findall(r"(?<![a-z])([a-z]{3})\s*(?:to|in|/|->)\s*([a-z]{3})(?![a-z])", value)
+    language_codes = {c.lower() for c in ALIASES.values()} | {c.lower() for c in known_codes}
+    code_tokens = set(re.findall(r"(?<![a-z])[a-z]{3}\b", value))
+    if (
+        re.search(r"(?i)\bpounds\b", text)
+        and not re.search(r"(?i)\bbritish pounds?\b|\bGBP\b", text)
+        and not (code_tokens & (language_codes - {"gbp"}))
+    ):
+        language_codes.discard("gbp")
+    money_code = bool(code_tokens & language_codes)
+    money_amount = any(
+        code in language_codes or code.upper() in re.findall(r"(?<![a-zA-Z])[A-Z]{3}\b", text)
+        for code in re.findall(rf"{NUM}\s*([a-z]{{3}})\b", value)
+    )
+    requested = bool(re.search(r"\b(?:convert|conversion|rate|worth|cost|price|in|to)\b", value))
+    if pairs and (
+        money_code or money_amount or re.fullmatch(r"[a-z]{3}\s*(?:to|/|->)\s*[a-z]{3}", value)
+    ):
+        return True
+    if requested and (money_code or money_amount or re.search(r"[$£¥]|\bdollars?\b", value)):
+        return True
+    return False
+
+
+def route(text, previous=None, context=None, known_codes=()):
     value = " ".join(text.strip().casefold().rstrip(".!?").split())
     if len(value) > 4096:
         return Route("unsupported", message="The request is too long.")
@@ -153,10 +224,14 @@ def route(text, previous=None, context=None):
             "currency",
             CurrencyArguments(base=previous.base, quote=previous.quote, operation="source"),
         )
+    if currency_explanation_or_correction(text):
+        return Route()
     source = "that rate" in value and any(
         w in value for w in ("source", "published", "where", "date", "effective")
     )
-    refresh = value in {"refresh that rate", "refresh the rate", "refresh"}
+    refresh = value in {"refresh that rate", "refresh the rate"} or (
+        value == "refresh" and (context is not None or previous is not None)
+    )
     reverse = bool(re.fullmatch(r"(?:what(?:'s| is) (?:the )?)?reverse rate", value))
     if source or refresh or reverse:
         pair = context or ((previous.base, previous.quote) if previous else None)
@@ -173,17 +248,23 @@ def route(text, previous=None, context=None):
     followup = re.fullmatch(rf"(?:what about\s+)?({NUM})", value)
     if followup:
         if context is None:
-            return Route(
-                "clarify", message="Which currencies should I convert that amount between?"
-            )
+            return Route("clarify", message="What would you like me to do with that number?")
         return resolved(*context, amount=followup[1].replace(",", ""))
-    if value.startswith("what about ") or (
-        context is not None and re.fullmatch(r"[-+0-9.,]+|nan|inf|infinity", value)
-    ):
+    if (
+        context is not None and re.fullmatch(r"what about (?:[-+0-9.,]+|nan|inf|infinity)", value)
+    ) or (context is not None and re.fullmatch(r"[-+0-9.,]+|nan|inf|infinity", value)):
         return Route(
             "clarify",
             message="Please specify a valid finite amount and an unambiguous currency pair.",
         )
+    if (
+        context is None
+        and re.match(r"i (?:said|mean)\b", value)
+        and re.search(
+            rf"{NUM}\s+[a-z ]+\s+(?:each (?:worth|costing|priced at)|at|for)\s+{NUM}", value
+        )
+    ):
+        return Route("clarify", message="What would you like me to calculate from that purchase?")
     if re.search(r"\b(?:what is|explain|define) (?:an? |the )?exchange rate\b", value) and not any(
         w in value for w in ("now", "today", "current", " to ", " in ")
     ):
@@ -195,19 +276,7 @@ def route(text, previous=None, context=None):
         or re.search(rf"{NUM}\s+[a-z ]+\s+(?:at|for)\s+{NUM}", value)
         or re.search(rf"{NUM}\s*(?:\*|x|times)\s*{NUM}\s*[a-z]{{3}}\b", value)
     )
-    currency_like = any(
-        w in value for w in ("convert", "exchange rate", "currency", "how much", "myr", "jpy")
-    ) or bool(re.search(r"(?:[0-9]\s*|\b)[a-z]{3}\s*(?:to|in|/|->)\s*[a-z]{3}\b", value))
-    currency_like = currency_like or (
-        quantity_request and bool(re.search(r"\b(?:in|to)\s+[a-z]{3}\b", value))
-    )
-    currency_like = currency_like or (quantity_request and context is not None)
-    currency_like = currency_like or bool(
-        re.search(
-            rf"{NUM}\s+[a-z ]+\s+(?:each (?:worth|costing|priced at)|at|for)\s+{NUM}",
-            value,
-        )
-    )
+    currency_like = requests_currency_operation(text, context, known_codes)
     if currency_like:
         if re.fullmatch(r"(?:what is|explain) [a-z]{3}", value):
             return Route()
