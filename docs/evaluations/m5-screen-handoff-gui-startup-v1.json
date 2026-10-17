@@ -1,0 +1,9 @@
+{
+  "mode": "simulation; no real app/media backend",
+  "exit_code": 0,
+  "ready": true,
+  "screen_config_loaded": true,
+  "request_sent": "/quit only",
+  "startup_capture_requested": false,
+  "stderr_empty": true
+}

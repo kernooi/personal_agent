@@ -1,5 +1,147 @@
 # JARVIS implementation plan
 
+## Companion indicator appearance (2026-10-17)
+
+Replaced the red rectangular screen-access panel with a smaller rounded charcoal
+badge matching the orb. Kept readable access/status text, click-to-stop, native
+non-activation, session checks and capture exclusion. Presentation only; no capture,
+model or control behavior changes. Native visual review remains pending.
+
+## Private vision-to-chat answers (2026-10-17)
+
+Implemented the owner-approved fixed two-model handoff: vision produces structured
+private observations; the primary text model writes a natural explanation through
+a dedicated non-action schema. Both combined-app and ordinary conversations use
+the same route. Bounded private context, source/identity/revision binding, shared
+expiry, cancellation and independent target verification remain enforced. No
+public disclosure, ordinary screenshot-derived history, permanent memory or new
+desktop control. Wordle stays deterministic. See decision 0019.
+
+Completed 30 focused answer tests and full suite 1531 passed, with lint/format and
+dependency checks. Frozen live corpus and genuine two-model synthetic-image case
+passed 7/7; final source hash matches. Refreshed all six existing controller/language
+gates at unchanged 100% acceptance, and their strict readers accepted the reports.
+Updated shared terminal/GUI launcher; framed simulation startup reached ready
+without capture or real backend effects. No native capture/overlay adapter change.
+
+See docs/SCREEN_CHAT_HANDOFF.md for settings, commands, exact timings and limits.
+Both models remain fallible; this does not qualify every image/game or unrestricted
+follow-up interpretation. Broader M5 remains NOT FULLY VERIFIED. No commit/push.
+
+## Screen runtime recovery (2026-10-17)
+
+Diagnosed the owner's incomplete game-screen response as an Ollama runner crash.
+Implemented one cancellable, deadline-bound CPU retry with the same model and
+bounded derivative of the same frame, retaining strict completion/identity/parsing.
+No recapture or broader permission. Normal GPU reads retain full resolution.
+Synthetic native-CPU recovery passed; full-resolution timeout preserved before
+thumbnail recovery passed. Full suite 1501 passed. Broader recognition and M5
+compatibility remain unqualified; see docs/VISION_COMPATIBILITY.md for exact limits.
+
+All six source-bound controller/language gates refreshed and passed at the existing
+100% thresholds. Strict qualification readers accepted the reports; terminal and
+GUI share the updated launcher paths. Lint/format/dependency/whitespace checks pass.
+No commit/push or new setup; restart chat to load the recovery code/defaults.
+
+## Animated screen companion (2026-10-16)
+
+Implemented the owner's code-rendered black orb with two white pill eyes, native
+transparent click-through/no-activate overlay, smooth gaze/blink/entrance/exit,
+truthful capture/analysis/watch states, cancellation and strict private settings.
+Preview uses the same renderer/state machine and needs no model/screen access.
+Existing privacy/stop indicator stays readable; native status window fixes Tk's
+initial focus steal. No new dependency, permission or desktop-control capability.
+
+Completed deterministic geometry/lifecycle/exclusion/cleanup tests, actual owned
+fixture light/dark capture exclusion, physical input/global stop, real local M5
+read, two-sample native watch (scripted interpretation), both 96-DPI monitors,
+reduced mode, blocked-loop shutdown and short performance measurement. Failed
+runs retained. Full suite 1488 passed; 21 GUI regressions passed after launcher
+refresh; lint/format/dependencies/whitespace pass. Six source-bound local-model
+gates all pass with unchanged 100% acceptance and zero unauthorized effects;
+cold-load timeout from the first M2 run remains preserved/documented.
+
+See docs/DESKTOP_COMPANION.md for files, commands, measurements and limitations.
+Mixed/high DPI, lock transitions, unavailable-affinity hardware and long-duration
+stability remain unverified natively. Broader M5 is still NOT FULLY VERIFIED.
+No commit/push; stop after this feature for owner review.
+
+## Subsequent screen failure diagnostics (2026-10-15)
+
+Confirmed an additional invalid-vision-output failure at context 8192 with the
+owner's game visible. Added safe per-stage errors, status context/category and
+redacted diagnostic events. Constrained concise model output, reject truncated
+JSON before publication and withhold guesses without a validated Wordle board.
+Improved symmetric outline compatibility without relaxing feedback checks.
+After the owner identified NYT Wordle, isolated different row/column spacing and
+pixel rounding. Added bounded independent vertical geometry verification, retaining
+exact colors and all thirty tile checks. Two actual main-display broker reads now
+extract one submitted row and recommend guesses consistent with every observed
+clue. Vision 4.48–4.66 s; no screenshot/text retained. Ground-truth letters were not
+independently scored; broader M5 compatibility/accuracy gaps remain.
+Final regression suite: 1,429 passed; 106 focused screen tests pass; lint,
+formatting and dependency/diff checks exit 0. Existing controller qualifications
+are refreshed for current source before enabling the shared launcher.
+All six final m5-nyt-board qualification validators pass with unchanged gates;
+shared GUI/terminal launcher uses those reports. Simulation GUI startup reaches
+Ready and exits cleanly without actions/capture.
+
+## Full-screen vision context correction (2026-10-15)
+
+Diagnosed the reported failure as Ollama HTTP 400: a 4,254-token full-screen image
+request exceeded the private vision context of 4,096. Backed up and raised only
+the vision configuration to 8,192; example updated. Text model unchanged.
+Real 2560x1440 capture plus local inference through the broker now succeeds
+(capture 0.795 s, vision 9.392 s); no screenshots/private descriptions persisted.
+90 focused tests and lint/format pass. No controller/policy/hash or acceptance
+change. Restart the GUI to reload. Predicted-word accuracy was not independently
+scored; broader M5 validation gaps remain.
+
+## Whole-screen default approved (2026-10-15)
+
+Owner replaced mandatory window/display selection with standing authorization for
+on-demand full main-screen questions. Implemented primary-display default, optional
+narrow window selection and explicit whole-screen override. No per-request prompt,
+no startup/background captures, no new UI control. Exclusions, local-only inference,
+indicator, stop and broker checks remain. Legacy foreground policy is configurable.
+
+Actual main-display capture passed at 2560x1440 after ignoring positively cloaked
+non-rendered Windows helper surfaces. No image persisted or analyzed in that check.
+M5 remains NOT FULLY VERIFIED; this change does not establish wider recognition,
+session-lock, high-DPI or multi-display native compatibility.
+Full offline regression: 1,413 passed; lint, formatting, dependency and diff checks
+exit 0. Existing source-bound controller qualifications are refreshed for startup.
+All six refreshed launcher qualification validators pass; shared GUI/terminal
+launch paths reference the current whole-screen reports. Simulation GUI worker
+reaches Ready and exits cleanly without requesting a capture or real action.
+
+## M5 implementation and limited native validation (2026-10-15)
+
+Implemented scoped visible-pixel Windows capture and local vision through the
+existing broker, separate private configuration/permissions, visible indicator,
+strict observations, exact-window revalidation, exclusions and cancellation.
+Added on-demand visual chat, refresh/comparison context, bounded watching and
+deterministic Wordle advice with licensed source-pinned dictionary. GUI/terminal
+share the optional private screen configuration; startup takes no screenshot.
+
+Owner approved qwen2.5vl:3b download and the owned-fixture attended test. Actual
+Windows 11 build 26200 captures plus local inference passed error reading, public
+flower description and two Wordle states; species remains uncertain. Physical
+global stop blocked a new capture. Native exclusion blocked the owned executable.
+Three-sample native watch with scripted interpretation detected one change and
+stopped at its bound. Preserve all earlier failed native/model reports.
+
+Status: **NOT FULLY VERIFIED**, not complete. Remaining: live vision during a
+bounded watch session, wider independently scored real visual corpus, native
+high-DPI/multi-monitor/full-display and lock/protected/password cases. Full-display
+testing needs its own explicit scope consent; no ordinary app/display captures
+were performed as a shortcut. See M5_TEST_REPORT.md for exact evidence and limits.
+Existing app/media model gates refreshed: M2 24/24, conversation 41/41, apps 31/31,
+browser 27/27, Spotify desktop 25/25, wording 33/33. All six current launcher
+validators pass. M2 r3/r4 failed results remain; no acceptance threshold changed.
+Final full suite 1,407 passed; lint/format/dependency/diff checks exit 0.
+No M6/M7/M8 or public installer work.
+
 ## Required-filter startup qualification restored (2026-10-15)
 
 The reported GUI error came from source-stale media/wording reports after the

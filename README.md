@@ -1,5 +1,115 @@
 # JARVIS local text assistant
 
+## Animated screen companion
+
+Screen questions now display a small animated charcoal orb with two white eyes.
+It reflects actual capture, local analysis and completion, then disappears without
+taking focus or blocking clicks. The readable screen-access/stop indicator remains.
+No capture occurs at startup. Restart the GUI to load the feature; existing screen
+settings are preserved and companion defaults apply automatically.
+
+```powershell
+.\.venv\Scripts\python.exe -m jarvis companion-preview --cycle
+```
+
+This standalone preview uses the real renderer without screen/model access.
+See [configuration, implementation and actual Windows evidence](docs/DESKTOP_COMPANION.md).
+
+## M5 screen assistance — limited native validation
+
+Screen questions now use the vision model to read the image and the primary chat
+model to write a natural explanation. The private handoff shares bounded relevant
+context, preserves uncertainty and keeps screen-derived information out of ordinary
+chat history and public tools. Wordle retains its deterministic solver. Restart chat
+to load the new defaults; see [settings and real-model validation](docs/SCREEN_CHAT_HANDOFF.md).
+
+M5 adds separately configured on-demand Windows screen understanding, local image
+analysis, bounded window watching and deterministic Wordle advice. It uses the
+existing task broker and chat, including the GUI; it adds no click/type, webcam,
+voice or memory capability. **M5 is NOT FULLY VERIFIED.** See the
+[M5 test report](docs/M5_TEST_REPORT.md),
+[capture compatibility](docs/SCREEN_CAPTURE_COMPATIBILITY.md),
+[vision compatibility](docs/VISION_COMPATIBILITY.md),
+[screen privacy](docs/SCREEN_PRIVACY.md) and [Wordle solver](docs/WORDLE.md).
+
+The inspected PC is Windows 11 build 26200 with RTX 4070/12 GB VRAM and 32 GB RAM.
+Initially only text-only `qwen3:8b` was installed. The owner subsequently approved
+and installed `qwen2.5vl:3b` for images, keeping qwen3 as the main chat model.
+Neither this command nor GUI startup downloads models.
+On this PC the private `screen.toml` is already enabled for on-demand questions
+with `qwen2.5vl:3b`; watching remains off. On another setup, create a private
+configuration from `config/examples/screen.toml`, preserving an
+existing file. Set `enabled=true` and `vision_model` to an installed local
+image-capable model only when choosing to enable screen assistance. Watching
+separately needs `watch_enabled=true`. Do not copy another PC's local-mode evidence.
+
+```powershell
+# After configuring private screen.toml and installing an approved vision model:
+.\.venv\Scripts\python.exe -m jarvis chat `
+  --profile "$env:LOCALAPPDATA\Jarvis\profiles\notepad-m2-concurrent-v1.toml" `
+  --screen-config "$env:LOCALAPPDATA\Jarvis\screen.toml"
+```
+
+This command leaves app/media actions simulated; screen reads are independently
+opted in. The combined launcher/GUI also includes the private `screen.toml` when
+present, retaining all existing real app/media qualifications. No capture happens
+on startup. Screen questions now capture your whole main monitor automatically;
+you do not need to choose a window or approve each capture:
+
+```text
+Scan my screen and explain what I am looking at.
+What am I looking at?
+What plant is this?
+What does this error mean?
+Help me solve this Wordle.
+I entered another guess. Check again.
+/screen-status
+/screen-revoke
+```
+
+The owner's standing permission covers on-demand main-screen reads. Optional
+`/screen-windows` and `/screen-allow <reference>` restrict questions to one window;
+asking to read the whole screen uses the main monitor again. Explicit all-monitor
+requests use desktop scope and can fail on monitor gaps or image limits. For the
+original foreground-window default, set `default_capture_scope="foreground_window"`.
+Watching still requires its separate enabled setting and an explicitly selected
+window; this change does not start background watching. Capture is limited to
+visible pixels and still checks exclusions, protection and changed targets.
+The visible **JARVIS SCREEN ACCESS** window must remain open during
+capture/analysis/watching. Move it outside a selected window if it overlaps.
+Closing the indicator, `/screen-stop`, `/stop` or Ctrl+Alt+Shift+F10 stops further
+capture/submissions. Pixels remain in memory; normal logs/history/web searches
+receive neither screenshots nor their private descriptions. No screenshot uploads.
+`/screen-status` shows the loaded vision context and last safe failure category.
+The private vision context is 8192 for full-display input. NYT Wordle detection
+supports small browser row/column spacing differences; invalid/truncated model
+output or an unreadable board never produces an unchecked guess.
+
+If Ollama's GPU vision runner returns an explicitly incomplete answer, JARVIS can
+retry once on CPU using a bounded thumbnail of the same capture. It retains the
+same model, local-only transport, cancellation and deadline, and warns about reduced
+detail. CPU recovery can take roughly 45–60 seconds or time out; normal GPU reads
+keep full resolution. See [vision recovery settings and limits](docs/VISION_COMPATIBILITY.md).
+
+After confirming attended readiness, this implemented lab displays only its own
+controlled error, plant illustration and Wordle fixture. It uses actual capture
+and local vision through the normal `Conversation` interface. The illustration
+does not establish photograph/species recognition. Reports refuse overwriting:
+
+```powershell
+.\.venv\Scripts\python.exe scripts\Test-JarvisScreen.py --windows --attended `
+  --profile "$env:LOCALAPPDATA\Jarvis\profiles\notepad-m2-concurrent-v1.toml" `
+  --screen-config "$env:LOCALAPPDATA\Jarvis\screen.toml" `
+  --report .\docs\evaluations\m5-screen-windows-new.json
+```
+
+Ordinary pytest remains deterministic and never captures a real desktop or calls
+Ollama. Real local error reading, public flower-photo description, Wordle extraction
+and physical stop passed on the owned fixture. This does not establish species
+recognition or universal capture compatibility. Native watching, full-display,
+multi-monitor/DPI and session-lock evidence are tracked separately in the test
+report. Do not infer them from mocked tests.
+
 ## Desktop chat
 
 Spotify desktop search needs its installed main window restored and visible.
@@ -88,8 +198,8 @@ remain in memory; the existing minimal action journal is unchanged. No GUI netwo
 server, additional dependency, cloud fallback, auto-start entry or installation is
 added. Startup progress appears in the activity bar; a search startup failure leaves
 local chat available with an explicit notice. Missing model/runtime/image artifacts
-are reported rather than downloaded. The GUI provides chat presentation only, without
-voice, vision or new application-control tools.
+are reported rather than downloaded. M5 screen assistance is independently opted
+in through the private screen configuration above. Voice remains outside scope.
 
 Approved service startup metadata is private at `%LOCALAPPDATA%\Jarvis\gui-startup.toml`:
 registered Ollama executable/hash/version, local Docker context, owned container name
@@ -243,7 +353,8 @@ M4 adds opt-in installed Chrome for YouTube and Netflix, and an official Spotify
 API adapter. See [M4 results](docs/M4_TEST_REPORT.md),
 [browser compatibility](docs/BROWSER_COMPATIBILITY.md),
 [media setup](docs/MEDIA_COMPATIBILITY.md) and
-[private profile policy](docs/BROWSER_PROFILE_POLICY.md). Stop at M4; no M5.
+[private profile policy](docs/BROWSER_PROFILE_POLICY.md). M5 screen assistance is
+separately configured as described above.
 Browser, Notepad, currency and public research permissions remain independent.
 
 The combined launcher now includes installed Spotify song and playlist search

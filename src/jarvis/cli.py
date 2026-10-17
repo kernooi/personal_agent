@@ -21,6 +21,14 @@ def main() -> None:
         description="JARVIS local text assistant; simulation default, explicit attended Notepad"
     )
     sub = parser.add_subparsers(dest="command", required=True)
+    companion = sub.add_parser(
+        "companion-preview", help="Orb renderer preview; no capture or model"
+    )
+    companion.add_argument("--size", type=int, choices=range(48, 129), default=80)
+    companion.add_argument("--reduced-motion", action="store_true")
+    companion.add_argument("--cycle", action="store_true", help="Cycle all preview states")
+    companion.add_argument("--duration", type=int, choices=range(1, 301))
+    companion.add_argument("--export", type=Path)
     demo = sub.add_parser("demo", help="SIMULATED scenarios only")
     demo.add_argument(
         "--scenario",
@@ -90,6 +98,7 @@ def main() -> None:
             child.add_argument("--web-config", type=Path, required=command == "eval-web")
         if command in {"doctor", "chat"}:
             child.add_argument("--media-config", type=Path)
+            child.add_argument("--screen-config", type=Path)
         if command == "eval-web":
             child.add_argument("--owner-url-only", action="store_true")
         if command == "doctor":
@@ -133,6 +142,14 @@ def main() -> None:
             )
             child.add_argument("--repeats", type=int, choices=(1, 2, 3), default=1)
     args = parser.parse_args()
+    if args.command == "companion-preview":
+        from jarvis.companion_preview import run
+
+        try:
+            run(args)
+        except (ValueError, OSError) as exc:
+            parser.error(str(exc))
+        return
     if args.command == "inspect-apps":
         import threading
 
@@ -472,6 +489,11 @@ def live_command(args, parser):
                     "web_provider_contacted": False,
                     "media": media_config.model_dump() if media_config else {"enabled": False},
                     "browser_launched": False,
+                    "screen": {
+                        "configured": args.screen_config is not None,
+                        "captured": False,
+                        "note": "Screen configuration grants no startup capture.",
+                    },
                     "last_evaluation": selected_summary,
                     **metadata,
                     "qualification": "M3 currency/chat passed; Windows qualification is separate"
@@ -725,6 +747,21 @@ def live_command(args, parser):
                 "A selected or sole verified window needs no extra confirmation. "
                 "Notepad text, unsaved changes and unknown state stay protected."
             )
+        if args.screen_config:
+            from jarvis.screen_data import load_config as load_screen_config
+            from jarvis.screen_tools import attach as attach_screen
+
+            try:
+                screen_config = load_screen_config(args.screen_config)
+                attach_screen(broker, screen_config)
+            except (OSError, ValueError):
+                parser.exit(
+                    2, "Screen configuration unavailable or invalid; capture remains disabled.\n"
+                )
+            print(
+                "Screen assistance: explicit on-demand scopes only; /screen-status for controls. "
+                "Images stay local; no capture on startup."
+            )
         recovered = broker.recover()
         waiting = [result for result in recovered if result.state == "NEEDS_REVIEW"]
         if recovered and len(recovered) != len(waiting):
@@ -749,10 +786,21 @@ def live_command(args, parser):
                         "Notepad actions are paused for an uncertain earlier outcome. "
                         f"Inspect Notepad, then /review {row[0]} manually-handled."
                     )
-        if args.real or args.real_browser or args.real_media or args.real_apps:
+        if (
+            args.real
+            or args.real_browser
+            or args.real_media
+            or args.real_apps
+            or args.screen_config
+        ):
             from jarvis.win_stop import StopHotkey
 
             stop = getattr(broker.desktop, "stop", browser_stop)
+            if stop is None:
+                import threading
+
+                stop = threading.Event()
+                broker.desktop.stop = stop
             if browser_provider:
                 browser_provider.stop = stop
             with StopHotkey(stop):
@@ -760,6 +808,8 @@ def live_command(args, parser):
         else:
             chat_loop(conversation, sys.stdin)
     finally:
+        if getattr(broker, "screen", None):
+            broker.screen.close()
         if broker.media:
             broker.media.close()
         broker.store.close()

@@ -23,9 +23,12 @@ class TerminalInput:
         self.exit = threading.Event()
         self.closed = threading.Event()
         self.thread = threading.Thread(target=self._read, daemon=True)
+        self.screen_stop = lambda: None
 
     def _deliver(self, line: str) -> bool:
         command = line.strip().casefold()
+        if command in {"/screen-stop", "/screen-revoke", "stop watching", "stop screen watching"}:
+            self.screen_stop()
         if command in {"stop", "/stop", "/cancel"}:
             with self.lock:
                 self.generation += 1
@@ -119,6 +122,10 @@ def chat_loop(conversation: Conversation, stream: TextIO, output: Callable[[str]
             output("You> ")
 
     reader = TerminalInput(stream, notice)
+    screen = getattr(conversation.broker, "screen", None)
+    if screen:
+        screen.notice = lambda text: output("Screen: " + text)
+        reader.screen_stop = screen.stop_requested.set
     desktop_stop = getattr(conversation.broker.desktop, "stop", threading.Event())
     media = conversation.broker.media
     conversation.broker.cancel_requested = lambda: (
@@ -144,6 +151,8 @@ def chat_loop(conversation: Conversation, stream: TextIO, output: Callable[[str]
             try:
                 generation, text = reader.lines.get(timeout=0.05)
             except queue.Empty:
+                if screen:
+                    screen.poll()
                 if reader.closed.is_set():
                     break
                 continue
@@ -152,6 +161,10 @@ def chat_loop(conversation: Conversation, stream: TextIO, output: Callable[[str]
             if not reader.begin(generation):
                 continue
             try:
+                if screen and text.startswith("/screen-"):
+                    output("JARVIS: " + screen.control(text))
+                    prompt()
+                    continue
                 applications = getattr(conversation.broker, "applications", None)
                 if applications is not None and text.startswith("/"):
                     reply = applications.control(text)
@@ -270,4 +283,6 @@ def chat_loop(conversation: Conversation, stream: TextIO, output: Callable[[str]
         reader.cancel.set()
         output("JARVIS: Interrupted; any admitted effect remains journaled.")
     finally:
+        if screen:
+            screen.close()
         reader.close()

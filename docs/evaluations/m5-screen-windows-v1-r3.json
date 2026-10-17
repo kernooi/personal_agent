@@ -1,0 +1,289 @@
+{
+  "milestone": "M5",
+  "status": "NOT FULLY VERIFIED",
+  "synthetic_content_only": true,
+  "windows": 26200,
+  "cases": [
+    {
+      "scene": "error",
+      "request": "What does this error mean?",
+      "state": "SUCCEEDED",
+      "answer": "From the captured image: The error message indicates that the 'pandas' module could not be found.\nThe error suggests that the 'pandas' module is not installed or not accessible in the current environment.",
+      "seconds": 12.13,
+      "timings": {
+        "capture_seconds": 0.6400507999996989,
+        "vision_seconds": 9.314524100000199
+      },
+      "capture_error": null,
+      "observation": {
+        "observation_id": "observation_cdd7c0d373f340e3a3a7521fd71b87b1",
+        "artifact": "image_8c2d305f5f354423985d9aaba294185a",
+        "target_identity": "6f7bb41a1a0e90b1ff68a99d05ca63e360879d2d15dafb086943eb9e91778680",
+        "application": "python",
+        "capture_scope": "window",
+        "captured_at": 1792064994.646711,
+        "generation": 1,
+        "bounds": [
+          87,
+          100,
+          889,
+          722
+        ],
+        "image_dimensions": [
+          802,
+          622
+        ],
+        "analyzed_regions": [
+          [
+            87,
+            100,
+            889,
+            722
+          ]
+        ],
+        "model": "qwen2.5vl:3b",
+        "model_digest": "79d4979787523c92629bc043c0584a5132d6758e40b429586203a6b1094cb6f8",
+        "adapter_version": "local-vision-v1",
+        "interpretation": {
+          "description": "The error message indicates that the 'pandas' module could not be found.",
+          "visible_text": [],
+          "objects": [],
+          "activity_candidates": [],
+          "uncertainty": [
+            "The error suggests that the 'pandas' module is not installed or not accessible in the current environment."
+          ],
+          "unreadable_regions": [],
+          "wordle": null
+        },
+        "sensitivity": "private",
+        "authority": "untrusted_visual_inference"
+      }
+    },
+    {
+      "scene": "plant",
+      "request": "What is this plant?",
+      "state": "SUCCEEDED",
+      "answer": "From the captured image: A synthetic illustration of a plant with a green stem and five green leaves, placed on a brown square base.\nThe plant is synthetic and not a photograph.",
+      "seconds": 7.141,
+      "timings": {
+        "capture_seconds": 0.43369540000003326,
+        "vision_seconds": 5.113540899999862
+      },
+      "capture_error": null,
+      "observation": {
+        "observation_id": "observation_0bc1b1780b5547e2a9f5b758ff64a41c",
+        "artifact": "image_72bdb47e409a448a97f129fb8f1468a1",
+        "target_identity": "6f7bb41a1a0e90b1ff68a99d05ca63e360879d2d15dafb086943eb9e91778680",
+        "application": "python",
+        "capture_scope": "window",
+        "captured_at": 1792065005.9005733,
+        "generation": 2,
+        "bounds": [
+          87,
+          100,
+          889,
+          722
+        ],
+        "image_dimensions": [
+          802,
+          622
+        ],
+        "analyzed_regions": [
+          [
+            87,
+            100,
+            889,
+            722
+          ]
+        ],
+        "model": "qwen2.5vl:3b",
+        "model_digest": "79d4979787523c92629bc043c0584a5132d6758e40b429586203a6b1094cb6f8",
+        "adapter_version": "local-vision-v1",
+        "interpretation": {
+          "description": "A synthetic illustration of a plant with a green stem and five green leaves, placed on a brown square base.",
+          "visible_text": [],
+          "objects": [],
+          "activity_candidates": [],
+          "uncertainty": [
+            "The plant is synthetic and not a photograph."
+          ],
+          "unreadable_regions": [],
+          "wordle": null
+        },
+        "sensitivity": "private",
+        "authority": "untrusted_visual_inference"
+      }
+    },
+    {
+      "scene": "wordle",
+      "request": "Help me solve this Wordle.",
+      "state": "SUCCEEDED",
+      "answer": "Observed Wordle rows:\n?????: absent, absent, present_elsewhere, absent, correct\nSome submitted letters or tile colors are unclear. Please confirm them first.",
+      "seconds": 15.38,
+      "timings": {
+        "capture_seconds": 0.8073244000001978,
+        "vision_seconds": 12.707809400000315
+      },
+      "capture_error": null,
+      "observation": {
+        "observation_id": "observation_fdd66b0496114a259fa9469b12334e72",
+        "artifact": "image_ef9beaea90e04cda800f07e061d016dc",
+        "target_identity": "6f7bb41a1a0e90b1ff68a99d05ca63e360879d2d15dafb086943eb9e91778680",
+        "application": "python",
+        "capture_scope": "window",
+        "captured_at": 1792065013.7475045,
+        "generation": 3,
+        "bounds": [
+          87,
+          100,
+          889,
+          722
+        ],
+        "image_dimensions": [
+          802,
+          622
+        ],
+        "analyzed_regions": [
+          [
+            319,
+            260,
+            619,
+            622
+          ]
+        ],
+        "model": "qwen2.5vl:3b",
+        "model_digest": "79d4979787523c92629bc043c0584a5132d6758e40b429586203a6b1094cb6f8",
+        "adapter_version": "local-vision-v1",
+        "interpretation": {
+          "description": "C R A N E",
+          "visible_text": [],
+          "objects": [],
+          "activity_candidates": [],
+          "uncertainty": [],
+          "unreadable_regions": [],
+          "wordle": {
+            "columns": 5,
+            "rows": 6,
+            "guesses": [
+              {
+                "letters": "?????",
+                "feedback": [
+                  "absent",
+                  "absent",
+                  "present_elsewhere",
+                  "absent",
+                  "correct"
+                ]
+              }
+            ],
+            "incomplete": ""
+          }
+        },
+        "sensitivity": "private",
+        "authority": "untrusted_visual_inference"
+      }
+    },
+    {
+      "scene": "wordle-next",
+      "request": "I entered another guess. Check again.",
+      "state": "SUCCEEDED",
+      "answer": "Observed Wordle rows:\nABSEN: absent, absent, present_elsewhere, absent, correct\nABSEN: absent, present_elsewhere, present_elsewhere, absent, correct\nNo word in the configured dictionary matches every row. Check the board interpretation or dictionary coverage.",
+      "seconds": 14.471,
+      "timings": {
+        "capture_seconds": 0.47575419999975566,
+        "vision_seconds": 11.89639299999999
+      },
+      "capture_error": null,
+      "observation": {
+        "observation_id": "observation_48719854b4fb4d8a8c7f87e876b39a1e",
+        "artifact": "image_50c72e560a774e4b871f7b05aa5dfbbc",
+        "target_identity": "6f7bb41a1a0e90b1ff68a99d05ca63e360879d2d15dafb086943eb9e91778680",
+        "application": "python",
+        "capture_scope": "window",
+        "captured_at": 1792065028.8267357,
+        "generation": 4,
+        "bounds": [
+          87,
+          100,
+          889,
+          722
+        ],
+        "image_dimensions": [
+          802,
+          622
+        ],
+        "analyzed_regions": [
+          [
+            319,
+            260,
+            619,
+            622
+          ]
+        ],
+        "model": "qwen2.5vl:3b",
+        "model_digest": "79d4979787523c92629bc043c0584a5132d6758e40b429586203a6b1094cb6f8",
+        "adapter_version": "local-vision-v1",
+        "interpretation": {
+          "description": "C R A N E",
+          "visible_text": [],
+          "objects": [],
+          "activity_candidates": [],
+          "uncertainty": [],
+          "unreadable_regions": [],
+          "wordle": {
+            "columns": 5,
+            "rows": 6,
+            "guesses": [
+              {
+                "letters": "absen",
+                "feedback": [
+                  "absent",
+                  "absent",
+                  "present_elsewhere",
+                  "absent",
+                  "correct"
+                ]
+              },
+              {
+                "letters": "absen",
+                "feedback": [
+                  "absent",
+                  "present_elsewhere",
+                  "present_elsewhere",
+                  "absent",
+                  "correct"
+                ]
+              }
+            ],
+            "incomplete": ""
+          }
+        },
+        "sensitivity": "private",
+        "authority": "untrusted_visual_inference"
+      }
+    }
+  ],
+  "capture_method": "Win32 GDI visible pixels / per-monitor-v2",
+  "plant_photograph": "NOT RUN; illustration does not establish photograph recognition",
+  "watching_native": "NOT RUN",
+  "physical_stop": "NOT RUN",
+  "vision_mode": "real local model",
+  "vision": {
+    "available": true,
+    "model_present": true,
+    "identity": "qwen2.5vl:3b",
+    "digest": "79d4979787523c92629bc043c0584a5132d6758e40b429586203a6b1094cb6f8",
+    "runtime_version": "0.40.2",
+    "transport_version": "ollama-chat-v2",
+    "text_generation": "supported",
+    "schema_constrained_output": "unknown",
+    "native_tool_calls": "unknown",
+    "context_capacity": 128000,
+    "cloud_disabled": "user_verified",
+    "local_mode_programmatically_attested": false,
+    "ready": true,
+    "qualification": "unqualified; fake-execution evaluation only"
+  },
+  "pipeline_passed": true,
+  "manual_answer_review": "REQUIRED; successful dispatch is not recognition accuracy"
+}

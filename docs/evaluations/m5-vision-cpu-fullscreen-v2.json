@@ -1,0 +1,40 @@
+{
+  "synthetic_pixels_only": true,
+  "dimensions": [
+    2560,
+    1440
+  ],
+  "fault_injection": "initial incomplete response simulated; CPU inference real",
+  "real_screen_captures": 0,
+  "status": "passed",
+  "description": "The main color in the image is a solid orange.",
+  "uncertainty": [
+    "Recovery used a smaller version of the captured image; fine details may be unclear."
+  ],
+  "recovery_dimensions": [
+    512,
+    288
+  ],
+  "elapsed_seconds": 46.77794119999999,
+  "attempts": [
+    {
+      "backend": "default",
+      "outcome": "incomplete"
+    },
+    {
+      "backend": "cpu",
+      "outcome": "complete"
+    }
+  ],
+  "wire": [
+    {
+      "done": true,
+      "done_reason": "stop",
+      "load_duration": 2817514000,
+      "prompt_eval_count": 1312,
+      "prompt_eval_duration": 41096561000,
+      "eval_count": 25,
+      "eval_duration": 2323198000
+    }
+  ]
+}

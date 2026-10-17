@@ -1,0 +1,25 @@
+{
+  "fixture_only": true,
+  "private_desktop_captured": false,
+  "checks": {},
+  "status": "NOT FULLY VERIFIED",
+  "last_overlay_metadata": {
+    "ack": 2,
+    "frames": 26,
+    "render_seconds": 0.016843799996422604,
+    "state": "capturing",
+    "companion_error": null,
+    "excluded": true,
+    "hwnd": 1116270,
+    "position": [
+      2430,
+      1262,
+      106
+    ],
+    "dpi": 96,
+    "reduced_motion": false
+  },
+  "last_indicator_pid": 23776,
+  "failure_type": "Denied",
+  "capture_error": "CAPTURE_REGION_EXCLUDED_OR_UNKNOWN"
+}

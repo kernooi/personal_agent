@@ -1,0 +1,199 @@
+{
+  "milestone": "M5",
+  "status": "NOT FULLY VERIFIED",
+  "synthetic_content_only": true,
+  "windows": 26200,
+  "cases": [
+    {
+      "scene": "error",
+      "request": "What does this error mean?",
+      "state": "SUCCEEDED",
+      "answer": "From the captured image: A synthetic test application is visible.",
+      "seconds": 1.421,
+      "timings": {
+        "capture_seconds": 0.40762610000001587,
+        "vision_seconds": 1.049999991664663e-05
+      },
+      "capture_error": null,
+      "observation": {
+        "observation_id": "observation_f960eb14b426487494394fbdb8a8d969",
+        "artifact": "image_78bcf9a0967c4b2aa89914b27e5c8ba7",
+        "target_identity": "1d6809e1c1c6ca34bcebc739d11f0e9963f062b0422d09ce7e470cce39b090ea",
+        "application": "python",
+        "capture_scope": "window",
+        "captured_at": 1792064532.2479963,
+        "generation": 1,
+        "bounds": [
+          87,
+          100,
+          889,
+          722
+        ],
+        "image_dimensions": [
+          802,
+          622
+        ],
+        "model": "synthetic-vision",
+        "model_digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "adapter_version": "local-vision-v1",
+        "interpretation": {
+          "description": "A synthetic test application is visible.",
+          "visible_text": [],
+          "objects": [],
+          "activity_candidates": [],
+          "uncertainty": [],
+          "unreadable_regions": [],
+          "wordle": null
+        },
+        "sensitivity": "private",
+        "authority": "untrusted_visual_inference"
+      }
+    },
+    {
+      "scene": "plant",
+      "request": "What is this plant?",
+      "state": "SUCCEEDED",
+      "answer": "From the captured image: A synthetic test application is visible.",
+      "seconds": 1.426,
+      "timings": {
+        "capture_seconds": 0.4101988000002166,
+        "vision_seconds": 1.539999993838137e-05
+      },
+      "capture_error": null,
+      "observation": {
+        "observation_id": "observation_7d804c86f843441dbbf24a342958fbd2",
+        "artifact": "image_a006f890571a4071b150bd03354a28a5",
+        "target_identity": "1d6809e1c1c6ca34bcebc739d11f0e9963f062b0422d09ce7e470cce39b090ea",
+        "application": "python",
+        "capture_scope": "window",
+        "captured_at": 1792064533.6835275,
+        "generation": 2,
+        "bounds": [
+          87,
+          100,
+          889,
+          722
+        ],
+        "image_dimensions": [
+          802,
+          622
+        ],
+        "model": "synthetic-vision",
+        "model_digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "adapter_version": "local-vision-v1",
+        "interpretation": {
+          "description": "A synthetic test application is visible.",
+          "visible_text": [],
+          "objects": [],
+          "activity_candidates": [],
+          "uncertainty": [],
+          "unreadable_regions": [],
+          "wordle": null
+        },
+        "sensitivity": "private",
+        "authority": "untrusted_visual_inference"
+      }
+    },
+    {
+      "scene": "wordle",
+      "request": "Help me solve this Wordle.",
+      "state": "SUCCEEDED",
+      "answer": "From the captured image: A synthetic test application is visible.\nI cannot reliably read a Wordle board in this capture.",
+      "seconds": 1.406,
+      "timings": {
+        "capture_seconds": 0.3935559000001376,
+        "vision_seconds": 1.339999971605721e-05
+      },
+      "capture_error": null,
+      "observation": {
+        "observation_id": "observation_656135c337424c99a085ad3e056e7736",
+        "artifact": "image_0b69b64dc441475aa664437b67f0bd89",
+        "target_identity": "1d6809e1c1c6ca34bcebc739d11f0e9963f062b0422d09ce7e470cce39b090ea",
+        "application": "python",
+        "capture_scope": "window",
+        "captured_at": 1792064535.1148584,
+        "generation": 3,
+        "bounds": [
+          87,
+          100,
+          889,
+          722
+        ],
+        "image_dimensions": [
+          802,
+          622
+        ],
+        "model": "synthetic-vision",
+        "model_digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "adapter_version": "local-vision-v1",
+        "interpretation": {
+          "description": "A synthetic test application is visible.",
+          "visible_text": [],
+          "objects": [],
+          "activity_candidates": [],
+          "uncertainty": [],
+          "unreadable_regions": [],
+          "wordle": null
+        },
+        "sensitivity": "private",
+        "authority": "untrusted_visual_inference"
+      }
+    },
+    {
+      "scene": "wordle-next",
+      "request": "I entered another guess. Check again.",
+      "state": "SUCCEEDED",
+      "answer": "From the captured image: A synthetic test application is visible.",
+      "seconds": 1.407,
+      "timings": {
+        "capture_seconds": 0.4087139000002935,
+        "vision_seconds": 7.099999947968172e-06
+      },
+      "capture_error": null,
+      "observation": {
+        "observation_id": "observation_aec47c6d88ca4fe08d2b4387d95ff7e3",
+        "artifact": "image_59d5d5ead61542868bd20b970b8c95a7",
+        "target_identity": "1d6809e1c1c6ca34bcebc739d11f0e9963f062b0422d09ce7e470cce39b090ea",
+        "application": "python",
+        "capture_scope": "window",
+        "captured_at": 1792064536.5535622,
+        "generation": 4,
+        "bounds": [
+          87,
+          100,
+          889,
+          722
+        ],
+        "image_dimensions": [
+          802,
+          622
+        ],
+        "model": "synthetic-vision",
+        "model_digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "adapter_version": "local-vision-v1",
+        "interpretation": {
+          "description": "A synthetic test application is visible.",
+          "visible_text": [],
+          "objects": [],
+          "activity_candidates": [],
+          "uncertainty": [],
+          "unreadable_regions": [],
+          "wordle": null
+        },
+        "sensitivity": "private",
+        "authority": "untrusted_visual_inference"
+      }
+    }
+  ],
+  "capture_method": "Win32 GDI visible pixels / per-monitor-v2",
+  "plant_photograph": "NOT RUN; illustration does not establish photograph recognition",
+  "watching_native": "NOT RUN",
+  "physical_stop": "NOT RUN",
+  "vision_mode": "explicit scripted fixture; NOT real-model recognition",
+  "vision": {
+    "identity": "synthetic-vision",
+    "digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+  },
+  "pipeline_passed": true,
+  "manual_answer_review": "REQUIRED; successful dispatch is not recognition accuracy"
+}

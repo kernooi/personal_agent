@@ -521,7 +521,9 @@ class Broker:
 
     def dispatch(self, action: PreparedAction, approval: Approval | None = None):
         adapter = (
-            self.currency
+            self.screen
+            if action.capability == "screen.observe"
+            else self.currency
             if action.capability == "currency.quote"
             else self.web
             if action.capability == "web.research"
@@ -529,7 +531,12 @@ class Broker:
             if action.capability == "media.control"
             else self.desktop
         )
-        if action.capability in {"currency.quote", "web.research", "media.control"}:
+        if action.capability in {
+            "currency.quote",
+            "web.research",
+            "media.control",
+            "screen.observe",
+        }:
             adapter.cancel = lambda: self._cancelled(action.task_id)
         self.registry.validate(action)
         auth = authorize(
@@ -582,7 +589,7 @@ class Broker:
             )
             return self._result(action.task_id)
         except Exception as exc:
-            if action.capability in {"currency.quote", "web.research"}:
+            if action.capability in {"currency.quote", "web.research", "screen.observe"}:
                 from jarvis.public_data import PublicDataError
 
                 self.last_error = (
@@ -618,7 +625,7 @@ class Broker:
         try:
             evidence = adapter.observe(action)
         except Exception as exc:
-            if action.capability in {"currency.quote", "web.research"}:
+            if action.capability in {"currency.quote", "web.research", "screen.observe"}:
                 from jarvis.public_data import PublicDataError
 
                 self.last_error = (
@@ -658,7 +665,8 @@ class Broker:
             if evidence
             and (
                 getattr(self.registry, "m2", False)
-                or action.capability in {"currency.quote", "web.research", "media.control"}
+                or action.capability
+                in {"currency.quote", "web.research", "media.control", "screen.observe"}
             )
             else evidence.running
             if evidence
@@ -667,10 +675,12 @@ class Broker:
         if not matches or observed is None:
             self.store.complete(
                 action_id,
-                "FAILED" if action.capability in {"currency.quote", "web.research"} else "UNKNOWN",
+                "FAILED"
+                if action.capability in {"currency.quote", "web.research", "screen.observe"}
+                else "UNKNOWN",
                 evidence,
                 State.FAILED
-                if action.capability in {"currency.quote", "web.research"}
+                if action.capability in {"currency.quote", "web.research", "screen.observe"}
                 else State.NEEDS_REVIEW,
                 "SIMULATED: postcondition unverified; outcome unknown; no replay.",
             )
@@ -738,7 +748,7 @@ class Broker:
             except ValueError:
                 valid = False
             if row["state"] == "DISPATCHING":
-                if row["capability"] in {"currency.quote", "web.research"}:
+                if row["capability"] in {"currency.quote", "web.research", "screen.observe"}:
                     if task.state == State.RUNNING:
                         self.store.transition(task.task_id, State.VERIFYING)
                     self.store.complete(
@@ -762,7 +772,7 @@ class Broker:
             elif task.state == State.READY:
                 self.store.transition(
                     task.task_id,
-                    State.NEEDS_REVIEW,
+                    State.FAILED if row["capability"] == "screen.observe" else State.NEEDS_REVIEW,
                     "SIMULATED: unadmitted intent pending; reauthorization required.",
                 )
             recovered.append(self._result(task.task_id))

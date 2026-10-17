@@ -1,0 +1,123 @@
+{
+  "fixture_only": true,
+  "private_desktop_captured": false,
+  "checks": {
+    "light": {
+      "orb_visible": true,
+      "focus_unchanged": true,
+      "hit_test_reaches_fixture": true,
+      "capture_exclusion_verified": true,
+      "metadata": {
+        "ack": 2,
+        "frames": 37,
+        "render_seconds": 0.023364100004982902,
+        "state": "capturing",
+        "companion_error": null,
+        "excluded": true,
+        "hwnd": 4653240,
+        "position": [
+          2430,
+          1262,
+          106
+        ],
+        "dpi": 96,
+        "reduced_motion": false,
+        "foreground_is_indicator": false,
+        "foreground_is_orb": false,
+        "indicator_noactivate": true,
+        "elapsed_seconds": 0.647639300001174
+      },
+      "destroyed": true
+    },
+    "dark": {
+      "orb_visible": true,
+      "focus_unchanged": true,
+      "hit_test_reaches_fixture": true,
+      "capture_exclusion_verified": true,
+      "metadata": {
+        "ack": 2,
+        "frames": 37,
+        "render_seconds": 0.02288129999215016,
+        "state": "capturing",
+        "companion_error": null,
+        "excluded": true,
+        "hwnd": 3213840,
+        "position": [
+          2430,
+          1262,
+          106
+        ],
+        "dpi": 96,
+        "reduced_motion": false,
+        "foreground_is_indicator": false,
+        "foreground_is_orb": false,
+        "indicator_noactivate": true,
+        "elapsed_seconds": 0.6403844000014942
+      },
+      "destroyed": true
+    },
+    "real_m5": {
+      "state": "SUCCEEDED",
+      "events": [
+        "capturing",
+        "analyzing",
+        "completed"
+      ],
+      "timings": {
+        "capture_seconds": 0.42624269999942044,
+        "vision_seconds": 0.00511969999934081
+      },
+      "real_local_vision": true
+    },
+    "watch_foreground_ready": true,
+    "watching": {
+      "samples": 2,
+      "ended": true,
+      "scripted_interpretation": true,
+      "events": [
+        "capturing",
+        "analyzing",
+        "completed",
+        "watching",
+        "capturing",
+        "analyzing",
+        "completed",
+        "capturing",
+        "completed",
+        "cancelled"
+      ],
+      "notices": [
+        "Screen access active: python \u00b7 local analysis only.",
+        "Screen access active: python \u00b7 local analysis only.",
+        "Screen access active: python \u00b7 local analysis only.",
+        "Screen watching ended; no further captures."
+      ],
+      "failure": [
+        null,
+        null
+      ]
+    }
+  },
+  "status": "REVIEW REQUIRED",
+  "last_overlay_metadata": {
+    "ack": 2,
+    "frames": 37,
+    "render_seconds": 0.02288129999215016,
+    "state": "capturing",
+    "companion_error": null,
+    "excluded": true,
+    "hwnd": 3213840,
+    "position": [
+      2430,
+      1262,
+      106
+    ],
+    "dpi": 96,
+    "reduced_motion": false,
+    "foreground_is_indicator": false,
+    "foreground_is_orb": false,
+    "indicator_noactivate": true,
+    "elapsed_seconds": 0.6403844000014942
+  },
+  "last_indicator_pid": 12936
+}

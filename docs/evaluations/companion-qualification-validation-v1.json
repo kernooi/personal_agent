@@ -1,0 +1,17 @@
+{
+  "checks": {
+    "m2_model": true,
+    "m2_conversation": true,
+    "applications": true,
+    "browser": true,
+    "spotify": true,
+    "language": true
+  },
+  "all_matching": true,
+  "real_effects_sent": 0,
+  "model": "qwen3:8b",
+  "digest": "500a1f067a9f782620b40bee6f7b0c89e17ae61f686b92c24933e4ca4b2b8b41",
+  "cloud_disabled": "user_verified",
+  "failed_report_preserved": "companion-m2-model-r1.json",
+  "failure": "greeting timed out at 30.46 seconds; unchanged gate repeated after remaining evaluations warmed the model"
+}

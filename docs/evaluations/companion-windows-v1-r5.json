@@ -1,0 +1,107 @@
+{
+  "fixture_only": true,
+  "private_desktop_captured": false,
+  "checks": {
+    "light": {
+      "orb_visible": true,
+      "focus_unchanged": true,
+      "hit_test_reaches_fixture": true,
+      "capture_exclusion_verified": true,
+      "metadata": {
+        "ack": 2,
+        "frames": 26,
+        "render_seconds": 0.016905400010728044,
+        "state": "capturing",
+        "companion_error": null,
+        "excluded": true,
+        "hwnd": 2886160,
+        "position": [
+          2430,
+          1262,
+          106
+        ],
+        "dpi": 96,
+        "reduced_motion": false,
+        "foreground_is_indicator": false,
+        "foreground_is_orb": false,
+        "indicator_noactivate": true,
+        "elapsed_seconds": 0.6348030000008293
+      },
+      "destroyed": true
+    },
+    "dark": {
+      "orb_visible": true,
+      "focus_unchanged": true,
+      "hit_test_reaches_fixture": true,
+      "capture_exclusion_verified": true,
+      "metadata": {
+        "ack": 2,
+        "frames": 27,
+        "render_seconds": 0.01776389999577077,
+        "state": "capturing",
+        "companion_error": null,
+        "excluded": true,
+        "hwnd": 2034454,
+        "position": [
+          2430,
+          1262,
+          106
+        ],
+        "dpi": 96,
+        "reduced_motion": false,
+        "foreground_is_indicator": false,
+        "foreground_is_orb": false,
+        "indicator_noactivate": true,
+        "elapsed_seconds": 0.6441783000009309
+      },
+      "destroyed": true
+    },
+    "real_m5": {
+      "state": "SUCCEEDED",
+      "events": [
+        "capturing",
+        "analyzing",
+        "completed"
+      ],
+      "timings": {
+        "capture_seconds": 0.3885539000002609,
+        "vision_seconds": 4.027233600001637
+      },
+      "real_local_vision": true
+    },
+    "watching": {
+      "samples": 0,
+      "ended": true,
+      "scripted_interpretation": true,
+      "events": [
+        "capturing",
+        "analyzing",
+        "completed",
+        "watching",
+        "cancelled"
+      ]
+    }
+  },
+  "status": "REVIEW REQUIRED",
+  "last_overlay_metadata": {
+    "ack": 2,
+    "frames": 27,
+    "render_seconds": 0.01776389999577077,
+    "state": "capturing",
+    "companion_error": null,
+    "excluded": true,
+    "hwnd": 2034454,
+    "position": [
+      2430,
+      1262,
+      106
+    ],
+    "dpi": 96,
+    "reduced_motion": false,
+    "foreground_is_indicator": false,
+    "foreground_is_orb": false,
+    "indicator_noactivate": true,
+    "elapsed_seconds": 0.6441783000009309
+  },
+  "last_indicator_pid": 11080
+}

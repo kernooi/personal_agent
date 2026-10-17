@@ -1,0 +1,10 @@
+{
+  "source": "https://github.com/tabatkins/wordle-list",
+  "commit": "255b9469c4dad99a3b95cc4ddbe139b3d3747868",
+  "sha256": {
+    "wordle-words.txt": "9df5dad1b44cf1b9e0fa7c3ebff94d69ff7efb59f8691ac88e74e1c7b3da121e",
+    "wordle-LICENSE.txt": "62927bb30e3ac6efd7bf5056288d5879e2e362c71a98bfdecae32316ec88da98"
+  },
+  "word_count": 14855,
+  "note": "Historical possible guesses, not a current official solution dictionary or a daily answer lookup."
+}

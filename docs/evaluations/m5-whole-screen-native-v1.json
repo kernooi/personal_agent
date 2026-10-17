@@ -1,0 +1,21 @@
+{
+  "date": "2026-10-15",
+  "scope": "owner-authorized on-demand main display",
+  "windows_build": 26200,
+  "capture_method": "Win32 GDI visible pixels",
+  "initial_attempt": {
+    "captured": false,
+    "code": "CAPTURE_REGION_EXCLUDED_OR_UNKNOWN",
+    "diagnosis": "DWM-cloaked helper windows incorrectly counted as visible surfaces"
+  },
+  "after_fix": {
+    "captured": true,
+    "width": 2560,
+    "height": 1440,
+    "dpi": 96,
+    "image_saved": false,
+    "image_inference_run": false,
+    "indicator_visible": true
+  },
+  "notes": "Only positively DWM-cloaked surfaces are skipped. Unknown status, exclusions, protected content and password-field checks remain enforced. This is capture evidence, not full-display recognition qualification."
+}

@@ -1,0 +1,8 @@
+{
+  "fixture_only": true,
+  "private_desktop_captured": false,
+  "checks": {},
+  "status": "NOT FULLY VERIFIED",
+  "failure_type": "Denied",
+  "capture_error": "CAPTURE_REGION_EXCLUDED_OR_UNKNOWN"
+}

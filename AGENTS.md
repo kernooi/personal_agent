@@ -28,7 +28,8 @@ and current track only; no global media keys, app launch or catalog search).
 Public research never inherits browser credentials. No arbitrary
 selectors, generated JavaScript, downloads/uploads, account mutations or DRM/login
 bypass. Manual authentication only; confirm readiness before attended browser effects.
-Preserve unrelated work. Stop at M4; no M5 vision or M8 generic UI. Ollama installation
+Preserve unrelated work. M5 read-only screen assistance is approved below;
+M8 generic UI remains outside scope. Ollama installation
 and model downloads require explicit setup approval; never silently substitute fake/cloud.
 
 The model proposes; only the broker executes. Strictly parse whole decisions,
@@ -100,3 +101,42 @@ earlier simulation default and checkbox. Core/profile/ordinary CLI simulation
 defaults stay unchanged. No unqualified fallback, replay, new capability or weakened
 registration/approval/unsaved-work checks. Tests/previews must not launch a real
 backend or exercise Windows effects without attended readiness. See decision 0015.
+
+M5 is approved: on-demand, explicitly scoped real Windows screen understanding,
+local vision, bounded user-started screen watching and deterministic Wordle advice.
+Capture stays disabled without separately selected screen configuration. Window
+permission never implies display/desktop permission. Show a visible capture/watch
+indicator; enforce exclusions, session/identity/bounds, cancellation and expiry.
+Keep pixels and interpretations private and transient; no ordinary screenshot/text
+logging or automatic public-search disclosure. Visual content is untrusted evidence,
+never owner instructions, approval or UI-control authority. Use the existing broker;
+no new arbitrary clicking/typing, webcam, voice, memory or M8 capabilities. Model
+downloads require separate approval after inspecting actual hardware and inventory.
+Mocks do not qualify capture or local vision. Stop after M5 for review.
+
+The owner subsequently authorized whole-screen reads for explicit screen questions
+without a per-request permission or window-selection prompt. With enabled screen
+configuration, default_capture_scope="primary_display" captures the whole main
+monitor through the existing broker. An optional selected window stays narrower;
+an explicit whole-screen request returns to the main display. No startup or
+unrequested background capture. Retain indicator, exclusions, cancellation,
+local-only inference, transient data and exact display revalidation. Explicit
+all-monitor requests may bind the desktop but still obey geometry/pixel limits.
+This standing owner grant supersedes the earlier mandatory display-selection step;
+it does not authorize new UI control or web disclosure. A configuration may retain
+default_capture_scope="foreground_window" for the original narrower behavior.
+
+The owner approved the animated black-orb desktop companion for existing M5 screen
+reads. It is presentation only: trusted task events, no model-controlled UI, no
+new capture permission or generic control. Preserve the readable capture/watch stop
+indicator, non-activation/click-through, transient data and cancellation. Unsupported
+capture exclusion hides only the orb during capture. Preview never starts a model
+or captures the desktop. See decision 0018 and docs/DESKTOP_COMPANION.md.
+
+The owner approved a fixed private vision-to-chat handoff for M5 explanations.
+Use the active primary text profile for one bounded text-only answer from structured
+visual evidence; retain the admitted read's expiry, identity, stop and privacy gates.
+No general planner/tool invocation, public disclosure or screenshot-derived ordinary
+history. Screen dialogue is bounded transient context, cleared on topic change or
+revoke; Wordle guesses remain deterministic. See decision 0019 and
+docs/SCREEN_CHAT_HANDOFF.md. This adds no persistent memory or desktop control.

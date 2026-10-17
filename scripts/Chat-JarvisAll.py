@@ -18,18 +18,17 @@ def chat_command(*, real=True):
     pairs = {
         "--profile": private / "profiles/notepad-m2-concurrent-v1.toml",
         "--registration": private / "notepad-registration.json",
-        "--model-report": root / "docs/evaluations/m2-media-recovery-model-v1-r1.json",
-        "--conversation-report": root
-        / "docs/evaluations/m2-media-recovery-conversation-v1-r1.json",
+        "--model-report": root / "docs/evaluations/m5-screen-handoff-m2-model-r1.json",
+        "--conversation-report": root / "docs/evaluations/m5-screen-handoff-conversation-r1.json",
         "--applications-config": private / "applications.toml",
-        "--applications-report": root / "docs/evaluations/applications-media-recovery-v4-r2.json",
-        "--language-report": root / "docs/evaluations/request-language-required-filters-v3-r1.json",
+        "--applications-report": root / "docs/evaluations/m5-screen-handoff-applications-r1.json",
+        "--language-report": root / "docs/evaluations/m5-screen-handoff-language-r1.json",
         "--public-data-config": private / "public-data.toml",
         "--web-config": private / "web.toml",
         "--media-config": private / "media-all-spotify-desktop-v1.toml",
         "--browser-registration": private / "chrome-registration.json",
-        "--media-report": root / "docs/evaluations/m4-required-filters-browser-v2-r1.json",
-        "--windows-media-report": root / "docs/evaluations/m4-required-filters-desktop-v1-r1.json",
+        "--media-report": root / "docs/evaluations/m5-screen-handoff-browser-r1.json",
+        "--windows-media-report": root / "docs/evaluations/m5-screen-handoff-spotify-r1.json",
     }
     if not real:
         for option in (
@@ -43,6 +42,9 @@ def chat_command(*, real=True):
             "--language-report",
         ):
             pairs.pop(option)
+    # Screen access remains independently opt-in; no capture occurs at startup.
+    if (private / "screen.toml").is_file():
+        pairs["--screen-config"] = private / "screen.toml"
     missing = [str(path) for path in pairs.values() if not path.is_file()]
     if missing:
         raise ValueError("Missing local setup or qualification files: " + ", ".join(missing))

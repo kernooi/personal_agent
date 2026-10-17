@@ -1,0 +1,25 @@
+{
+  "synthetic_pixels_only": true,
+  "fault_injection": "first response explicitly simulated HTTP200 done:false; CPU inference is real",
+  "real_screen_captures": 0,
+  "status": "passed",
+  "elapsed_seconds": 43.49857729999985,
+  "validated_description": "The image features a background with vertical stripes in two colors: a deep purple and a bright orange.",
+  "model": "qwen2.5vl:3b",
+  "digest": "79d4979787523c92629bc043c0584a5132d6758e40b429586203a6b1094cb6f8",
+  "attempts": [
+    {
+      "backend": "default",
+      "outcome": "incomplete"
+    },
+    {
+      "backend": "cpu",
+      "outcome": "complete"
+    }
+  ],
+  "same_image": true,
+  "cpu_option": 0,
+  "observed_vram_bytes": [
+    0
+  ]
+}

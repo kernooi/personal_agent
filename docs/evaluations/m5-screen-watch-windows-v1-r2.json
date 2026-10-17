@@ -1,0 +1,31 @@
+{
+  "milestone": "M5",
+  "status": "NOT FULLY VERIFIED",
+  "synthetic_content_only": true,
+  "private_user_content_captured": false,
+  "windows": 26200,
+  "cases": [],
+  "capture_method": "Win32 GDI visible pixels / per-monitor-v2",
+  "plant_photograph": "NOT RUN; illustration does not establish photograph recognition",
+  "watching_native": "NOT RUN",
+  "physical_stop": "NOT RUN",
+  "vision_mode": "real local model",
+  "vision": {
+    "available": true,
+    "model_present": true,
+    "identity": "qwen2.5vl:3b",
+    "digest": "79d4979787523c92629bc043c0584a5132d6758e40b429586203a6b1094cb6f8",
+    "runtime_version": "0.40.2",
+    "transport_version": "ollama-chat-v2",
+    "text_generation": "supported",
+    "schema_constrained_output": "unknown",
+    "native_tool_calls": "unknown",
+    "context_capacity": 128000,
+    "cloud_disabled": "user_verified",
+    "local_mode_programmatically_attested": false,
+    "ready": true,
+    "qualification": "unqualified; fake-execution evaluation only"
+  },
+  "failure_category": "PermissionError",
+  "pipeline_passed": false
+}

@@ -28,6 +28,7 @@ def authorize(
             ("web.research", ("web_evidence",)),
             ("media.control", ("media_read",)),
             ("media.control", ("media_visible",)),
+            ("screen.observe", ("screen_private_read",)),
         }
         or action.window_ref != task.scope.window_ref
         or action.policy_version != POLICY_VERSION

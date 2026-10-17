@@ -1,0 +1,105 @@
+{
+  "fixture_only": true,
+  "private_desktop_captured": false,
+  "checks": {
+    "light": {
+      "orb_visible": true,
+      "focus_unchanged": false,
+      "hit_test_reaches_fixture": true,
+      "capture_exclusion_verified": false,
+      "metadata": {
+        "ack": 2,
+        "frames": 26,
+        "render_seconds": 0.018041500014078338,
+        "state": "capturing",
+        "companion_error": null,
+        "excluded": true,
+        "hwnd": 4851890,
+        "position": [
+          2430,
+          1262,
+          106
+        ],
+        "dpi": 96,
+        "reduced_motion": false
+      },
+      "destroyed": true
+    },
+    "dark": {
+      "orb_visible": true,
+      "focus_unchanged": false,
+      "hit_test_reaches_fixture": true,
+      "capture_exclusion_verified": false,
+      "metadata": {
+        "ack": 2,
+        "frames": 27,
+        "render_seconds": 0.017925499989360105,
+        "state": "capturing",
+        "companion_error": null,
+        "excluded": true,
+        "hwnd": 1181582,
+        "position": [
+          2430,
+          1262,
+          106
+        ],
+        "dpi": 96,
+        "reduced_motion": false
+      },
+      "destroyed": true
+    },
+    "real_m5": {
+      "state": "SUCCEEDED",
+      "events": [
+        "capturing",
+        "analyzing",
+        "completed"
+      ],
+      "timings": {
+        "capture_seconds": 0.4041780000006838,
+        "vision_seconds": 6.806354000000283
+      },
+      "real_local_vision": true
+    },
+    "watching": {
+      "samples": 0,
+      "ended": true,
+      "scripted_interpretation": true,
+      "events": [
+        "capturing",
+        "analyzing",
+        "completed",
+        "watching",
+        "cancelled"
+      ]
+    },
+    "physical_input": {
+      "clicks": 1,
+      "keys": 3
+    },
+    "stop": {
+      "physical_hotkey": true,
+      "state": "CANCELLED",
+      "zero_new_captures": true,
+      "overlay_process_ended": true
+    }
+  },
+  "status": "REVIEW REQUIRED",
+  "last_overlay_metadata": {
+    "ack": 2,
+    "frames": 27,
+    "render_seconds": 0.017925499989360105,
+    "state": "capturing",
+    "companion_error": null,
+    "excluded": true,
+    "hwnd": 1181582,
+    "position": [
+      2430,
+      1262,
+      106
+    ],
+    "dpi": 96,
+    "reduced_motion": false
+  },
+  "last_indicator_pid": 19404
+}

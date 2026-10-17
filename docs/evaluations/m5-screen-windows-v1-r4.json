@@ -1,0 +1,294 @@
+{
+  "milestone": "M5",
+  "status": "NOT FULLY VERIFIED",
+  "synthetic_content_only": true,
+  "windows": 26200,
+  "cases": [
+    {
+      "scene": "error",
+      "request": "What does this error mean?",
+      "state": "SUCCEEDED",
+      "answer": "From the captured image: The error message indicates that the 'pandas' module could not be found. This typically means that the module is not installed in the current environment.",
+      "seconds": 10.173,
+      "timings": {
+        "capture_seconds": 0.4896974999996928,
+        "vision_seconds": 8.049876900000072
+      },
+      "capture_error": null,
+      "observation": {
+        "observation_id": "observation_42f883c25c9845b4a3a9f37b96dadc44",
+        "artifact": "image_0ebe2d1c788e42d5a987c50f366c41e5",
+        "target_identity": "efbd07d5fce46df0cfa7976b0e3eeb23123cb51521ab9fd32b9b647dc79ac599",
+        "application": "python",
+        "capture_scope": "window",
+        "captured_at": 1792065121.1665735,
+        "generation": 1,
+        "bounds": [
+          87,
+          100,
+          889,
+          722
+        ],
+        "image_dimensions": [
+          802,
+          622
+        ],
+        "analyzed_regions": [
+          [
+            87,
+            100,
+            889,
+            722
+          ]
+        ],
+        "model": "qwen2.5vl:3b",
+        "model_digest": "79d4979787523c92629bc043c0584a5132d6758e40b429586203a6b1094cb6f8",
+        "adapter_version": "local-vision-v1",
+        "interpretation": {
+          "description": "The error message indicates that the 'pandas' module could not be found. This typically means that the module is not installed in the current environment.",
+          "visible_text": [],
+          "objects": [],
+          "activity_candidates": [],
+          "uncertainty": [],
+          "unreadable_regions": [],
+          "wordle": null
+        },
+        "sensitivity": "private",
+        "authority": "untrusted_visual_inference"
+      },
+      "content_check": true
+    },
+    {
+      "scene": "plant",
+      "request": "What is this plant?",
+      "state": "SUCCEEDED",
+      "answer": "From the captured image: An orange flower with a radial pattern of petals.\nThe exact species of the flower cannot be determined from the image alone.",
+      "seconds": 7.83,
+      "timings": {
+        "capture_seconds": 0.5046766000000389,
+        "vision_seconds": 5.763454699999784
+      },
+      "capture_error": null,
+      "observation": {
+        "observation_id": "observation_25088fab366f49fd813b9b2cae1ac081",
+        "artifact": "image_0c0d758701f048699ce26086e0d9660a",
+        "target_identity": "efbd07d5fce46df0cfa7976b0e3eeb23123cb51521ab9fd32b9b647dc79ac599",
+        "application": "python",
+        "capture_scope": "window",
+        "captured_at": 1792065131.3146844,
+        "generation": 2,
+        "bounds": [
+          87,
+          100,
+          889,
+          722
+        ],
+        "image_dimensions": [
+          802,
+          622
+        ],
+        "analyzed_regions": [
+          [
+            87,
+            100,
+            889,
+            722
+          ]
+        ],
+        "model": "qwen2.5vl:3b",
+        "model_digest": "79d4979787523c92629bc043c0584a5132d6758e40b429586203a6b1094cb6f8",
+        "adapter_version": "local-vision-v1",
+        "interpretation": {
+          "description": "An orange flower with a radial pattern of petals.",
+          "visible_text": [],
+          "objects": [],
+          "activity_candidates": [],
+          "uncertainty": [
+            "The exact species of the flower cannot be determined from the image alone."
+          ],
+          "unreadable_regions": [],
+          "wordle": null
+        },
+        "sensitivity": "private",
+        "authority": "untrusted_visual_inference"
+      },
+      "content_check": "MANUAL REVIEW REQUIRED"
+    },
+    {
+      "scene": "wordle",
+      "request": "Help me solve this Wordle.",
+      "state": "SUCCEEDED",
+      "answer": "Observed Wordle rows:\nCRANE: absent, absent, present_elsewhere, absent, correct\n180 candidate(s) in the configured dictionary match every submitted row. Try AISLE; it favors common remaining letters and positions. This is advice only; I have not entered a guess.",
+      "seconds": 10.057,
+      "timings": {
+        "capture_seconds": 0.44489489999978105,
+        "vision_seconds": 7.007272700000158
+      },
+      "capture_error": null,
+      "observation": {
+        "observation_id": "observation_e745225cdd0942d2b9c355699954d3c9",
+        "artifact": "image_a865a181d98f4bbe9f1ea9baa2afac09",
+        "target_identity": "efbd07d5fce46df0cfa7976b0e3eeb23123cb51521ab9fd32b9b647dc79ac599",
+        "application": "python",
+        "capture_scope": "window",
+        "captured_at": 1792065139.1471817,
+        "generation": 3,
+        "bounds": [
+          87,
+          100,
+          889,
+          722
+        ],
+        "image_dimensions": [
+          802,
+          622
+        ],
+        "analyzed_regions": [
+          [
+            319,
+            260,
+            619,
+            622
+          ]
+        ],
+        "model": "qwen2.5vl:3b",
+        "model_digest": "79d4979787523c92629bc043c0584a5132d6758e40b429586203a6b1094cb6f8",
+        "adapter_version": "local-vision-v1",
+        "interpretation": {
+          "description": "A regular Wordle board is visible.",
+          "visible_text": [],
+          "objects": [],
+          "activity_candidates": [],
+          "uncertainty": [],
+          "unreadable_regions": [],
+          "wordle": {
+            "columns": 5,
+            "rows": 6,
+            "guesses": [
+              {
+                "letters": "crane",
+                "feedback": [
+                  "absent",
+                  "absent",
+                  "present_elsewhere",
+                  "absent",
+                  "correct"
+                ]
+              }
+            ],
+            "incomplete": ""
+          }
+        },
+        "sensitivity": "private",
+        "authority": "untrusted_visual_inference"
+      },
+      "content_check": true,
+      "solver_check": true
+    },
+    {
+      "scene": "wordle-next",
+      "request": "I entered another guess. Check again.",
+      "state": "SUCCEEDED",
+      "answer": "Observed Wordle rows:\nCRANE: absent, absent, present_elsewhere, absent, correct\nSLATE: absent, present_elsewhere, present_elsewhere, absent, correct\n39 candidate(s) in the configured dictionary match every submitted row. Try BAILE; it favors common remaining letters and positions. This is advice only; I have not entered a guess.",
+      "seconds": 9.909,
+      "timings": {
+        "capture_seconds": 0.5889210000000276,
+        "vision_seconds": 7.143890300000294
+      },
+      "capture_error": null,
+      "observation": {
+        "observation_id": "observation_4474485394fe4307a3ceb5336574f8cc",
+        "artifact": "image_7d90f89b2da44419a21e1b51d61bd428",
+        "target_identity": "efbd07d5fce46df0cfa7976b0e3eeb23123cb51521ab9fd32b9b647dc79ac599",
+        "application": "python",
+        "capture_scope": "window",
+        "captured_at": 1792065149.871855,
+        "generation": 4,
+        "bounds": [
+          87,
+          100,
+          889,
+          722
+        ],
+        "image_dimensions": [
+          802,
+          622
+        ],
+        "analyzed_regions": [
+          [
+            319,
+            260,
+            619,
+            622
+          ]
+        ],
+        "model": "qwen2.5vl:3b",
+        "model_digest": "79d4979787523c92629bc043c0584a5132d6758e40b429586203a6b1094cb6f8",
+        "adapter_version": "local-vision-v1",
+        "interpretation": {
+          "description": "A regular Wordle board is visible.",
+          "visible_text": [],
+          "objects": [],
+          "activity_candidates": [],
+          "uncertainty": [],
+          "unreadable_regions": [],
+          "wordle": {
+            "columns": 5,
+            "rows": 6,
+            "guesses": [
+              {
+                "letters": "crane",
+                "feedback": [
+                  "absent",
+                  "absent",
+                  "present_elsewhere",
+                  "absent",
+                  "correct"
+                ]
+              },
+              {
+                "letters": "slate",
+                "feedback": [
+                  "absent",
+                  "present_elsewhere",
+                  "present_elsewhere",
+                  "absent",
+                  "correct"
+                ]
+              }
+            ],
+            "incomplete": ""
+          }
+        },
+        "sensitivity": "private",
+        "authority": "untrusted_visual_inference"
+      },
+      "content_check": true,
+      "solver_check": true
+    }
+  ],
+  "capture_method": "Win32 GDI visible pixels / per-monitor-v2",
+  "plant_photograph": "Explicit operator-selected public test image",
+  "watching_native": "NOT RUN",
+  "physical_stop": "NOT RUN",
+  "vision_mode": "real local model",
+  "vision": {
+    "available": true,
+    "model_present": true,
+    "identity": "qwen2.5vl:3b",
+    "digest": "79d4979787523c92629bc043c0584a5132d6758e40b429586203a6b1094cb6f8",
+    "runtime_version": "0.40.2",
+    "transport_version": "ollama-chat-v2",
+    "text_generation": "supported",
+    "schema_constrained_output": "unknown",
+    "native_tool_calls": "unknown",
+    "context_capacity": 128000,
+    "cloud_disabled": "user_verified",
+    "local_mode_programmatically_attested": false,
+    "ready": true,
+    "qualification": "unqualified; fake-execution evaluation only"
+  },
+  "pipeline_passed": true,
+  "manual_answer_review": "REQUIRED; successful dispatch is not recognition accuracy",
+  "wordle_recognition_passed": true
+}

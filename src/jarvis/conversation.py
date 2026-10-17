@@ -34,7 +34,32 @@ class Conversation:
 
         self.spotify = SpotifyFlow(self)
 
+    def screen_request(self, text, request_key=None):
+        from jarvis.screen_tools import screen_question
+
+        screen = getattr(self.broker, "screen", None)
+        if screen_question(text, screen is not None and screen.has_dialogue()):
+            if screen:
+                self.begin_owner_turn(text)
+                return screen.submit(
+                    text, request_key, conversation_context=tuple(self.history[-4:])
+                )
+            return TaskResult(
+                "",
+                State.WAITING_INPUT,
+                "Screen assistance isn't enabled for this session. "
+                "I haven't captured or seen your screen.",
+                False,
+                "clarify",
+            )
+        if screen:
+            screen.end_dialogue()  # Topic changes cannot carry screen-derived context to tools.
+        return None
+
     def submit(self, text: str, request_key: str | None = None):
+        result = self.screen_request(text, request_key)
+        if result is not None:
+            return result
         self.begin_owner_turn(text)
         from jarvis.request_language import normalize
 

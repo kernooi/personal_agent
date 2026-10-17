@@ -1,0 +1,71 @@
+{
+  "captures": 0,
+  "checks": [
+    {
+      "name": "primary-small",
+      "bounds": [
+        0,
+        0,
+        2560,
+        1440
+      ],
+      "size_dip": 48,
+      "metadata": {
+        "ack": 2,
+        "frames": 1,
+        "render_seconds": 0.0003268000000389293,
+        "state": "capturing",
+        "companion_error": null,
+        "excluded": true,
+        "hwnd": 2230712,
+        "position": [
+          2473,
+          1305,
+          63
+        ],
+        "dpi": 96,
+        "reduced_motion": true,
+        "foreground_is_indicator": false,
+        "foreground_is_orb": false,
+        "indicator_noactivate": true,
+        "elapsed_seconds": 0.3350006000000576
+      },
+      "focus_unchanged": true,
+      "within_monitor": true,
+      "destroyed": true
+    },
+    {
+      "name": "secondary-large",
+      "bounds": [
+        2560,
+        113,
+        4480,
+        1193
+      ],
+      "size_dip": 128,
+      "metadata": {
+        "ack": 2,
+        "frames": 18,
+        "render_seconds": 0.01522470001145848,
+        "state": "capturing",
+        "companion_error": null,
+        "excluded": true,
+        "hwnd": 1115516,
+        "position": [
+          4287,
+          839,
+          169
+        ],
+        "dpi": 96,
+        "reduced_motion": false,
+        "foreground_is_indicator": false,
+        "foreground_is_orb": false,
+        "indicator_noactivate": true,
+        "elapsed_seconds": 0.3323305000012624
+      },
+      "focus_unchanged": true,
+      "within_monitor": true,
+      "destroyed": true
+    }
+  ]
+}

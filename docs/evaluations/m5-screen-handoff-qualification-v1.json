@@ -1,0 +1,17 @@
+{
+  "checks": {
+    "m2_model": true,
+    "conversation": true,
+    "applications": true,
+    "browser": true,
+    "spotify": true,
+    "language": true
+  },
+  "all_matching": true,
+  "runtime": "0.40.2",
+  "model": "qwen3:8b",
+  "model_digest": "500a1f067a9f782620b40bee6f7b0c89e17ae61f686b92c24933e4ca4b2b8b41",
+  "execution": "real local inference with fake effect controllers",
+  "real_app_media_effects": 0,
+  "acceptance_unchanged": true
+}

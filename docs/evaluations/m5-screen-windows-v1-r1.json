@@ -1,0 +1,233 @@
+{
+  "milestone": "M5",
+  "status": "NOT FULLY VERIFIED",
+  "synthetic_content_only": true,
+  "windows": 26200,
+  "cases": [
+    {
+      "scene": "error",
+      "request": "What does this error mean?",
+      "state": "SUCCEEDED",
+      "answer": "In the image captured 38 seconds ago: The error message indicates that the 'pandas' module could not be found.\nThe error suggests that the 'pandas' module is not installed or not accessible in the current environment.",
+      "seconds": 39.406,
+      "timings": {
+        "capture_seconds": 0.3989325000002282,
+        "vision_seconds": 37.57961329999989
+      },
+      "capture_error": null,
+      "observation": {
+        "observation_id": "observation_ce883f80e5c54432a83ffca019ba1750",
+        "artifact": "image_8c2f7cfd35fc48f7acb53ae57a5648e5",
+        "target_identity": "eec2914c8d7073f7cb01101aee5487f39828286415cb577c0d5139e24c600797",
+        "application": "python",
+        "capture_scope": "window",
+        "captured_at": 1792064547.0482407,
+        "generation": 1,
+        "bounds": [
+          87,
+          100,
+          889,
+          722
+        ],
+        "image_dimensions": [
+          802,
+          622
+        ],
+        "model": "qwen2.5vl:3b",
+        "model_digest": "fb90415cde1ef08aa669ae74b082d49b158729b6db1ab183c941417d507e71a1",
+        "adapter_version": "local-vision-v1",
+        "interpretation": {
+          "description": "The error message indicates that the 'pandas' module could not be found.",
+          "visible_text": [],
+          "objects": [],
+          "activity_candidates": [],
+          "uncertainty": [
+            "The error suggests that the 'pandas' module is not installed or not accessible in the current environment."
+          ],
+          "unreadable_regions": [],
+          "wordle": null
+        },
+        "sensitivity": "private",
+        "authority": "untrusted_visual_inference"
+      }
+    },
+    {
+      "scene": "plant",
+      "request": "What is this plant?",
+      "state": "SUCCEEDED",
+      "answer": "From the captured image: A synthetic illustration of a plant with a green stem and five green leaves, placed on a brown square base.\nThe plant is synthetic and not a photograph.",
+      "seconds": 6.974,
+      "timings": {
+        "capture_seconds": 0.4015017000001535,
+        "vision_seconds": 5.050199499999962
+      },
+      "capture_error": null,
+      "observation": {
+        "observation_id": "observation_e39bd9cb850848e392eb1f77a0632fa6",
+        "artifact": "image_e57bfed723d74c7a8e91ba3a051e4bf2",
+        "target_identity": "eec2914c8d7073f7cb01101aee5487f39828286415cb577c0d5139e24c600797",
+        "application": "python",
+        "capture_scope": "window",
+        "captured_at": 1792064586.5570238,
+        "generation": 2,
+        "bounds": [
+          87,
+          100,
+          889,
+          722
+        ],
+        "image_dimensions": [
+          802,
+          622
+        ],
+        "model": "qwen2.5vl:3b",
+        "model_digest": "79d4979787523c92629bc043c0584a5132d6758e40b429586203a6b1094cb6f8",
+        "adapter_version": "local-vision-v1",
+        "interpretation": {
+          "description": "A synthetic illustration of a plant with a green stem and five green leaves, placed on a brown square base.",
+          "visible_text": [],
+          "objects": [],
+          "activity_candidates": [],
+          "uncertainty": [
+            "The plant is synthetic and not a photograph."
+          ],
+          "unreadable_regions": [],
+          "wordle": null
+        },
+        "sensitivity": "private",
+        "authority": "untrusted_visual_inference"
+      }
+    },
+    {
+      "scene": "wordle",
+      "request": "Help me solve this Wordle.",
+      "state": "SUCCEEDED",
+      "answer": "Observed Wordle rows:\nCRAIE: unknown, unknown, unknown, unknown, unknown\nSome submitted letters or tile colors are unclear. Please confirm them first.",
+      "seconds": 8.273,
+      "timings": {
+        "capture_seconds": 0.41340349999973114,
+        "vision_seconds": 5.990552299999763
+      },
+      "capture_error": null,
+      "observation": {
+        "observation_id": "observation_ff4e5b82f78e424daf89b3c55a4c1830",
+        "artifact": "image_cc9e605ca13b4aa8b4a5e9ccaf6145c7",
+        "target_identity": "eec2914c8d7073f7cb01101aee5487f39828286415cb577c0d5139e24c600797",
+        "application": "python",
+        "capture_scope": "window",
+        "captured_at": 1792064593.4982061,
+        "generation": 3,
+        "bounds": [
+          87,
+          100,
+          889,
+          722
+        ],
+        "image_dimensions": [
+          802,
+          622
+        ],
+        "model": "qwen2.5vl:3b",
+        "model_digest": "79d4979787523c92629bc043c0584a5132d6758e40b429586203a6b1094cb6f8",
+        "adapter_version": "local-vision-v1",
+        "interpretation": {
+          "description": "The word 'CRAINE' is hidden in a grid of squares.",
+          "visible_text": [],
+          "objects": [],
+          "activity_candidates": [],
+          "uncertainty": [],
+          "unreadable_regions": [],
+          "wordle": {
+            "columns": 5,
+            "rows": 6,
+            "guesses": [
+              {
+                "letters": "craie",
+                "feedback": [
+                  "unknown",
+                  "unknown",
+                  "unknown",
+                  "unknown",
+                  "unknown"
+                ]
+              }
+            ],
+            "incomplete": ""
+          }
+        },
+        "sensitivity": "private",
+        "authority": "untrusted_visual_inference"
+      }
+    },
+    {
+      "scene": "wordle-next",
+      "request": "I entered another guess. Check again.",
+      "state": "SUCCEEDED",
+      "answer": "From the captured image: The word 'CRAINE' is hidden in a grid of squares.\nCRAINE",
+      "seconds": 8.291,
+      "timings": {
+        "capture_seconds": 0.5665955999998005,
+        "vision_seconds": 5.838640399999804
+      },
+      "capture_error": null,
+      "observation": {
+        "observation_id": "observation_b66177d30026475d8d765b371c5338dd",
+        "artifact": "image_b4ea52cf3c5e4134a4961f2c6d4faae7",
+        "target_identity": "eec2914c8d7073f7cb01101aee5487f39828286415cb577c0d5139e24c600797",
+        "application": "python",
+        "capture_scope": "window",
+        "captured_at": 1792064602.3107076,
+        "generation": 4,
+        "bounds": [
+          87,
+          100,
+          889,
+          722
+        ],
+        "image_dimensions": [
+          802,
+          622
+        ],
+        "model": "qwen2.5vl:3b",
+        "model_digest": "79d4979787523c92629bc043c0584a5132d6758e40b429586203a6b1094cb6f8",
+        "adapter_version": "local-vision-v1",
+        "interpretation": {
+          "description": "The word 'CRAINE' is hidden in a grid of squares.",
+          "visible_text": [],
+          "objects": [],
+          "activity_candidates": [],
+          "uncertainty": [
+            "CRAINE"
+          ],
+          "unreadable_regions": [],
+          "wordle": null
+        },
+        "sensitivity": "private",
+        "authority": "untrusted_visual_inference"
+      }
+    }
+  ],
+  "capture_method": "Win32 GDI visible pixels / per-monitor-v2",
+  "plant_photograph": "NOT RUN; illustration does not establish photograph recognition",
+  "watching_native": "NOT RUN",
+  "physical_stop": "NOT RUN",
+  "vision_mode": "real local model",
+  "vision": {
+    "available": true,
+    "model_present": true,
+    "identity": "qwen2.5vl:3b",
+    "digest": "fb90415cde1ef08aa669ae74b082d49b158729b6db1ab183c941417d507e71a1",
+    "runtime_version": "0.40.2",
+    "transport_version": "ollama-chat-v2",
+    "text_generation": "supported",
+    "schema_constrained_output": "unknown",
+    "native_tool_calls": "unknown",
+    "context_capacity": 128000,
+    "cloud_disabled": "user_verified",
+    "local_mode_programmatically_attested": false,
+    "ready": true,
+    "qualification": "unqualified; fake-execution evaluation only"
+  },
+  "pipeline_passed": true,
+  "manual_answer_review": "REQUIRED; successful dispatch is not recognition accuracy"
+}

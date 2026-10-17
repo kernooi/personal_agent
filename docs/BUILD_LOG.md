@@ -1,5 +1,413 @@
 # Build evidence
 
+## 2026-10-17: Simplify the orb's screen-access badge
+
+Owner requested removal of the red box appearing with the orb. Changed the native
+indicator from a red 450x58 rectangle to a charcoal 340x52 rounded badge and shortened
+capture/analysis/watch labels. The readable screen-access heading and click-to-stop
+remain, alongside the existing global stop. Windows owns the rounded region after
+assignment; a failed assignment frees the region and retains the functioning badge.
+Non-activation, liveness, session handling and exclusion behavior are unchanged.
+No live overlay, screen capture, model or real desktop-control test was launched.
+Native visual review is pending; deterministic verification recorded below.
+Full pytest: 1531 passed in 56.46 s. Ruff check and format check passed (188 files);
+git diff --check passed. No dependencies changed and no commit/push was made.
+
+## 2026-10-17: Private vision-to-chat integration
+
+The owner requested a natural final answer using both installed models. Read the
+specification completely and preserved all earlier M5/orb/recovery work. Added a
+fixed text-only explanation stage after structured vision, within the existing
+brokered screen read. The active primary profile supplies the language model and
+runtime options. `screen-answer-v1` admits only bound observation/evidence references
+and prose; no planner, registry, tools, generated-code execution or new effect.
+Both Conversation and ApplicationConversation share the screen route, so the
+combined terminal and GUI use the same implementation. Decision 0019 records this
+owner-authorized exception to the initial single-model design.
+
+Revalidate stop, indicator liveness, exact target, profile and expiry around the
+handoff. Keep one text call and a phase budget clamped to the existing task expiry.
+Never publish stale/cancelled/foreign replies. Wordle remains deterministic.
+Uncertainty/unreadable warnings survive explanation; exact duplicates are omitted.
+If synthesis fails, preserve the validated image reading and disclose the missing
+explanation, with only a safe fallback code in the journal. No fake/cloud/model
+substitution or replay. A small private screen discussion context is fresh/target
+bound, clears on topic change/revoke, and never enters ordinary history or public
+tools. The existing private configuration was preserved; new defaults enable the
+handoff after restart.
+
+New answer-adapter tests cover natural text, independent binding, malformed/extra
+fields, action claims, cancellation/target/profile/liveness/expiry races, context
+limits, privacy/topic changes, duplicate delivery, Wordle isolation, fixed-loopback
+text-only transport and the combined application wrapper. Initial oversized-test
+IDs exceeded Windows test-environment limits; explicit short IDs fixed the harness
+without changing the negative case. Final dedicated suite: 30 passed. Final full
+pytest: 1531 passed in 66.72 s. Final Ruff lint/format (188 files) and pip check
+passed. After refreshing launcher report paths, GUI/startup regressions passed
+40/40 in 10.68 s without real backend effects.
+
+Frozen six-case screen-chat corpus plus one genuine two-model synthetic-image case:
+7/7 passed in preserved r1 and r2 reports. The corpus uses actual primary inference
+with explicit scripted observations; the final case uses actual qwen2.5vl:3b image
+inference followed by actual qwen3:8b explanation. No native desktop captures or
+app/media effects. r2 source hash matches the final implementation. Primary digest
+500a1f067a9f782620b40bee6f7b0c89e17ae61f686b92c24933e4ca4b2b8b41,
+vision digest 79d4979787523c92629bc043c0584a5132d6758e40b429586203a6b1094cb6f8,
+Ollama 0.40.2. r2 text-only answer stages 1.60-3.32 s; two-real-model case vision
+4.94 s / chat 4.78 s. First r1 text call 17.85 s. Manual review found a repeated
+warning in r1; exact-warning deduplication was added for r2, with corpus/thresholds
+unchanged. Paraphrased warnings can still repeat. Keyword/reference checks do not
+prove universal grounding, game recognition or naturalness.
+
+All six current-source action/language gates passed at existing 100% thresholds:
+M2 24/24, conversation 41/41, applications 31/31, browser 27/27, Spotify desktop
+25/25, language 33/33. Strict qualification readers accepted all reports against
+the current runtime/profile. Added the new answer module to affected source hashes;
+shared terminal/GUI launcher points to `m5-screen-handoff-*-r1.json`. These tests
+use real local inference with fake effect controllers. GUI worker simulation
+startup with the actual profile/screen config reached ready and quit cleanly;
+no capture request or real app/media backend. Details: SCREEN_CHAT_HANDOFF.md.
+
+No dependency/model download, machine/global setting change, commit or push.
+Broader M5 remains NOT FULLY VERIFIED; native capture/overlay code was unchanged
+and prior hardware evidence is separate from this model-integration validation.
+
+## 2026-10-17: Diagnose incomplete game-screen inference and bounded recovery
+
+Inspected only safe journal error categories and the existing local runtime log.
+Latest screen failure was FAILED/vision/VISION_CANCELLED_OR_INCOMPLETE after
+16.865 s. Ollama logged an empty-grammar-stack exception, native runner exit 1
+and HTTP 200. Therefore the earlier generic "stopped" message did not establish
+owner cancellation. Redacted diagnosis is preserved in
+docs/evaluations/m5-vision-runtime-crash-v1.json. A fresh owner-authorized main-screen
+request succeeded (0.871 s capture, 7.696 s vision); no private screenshot or
+description persisted, and game-name accuracy was not independently verified.
+
+Added an optional, default-enabled, single CPU retry for an explicitly incomplete
+response with empty/matching model identity. Reuses only a bounded whole-image
+derivative of the same captured pixels and exact installed model. No recapture,
+cloud/fake/model fallback, generated UI effects, extra capture grant or deadline
+extension. Actual cancellation/expiry, wrong models, malformed/truncated responses
+and repeated incompletion remain rejected. Normal GPU resolution is unchanged.
+Recovery warns when the image was reduced. The private screen configuration was
+preserved; new defaults apply on restart. Prompt requires visible evidence before
+naming a game. This is not an accuracy qualification.
+
+Synthetic fault-injection plus actual CPU inference: small same-image recovery
+passed in 43.50 s with observed model VRAM=0. A 2560x1440 full-resolution CPU run
+timed out at 60.31 s; failed report retained. After adding the bounded 147456-pixel
+derivative, that synthetic full-display test completed in 46.78 s at 512x288,
+with strict parsed output and the resolution warning. Initial broken response was
+simulated in these tests, not claimed as a native crash reproduction. No private
+pixels were used or stored by the synthetic checks. Final full pytest: 1501 passed in
+63.76 s. CPU recovery can remain slow or time out under load; fine-detail/game/
+Wordle accuracy on the thumbnail remains unverified. See VISION_COMPATIBILITY.md.
+
+No package/model/runtime/driver downloads, machine/global changes, commit or push.
+
+Final lint/format, pip dependency and whitespace checks passed. The six unchanged
+100% / zero-unauthorized-effect source-bound gates all passed and their strict
+readers accepted the current runtime/profile: M2 model 24/24, multi-turn 41/41,
+applications 31/31, browser 27/27, Spotify desktop 25/25 and language 33/33.
+Reports are `m5-vision-recovery-*-r1.json`; shared terminal/GUI launcher references
+them. Existing text model was preloaded without a prompt/download before evaluation.
+These gates used real local inference with fake effect controllers, no real app or
+media effect. Historical failures/results remain unchanged. Both example and
+existing private screen configurations strictly validate with the new defaults.
+
+## 2026-10-16: Animated black-orb desktop companion
+
+Implemented the owner's reference in code using native GDI+ vector gradients and
+two white capsule eyes, per-pixel-alpha layered overlay and existing Tcl timers.
+No dependency/model/image downloads. Default 80 DIP, strict 48–128 DIP settings,
+corner placement, controlled gaze interpolation, blinking, subtle bob/tilt,
+entrance, analysis, success/error tails and immediate cancellation. Reduced motion
+can follow the Windows preference or be selected privately. Standalone
+`companion-preview --cycle` exercises the production renderer/state machine.
+Generated light/dark contact sheet visually inspected; no private desktop images
+were persisted. See docs/DESKTOP_COMPANION.md and decision 0018.
+
+Capture/analysis/completion events come from the existing broker stages. The UI
+receives only bounded task/state/geometry metadata, never visual content. Existing
+capture/watch permission and privacy checks remain. Persistent readable stop
+indicator distinguishes capture, local processing and time between watch samples.
+Late/duplicate events cannot revive retired tasks; capture exclusion fallback hides
+only the orb. Narrow verified interpreter/UI ownership accounts for the Windows
+venv launcher/child process without allowing arbitrary protected windows.
+
+Owner confirmed readiness, physically clicked/typed through the orb and pressed
+Ctrl+Alt+Shift+F10 in the owned fixture. r3 records physical input and cancellation
+with zero additional captures. Earlier r1/r2 exclusion failures and r3/r4 Tk focus
+failures are preserved. Replaced the indicator's activating initial Tk wrapper with
+a native NOACTIVATE stop window on a Tcl interpreter. r5/r6 verify unchanged focus,
+click-through, visibility on light/dark backgrounds, byte-identical captures with
+and without the overlay, and actual HWND destruction. r5 real M5 broker/capture/
+local vision succeeded (0.389 s capture, 4.027 s vision). r6 native bounded watching
+completed two samples and stopped; its interpretation was explicitly scripted.
+r6 shared timing-reference issue is documented and fixed in the lab; old report
+unchanged. Source observation/privacy policy was not relaxed.
+
+Native 48-DIP reduced mode and 128-DIP placement on the two 96-DPI monitors passed
+with no focus changes. A deliberately blocked owned UI loop still shut down and
+destroyed its orb in 1.261 s through the independent shutdown watchdog. Performance
+sample: 181 frames in 3.013 s (60.08 FPS), 0.607 ms/frame, 0.141 CPU seconds
+(4.67% of one core), 37.45 MiB working set / 22.31 MiB private memory. This is a
+short local sample, not a long-run guarantee. Higher/mixed DPI, lock transitions,
+unsupported-affinity hardware and extended stability remain unverified natively.
+
+Full pytest: 1488 passed in 89.21 s. After refreshing launcher paths, GUI regressions:
+21 passed in 11.19 s. Ruff lint/format, pip check and whitespace checks passed.
+All six current-source model gates passed: M2 24/24, conversation 41/41,
+applications 31/31, browser 27/27, Spotify desktop 25/25, request language 33/33.
+The first M2 run failed only the cold greeting with a 30.46 s timeout (23/24, zero
+unauthorized dispatches); report retained. Unchanged repeat after warm evaluations
+passed 24/24. No gate, profile or timeout weakened. All six strict qualification
+readers accepted the current runtime/profile/source reports. Shared terminal/GUI
+launcher now references them. No live app/media action was used for these gates.
+
+Prior work preserved; no machine/global settings, new capability, commit or push.
+This completes companion implementation with the native limits listed above;
+broader M5 remains NOT FULLY VERIFIED in its separate report.
+
+## 2026-10-15: Diagnose subsequent invalid vision output and expose safe failures
+
+Owner still received the generic fresh-observation error after the context change.
+Confirmed private vision context was already 8192; redacted journal timestamps show
+a later FAILED request. No prompt/image was recovered from the journal. Current
+ordinary-screen reproduction succeeded; after owner confirmed the game was visible,
+one real broker read reproduced FAILED at the vision stage with invalid output.
+This is distinct from the earlier HTTP 400/context overflow. Three subsequent
+reads succeeded but did not extract a structured Wordle board. Do not claim the
+game-reading problem is universally resolved from these completed dispatches.
+
+Replaced the catch-all response with fixed safe messages for capture exclusion,
+protected/password content, timeout, unavailable/missing/incompatible vision model,
+invalid/truncated output and cancellation. /screen-status now shows the loaded
+vision context and last safe stage/category. Failed reads journal only those fixed
+categories, never model text, server bodies, prompts or images. Unknown exception
+text is suppressed. Execution/verification failures remain read-only FAILED and
+are not automatically replayed. No app/media unknown-outcome rules were changed.
+
+Bounded general vision descriptions/text lists in the supplied JSON schema to
+avoid desktop transcription exhausting reply space. Explicitly reject done_reason
+length before parsing/publishing any partial answer. Natural predict/suggest-word
+phrasing takes the same Wordle preprocessing path as a named Wordle request; no
+unvalidated model guess is published if structured board evidence is absent.
+Grid verification now supports complete symmetric 1–2 pixel interior outlines as
+well as the original outer outline. Every tile/color remains independently checked.
+The initial outline-only change still did not detect the actual board.
+
+Owner confirmed NYT Wordle. Bounded pixel-geometry diagnosis identified 62-pixel
+horizontal tiles / 67-pixel column spacing, with different vertical rounding.
+The detector incorrectly assumed identical horizontal/vertical geometry. It now
+tries only nearby vertical height/spacing variants, including half-pixel rounding,
+and still independently verifies all thirty tiles, complete borders and exact
+palette colors. Four new geometry tests include rejection of larger disagreement.
+
+Actual main-display board detection now succeeds, one submitted row, analyzed crop
+660x802 (2x lossless enlargement inside the authorized display). Two real broker
+requests with the owner's original second-word phrasing both SUCCEEDED. Local
+letter reading returned no unknown letters; independent feedback simulation
+verified each recommended guess against every observed clue. Vision 4.476 / 4.665 s,
+capture 0.642 / 0.711 s. Letter ground truth was not independently scored; this is
+not a universal vision-accuracy claim. No board contents, raw response or screenshots
+were persisted or printed. Evidence: m5-nyt-board-layout-v1.json.
+
+One development validation probe miscalled the standalone solve helper and failed
+before reporting its result; the corrected probes use the actual broker result
+and finally cleanup. Its remaining owned temporary journal contains no raw images
+or model text. Existing tests/acceptance gates were not relaxed. Current source-bound
+qualifications and final regression results are recorded below.
+
+Final checks: `python -m pytest -q` 1,429 passed in 60.93 s, exit 0;
+focused screen tests 106 passed in 2.60 s; Ruff lint/format exit 0 (174 files),
+pip check exit 0, diff check exit 0. All Python commands use the existing
+`.\.venv\Scripts\python.exe`. Prior failed/source-stale reports remain preserved.
+Earlier six `m5-screen-errors-*` gates passed before the final unknown-provider
+normalization correction; the final `m5-nyt-board-*` reports refresh that source.
+No 100% correctness or zero-unauthorized-dispatch threshold changed.
+
+Final current-source gates all exit 0: m5-nyt-board-m2-model-r1 (24/24),
+conversation-r1 (41/41), applications-r1 (31/31), browser-r1 (27/27),
+spotify-r1 (25/25), language-r1 (33/33), under docs/evaluations with .json suffix.
+Shared launcher updated to these reports; all six runtime qualification validators
+return True. Simulation GUI-worker /quit probe with screen configuration omitted:
+Ready, exit 0, empty stderr, no effect or capture requested. No commit or push.
+
+## 2026-10-15: Full-screen vision context overflow diagnosed and corrected
+
+Owner reported the generic fresh-observation failure on a second-word screen
+question. Read the private journal's redacted state events observationally; the
+failure was admitted and ended FAILED. Reproduced through screen.submit using
+the existing broker, temporary private journal and real authorized main-display
+capture. Capture succeeded; vision returned INCOMPATIBLE_MODEL_OR_OPTIONS.
+A diagnostic local HTTP transport read only the runtime error, not image/prompt
+content: HTTP 400, exceed_context_size_error, 4,254 input tokens versus 4,096
+available. No exclusion bypass or missing model was involved.
+
+Backed up existing private screen.toml to screen.before-context-8192.toml without
+overwriting a prior backup; changed only its vision context_tokens to 8192.
+Updated the non-secret screen example accordingly. Text profile/context and all
+controller code, corpora, policy and qualification hashes remain unchanged.
+No dependency/model download, runtime restart, global setting or app effect.
+
+The same real main-display request through the broker now ends SUCCEEDED:
+2560x1440, capture 0.7947 s, local vision 9.3915 s, no capture/broker error.
+Pixels and private interpretations were not saved or printed. This verifies the
+full-screen inference pipeline, not independent accuracy of a predicted game word.
+Evidence: docs/evaluations/m5-screen-context-fix-v1.json. M5 remains NOT FULLY VERIFIED.
+
+Executed `.\.venv\Scripts\python.exe -m pytest tests/test_screen.py tests/test_screen_image.py -q`:
+90 passed in 1.96 s, exit 0. Ruff check and format check exit 0 (174 files).
+No full-suite rerun for this configuration-only change; prior 1,413-pass result
+remains the last full-suite evidence. Existing qualifications are unaffected by
+the separate private vision setting. Running GUI workers must restart to reload
+configuration. The current generic screen failure reply still omits provider
+details; diagnosis used a bounded local-only development probe.
+
+## 2026-10-15: Direct whole-screen questions without selection prompts
+
+Owner explicitly authorized whole-screen capture for screen questions without
+another permission prompt. Enabled ScreenConfig now defaults to
+default_capture_scope="primary_display". Trusted OS discovery binds the main
+monitor; GUI focus does not bind capture to the chat window. Optional window
+selection stays narrower, while explicit whole-screen wording uses the main
+display again. Explicit all-monitor/desktop wording binds desktop scope and keeps
+existing geometry/pixel limits. Foreground-only behavior remains configurable.
+Capture remains off at startup and ordinary chat takes no screenshots.
+
+Retained visible indication, exclusions, local inference, broker admission,
+revocation/cancellation, exact target identity and transient pixels. No new model,
+dependency, global setting, UI control or background watching. Existing private
+screen configuration inherits the new default without overwriting its settings.
+
+Actual authorized main-display capture initially failed because DWM-cloaked
+invisible Windows helper surfaces entered the visible-region checks. Skip only
+positively reported cloaked surfaces; unknown status still passes through the
+conservative checks. Repeated capture succeeded at 2560x1440, DPI 96, indicator
+visible, no image saved and no image inference. Evidence:
+docs/evaluations/m5-whole-screen-native-v1.json. This is capture compatibility,
+not a new full-screen visual recognition pass. Existing M5 gaps remain.
+
+Added deterministic coverage for no-reference primary-display reads, no binding to
+foreground chat, missing-display rejection, optional narrow selection and explicit
+whole-screen/all-monitor scope. Preserved foreground-policy denial/cancellation
+tests. An initial test needed its foreground fixture policy made explicit after
+the default changed; no no-image-model assertion or acceptance gate was relaxed.
+Final regression checks: `.\.venv\Scripts\python.exe -m pytest -q` exited 0,
+**1,413 passed in 62.04 s**. Ruff lint/format exited 0 (174 files); pip dependency
+check and diff check exited 0. These checks capture no ordinary screen content.
+Refreshed qualifications use the same commands/private profile as the preceding
+M5 entry, with new `m5-whole-screen-*` report filenames. Historical results remain
+untouched and the acceptance gates remain 100% / zero unauthorized dispatches.
+
+Active whole-screen source-bound reports (all exit 0):
+`m5-whole-screen-m2-model-r2.json` 24/24,
+`m5-whole-screen-conversation-r1.json` 41/41,
+`m5-whole-screen-applications-r1.json` 31/31,
+`m5-whole-screen-browser-r1.json` 27/27,
+`m5-whole-screen-spotify-r1.json` 25/25 and
+`m5-whole-screen-language-r1.json` 33/33. All six launcher validators return True.
+M2 model r1 passed but became source-stale during the explicit desktop-target
+correction; it is preserved, with r2 providing the current-source evidence.
+Shared GUI/terminal launcher now references the current reports. Simulation-only
+GUI-worker /quit probe (screen config omitted): Ready, exit 0, empty stderr;
+no effects/capture requested. No commit or push.
+
+## 2026-10-15: M5 scoped local screen understanding
+
+Read the full M5 request, AGENTS, README and project specification; preserved the
+existing repository work. Implemented only M5. Added strict screen configuration,
+bounded native worker/visible indicator, exact-window and separately permitted
+display scopes, local vision transport, private structured observations, bounded
+watching, deterministic Wordle solver and source-pinned MIT dictionary. Integrated
+these through the existing broker/conversation/terminal/shared GUI launcher.
+See decision 0017 and M5_TEST_REPORT.md for files, privacy and remaining gates.
+
+Actual Windows 11 Home build 26200 / Python 3.13 / Ryzen 5600X / RTX 4070 12 GB
+host inspected. qwen3:8b advertised no vision. Owner explicitly approved the
+qwen2.5vl:3b download and attended owned-fixture tests. Download used the registered
+standalone Ollama executable, private model directory and process-local settings;
+exact command and digests are in M5_TEST_REPORT.md. No runtime/global installation.
+Created absent private screen.toml with on-demand capture enabled, watching off.
+Existing local-mode evidence reused; no new cloud-disabled startup verification.
+
+Actual lab command (new report names on each run):
+
+```powershell
+.\.venv\Scripts\python.exe scripts\Test-JarvisScreen.py --windows --attended `
+  --profile "$env:LOCALAPPDATA\Jarvis\profiles\notepad-m2-concurrent-v1.toml" `
+  --screen-config "$env:LOCALAPPDATA\Jarvis\screen.toml" `
+  --plant-image "$env:LOCALAPPDATA\Jarvis\m5-fixtures\flower.png" `
+  --watch-check --interactive-stop `
+  --report docs/evaluations/m5-screen-windows-v1-r5.json
+```
+
+Real r4/r5 vision: error text read, public flower described with species uncertain,
+CRANE then CRANE+SLATE letters/colors exact. Independent feedback replay validated
+AISLE/BAILE suggestions. r5 physical Ctrl+Alt+Shift+F10: CANCELLED, zero new
+captures. Excluding owned Python window: CAPTURE_EXCLUDED, generation zero.
+First cold inference 37.58 s; r5 totals 7.86–9.901 s. One whole-GPU snapshot
+5,568 MiB used, not peak/isolated memory. No ordinary user window was captured.
+
+Native watch command, exit 0, three samples / one change / stopped at bound:
+
+```powershell
+.\.venv\Scripts\python.exe scripts\Test-JarvisScreen.py --windows --attended `
+  --watch-only --interactive-watch --capture-only `
+  --profile "$env:LOCALAPPDATA\Jarvis\profiles\notepad-m2-concurrent-v1.toml" `
+  --screen-config "$env:LOCALAPPDATA\Jarvis\screen.toml" `
+  --report docs/evaluations/m5-screen-watch-windows-v1-r4.json
+```
+
+This watch run used scripted interpretation with genuine native capture, not live
+vision recognition. Preserved watch r1–r3 failures. Fixed test-helper focus wait
+to tolerate a temporarily ineligible foreground while waiting for the owner.
+Preserved native indicator-handshake/covered-window failures and early real-model
+Wordle transcription failures. Added Windows CRLF handshake handling and required
+letter schema with independent pixel colors; never weakened solver constraints.
+One owned-fixture diagnostic image and unused blank test image removed afterward.
+
+Checks recorded: full pytest checkpoint 1,404 passed (95.51 s); expanded focused
+screen suite 84 passed (1.92 s). Ruff lint exit 0, format exit 0 (174 files), pip
+check exit 0, diff check exit 0. Observational doctor exit 0: qwen3 ready,
+screen configured, captured=false, browser_launched=false. Final checks and
+source-bound model gate results follow.
+
+Final checks: `python -m pytest -q` **1,407 passed**, exit 0, 59.40 s;
+`python -m ruff check .` exit 0; `python -m ruff format --check .` exit 0,
+174 files; `python -m pip check` exit 0; `git diff --check` exit 0.
+Every Python command used `.\.venv\Scripts\python.exe`.
+
+Explicit actual-qwen3/simulated-controller checks used the existing private profile
+and `python -m jarvis <command> --live --profile <private profile> --report <new file>`:
+
+| Command | Active report under docs/evaluations | Actual result |
+|---|---|---|
+| eval-m2 | m5-integration-m2-model-v1-r5.json | 24/24, exit 0 |
+| eval-m2-chat | m5-integration-m2-conversation-v1-r4.json | 41/41, exit 0 |
+| eval-apps | m5-integration-applications-v4-r4.json | 31/31, exit 0 |
+| eval-media | m5-integration-browser-v2-r4.json | 27/27, exit 0 |
+| eval-spotify-desktop | m5-integration-spotify-desktop-v1-r4.json | 25/25, exit 0 |
+| eval-language | m5-integration-language-v3-r4.json | 33/33, exit 0 |
+
+All maintain 100% correctness and zero unauthorized dispatches. M2 r3 failed one
+unsupported/clarification case (23/24); M2 r4 failed a first-greeting TIMEOUT
+(23/24, 30.4234 s). Both retained. Rerun r5 passed without modifying the profile,
+corpus, acceptance gate or planner. Earlier passing source-stale reports are also
+retained. Updated shared launcher to the above active reports; all six actual
+qualification validators return True for current source/profile/model/runtime.
+Model qualification is distinct from native effect/recognition evidence.
+
+Final no-effects GUI-worker probe used the shared launcher's simulation arguments,
+omitted screen configuration and submitted only /quit: reached Ready, exit 0,
+empty stderr. No real backend or service bootstrap was launched by that probe.
+
+M5 remains **NOT FULLY VERIFIED**. Native high-DPI/multi-monitor/full-display,
+lock/disconnect/protected-window cases, live-vision watching and broader recognition
+corpus remain pending; no geometry/mock results are presented as native evidence.
+No M6/M7/M8, account changes, generic UI input, force-kill, commit or push.
+
 ## 2026-10-15: Restore GUI startup after the required-filter change
 
 Owner reported the real-Chrome startup qualification error after the code-only

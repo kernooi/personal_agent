@@ -449,6 +449,9 @@ class ApplicationConversation:
         self.pending_window = None
 
     def submit(self, text, request_key=None):
+        result = self.original.screen_request(text, request_key)
+        if result is not None:
+            return result
         self.original.begin_owner_turn(text)
         from jarvis.request_language import normalize
 

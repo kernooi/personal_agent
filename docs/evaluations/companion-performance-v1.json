@@ -1,0 +1,34 @@
+{
+  "synthetic_ui_only": true,
+  "captures": 0,
+  "elapsed_seconds": 3.012621099998796,
+  "frames": 181,
+  "frames_per_second": 60.08057236274164,
+  "render_ms_per_frame": 0.607018784669071,
+  "cpu_seconds": 0.140625,
+  "one_core_cpu_percent": 4.667862148348367,
+  "working_set_bytes": 39264256,
+  "private_bytes": 23396352,
+  "peak_working_set_bytes": 39264256,
+  "metadata": {
+    "ack": 3,
+    "frames": 212,
+    "render_seconds": 0.1301529000265873,
+    "state": "capturing",
+    "companion_error": null,
+    "excluded": true,
+    "hwnd": 2098698,
+    "position": [
+      2430,
+      1262,
+      106
+    ],
+    "dpi": 96,
+    "reduced_motion": false,
+    "foreground_is_indicator": false,
+    "foreground_is_orb": false,
+    "indicator_noactivate": true,
+    "elapsed_seconds": 3.560079200000473
+  },
+  "owned_process_ended": true
+}

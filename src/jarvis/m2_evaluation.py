@@ -103,6 +103,9 @@ def contract_hash(profile):
                 "policy",
                 "storage",
                 "bootstrap",
+                "screen_tools",
+                "screen_data",
+                "screen_answer",
             )
         }
     raw = json.dumps(

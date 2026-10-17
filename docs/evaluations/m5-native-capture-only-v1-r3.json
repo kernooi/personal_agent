@@ -1,0 +1,29 @@
+{
+  "milestone": "M5",
+  "status": "NOT FULLY VERIFIED",
+  "synthetic_content_only": true,
+  "windows": 26200,
+  "cases": [
+    {
+      "scene": "error",
+      "request": "What does this error mean?",
+      "state": "FAILED",
+      "answer": "I couldn't obtain a fresh, valid screen observation. Nothing was clicked or typed. Recheck scope, visibility and the local vision configuration.",
+      "seconds": 1.031,
+      "timings": {},
+      "capture_error": "WINDOW_COVERED",
+      "observation": null
+    }
+  ],
+  "capture_method": "Win32 GDI visible pixels / per-monitor-v2",
+  "plant_photograph": "NOT RUN; illustration does not establish photograph recognition",
+  "watching_native": "NOT RUN",
+  "physical_stop": "NOT RUN",
+  "vision_mode": "explicit scripted fixture; NOT real-model recognition",
+  "vision": {
+    "identity": "synthetic-vision",
+    "digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+  },
+  "pipeline_passed": false,
+  "manual_answer_review": "REQUIRED; successful dispatch is not recognition accuracy"
+}

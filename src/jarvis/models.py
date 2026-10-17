@@ -92,6 +92,10 @@ def parse_decision(raw: bytes, version: str = "decision-v1") -> Decision:
     if not isinstance(raw, bytes) or not raw or len(raw) > MAX_REPLY_BYTES:
         raise ValueError("Empty, non-byte, or oversized reply")
     try:
+        if version == "screen-answer-v1":
+            from jarvis.screen_answer import gateway_parse
+
+            return gateway_parse(raw)
         payload = json.loads(
             raw.decode("utf-8"), object_pairs_hook=unique_object, parse_constant=reject_constant
         )
@@ -233,6 +237,7 @@ class OllamaProfile(BaseProfile):
     provider_options: ProviderOptions = Field(default_factory=ProviderOptions)
     stage_options: dict[
         Literal[
+            "screen-answer-v1",
             "request-language-v1",
             "assistant-intent-v1",
             "assistant-plan-v1",
@@ -293,6 +298,7 @@ class ModelRequest:
     messages: tuple[Message, ...]
     decision_boundary: (
         Literal[
+            "screen-answer-v1",
             "request-language-v1",
             "currency-decision-v1",
             "media-choice-v1",

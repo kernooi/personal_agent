@@ -1,0 +1,19 @@
+{
+  "date": "2026-10-17",
+  "runtime": "Ollama 0.40.2",
+  "vision_model": "qwen2.5vl:3b",
+  "source": "existing private Ollama log and redacted broker error event; no screenshot or description retained",
+  "native_exception": "Unexpected empty grammar stack after accepting piece: @ (31)",
+  "runner_exit_status": 1,
+  "http_status": 200,
+  "broker_state": "FAILED",
+  "broker_failure_stage": "vision",
+  "broker_failure_code": "VISION_CANCELLED_OR_INCOMPLETE",
+  "broker_elapsed_seconds": 16.865,
+  "fresh_authorized_main_display_probe": {
+    "state": "SUCCEEDED",
+    "capture_seconds": 0.8709401,
+    "vision_seconds": 7.6956644,
+    "game_identity_independently_verified": false
+  }
+}

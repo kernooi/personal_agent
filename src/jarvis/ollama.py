@@ -229,6 +229,7 @@ class OllamaProvider:
         profile = self._profile(request.profile)
         if request.decision_boundary not in {
             None,
+            "screen-answer-v1",
             "request-language-v1",
             "currency-decision-v1",
             "media-choice-v1",

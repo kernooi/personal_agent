@@ -1,0 +1,44 @@
+{
+  "date": "2026-10-15",
+  "owner_confirmed_game": "NYT Wordle",
+  "capture_scope": "primary display",
+  "display_dimensions": [2560, 1440],
+  "before_layout_fix": {
+    "regular_grid_detected": false,
+    "unaccepted_vision_result_reproduced": true,
+    "later_completed_reads_without_structured_board": 3
+  },
+  "layout_change": {
+    "independent_vertical_spacing": true,
+    "bounded_fractional_pixel_rounding": true,
+    "symmetric_interior_or_exterior_outlines": true,
+    "all_thirty_tiles_still_verified": true,
+    "colors_inferred_or_relaxed": false
+  },
+  "after_layout_fix": {
+    "regular_grid_detected": true,
+    "analyzed_image_dimensions": [660, 802],
+    "submitted_rows": 1,
+    "real_broker_runs": [
+      {
+        "state": "SUCCEEDED",
+        "capture_seconds": 0.6415333000004466,
+        "vision_seconds": 4.476335699999254,
+        "readable_letters": true,
+        "suggestion_independently_matches_every_observed_clue": true
+      },
+      {
+        "state": "SUCCEEDED",
+        "capture_seconds": 0.7112770000003366,
+        "vision_seconds": 4.664965799998754,
+        "readable_letters": true,
+        "suggestion_independently_matches_every_observed_clue": true
+      }
+    ],
+    "letter_ground_truth_independently_scored": false,
+    "raw_screenshot_letters_answers_or_model_output_persisted": false
+  },
+  "model": "qwen2.5vl:3b",
+  "vision_context_tokens": 8192,
+  "milestone_status": "NOT FULLY VERIFIED"
+}

@@ -1,0 +1,41 @@
+# Copy into private local data. Enabling does not take a screenshot.
+# Choose an installed, image-capable LOCAL model; downloads need separate approval.
+version = 1
+enabled = false
+# Explicit visual questions capture the main monitor without a selection prompt.
+default_capture_scope = "primary_display"
+vision_model = ""
+allowed_executables = [] # Optional narrower list of executable basenames.
+excluded_executables = ["1password.exe", "keepass.exe", "keepassxc.exe", "bitwarden.exe"]
+excluded_title_terms = ["incognito", "inprivate", "private browsing", "password", "banking"]
+watch_enabled = false
+watch_seconds = 120
+sample_seconds = 10
+max_samples = 24
+max_pixels = 4194304
+max_image_bytes = 8388608
+capture_seconds = 8
+inference_seconds = 90
+freshness_seconds = 30
+# Full-display images may exceed 4096 input tokens even before the reply.
+context_tokens = 8192
+output_tokens = 1536
+# Same image/model, one CPU retry after an explicit incomplete runtime response.
+# No recapture or extension of the inference deadline. Can be slower than GPU.
+cpu_retry_on_incomplete = true
+cpu_retry_max_pixels = 147456 # Whole-image thumbnail; preserves aspect ratio.
+# Use the active primary text profile for one private explanation after vision.
+chat_answer_enabled = true
+chat_answer_seconds = 30 # Within the existing screen task's expiry, never extended.
+# Optional trusted local UTF-8 dictionary: lowercase five-letter words, one per line.
+# No automatic dictionary download or today's-answer lookup.
+word_list = ""
+
+# Presentation only: no startup capture or new permission.
+[companion]
+enabled = true
+size = 80 # DIP, 48..128
+position = "bottom-right" # also bottom-left, top-left, top-right
+intensity = 0.7 # 0..1
+reduced_motion = "system" # system, always, never
+show_during_watch = true

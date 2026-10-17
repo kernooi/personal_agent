@@ -219,7 +219,9 @@ class Store:
             )
             or payload["effect"]
             not in (
-                {"media_read", "media_visible"}
+                {"screen_private_read"}
+                if payload["app_id"] == "screen"
+                else {"media_read", "media_visible"}
                 if payload["app_id"] == "media"
                 else {"web_public_read", "web_evidence"}
                 if payload["app_id"] == "web"
@@ -252,6 +254,11 @@ class Store:
                 or effect(arguments) != payload["effect"]
             ):
                 raise Denied("Corrupt media scope")
+        if payload["app_id"] == "screen":
+            import re
+
+            if not re.fullmatch(r"capture_[a-f0-9]{32}", payload.get("window_ref", "")):
+                raise Denied("Corrupt screen scope")
         return Task(
             task_id,
             row["revision"],
@@ -429,6 +436,7 @@ class Store:
                         "currency-adapter-v1",
                         "web-adapter-v1",
                         "media-adapter-v1",
+                        "screen-read-v1",
                     }
                     else evidence.running
                 )
@@ -444,6 +452,15 @@ class Store:
                     or evidence.authority != "tool_output"
                 ):
                     raise Denied("Stored currency evidence authority is invalid")
+            if action.adapter_version == "screen-read-v1" and (
+                evidence.source != "screen-binding-validator-v1"
+                or evidence.kind != "scoped_visual_observation"
+                or evidence.authority != "tool_output"
+                or evidence.sensitivity != "private"
+                or evidence.window_ref != action.window_ref
+                or evidence.observed_identity != action.target_identity
+            ):
+                raise Denied("Stored screen evidence authority is invalid")
             if action.adapter_version in {"applications-windows-v1", "applications-fake-v1"}:
                 from jarvis.application_data import valid_runtime_proof
                 from jarvis.application_tools import identity

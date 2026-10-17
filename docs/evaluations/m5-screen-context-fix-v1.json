@@ -1,0 +1,34 @@
+{
+  "date": "2026-10-15",
+  "initial_failure": {
+    "capture_succeeded": true,
+    "provider_error": "INCOMPATIBLE_MODEL_OR_OPTIONS",
+    "http_status": 400,
+    "runtime_category": "exceed_context_size_error",
+    "input_tokens": 4254,
+    "available_context_tokens": 4096
+  },
+  "change": {
+    "vision_context_tokens": 8192,
+    "text_context_unchanged": true,
+    "private_config_backup_created": true
+  },
+  "real_broker_retest": {
+    "state": "SUCCEEDED",
+    "capture_scope": "display",
+    "image_dimensions": [2560, 1440],
+    "capture_seconds": 0.7946764999996958,
+    "vision_seconds": 9.391535799999474,
+    "capture_error": null,
+    "broker_error": null,
+    "images_or_private_descriptions_saved": false,
+    "answer_accuracy_independently_scored": false
+  },
+  "checks": {
+    "focused_screen_tests_passed": 90,
+    "focused_screen_tests_seconds": 1.96,
+    "ruff_check_exit": 0,
+    "ruff_format_check_exit": 0
+  },
+  "milestone_status": "NOT FULLY VERIFIED"
+}
