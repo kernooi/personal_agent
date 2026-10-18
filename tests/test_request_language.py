@@ -115,12 +115,13 @@ def test_service_is_a_field_and_unique_exact_playlist_wins(language_setup, text)
     assert model.language_calls == 0  # Straightforward requests keep the fast route.
 
 
-def test_duplicate_exact_titles_still_need_a_real_choice(language_setup):
-    _, chat, fake, _, _ = language_setup
+def test_duplicate_spotify_titles_use_owner_selected_first_result(language_setup):
+    broker, chat, fake, _, _ = language_setup
     fake.catalog = [("a" * 22, "Fav Jpop", "One"), ("b" * 22, "Fav Jpop", "Two")]
     result = chat.submit("Play playlist Fav Jpop")
-    assert fake.execution_count == 1
-    assert "Which" in result.display_message
+    assert result.state == State.SUCCEEDED and fake.execution_count == 3
+    assert broker.media.observation.item_id == "a" * 22
+    assert "Which" not in (result.display_message or result.message)
 
 
 def test_youtube_artist_must_match_creator_metadata(language_setup):

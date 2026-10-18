@@ -1,5 +1,799 @@
 # Build evidence
 
+## 2026-10-18: Repository cleanup and duplication audit
+
+Inspected tracked/untracked files while preserving existing M6/Spotify work.
+Static AST/content audit found no byte-identical Python files or identical named
+functions of ten or more lines. Modules with few textual references were checked
+against CLI dispatch, subprocess entry points and tests; no unused source module
+was confirmed. Retained extensible provider contracts, versioned compatibility
+code, optional backends, installed environment metadata, frozen corpora and all
+evaluation evidence. No runtime source, dependency or private setting changed.
+
+Consolidated repeated/outdated README voice release notes into one current usage
+section and retained a single manual Ollama startup block with a link from M2.
+Replaced overlapping chains of current-state/handoff updates with a concise
+current summary and links to the authoritative plan, voice docs and evidence log.
+Original detailed project audits remain explicitly labelled historical snapshots;
+earlier measurements and failed speech gates remain in their existing reports.
+
+Validation: `.venv` pytest 1722 passed in 62.07s; ruff check passes, ruff format
+--check reports 225 files formatted, pip check reports no broken requirements.
+Relative file links in the three edited guides resolve and UTF-8 decoding passes.
+No live models, microphone, speakers, captures, app/media effects or services used.
+
+Generated clutter inventory found two abandoned .pytest-run directories, three
+project __pycache__ directories and a Ruff cache, all outside .venv. An attempted
+PowerShell recursive cleanup verified absolute workspace bounds and rejected
+reparse points, but automatic approval review rejected the command before execution
+with only "blocked by policy". No directories were removed by that command; no
+alternate recursive deletion was attempted. The narrower supported command
+`python -m ruff clean` exited 0 and removed only .ruff_cache. Python/test caches
+remain; .venv, Git metadata, models, private settings and evidence were preserved.
+
+## 2026-10-18: Generic local spelling hints for app-name homophones
+
+Owner reports Discord → this cord, clarifying that some failures are actual word
+segmentation/substitution, not just number formatting. Added voice_vocabulary.py:
+only friendly OS application names through fixed existing catalog operation under
+enabled private applications.toml; five-second read-only deadline, no inventory,
+launch/effects or model-callable API. Voice metadata discovery returns validated
+bounded names; Voice/AudioJobs forwards them only to recording workers. Automatic
+list never enters private voice settings, chat prompts/history or journals.
+GUI adds explicit optional one-per-line spelling preferences (private) and an
+automatic app-name-hints checkbox. No hardcoded Discord replacement/alias list.
+
+faster-whisper receives hotwords before its single normal acoustic decode; no
+extra inference pass, audio retry, history prompt or post-hoc text rewrite. Keep
+64 names/512 chars maximum; active actual tokenizer budgets complete terms <=160
+tokens. Plain words and existing confidence/review remain authoritative as speech
+evidence, never as permission. No policy/controller/primary-profile changes or
+model/dependency downloads. Existing broker gates and all old failed reports intact.
+
+Actual read-only catalog yielded 54 names/509 chars, including Discord/Spotify.
+12 new fake tests plus GUI spelling-save checks cover generic target labels,
+control/path/oversize rejection, catalog-only operation, private preference save,
+non-persistence of automatic names, disable behavior, tokenizer budget and exact
+literal output preservation. Full suite 1720 passed in 61.67s; lint/format (224
+files) and pip dependency checks pass. No microphone/speaker effects in fake tests.
+
+Executed through .venv: `python scripts/Evaluate-JarvisSpelling.py --synthetic
+--report docs/evaluations/m6-spelling-synthetic-r1.json` (exit 0). New frozen
+four-case spelling corpus has unchanged strict 100% gate, two Discord app phrases
+and two literal-cord counterexamples. Same transient Michael audio decoded once
+unhinted and once with 54 actual OS names: 8/8 exact, zero word errors/uncertainty.
+Warm decode unhinted 1.709–1.751s, hinted 1.949–2.177s. This is non-regression on
+synthetic speech, not proof of improved owner accuracy (unhinted also passed).
+No recording/playback, app effects or saved audio/transcripts. Preserved earlier
+general-recognition failures, exact-match scoring and app/model qualifications.
+
+Prepared normal wake-path recognition lab with --corpus app-spelling, recording
+corpus version separately from the original seven-case corpus. Fresh owner
+readiness requested for four sentences; no native test launched at this entry.
+All six preserved action-model qualification validators still accept their current
+contracts/profile with saved metadata; no text-model inference or new action gate.
+Final whitespace check also passed. No commits or ordinary GUI launch performed.
+
+Owner subsequently confirmed attended readiness for the four-sentence spelling
+check. Launched via .venv: `python scripts/Test-JarvisRecognition.py --attended
+--corpus app-spelling --report docs/evaluations/m6-spelling-attended-r1.json`.
+Uses the normal owned wake/ack/command worker with actual bounded app-name hints,
+two Discord requests and two literal-cord sentences. Spoken requests are never
+forwarded to chat/tools; no application/media/screen effects or saved speech.
+Actual result pending at launch; earlier failed seven-case evidence unchanged.
+
+Attended r1 completed (worker exit 0, accuracy gate FAILED): 1/4 exact, all four
+transcripts received, no worker errors or uncertainty flags. First Discord request
+matched; second was LEADING_WORDS_MISSING; both literal cases were WORDS_DIFFER.
+Owner then confirmed literal "this cord" was consistently recognized as Discord.
+This is evidence of harmful decoder bias, not reliable app-name disambiguation.
+Post-ack input readiness 65.5–66.8ms; clip RMS 0.0168–0.0220, peak 0.1655–0.2296,
+zero clipping. Confidence did not flag wrong words. Report remains unchanged at
+docs/evaluations/m6-spelling-attended-r1.json; no speech/audio saved or tools sent.
+
+Corrected automatic app-name hints to default OFF, including the example config;
+Settings labels optional hints experimental. Explicit private spellings remain
+available and can also bias recognition. Updated this PC's private voice.toml to
+app_name_hints=false with a unique byte-for-byte backup; parsed comparison verifies
+all other settings unchanged. No transcript replacement or model/permission change.
+Regression covers default/explicit disable despite stale discovered names, opt-in
+forwarding, absence of decoder hotwords without configured terms, and unchanged
+literal output. Focused vocabulary/GUI tests: 19 passed in 3.86s. No further native
+test started; original speech accuracy and full M6 qualification remain unresolved.
+
+Final default-correction checks: full fake suite 1722 passed in 64.45s; ruff check
+passes, ruff format --check reports 225 files formatted, pip check reports no broken
+requirements, git diff --check passes (existing CRLF conversion notices only).
+No additional native recording/playback, downloads, action qualifications, commit
+or push. Existing failed spelling and general-recognition results remain intact.
+
+## 2026-10-18: Recognition capture/decoder fixes and approved small.en
+
+Owner reports frequent misrecognition, without a recorded original clip. Inspection
+found private speech/base.en, beam_size=3, 0.5s command-silence setting, interpolation
+resampling for non-16k input, and SpeechBuffer silence measured by callback wall
+time. transcribe also discarded an emitted segment solely on no_speech_prob>0.6,
+potentially submitting only the remainder. No single original cause is claimed.
+
+Changed SpeechBuffer to actual quiet frame counts; regression confirms that a
+4-second callback gap with only 50ms quiet PCM cannot end an utterance. Set private
+command silence to 1.0s (backup and all other fields checked preserved); regression
+keeps words on both sides of a 650ms hesitation in one clip. This does not delay
+post-ack input. PyAV band-limited resampling now handles native formats and flushes
+the tail; native 16k bytes remain exact. Synthetic tone tests verify 44.1/48k input
+speech-band level and >99% out-of-band RMS rejection. Existing installed PyAV only.
+
+Added strict stt_beam_size (1–8, default/current 5), explicit VAD speech padding
+500ms, no previous-text conditioning or vocabulary prompt. High no-speech emitted
+segments are retained as uncertain review drafts, not deleted; existing -0.8
+log-probability / 2.4 compression thresholds retained and nonfinite scores rejected.
+No LLM transcript rewrite, auto-retry, authority, real-control gate or TTS change.
+GUI setting now says Command pause before sending (seconds).
+
+Owner separately approved downloading/selecting small.en. Executed through .venv:
+`python scripts/Setup-JarvisVoice.py --download-small-en --approved --select` (exit
+0). Snapshot pinned to d1d751a5f8271d482d14ca55d9e2deeebbae577f; four allowed files
+total 486098798 bytes. Local model.bin matches upstream SHA-256
+62b2a45b05ee59acb4a5341b33ee35e041395d378d418a18acfe4c9e768ee37a, size 483545366.
+Actual local CPU/int8 load passed. Selected speech/small.en, base.en preserved;
+Michael, exact mic/output, pause and other fields preserved with another private
+backup. Startup never downloads; no new dependency, GPU/system installation or
+cloud path. Unauthenticated Hugging Face rate-limit notice needed no token/setup.
+
+Checks: focused voice suite 162 passed in 4.04s; full `python -m pytest -q` 1700
+passed in 63.72s. `ruff check .`, `ruff format --check .` (220 files), `pip check`
+and `git diff --check` pass. No real microphone/speaker was used by these checks.
+
+Ran explicit `python scripts/Evaluate-JarvisRecognition.py --synthetic --report
+docs/evaluations/m6-recognition-synthetic-r1.json` (exit 1). Frozen corpus has seven
+synthetic utterances and unchanged 100% exact-match gate; both recognizers consume
+the same transient Michael PCM through the corrected pipeline. Both match 5/7,
+WER 5/46=0.10869565. Small corrects the song title base missed; its general-question
+mismatch was confirmed numeric spelling (6/8 vs six/eight) by a separate synthetic
+diagnostic. Both fail unusual playlist spelling; small gives Fab J-pop. Original
+failure/gate retained, no normalization change or claim of universal improvement.
+Warm decode times: base 0.590–0.679s, small 1.854–2.047s, excluding load/capture.
+No mic/speaker/tools or ordinary transcripts/audio persisted by these comparisons.
+
+Owner confirmed new attended readiness for the prepared seven-sentence microphone
+lab. Launched `python scripts/Test-JarvisRecognition.py --attended --report
+docs/evaluations/m6-recognition-attended-r1.json`. It uses normal owned wake/ack/
+command workers, with no chat/model/tool submission, screen or application/media
+effects. Expected phrases are fixed synthetic fixtures; actual text is displayed
+only transiently. Report stores case IDs/matches/uncertainty/handoff timing, never
+audio/transcripts. Actual result pending. Full M6 remains unqualified; no commit.
+
+Seven further fake setup/scoring tests pass in 0.25s: explicit approval and exactly
+one download choice required, pinned small.en revision, old base and voice/device/
+wake settings preserved, concurrent config edits not overwritten, and strict score
+still rejects missing negation/number spelling. Lint/format now cover 221 files.
+All six existing combined model qualification validators match their current
+profile/contracts with saved evaluation metadata. No text-model inference or new
+real desktop/media validation, new qualification claim or gate change.
+
+Attended r1 completed (exit 0): all seven utterances yielded transcripts without
+worker errors, and neural acknowledgement-to-first-input was 0.06550–0.06750s.
+Only Notepad and negation matched exactly: 2/7, strict gate FAILED. Report contains
+no words/audio, so exact causes of the other mismatches cannot be inferred.
+Owner feedback about wrong/missing words versus formatting is requested. Preserve
+the failed report; do not claim microphone accuracy is fixed or reclassify it.
+Added diagnostic categories (number spelling, contraction, missing prefix/suffix,
+other word differences) for future checks, leaving exact-match scoring unchanged.
+Optional --case labels a bounded diagnostic subset explicitly. Safe amplitude,
+duration and confidence metadata can distinguish quiet/clipped input without
+storing speech; normal GUI logs still whitelist only their existing timing fields.
+32 focused recognition/setup/handoff checks pass in 0.40s after those diagnostics.
+
+Final full suite after diagnostic changes: 1708 passed in 54.35s. Final lint,
+format (221 files), pip dependency and whitespace checks pass. No further native
+test has started; operator feedback about the mismatches remains pending. Keep
+small.en as explicitly selected by the owner, without claiming its accuracy gate
+passed. All failed evidence and old recognizer/config backups remain preserved.
+
+## 2026-10-18: Approved American male neural speech — implementation/setup
+
+Inventory found only Microsoft David/Zira SAPI voices; private selection was David.
+Owner answered the concrete Kokoro installation/download proposal with "Prefer an
+American male voice." Selected am_michael, preserving all other private settings
+and a unique private pre-change backup. No unrelated workspace changes discarded.
+
+Read full specification/current instructions. Verified upstream Kokoro ONNX/PyPI
+0.6.1 Python >=3.10,<3.14 support and Windows x64 bundled espeakng-loader wheel;
+no system eSpeak install, administrator request or global settings change. Added
+optional neural-voice extra, regenerated requirements-dev.lock with all existing
+extras plus neural-voice, installed with --require-hashes, then reinstalled editable
+project with --no-deps --no-build-isolation. All commands exited 0. Only new voice
+dependencies were installed; existing resolved versions were retained.
+
+Executed:
+`python scripts/Setup-JarvisNeuralVoice.py --approved --voice am_michael --select`
+using .venv. Downloaded only kokoro-v1.0.onnx (325505369 bytes, SHA-256
+beb0d1848dee9a49da392cc3df26958d46cfa35d321edf434f52949153f0df3a) and
+voices-v1.0.bin (28214398 bytes, SHA-256
+bca610b8308e8d99f32e6fe4197e7ec01679264efed0cac9140fe9c29f1fbf7d)
+from thewh1teagle/kokoro-onnx model-files-v1.1 release. Both downloaded sizes and
+hashes match upstream GitHub asset metadata. Private assets are not committed.
+
+New voice_neural.py loads verified local assets through an explicit ONNX CPU
+session (2 inference threads), renders bounded complete-text chunks, validates
+mono/finite/nonempty/duration-limited audio, keeps ordinary PCM transient and
+checks Stop/deadline before output and between chunks. No hub/network API or
+cloud fallback. Existing voice_worker.speak supports SAPI memory-stream playback
+with exact configured AudioOutput, volume, PCM speed already applied at synthesis,
+matching stream START/END, hrLastResult, completion and purge verification.
+Metadata-only native check confirmed 24kHz mono memory-stream SetData/GetData and
+SpeakStream availability without issuing Speak/SpeakStream or opening a device.
+
+Setup-created private synthetic "Yes sir." cache/receipt stores only fixed text
+and its audio; normal reply audio is not persisted. Wake loads cache before mic
+setup; no neural load/synthesis is inserted after acknowledgement completion.
+Existing prepared command stream remains inactive through speech, then starts.
+GUI adds explicit engine/natural-voice selection without changing microphone,
+speaker, wake call, command silence or rate/volume. Legacy profiles default to
+Windows SAPI. No silent provider/output fallback or new execution authority.
+
+Actual CPU-only synthesis (no audio playback/microphone): setup load 2.076s,
+fixed acknowledgement 2.619s / 1.033s of audio. Second synthetic run: load 2.221s,
+greeting generation 2.896s / 3.349s audio, warm acknowledgement 0.921s / 1.023s,
+second sentence 2.626s / 3.840s. Digital synthesis does not prove perceived quality,
+audibility or audible startup latency. Per-job engine load and sequential chunk
+generation can add pauses; bounded output timeout remains unchanged.
+
+Checks actually run: full `python -m pytest -q`: 1684 passed in 66.81s. After the
+final cache-length validation and GUI/handoff regression additions, focused six
+voice files: 147 passed in 4.38s. `ruff check .`, `ruff format --check .` and
+`pip check` pass. Six preserved combined qualification validators accept the
+unchanged current profile/contracts using saved evaluation metadata; no new model
+evaluation, current Ollama attestation, real desktop effect or changed gate.
+
+Owner separately confirmed readiness for the prepared speaker-only preview.
+Launched `python scripts/Test-JarvisSpeech.py --attended --report
+docs/evaluations/m6-neural-speech-michael-r1.json`; actual report pending at this
+entry. Lab uses the existing owned audio worker with fixed synthetic greeting and
+interruptible longer sample, operator checkboxes and global Stop. No microphone,
+screen, app/media tool or chat-model operation. Neural wake/command handoff has
+not been retested; the previous 67ms result belongs to SAPI synthesis. Overall
+M6 remains not fully verified. No automatic GUI launch or commit performed.
+
+Speaker-only preview subsequently completed under that confirmed readiness (exit
+0). Preserved m6-neural-speech-michael-r1.json: four greeting previews have matched
+native playback start/end and successful completion. A fifth greeting was stopped
+after playback began; worker finished 0.232s after the Stop click, without a false
+completion. Operator checkboxes confirm hearing Michael clearly and hearing output
+stop. No errors, microphones, app/media/screen effects, raw audio or transcripts.
+The longer Stop sample was not used; cancellation was observed during the greeting.
+Worker synthesis-to-first-playback was 3.813–4.134s; full greeting jobs 7.973–8.312s.
+Those timings exclude worker process launch. This is audible speech/Stop evidence,
+not a new neural wake-handoff or full M6 qualification. Final lint/format (217
+files), pip check and whitespace checks pass.
+
+## 2026-10-18: Prepare inactive command input before the wake acknowledgement
+
+Owner reports a 2–3 second gap after audible "Yes sir" before command input.
+Code inspection found no intentional delay setting: device discovery, format
+validation and PortAudio stream construction happened after TTS. The followup
+setting is a command-onset window, not a startup delay. No native timing of the
+reported gap was previously retained.
+
+Native wake now reserves the selected command input INACTIVE before starting
+SAPI wake recognition. Checked the installed sounddevice implementation: the
+RawInputStream constructor opens the stream; start() begins capture. No command
+audio is retained while reserved, during wake recognition or during TTS. Reject
+unexpected active input. Release/purge the native wake recognizer as before;
+after verified acknowledgement completion, start the reserved stream without
+another device lookup/format check/open. Listening/its followup window begin
+with the first received audio block, preserving that block in the utterance.
+Retain Stop, first-sample eight-second deadline, bounded queue, no overflow
+drops, complete-utterance limits and close/drain on every path before STT.
+Close failure cannot turn into successful submission; original errors survive.
+
+SAPI returns its verified completion timestamp; bounded metadata
+command_input_ready_seconds measures that boundary to the first received input
+block, including cleanup/start cost. Details and the attended wake lab can show
+it without recording audio/text. Legacy explicit Whisper wake is unchanged.
+Prepared-input coexistence and actual latency were subsequently observed in the
+attended test below; no performance claim relies on synthetic timing.
+
+128 focused fake-only tests pass in 4.50s, including reserved/inactive ownership,
+capture only after acknowledgement, first-word samples, cancellation, no-wake
+cleanup, unexpected active/start failures and active-without-samples timeout.
+The fake clock's 0.05s readiness is synthetic, not a hardware benchmark. Existing
+six combined qualifications still pass their unchanged validators against fresh
+local model metadata; these voice-only edits do not change their contracts.
+Final fake-only suite: 1666 passed in 63.69s. Ruff lint and formatting (213 files)
+and whitespace checks pass. No private-setting change, download, commit or push.
+
+Owner explicitly confirmed fresh attended voice-only readiness with other JARVIS
+windows closed. Ran Test-JarvisWake.py --attended --report
+docs/evaluations/m6-wake-warm-input-r1.json. Actual native wake input started in
+0.802s since lab launch with the inactive command input reserved. Wake, verified
+acknowledgement, command recording and local STT completed. First received command
+input arrived 0.0668258s (about 67ms) after verified SAPI completion. The operator
+was instructed to speak immediately after "Yes sir"; the entire expected question
+matched exactly with no uncertainty (1.75s clip). Heard-acknowledgement and saw-orb
+checkboxes are true. No raw audio/transcript, chat-model call, app/media effect or
+screen capture. The owned lab and stream closed normally; existing failed reports
+are untouched. This is one successful native handoff, not full M6 qualification
+or a general latency/accuracy guarantee. Physical stop was not repeated in this run.
+
+Original lab status string was computed before operator checkboxes, although its
+explicit audibility/visibility fields are confirmed. Preserved that report and
+recorded the interpretation in m6-wake-handoff-validation-v1.json. Corrected future
+lab status reconciliation after Finish; no acceptance gate/old report was changed.
+
+## 2026-10-18: Owner-selected first Spotify result for play requests — complete
+
+Added Spotify-only selection/prompt hooks to the existing shared media flow.
+Play goals choose the first fresh retrieved result; explicit creator constraints
+choose the first matching result and never substitute a wrong artist/owner.
+No match/no results means no playback; no selection list for a play request.
+Explicit search-only requests retain their list. YouTube's existing selection
+policy is unchanged. Existing broker search/open/play phases, per-phase model
+proposal, qualification, cancellation, expiry and independent verification remain.
+
+Added fake-only regressions for ranked selection with multiple results,
+duplicate-title ranking, explicit search, receipt deduplication, creator mismatch,
+cancel between phases and empty results. Preserved old frozen corpora/results;
+added desktop corpus v2 and language
+corpus v4 for the newly authorized behavior, with unchanged 100%/zero-unauthorized
+gates. Changed source invalidates historical contract-bound reports; real startup
+requires fresh passing reports, not a validator bypass.
+The owner explicitly resumed fake-only tests and actual-local-model qualification
+refresh after reviewing this change. Focused Spotify/media/request-language tests:
+248 passed in 9.97s. Full fake-only suite: 1658 passed in 69.00s, including the
+previously unrun wake/empty-command cases. No native microphone or media effects.
+Actual qwen3:8b gates all pass: model 24/24, conversation 41/41, applications
+31/31, request-language 33/33, browser 27/27 and Spotify desktop 25/25, with zero
+unauthorized dispatches. Existing qualified() functions independently accept all
+six fresh reports against the actual current profile, model digest, runtime,
+corpus and contract. Summary: evaluations/spotify-first-result-qualification-v1.json.
+Updated the shared GUI/terminal launcher to these reports only after all pass.
+Post-update launcher transport/parity checks: 2 passed in 0.14s. Read-only
+preflight confirms all configured files exist and all six report paths selected
+by chat_command() pass their existing validators against fresh model metadata;
+no GUI backend or Windows controller was started.
+Ruff lint/format (212 files), dependencies and whitespace checks pass. See
+decision 0023; no prior evidence/report was overwritten. No real app/media/
+microphone test, private-setting change, download, commit or push.
+
+## 2026-10-18: Empty wake-command recognition no longer disables listening
+
+Owner supplied ordinary GUI logs: two completed transcription/playback turns,
+then NO_SPEECH_DETECTED promoted to a fatal Voice ERROR. Inspected native wake
+command STT and GUI state handling. The log does not establish why that audio
+contained no usable recognized speech; no recognition-accuracy claim is added.
+
+Voice.poll now treats only the exact NO_SPEECH_DETECTED error frame while the
+owned wake operation is TRANSCRIBING as an empty command turn. Drop pending text/
+reply, show a natural notice using the configured wake call, and wait for the
+existing worker's finished event before IDLE permits the GUI's normal fresh
+wake session. Do not retry transcription, submit a request or replay an action.
+Stop/cancellation is checked first and keeps wake paused. Other stages, extra
+error fields, PTT, device failures, timeouts and speech output errors retain
+their existing error behavior. No worker protocol, model, private config,
+confidence/approval gate, cloud fallback or tool capability changed.
+
+Added fake-only cases for empty-command recovery after actual worker completion,
+no premature restart/submission, custom wake notice, Stop before completion,
+and nonrecoverable stage/device/timeout/output cases. These cases are UNRUN:
+the previous general test pause remains in effect; this task authorizes the
+fix, not new microphone/speaker or broad runtime testing. `ruff check .` passed;
+`ruff format --check .` passed (211 files); `git diff --check` passed. Native
+recovery and M6 qualification remain pending. No private configuration change,
+download, live effect, commit or push.
+
+## 2026-10-18: Operator confirms the synthetic wake-test question
+
+Run r3 started native input in 0.880 seconds but did not observe the wake; the
+operator then confirmed not performing it and requested a repeat. Preserve its
+report plus separate nonparticipation supplement; it is not an accuracy trial.
+Run r4 started native input in 0.886 seconds, detected the wake, completed native
+acknowledgement and transcribed a 1.05-second command clip without uncertainty.
+The operator checked both heard-acknowledgement and saw-orb boxes before Finish.
+This establishes audible "Yes sir" and orb visibility for that run. Its exact
+question comparison still failed; the operator confirms saying the intended
+phrase, but has not reported the displayed recognized text. No cause inferred.
+Added a fixed synthetic-question mismatch category (formatting, contraction,
+leading/trailing/extra words, other), separate from the unchanged exact pass
+comparison; no recognized words are saved. Run r5 starts native input in 0.796
+seconds but observes no wake or command before its bounded session ends. No
+mismatch diagnosis is obtained. Operator participation in r5 is unknown; do not
+infer an accuracy score. No audio test remains running. Lint/format (211 files)
+and whitespace checks pass; broad pytest remains paused. Question capture/STT
+accuracy remains unresolved, with no speculative production change or weakened gate.
+
+Owner confirms saying the intended "What is your name?" after run r2. This does
+not confirm audible acknowledgement or orb visibility. Preserve the original
+failed exact-match report and a separate m6-wake-live-r2-operator.json supplement;
+without retained audio/text the mismatch cause cannot be established retrospectively.
+Do not substitute expected text, relax the comparison or tune capture by guesswork.
+
+Improved the attended voice-only harness to display the transient recognized
+question until Finish or its hard deadline, with explicit heard-acknowledgement
+and saw-orb operator checkboxes. Only booleans, audio duration and fixed state/
+timing metadata are saved. No raw transcript/audio or new chat/tool action.
+Clarified that the lab checks recognition and does not generate a chat answer.
+Lint/format pass (211 files); broad pytest remains paused. Continued within the
+already approved voice-only scope after read-only inspection found no GUI/voice
+worker running. Actual run results are recorded above; harness changes alone
+do not establish recognition accuracy.
+
+## 2026-10-18: Corrected native wake message dispatch; attended startup observed
+
+The new microphone timeout exposed a second defect after explicit event binding:
+comtypes PumpEvents uses a COM wait that left ordinary queued Windows messages
+undispatched. The owner-approved inactive diagnostic delivered a synthetic native
+timer callback with the explicit Windows pump, while the old wait did not. The
+recognizer remained inactive throughout that comparison. Added bounded dispatch
+of this worker thread's queue (64 messages per batch), pointer-sized Win32
+signatures, WM_QUIT cancellation and the unchanged eight-second start deadline.
+No synthetic start event is used by production. Evidence:
+evaluations/m6-wake-message-pump-v1.json. Added fake queue-bound/quit regressions;
+these remain unrun under the general test pause.
+
+The owner then explicitly resumed the prepared attended voice-only test. Both
+runs use production AudioJobs/wake worker, with no app/media/screen tools or chat
+model. Run r1 received real SAPI StartStream at 0.805 seconds after lab launch but
+observed no wake before its 30-second session ended. The operator could not identify
+the small listening label. Improved the lab's large green instruction, activity
+feedback and 90-second wake allowance; the production startup timeout is unchanged.
+Run r2 received StartStream at 0.935 seconds, detected the wake, entered SPEAKING,
+opened command input and transcribed a non-uncertain command. Its exact synthetic
+question comparison failed. Reports r1/r2 are preserved without raw audio/text.
+Audibility/operator wording confirmation remains pending; neither run qualifies
+the full flow. The acknowledgement/speech timestamps are since lab launch, not
+measured voice-onset latency. No claim of instant detection or M6 completion.
+
+`ruff check .` passed; `ruff format --check .` passed (211 files);
+`git diff --check` passed. No pytest execution, dependency change/download,
+global setting change, private configuration overwrite, commit or push.
+
+## 2026-10-18: Reproduced and corrected Windows wake event-binding failure
+
+Owner reports WAKE_ENGINE_START_FAILED. The old adapter let comtypes infer the
+outgoing event interface for a returned SAPI context pointer. Corrected GetEvents
+to explicitly use SpeechLib._ISpeechRecoContextEvents. Added bounded stage/category/
+HRESULT-only diagnostics, preserving the initial failure if cleanup also fails;
+no native exception text, ambient audio or private configuration is logged.
+The GUI now identifies the failing step instead of assuming a microphone issue.
+
+Prepared Inspect-JarvisWake.py, which builds only an inactive recognizer/grammar,
+with an optional comparison against automatic event binding. The owner explicitly
+approved this inactive check; the prior pause remains for other runtime/audio
+tests. Actual commands both exited 0: plain inspection returned
+INACTIVE_SETUP_READY, activation_requested=false, stage=GRAMMAR. --compare-events
+reproduced automatic binding failure at EVENTS/BINDING while the explicit binding
+and complete grammar setup succeeded. Both recognizers were kept inactive and
+released. No recording, playback, model calls, downloads, global changes or GUI
+launch. Evidence: evaluations/m6-wake-inactive-setup-v1.json. This proves inactive
+setup only; it does not qualify microphone activation, wake accuracy, latency,
+audibility or interruption. M6 remains NOT FULLY VERIFIED.
+
+Added fake regression cases for the explicit interface, inactive no-activation
+contract, safe error metadata and preservation of the original failure. These
+fake cases are not run; general/runtime test pause is unchanged. `ruff check .`
+passed; `ruff format --check .` passed (210 files); `git diff --check` passed.
+No commit/push or private-setting overwrite.
+
+## 2026-10-18: Windows wake grammar before command transcription
+
+Owner confirms quiet → sound detected → checking locally, with no wake response.
+This confirms input activity, not correct transcription. Inspected private config
+selects the PRO X 2 microphone, Jarvis and three seconds of sentence silence.
+Previous code waited for that interval and silently rejected uncertain/no-match
+Whisper results. The exact failed utterance/rejection was not captured or logged.
+
+Read-only registry inspection found Microsoft Speech Recognizer 8.0 English-US,
+MS-1033-80-DESK, Language 409;9, Vendor Microsoft. No native engine activation or
+audio test. Added voice_keyword.py: owned in-process Microsoft English grammar
+for the configured literal call/prefixes. Full, high-confidence non-emulated
+matching emits the existing orb state, then capture is purged before local TTS.
+Command capture starts afterward, with a finite onset/duration budget, then
+existing local Whisper and GUI/broker/review handle the command. No text-model
+call before acknowledgement, new model/package, shared speech/global setting,
+raw audio/history persistence or silent fallback. Legacy whisper wake remains
+explicitly selectable; default native mode expects wake then command.
+
+Added safe rejection/level metadata and fake cases for auto-pause, stop, exact
+microphone resolution, no ambient text disclosure and input/output ordering.
+These cases are **not run** under the owner's continuing test pause.
+`ruff check .` passed; `ruff format --check .` passed (209 files);
+`git diff --check` passed. No microphone/speaker, GUI, model or app
+test. Actual latency, accuracy/false triggers, COM/device compatibility and
+audibility remain pending. M6 NOT FULLY VERIFIED. See decision 0022.
+
+## 2026-10-18: Configurable wake call and visible command window
+
+Owner clarified the desired flow: chosen wake call, character/“Yes sir”, then a
+window for the command. Added private wake_call with Jarvis default, bounded
+1–5 word validation/whitespace normalization, escaped whole-word matching and
+dynamic GUI labels. Settings exposes Wake call and the existing bounded 3–20
+second command listening window. Save persists/applies them after stopping old
+voice work; older configs retain defaults. A scrollable dark settings form keeps
+new fields and Save/error feedback accessible. The existing acknowledgement
+pauses input, checks real output, then restarts capture before arming followup.
+No separate model, download, cloud, backend request or new tool authority.
+
+Added fake cases for replacement phrases, case/word boundaries, uncertainty,
+private persistence/validation and the GUI form save path. **Not executed** under
+the owner's ongoing pause. `ruff check .` passed; `ruff format --check .` passed
+(206 files); `git diff --check` passed. No GUI,
+microphone/speaker, model or desktop test. Native detection/playback remains
+unverified; this is not a claim that the reported recognition failure is solved.
+
+
+## 2026-10-18: Orb and local “Yes sir” acknowledgement on standalone wake
+
+Owner requested the character appear and say “Yes sir” on “JARVIS.” A confident
+standalone wake now enters WAKE_ACKNOWLEDGING, presented by the existing single
+orb with screen privacy priority. The same owned audio worker stops its input
+stream before fixed local SAPI output. It retains verified start/completion,
+output errors, deadlines, cancellation and purge; no intermediate done ends the
+wake session. After success, discard queued pre-acknowledgement audio, restart
+the mic and arm the ten-second one-request followup using actual restart time.
+The same recognition model is retained; session extension has a finite hard cap.
+One-utterance addressed questions keep their existing path. No acknowledgement
+enters model/chat history/research or grants action authority. No new assets,
+dependencies, private settings or downloads. Stop prevents automatic mic resume.
+
+Added fake cases for microphone-before-output order, cancellation, followup
+capture timing and GUI voice/orb states without submission. **Not executed**;
+the owner's testing pause remains active. `ruff check .` passed,
+`ruff format --check .` passed (206 files), and `git diff --check` passed.
+Native acknowledgement, wake detection and speech remain unverified.
+No GUI, microphone, speaker, inference or desktop test was started. No commit.
+
+## 2026-10-18: Replace fragile SAPI playback-start callback check
+
+Owner reports SPEECH_PLAYBACK_NOT_STARTED after successful recognition. Source
+inspection confirms this code means the automation StartStream callback was not
+received; it does not diagnose recognition or prove the speaker is unavailable.
+The earlier EventInterests=2 change did not resolve the reported problem. Native
+delivery/audibility was not reproduced because the owner paused further tests.
+
+Replaced automation event sinks/message pumping with ISpVoice's native queued
+start/end events, explicitly subscribed before Speak using the SDK SPFEI mask
+(including reserved check bits). Bind both events to the returned stream number;
+short streams remain observable after completing between polls. Require matching
+start/end plus WaitUntilDone and a successful native output status before done.
+No callback, Speak receipt or other stream can claim playback. Bound startup to
+eight seconds and total speech to the existing configured limit. Cancellation is
+checked before submission, while draining and before completion; finally purges
+only the owned SAPI voice even if Speak fails. No automatic speech/action replay.
+
+Updated fake cases for queued short streams, missing/wrong stream events, missing
+completion, native failure, cancellation and purge on submission failure. These
+cases are **not executed**. Static `ruff check .` passed, `ruff format --check .`
+passed (206 files), and `git diff --check` passed. No runtime/native audio, GUI,
+model call, download or private-config change.
+Audible output, interruption and this queue implementation remain unverified.
+Historical failed reports are retained; M6 is NOT FULLY VERIFIED. No commit/push.
+
+## 2026-10-17: Reduce missed wake addresses without new model downloads
+
+Owner reports frequent missed "JARVIS" detections. Inspection found concrete
+acquisition defects: the initial wake path retained up to twenty seconds of idle
+silence, averaged its short speech against that silence, and closed the mic during
+recognition. The constant 240-RMS endpoint threshold could also miss softer input.
+These are code findings, not measured attribution of the owner's individual misses.
+
+Replaced wake capture with one bounded session stream plus 50 ms callback frames,
+an 80-block queue and a pure SpeechBuffer. Only roughly 300 ms of leading context
+is kept; activity must persist for 100 ms, and silence ends a bounded utterance.
+Overlong speech discards the full tail; queue overflow fails rather than dropping
+words. The callback keeps buffering while local wake recognition runs, removing
+the previous recognition-time capture gap. Actual capture context closes before
+any accepted request is emitted to the GUI/broker or output is spoken. No speech
+output/capture overlap, new public disclosure, cloud or persistent audio.
+
+Followup eligibility now uses actual capture onset, preventing recognition delay
+from consuming the followup window or accepting pre-address queued speech.
+Added adjustable Voice activation level (wake_minimum_rms=100 by default) and
+passive input-level feedback. Recognition confidence, exact leading wake address,
+approval review and broker gates are unchanged. No fuzzy-name or prompt biasing.
+
+Added fake-only cases for long quiet waits, soft short buffers, clipped-tail
+discard/recovery and delayed followup recognition. **Not executed**: owner asked
+to keep tests paused. No model call, microphone/speaker operation, native GUI
+launch, download or config overwrite. Static Ruff lint/format and whitespace
+checks passed. Detection accuracy, false wakes, latency, overflow behavior and
+native continuous-capture compatibility remain unverified. No commit/push.
+
+## 2026-10-17: Owner-selected hands-free GUI and simplified settings
+
+Owner requested all settings beside Details, automatic speech interaction on the
+address "JARVIS", no manual Mic/Stop speaking controls and always-on spoken
+replies. Implemented the GUI-specific selection under ADR 0021, preserving core
+PTT defaults and explicit physical activation in the attended PTT lab. No tests,
+GUI launches, model calls, microphone capture or playback were run for this
+update, honoring the prior instruction to skip testing. No downloads, dependency
+or private device-config changes. Wake mode remains unverified, not qualified by
+the earlier PTT successes or pre-change 1593-test run.
+
+Settings now sits next to Details; ordinary chat has a readable voice status with
+no audio buttons/toggle. Settings automatically releases passive wake capture and
+can disable the microphone independently of always-on reply speech. While ready,
+the GUI renews bounded CPU base.en wake workers. The existing model is reused
+inside each worker. Silence ends bounded utterances; only confident leading wake
+addressing or one ten-second followup after a bare address can emit a transcript.
+Unaddressed speech/text never reaches chat/history/research. Clipped utterances
+are rejected. Added fake-only address/expiry/half-duplex/stop cases, not executed.
+Punctuation on bare approval text now retains manual-review behavior.
+
+Capture stops before recognition, backend processing and TTS. It resumes only
+after output and while there is no typed draft, settings dialog, stop or error.
+Stop/Esc keeps wake listening paused until Settings > Save; global stop retains
+the established session semantics. Passive wake states use the existing single
+companion presentation. No full-duplex barge-in or acoustic echo cancellation;
+false wakes, accent/noise accuracy, CPU cost and device soak need future validation.
+
+Static-only review: Ruff lint passed, format check passed (206 files at that
+point), whitespace diff check passed. These are not runtime tests or voice/model
+qualification. Documentation/context/plan updated; no commit/push or M7 work.
+
+## 2026-10-17: M6 native recognition observed; owner stopped further testing
+
+Owner requested "skip the tests for now"; no further tests or native audio effects
+were launched after that request. The test GUI has closed and r4 is preserved.
+R4 shows genuine user-started microphone LISTENING, local TRANSCRIBING and the two
+recognized synthetic phrases (name and screen question). Four CPU recognition
+samples measured model load 0.322–0.381 s and STT 0.584–0.756 s. Two requests
+entered PROCESSING; two further transcripts stayed unsubmitted in the lab. R4
+also preserves initial device-open/silence failures and speech-state errors.
+No claim of complete voice-to-screen answer, audible output or interruption.
+
+A no-speaker SAPI memory-stream diagnostic identified EventInterests=0: native
+synthesis produced bytes but no StartStream event, so the strict playback gate
+reported SPEECH_PLAYBACK_NOT_STARTED. Added SVEStartInputStream interest=2 before
+subscribing. This final one-line correction is **not tested**, honoring the owner's
+stop request; audibility and Stop speaking remain pending. No weakened gate.
+
+Last full test run before that final correction: **1593 passed in 60.08 s**;
+focused 62 passed in 2.40 s. Lint/format/pip checks passed before the correction.
+These results do not qualify the subsequently changed final tree. M6 remains
+NOT FULLY VERIFIED. No new tests, recording, playback or commit after the request.
+
+## 2026-10-17: Diagnose M6 microphone startup deadlock
+
+The owner reported indefinite Opening microphone, then the bounded test reported
+an eight-second startup timeout despite a working headset. Read-only discovery
+and the selected endpoint's 16 kHz mono/int16 format check pass. Reproduced the
+stall without any microphone capture: importing NumPy's native multiarray module
+after starting a thread blocked on stdin deadlocks in this Windows environment.
+Faulthandler located native import on the main thread and buffered stdin on the
+control thread; closing stdin releases the stall. A synthetic-buffer worker probe
+after preloading native speech libraries before that reader completed in 2.027 s
+and correctly rejected silence. This was not a real microphone recognition pass.
+
+Added ordered native preloading, bounded eight-second startup supervision,
+specific startup steps and transient input-level indication only after real
+LISTENING. Level events carry only a bounded RMS scalar, never audio; sound
+detection is not proof of recognized words. EOF-first owned-worker cleanup allows
+its exit watchdog to run; the reader owns stream cleanup to keep Tk from waiting
+on a blocked stream lock. No OS device setting or audio-engine installation.
+Native r3 preserved six startup-timeout failures before capture; r4 uses the
+corrected initialization under existing attended readiness. No automatic mic
+activation, app/media action or ordinary-display capture. Native acceptance is
+still pending. Focused suite: 62 passed in 2.40 s, including startup ordering,
+timeout, malformed level and stale-result rejection. Lint/format/pip checks pass.
+
+## 2026-10-17: Fix M6 Voice settings save blocker
+
+The owner reported the settings dialog repeatedly asking to check settings and
+finish/cancel voice work. The numeric controls used `value or ""`, which converted
+valid rate=0 and silence_seconds=0 into empty strings; conversion failed before
+saving, then a generic error incorrectly blamed active work. Preserve zero values
+and distinguish actual busy state, numeric/range validation and private-file write
+errors. No recording or cancellation is triggered by opening/saving the form.
+An isolated real-Tk/fake-audio regression exercises default save, invalid number,
+range failure, genuinely busy state, write failure and recovery. Initial harness
+selection included ttk Combobox entries; corrected widget selection, preserving
+the assertions. Focused voice/UI suite: **58 passed in 2.61 s**. Lint, format and
+dependency checks passed. Full regression: **1589 passed in 60.48 s**.
+
+Native lab r2 ended with exact synthetic-window scope confirmed, zero recognized
+test phrases and zero spoken streams. Its report is preserved; the owner's
+settings blocker prevented audio acceptance. A corrected native run requires GUI
+restart to load this fix. M6 remains NOT FULLY VERIFIED; no speech pass claimed.
+
+## 2026-10-17: Approved M6 model setup and attended GUI follow-up
+
+Owner approved base.en download and attended microphone/speaker testing, plus
+only an owned synthetic window for screen validation. Downloaded the fixed
+Systran/faster-whisper-base.en revision
+3d3d5dee26484f91867d81cb899cfcf72b96be6c into private speech/base.en. The initial
+setup omitted vocabulary.txt; native load failed rather than claiming readiness.
+Verified the existing manifest hashes and completed the same revision without
+discarding files. Setup now includes vocabulary and loads the CPU model before
+success; runtime rejects incomplete assets before opening the microphone.
+Installed model files total 147,769,510 bytes. Offline CPU int8 loading took
+0.3115184 s; one second of synthetic silence produced zero segments. Hashes and
+revision are retained in m6-stt-offline-load-v1.json; no real audio was saved.
+
+Native GUI lab r1 ended before recording: Tk's fixture wrapper had not finished
+mapping when its HWND was resolved. Its failed report is preserved. Corrected
+the harness to resolve the mapped HWND on Tk's thread, retaining exact-window
+scope checks; r2 is running and awaits physical input. No app/media requests are
+allowed by this lab. Audibility and real microphone recognition are not yet
+verified. No automatic recording or ordinary-display capture was requested.
+
+After the setup/runtime correction and incomplete-vocabulary regression, full
+pytest: **1588 passed in 61.70 s**. Ruff check and format check passed (203 files),
+pip check passed and git diff --check passed. No source-bound tool contracts were
+changed by this follow-up; existing qualification gates remain intact.
+
+## 2026-10-17: M6 local voice implementation — native acceptance pending
+
+Continued from d96c1c4 and preserved both uncommitted audit reports. Read actual
+GUI/session/worker/startup, broker/conversation/profile, M5 and companion interfaces
+before the owner-approved M6 implementation. The owner-approved M6 attachment
+supersedes earlier no-voice scope only for local push-to-talk frontend/audio work.
+No second assistant, Tk root, conversation history, planner or execution engine.
+
+Added GUI Mic/Finish, voice status, Speak replies, Stop speaking, per-user voice
+settings and a local-window PTT shortcut. Audio runs in one owned supervised
+process at a time; Tk consumes bounded queued events. CPU-int8 faster-whisper STT,
+sounddevice/PortAudio mono recording/resampling and typed COM Windows SAPI TTS.
+Recording is user-initiated, bounded and half-duplex. No runtime model downloads.
+Concrete replaceable STT/TTS adapters have no tools. Transcripts use the same
+ChatWindow.send_text as typed messages; optional address stripping, low-confidence/
+control draft review, generation checks, typed-input priority and error/late-result
+rejection protect submission. Completed authoritative replies provide speech.
+Short replies preserve warnings; long/code/table replies direct users to full chat.
+
+Existing Stop/Esc cancels voice and backend; Stop speaking only purges speech.
+Global stop remains authoritative. SAPI StartStream is the playback-state signal,
+not audible-sound proof. Parent EOF and bounded owned-process cancellation avoid
+orphaned audio work; no desktop target is killed. PCM stays transient in the audio
+process, with no WAV files, raw audio logs, journal audio or screenshot/public-search
+disclosure. Shared companion metadata frames cannot propose effects; screen
+capture/watch wins arbitration, retaining one overlay and its privacy stop badge.
+
+Hardware inspected observationally: Ryzen 5 5600X, 6 cores/12 logical processors,
+34,257,739,776 RAM bytes; RTX 4070 total 12,282 MiB VRAM, 1,903 MiB used snapshot.
+Read-only audio enumeration found 8 input endpoints, 4 SAPI outputs and 2 Microsoft
+desktop voices. Dynamic SAPI event discovery failed; typed COM registration passed
+without any speech request. Device counts are not microphone capture or audibility
+qualification. Recognition model remains absent; base.en download approval and
+attended mic/speaker readiness were requested, with no reply received during this
+implementation. No live recording or speech playback was performed.
+
+Generated hashed lock with --extra voice and installed only into .venv, then
+reinstalled project editable with --no-deps --no-build-isolation. CPython 3.13 Windows
+wheels: faster-whisper 1.2.1, CTranslate2 4.8.3, sounddevice 0.5.6, NumPy 2.5.4,
+PyAV 19.0.1, packaged-VAD onnxruntime 1.31.0 and required dependencies. Existing
+pins remained. No competing speech engine, system runtime/CUDA/FFmpeg installation,
+TTS voice download or global device setting change. Offline engine selection,
+upstream sources and future redistribution limits are recorded in VOICE.md.
+
+Pre-change baseline: 1531 passed in 54.37 s. New deterministic voice/UI suite:
+56 passed in 1.34 s. First integrated full suite 1583 passed in 56.24 s; final
+full suite 1587 passed in 53.45 s after additional cancellation/protocol cases
+and final stop/readiness UI checks. Voice-only events show the orb without adding
+another floating badge; the existing screen privacy badge remains authoritative.
+Ruff check/format (203 files), pip check and whitespace checks passed. Tests use
+fake audio/backends and owned isolated Tk widgets; no live audio or Windows/tool
+effects. Initial helper decorator path, auto-language TOML persistence and invalid
+result cancellation bugs were corrected without weakening assertions. No existing
+tests, frozen corpora or acceptance thresholds were weakened.
+
+Terminal presentation framing changed source contracts. Refreshed actual-local-
+model/fake-controller gates passed: apps 31/31, browser 27/27, Spotify desktop 25/25,
+language 33/33. All six strict qualification readers match, retaining unchanged
+Notepad 24/24 and conversation 41/41 reports rather than claiming new runs. The v1
+reader report detected the stale app contract and is preserved; app reevaluation
+and v2 reader report pass. Shared terminal/GUI launcher uses the refreshed reports.
+No real app/media effect or new model/profile option selected by those evaluations.
+
+Prepared opt-in production-GUI lab using only an independently resolved synthetic
+window, a confirmed existing scope and two synthetic phrases. It does not auto-
+record or automatically run app/media requests; real lab execution is pending.
+Report outputs bounded state/timing/boolean metadata, not private transcripts,
+answers, screenshots or audio. Audibility and broker outcomes need independent
+review. No live STT latency/peak resource, physical stop, device-loss, speaker or
+voice-to-screen acceptance pass is claimed. Verdict: M6 NOT FULLY VERIFIED.
+See M6_TEST_REPORT.md, VOICE.md and decision 0020. No commit/push; stop at M6.
+
 ## 2026-10-17: Simplify the orb's screen-access badge
 
 Owner requested removal of the red box appearing with the orb. Changed the native

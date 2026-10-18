@@ -1,0 +1,11 @@
+{
+  "date": "2026-10-18",
+  "associated_report": "m6-wake-live-r2.json",
+  "operator_confirmation": {
+    "said_exact_expected_synthetic_question": true,
+    "expected_question": "What is your name?",
+    "heard_acknowledgement": "NOT CONFIRMED",
+    "saw_orb": "NOT CONFIRMED"
+  },
+  "interpretation": "Exact phrase mismatch remains unresolved. Original transient recognition was not retained; cannot distinguish transcription error, capture clipping or formatting variation from this report."
+}

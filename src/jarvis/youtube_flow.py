@@ -63,6 +63,18 @@ class YouTubeFlow:
         ]
         return exact or matches
 
+    def automatic_selection(self, goal, query, results):
+        matches = self.matching_candidates(query, results)
+        return matches[0] if goal != "search" and len(matches) == 1 else None
+
+    def play_selection_prompt(self, result):
+        message = result.display_message or result.message
+        return replace(
+            result,
+            display_message=message.removesuffix("Which one should I open?")
+            + f"Which {self.noun} should I play? Choose its number.",
+        )
+
     def __init__(self, conversation):
         self.chat = conversation
         self.pending = None
@@ -104,19 +116,14 @@ class YouTubeFlow:
                     adapter.owner_session,
                     deadline,
                 )
-                matches = self.matching_candidates(query, adapter.results)
-                if len(matches) == 1 and goal != "search":
+                selection = self.automatic_selection(goal, query, adapter.results)
+                if selection is not None:
                     self.pending = None
                     result = self._open_and_play(
-                        "Open the " + str(matches[0]) + " result", key, goal, deadline
+                        "Open the " + str(selection) + " result", key, goal, deadline
                     )
                 elif goal == "play":
-                    message = result.display_message or result.message
-                    result = replace(
-                        result,
-                        display_message=message.removesuffix("Which one should I open?")
-                        + f"Which {self.noun} should I play? Choose its number.",
-                    )
+                    result = self.play_selection_prompt(result)
         elif pending and owner_operation(text) == "open":
             self.pending = None
             goal, generation, session, owner, deadline = pending

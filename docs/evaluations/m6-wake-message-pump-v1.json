@@ -1,0 +1,24 @@
+{
+  "date": "2026-10-18",
+  "scope": "Owner-approved inactive setup inspection; synthetic callback metadata only",
+  "command": ".\\.venv\\Scripts\\python.exe scripts\\Inspect-JarvisWake.py --check-message-pump",
+  "exit_code": 0,
+  "result": {
+    "status": "INACTIVE_SETUP_READY",
+    "activation_requested": false,
+    "stage": "GRAMMAR",
+    "message_pump": {
+      "com_wait_delivered": false,
+      "windows_pump_delivered": true,
+      "recognizer_inactive": true
+    }
+  },
+  "direct_callback_check": {
+    "command": ".\\.venv\\Scripts\\python.exe scripts\\Inspect-JarvisWake.py --check-dispatch",
+    "exit_code": 0,
+    "synthetic_start_callback": true,
+    "recognizer_inactive": true
+  },
+  "recording_or_playback": false,
+  "qualification": "Message dispatch evidence only; not live wake recognition or audibility"
+}

@@ -79,10 +79,28 @@ class Animation:
     def event(self, state, task, sequence, now, *, watching=False):
         if sequence <= self.sequence or task in self.retired:
             return False
-        if state not in {"capturing", "analyzing", "watching", "completed", "error", "cancelled"}:
+        if state not in {
+            "capturing",
+            "analyzing",
+            "watching",
+            "completed",
+            "error",
+            "cancelled",
+            "listening",
+            "transcribing",
+            "thinking",
+            "speaking",
+        }:
             return False
         if task != self.task:
-            if state not in {"capturing", "watching"}:
+            if state not in {
+                "capturing",
+                "watching",
+                "listening",
+                "transcribing",
+                "thinking",
+                "speaking",
+            }:
                 return False
             if self.task:
                 self.retired.append(self.task)
@@ -134,9 +152,11 @@ class Animation:
             self.previous = self.current_gaze(now)
             choices = (
                 [(0.1, -0.8), (-0.2, -0.75), (0, -0.6)]
-                if self.state == "analyzing"
+                if self.state in {"analyzing", "thinking"}
+                else [(-0.55, -0.1), (-0.4, 0)]
+                if self.state == "transcribing"
                 else [(0, 0), (0, 0), (0.25, -0.15)]
-                if self.state == "watching"
+                if self.state in {"watching", "listening", "speaking"}
                 else [
                     (0, 0),
                     (-0.85, 0),
@@ -172,8 +192,10 @@ class Animation:
         if self.state == "error":
             gaze = (0, 0.55)
         if self.reduced:
-            gaze = (0, -0.55) if self.state == "analyzing" else (0, 0)
+            gaze = (0, -0.55) if self.state in {"analyzing", "thinking"} else (0, 0)
         bob = math.sin(elapsed * 1.8) * 1.6 * intensity if not self.reduced else 0
+        if self.state == "speaking" and not self.reduced:
+            bob = math.sin(elapsed * 4) * 1.2 * intensity
         tilt = gaze[0] * 7 * intensity if not self.reduced else 0
         return Pose(
             self.state,

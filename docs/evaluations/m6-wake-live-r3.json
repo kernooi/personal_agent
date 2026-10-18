@@ -1,0 +1,25 @@
+{
+  "version": "m6-attended-wake-v1",
+  "status": "NOT FULLY VERIFIED",
+  "started_at": 1792261510.8675714,
+  "states": [
+    "WAKE_LISTENING"
+  ],
+  "diagnostics": [
+    "NO_MATCH"
+  ],
+  "expected_command_recognized": false,
+  "command_uncertain": null,
+  "command_audio_seconds": null,
+  "microphone_started_seconds": 0.88,
+  "maximum_wake_input_level": 0,
+  "acknowledgement_seconds": null,
+  "speech_started_seconds": null,
+  "app_media_screen_actions": 0,
+  "chat_model_calls": 0,
+  "audio_or_transcripts_saved": false,
+  "audibility": "OPERATOR CONFIRMATION REQUIRED",
+  "ended_at": 1792261671.4421103,
+  "operator_heard_acknowledgement": false,
+  "operator_saw_orb": false
+}

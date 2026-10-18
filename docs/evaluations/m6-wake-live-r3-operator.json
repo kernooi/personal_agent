@@ -1,0 +1,7 @@
+{
+  "date": "2026-10-18",
+  "associated_report": "m6-wake-live-r3.json",
+  "operator_participated": false,
+  "operator_requested_repeat": true,
+  "interpretation": "No intended wake utterance was performed; this run cannot measure wake detection accuracy. Preserve its native-start observation and no-match metadata."
+}

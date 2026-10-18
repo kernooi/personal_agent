@@ -53,6 +53,7 @@ class ChatSession:
         self.startup_done = threading.Event()
         self.write_lock = threading.Lock()
         self.prepare = prepare
+        self.voice_sequence = 0
 
     def start(self, *, real=False):
         try:
@@ -139,6 +140,19 @@ class ChatSession:
                 self.process.stdin.flush()
             except OSError as exc:
                 raise ValueError("The chat connection closed.") from exc
+
+    def voice_state(self, state):
+        from jarvis.voice_data import VoiceState
+        from jarvis.voice_presentation import PREFIX
+
+        VoiceState(state)
+        with self.write_lock:
+            if self.process is None or self.process.poll() is not None:
+                return
+            self.voice_sequence += 1
+            line = PREFIX + json.dumps({"sequence": self.voice_sequence, "state": state}) + "\n"
+            self.process.stdin.write(line)
+            self.process.stdin.flush()
 
     def close(self):
         # Cooperative shutdown only: acknowledge stop and quit through existing input.

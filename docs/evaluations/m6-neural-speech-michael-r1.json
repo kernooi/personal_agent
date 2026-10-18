@@ -1,0 +1,60 @@
+{
+  "version": "m6-neural-speech-preview-v1",
+  "tts_provider": "kokoro",
+  "voice": "am_michael",
+  "microphone_opened": false,
+  "app_media_screen_actions": 0,
+  "audio_or_transcripts_saved": false,
+  "runs": [
+    {
+      "kind": "preview",
+      "playback_started": true,
+      "completed": true,
+      "stop_requested": false,
+      "metrics": {
+        "start_seconds": 4.038150399999722,
+        "speech_seconds": 8.204828599999018
+      }
+    },
+    {
+      "kind": "preview",
+      "playback_started": true,
+      "completed": true,
+      "stop_requested": false,
+      "metrics": {
+        "start_seconds": 4.134260200000426,
+        "speech_seconds": 8.312107599998853
+      }
+    },
+    {
+      "kind": "preview",
+      "playback_started": true,
+      "completed": true,
+      "stop_requested": false,
+      "metrics": {
+        "start_seconds": 3.8131454000031226,
+        "speech_seconds": 7.972949500002869
+      }
+    },
+    {
+      "kind": "preview",
+      "playback_started": true,
+      "completed": false,
+      "stop_requested": true,
+      "stopped_worker_seconds": 0.232
+    },
+    {
+      "kind": "preview",
+      "playback_started": true,
+      "completed": true,
+      "stop_requested": false,
+      "metrics": {
+        "start_seconds": 3.9504422999998496,
+        "speech_seconds": 8.144626799999969
+      }
+    }
+  ],
+  "status": "SPEAKER PREVIEW AND STOP OBSERVED; OPERATOR CONFIRMED",
+  "operator_heard_clear_voice": true,
+  "operator_heard_audio_stop": true
+}

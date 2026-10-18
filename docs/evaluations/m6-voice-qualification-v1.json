@@ -1,0 +1,15 @@
+{
+  "date": "2026-10-17",
+  "checks": {
+    "m2": true,
+    "conversation": true,
+    "applications": false,
+    "browser": true,
+    "spotify": true,
+    "language": true
+  },
+  "all_matching": false,
+  "profile_unchanged": true,
+  "actual_app_media_effects": 0,
+  "speech_qualification": "pending real microphone/speaker validation"
+}

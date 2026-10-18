@@ -1,0 +1,73 @@
+{
+  "version": "m6-production-gui-voice-v1",
+  "started_at": 1792250935.0785692,
+  "status": "NOT FULLY VERIFIED",
+  "automatic_recordings": 0,
+  "automatic_app_media_actions": 0,
+  "screen_scope": "owned synthetic window only",
+  "states": [
+    "IDLE",
+    "IDLE",
+    "IDLE",
+    "IDLE",
+    "PROCESSING",
+    "IDLE",
+    "IDLE",
+    "PROCESSING",
+    "IDLE",
+    "ERROR",
+    "IDLE",
+    "IDLE",
+    "LISTENING",
+    "ERROR",
+    "LISTENING",
+    "TRANSCRIBING",
+    "SUBMITTING",
+    "PROCESSING",
+    "PROCESSING",
+    "ERROR",
+    "LISTENING",
+    "TRANSCRIBING",
+    "SUBMITTING",
+    "PROCESSING",
+    "PROCESSING",
+    "ERROR",
+    "LISTENING",
+    "TRANSCRIBING",
+    "SUBMITTING",
+    "IDLE",
+    "LISTENING",
+    "TRANSCRIBING",
+    "SUBMITTING",
+    "IDLE",
+    "IDLE"
+  ],
+  "synthetic_transcripts": {
+    "what is your name": true,
+    "what am i looking at": true
+  },
+  "spoken_stream_starts": 0,
+  "stop_speaking_clicked": false,
+  "timings": [
+    {
+      "load_seconds": 0.34699230000114767,
+      "stt_seconds": 0.7555395000017597
+    },
+    {
+      "load_seconds": 0.3476686000030895,
+      "stt_seconds": 0.6457212999994226
+    },
+    {
+      "load_seconds": 0.3812155999985407,
+      "stt_seconds": 0.5919475000009697
+    },
+    {
+      "load_seconds": 0.32168430000092485,
+      "stt_seconds": 0.5836058000022604
+    }
+  ],
+  "audibility": "operator confirmation required",
+  "scope_confirmed": true,
+  "scope_setup_sent": true,
+  "ended_at": 1792251107.362723
+}

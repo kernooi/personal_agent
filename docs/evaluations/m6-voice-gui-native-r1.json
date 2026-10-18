@@ -1,0 +1,19 @@
+{
+  "version": "m6-production-gui-voice-v1",
+  "started_at": 1792250054.6126926,
+  "status": "NOT FULLY VERIFIED",
+  "automatic_recordings": 0,
+  "automatic_app_media_actions": 0,
+  "screen_scope": "owned synthetic window only",
+  "states": [
+    "IDLE"
+  ],
+  "synthetic_transcripts": {},
+  "spoken_stream_starts": 0,
+  "stop_speaking_clicked": false,
+  "timings": [],
+  "audibility": "operator confirmation required",
+  "setup_error": "OWNED_FIXTURE_NOT_FOUND",
+  "ended_at": 1792250055.9949155,
+  "scope_setup_sent": false
+}

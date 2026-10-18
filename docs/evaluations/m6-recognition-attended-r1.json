@@ -1,0 +1,65 @@
+{
+  "version": "m6-recognition-attended-v1",
+  "model_directory": "speech/small.en",
+  "command_pause_seconds": 1.0,
+  "beam_size": 5,
+  "gate": {
+    "minimum_exact_fraction": 1.0
+  },
+  "records": [
+    {
+      "case": "identity",
+      "exact": false,
+      "uncertain": false,
+      "command_input_ready_seconds": 0.06750050000005103,
+      "transcript_received": true
+    },
+    {
+      "case": "notepad",
+      "exact": true,
+      "uncertain": false,
+      "command_input_ready_seconds": 0.06550080000010894,
+      "transcript_received": true
+    },
+    {
+      "case": "spotify-song",
+      "exact": false,
+      "uncertain": false,
+      "command_input_ready_seconds": 0.06747810000001664,
+      "transcript_received": true
+    },
+    {
+      "case": "general-question",
+      "exact": false,
+      "uncertain": false,
+      "command_input_ready_seconds": 0.0659809999999652,
+      "transcript_received": true
+    },
+    {
+      "case": "negation",
+      "exact": true,
+      "uncertain": false,
+      "command_input_ready_seconds": 0.06600649999995767,
+      "transcript_received": true
+    },
+    {
+      "case": "youtube",
+      "exact": false,
+      "uncertain": false,
+      "command_input_ready_seconds": 0.06615790000000743,
+      "transcript_received": true
+    },
+    {
+      "case": "playlist-name",
+      "exact": false,
+      "uncertain": false,
+      "command_input_ready_seconds": 0.06680469999992056,
+      "transcript_received": true
+    }
+  ],
+  "status": "FAILED",
+  "audio_or_transcripts_saved": false,
+  "app_media_screen_actions": 0,
+  "correct": 2,
+  "total": 7
+}

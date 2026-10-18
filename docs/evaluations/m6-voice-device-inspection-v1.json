@@ -1,0 +1,26 @@
+{
+  "version": "m6-read-only-device-inspection-v1",
+  "date": "2026-10-17",
+  "python": "3.13.2",
+  "hardware": {
+    "cpu": "AMD Ryzen 5 5600X",
+    "physical_cores": 6,
+    "logical_processors": 12,
+    "physical_ram_bytes": 34257739776,
+    "gpu": "NVIDIA GeForce RTX 4070",
+    "vram_total_mib": 12282,
+    "vram_used_mib_snapshot": 1903
+  },
+  "native_device_discovery": {
+    "input_endpoints": 8,
+    "sapi_voices": 2,
+    "sapi_outputs": 4,
+    "typed_sapi_event_connection": true
+  },
+  "stt_assets_present": false,
+  "actual_microphone_captures": 0,
+  "speech_playback_requests": 0,
+  "audio_saved": false,
+  "status": "metadata-only; not an audio acceptance pass",
+  "note": "Dynamic SAPI event lookup failed before typed COM was selected. No recording or speech was requested by these probes."
+}

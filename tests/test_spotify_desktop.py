@@ -326,13 +326,83 @@ def test_frozen_desktop_corpus_with_all_conversation_controllers(setup, case):
     assert broker.desktop.original.execution_calls == 0
 
 
-def test_followup_receipt_survives_pending_consumption(setup):
+def test_autoplay_receipt_does_not_repeat_search_selection_or_play(setup):
     broker, chat, fake, _ = setup
     seed(broker, fake, {})
-    chat.submit("Play relaxing music on Spotify", "search")
+    chat.submit("Play relaxing music on Spotify", "play")
+    one = chat.submit("Play relaxing music on Spotify", "play")
+    again = chat.submit("Play relaxing music on Spotify", "play")
+    assert one == again and fake.execution_count == 3
+
+
+def test_explicit_search_choice_receipt_survives_pending_consumption(setup):
+    broker, chat, fake, _ = setup
+    seed(broker, fake, {})
+    chat.submit("Search Spotify for relaxing music", "search")
     one = chat.submit("1", "choose")
     again = chat.submit("1", "choose")
-    assert one == again and fake.execution_count == 3
+    assert one == again and fake.execution_count == 2
+
+
+@pytest.mark.parametrize("query", ["Avid", "playlist Fav Jpop"])
+def test_play_request_selects_first_ranked_result_without_showing_list(setup, query):
+    broker, chat, fake, _ = setup
+    seed(broker, fake, {})
+    fake.catalog = [
+        ("a" * 22, "First ranked match", "First creator"),
+        ("b" * 22, query.removeprefix("playlist "), "Another creator"),
+    ]
+    result = chat.submit("Play " + query + " on Spotify", "play-first")
+    assert result.state == State.SUCCEEDED
+    assert broker.media.pending["arguments"].operation == "play"
+    assert fake.execution_count == 3
+    assert broker.media.observation.item_id == "a" * 22
+    assert "I found:" not in conversational_text(result)
+    assert "Choose" not in conversational_text(result)
+    assert chat.original.spotify.pending is None
+    again = chat.submit("Play " + query + " on Spotify", "play-first")
+    assert again == result and fake.execution_count == 3
+
+
+def test_explicit_search_displays_results_without_playback(setup):
+    broker, chat, fake, _ = setup
+    seed(broker, fake, {})
+    result = chat.submit("Search Spotify for relaxing music")
+    assert fake.execution_count == 1
+    assert broker.media.pending["arguments"].operation == "search"
+    assert "I found:" in conversational_text(result)
+
+
+def test_first_result_preference_never_substitutes_an_explicit_creator(setup):
+    broker, chat, fake, _ = setup
+    seed(broker, fake, {})
+    fake.catalog = [("a" * 22, "Avid", "Different artist")]
+    result = chat.submit("Play Avid by Requested Artist on Spotify")
+    assert fake.execution_count == 1
+    assert broker.media.pending["arguments"].operation == "search"
+    assert "nothing was played" in conversational_text(result)
+    assert "I found:" not in conversational_text(result)
+
+
+def test_autoplay_does_not_continue_after_cancelled_search(setup):
+    broker, chat, fake, _ = setup
+    seed(broker, fake, {})
+    stopped = []
+    broker.cancel_requested = lambda: bool(stopped)
+    fake.after_execute = lambda: stopped.append(True)
+    result = chat.submit("Play relaxing music on Spotify")
+    assert result.state != State.SUCCEEDED
+    assert fake.execution_count == 1
+
+
+def test_autoplay_with_no_results_never_selects_or_plays(setup):
+    broker, chat, fake, _ = setup
+    seed(broker, fake, {})
+    fake.catalog = []
+    result = chat.submit("Play relaxing music on Spotify")
+    assert fake.execution_count == 1
+    assert broker.media.pending["arguments"].operation == "search"
+    assert "No matching results" in conversational_text(result)
 
 
 @pytest.mark.parametrize(

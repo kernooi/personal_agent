@@ -16,7 +16,7 @@ from jarvis.media_fake import FakeBrowserProvider
 from jarvis.models import reject_constant, unique_object
 from jarvis.ollama import OllamaProvider
 
-CORPUS = Path(__file__).resolve().parents[2] / "tests/fixtures/request-language-corpus-v3.json"
+CORPUS = Path(__file__).resolve().parents[2] / "tests/fixtures/request-language-corpus-v4.json"
 
 
 def contract_hash():

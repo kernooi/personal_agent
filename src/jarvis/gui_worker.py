@@ -59,7 +59,13 @@ def main():
     original = terminal.chat_loop
 
     def framed_loop(conversation, stream):
-        return original(conversation, stream, output=writer.output)
+        from jarvis.voice_presentation import VoicePresentation
+
+        presentation = VoicePresentation(conversation.broker)
+        try:
+            return original(conversation, stream, output=writer.output, presentation=presentation)
+        finally:
+            presentation.close()
 
     terminal.chat_loop = framed_loop
     diagnostics = DiagnosticStream(writer)

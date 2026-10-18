@@ -14,7 +14,16 @@ from jarvis.gui_widgets import RoundedPanel, SendButton
 
 
 class ChatWindow:
-    def __init__(self, root, command_factory, repository, *, prepare=None, auto_start=False):
+    def __init__(
+        self,
+        root,
+        command_factory,
+        repository,
+        *,
+        prepare=None,
+        auto_start=False,
+        voice_factory=None,
+    ):
         self.root, self.command_factory, self.repository = root, command_factory, repository
         self.session = None
         self.prepare = prepare
@@ -37,6 +46,9 @@ class ChatWindow:
         root.iconphoto(True, *self.window_icons)
         root.bind("<Map>", self.style_titlebar, add="+")
         self.build()
+        self.voice = voice_factory(self) if voice_factory else None
+        if self.voice:
+            self.update_composer()
         root.bind("<Escape>", lambda _: self.stop())
         self.schedule(40, self.poll)
         self.schedule(200, self.animate)
@@ -112,6 +124,15 @@ class ChatWindow:
             pady=8,
         )
         details.pack(side="right", padx=(0, 8))
+        self.settings_button = self.button(header, "Settings", self.settings)
+        self.settings_button.configure(
+            bg=TITLE,
+            fg="#c4d6f5",
+            activeforeground="#ffffff",
+            activebackground="#243b60",
+            pady=8,
+        )
+        self.settings_button.pack(side="right", padx=(0, 8))
         tk.Frame(self.root, bg=BORDER, height=1).pack(fill="x")
 
         self.hint = tk.Label(
@@ -238,7 +259,7 @@ class ChatWindow:
         lines = max(2, min(6, (count[0] if count else 0) + 1))
         if int(self.input.cget("height")) != lines:
             self.input.configure(height=lines)
-        height = 132 + (lines - 2) * 22
+        height = (164 if getattr(self, "voice", None) else 132) + (lines - 2) * 22
         if int(self.composer.cget("height")) != height:
             self.composer.configure(height=height)
 
@@ -247,6 +268,8 @@ class ChatWindow:
 
     def toggle_session(self):
         if self.connected:
+            if self.voice:
+                self.voice.stop()
             self.status.set("Ending session…")
             self.ready = False
             self.send_button.configure(state="disabled")
@@ -299,9 +322,11 @@ class ChatWindow:
         return "break"
 
     def send(self):
+        return self.send_text(self.input.get("1.0", "end-1c").strip())
+
+    def send_text(self, text, *, from_voice=False, display_text=None):
         if not self.ready or self.busy:
-            return
-        text = self.input.get("1.0", "end-1c").strip()
+            return False
         if not text:
             return
         if text.casefold() in {"/stop", "stop", "/cancel"}:
@@ -317,7 +342,9 @@ class ChatWindow:
         except ValueError as exc:
             self.status.set(str(exc))
             return
-        self.add_message("user", text)
+        if self.voice:
+            self.voice.submitted(from_voice)
+        self.add_message("user", "Voice: " + display_text if from_voice else text)
         self.input.delete("1.0", "end")
         self.update_composer()
         self.busy, self.ready = True, False
@@ -325,8 +352,11 @@ class ChatWindow:
         self.status.set("Thinking…")
         self.send_button.configure(state="disabled")
         self.stop_button.configure(state="normal")
+        return True
 
     def stop(self):
+        if self.voice:
+            self.voice.stop()
         if self.session and self.connected and self.busy:
             startup_done = getattr(self.session, "startup_done", None)
             if (
@@ -366,10 +396,14 @@ class ChatWindow:
                     self.send_button.configure(state="normal")
                     self.stop_button.configure(state="disabled")
                     self.input.focus_set()
+                    if self.voice:
+                        self.voice.ready()
                 elif kind == "progress":
                     self.status.set(text)
                 elif kind == "reply":
                     self.add_message("assistant", text)
+                    if self.voice:
+                        self.voice.reply(text)
                 elif kind == "diagnostic":
                     self.logs.append(text)
                     self.logs = self.logs[-300:]
@@ -382,12 +416,16 @@ class ChatWindow:
                         self.add_message("assistant", text)
                     if text.startswith("JARVIS: Stop acknowledged. New actions are blocked;"):
                         self.global_stopped = True
+                        if self.voice:
+                            self.voice.stop()
                         self.ready = self.busy = False
                         self.status.set("Stopped · end this session before starting another")
                         self.send_button.configure(state="disabled")
                         self.stop_button.configure(state="disabled")
                         self.add_message("assistant", text.removeprefix("JARVIS: "))
                 elif kind == "closed":
+                    if self.voice:
+                        self.voice.stop()
                     if not self.ready and self.logs:
                         self.add_message("assistant", self.logs[-1])
                     self.session.close()
@@ -430,10 +468,17 @@ class ChatWindow:
         text.insert("end", "\n".join(self.logs) or "No session details yet. Start a chat first.")
         text.configure(state="disabled")
 
+    def settings(self):
+        if self.voice:
+            self.voice.settings()
+
     def close(self):
         if self.closed:
             return
         self.closed = True
+        if self.voice:
+            self.voice.close()
+        self.voice_close_deadline = time.monotonic() + 3
         for timer in self.timers:
             self.root.after_cancel(timer)
         self.timers.clear()
@@ -443,6 +488,10 @@ class ChatWindow:
         self.finish_close()
 
     def finish_close(self):
+        voice = getattr(self.voice, "voice", None)
+        if voice and voice.jobs.active and time.monotonic() < self.voice_close_deadline:
+            self.schedule(50, self.finish_close)
+            return
         startup_done = getattr(self.session, "startup_done", None)
         process = getattr(self.session, "process", None)
         if (startup_done is not None and not startup_done.is_set()) or (
@@ -454,6 +503,15 @@ class ChatWindow:
 
 
 def main(command_factory, repository, *, prepare=None):
+    from jarvis.gui_voice import VoicePanel
+
     root = tk.Tk()
-    ChatWindow(root, command_factory, repository, prepare=prepare, auto_start=True)
+    ChatWindow(
+        root,
+        command_factory,
+        repository,
+        prepare=prepare,
+        auto_start=True,
+        voice_factory=VoicePanel,
+    )
     root.mainloop()

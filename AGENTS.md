@@ -140,3 +140,97 @@ No general planner/tool invocation, public disclosure or screenshot-derived ordi
 history. Screen dialogue is bounded transient context, cleared on topic change or
 revoke; Wordle guesses remain deterministic. See decision 0019 and
 docs/SCREEN_CHAT_HANDOFF.md. This adds no persistent memory or desktop control.
+
+M6 local push-to-talk voice is owner-approved as a frontend to the existing GUI
+and chat pipeline. Keep recording user-initiated, bounded and half-duplex; no cloud
+speech, wake-word listener or separate action engine. CPU local STT uses separately
+approved installed assets; no runtime downloads. Installed Windows offline TTS is
+interruptible and must not speak stale replies or turn failures into successes.
+Audio/recognition is transient, not journal/history audio storage. Keep Tk updates
+on its main thread and device/inference work in bounded owned workers. Voice can
+never approve itself or bypass existing scopes, registrations and qualifications.
+Use one existing companion overlay with screen/capture privacy priority. Confirm
+attended readiness before real microphone/speaker or tool-effect validation; mocks
+do not qualify speech or audibility. Stop after M6 for review. See decision 0020.
+
+The owner subsequently selected hands-free local "JARVIS" wake addressing in the
+ordinary GUI and always-on spoken replies. Settings belongs beside Details; no
+manual Mic/Finish/Stop speaking or Speak replies toggle in ordinary chat. Reuse
+installed speech assets; no new model downloads. Show microphone status, bound
+transient utterances and wake sessions, discard unaddressed words, pause capture
+through processing/speech, preserve Stop/Esc/global stop and all broker gates.
+Wake recognition is not speaker authentication or exact approval. Settings can
+disable microphone listening; explicit PTT lab mode remains nonautomatic. This
+supersedes M6's earlier PTT-only startup default for this GUI. The owner requested
+no further tests for now; document changes as unverified. See decision 0021.
+
+The owner additionally requested that a standalone spoken "JARVIS" show the
+existing orb and reply "Yes sir." locally. Pause the owned microphone during
+that fixed acknowledgement, then resume its bounded one-request followup window.
+Do not send the wake address/acknowledgement to the model, history or tools.
+One-utterance addressed questions keep their direct path. Retain Stop, privacy
+priority, no overlap and no automatic retry; native validation is still paused.
+
+The wake call is now owner-configurable through GUI Settings, defaulting to
+"Jarvis" for existing private files. Use that selected phrase for recognition
+and status labels; expose the bounded command-listening window (3–20 seconds).
+Keep confident whole-word matching and start the followup after acknowledgement.
+
+The owner clarified that wake detection must precede command transcription.
+The GUI now defaults to an owned installed Microsoft offline Windows English
+SAPI wake grammar, with no model download/shared speech service or global setting
+change. It may recognize only the configured wake call/prefixes, never arbitrary
+commands; require a full high-confidence non-emulated match. Stop/purge native
+capture before local acknowledgement, then start a bounded command window and
+use existing local STT/review/broker. Legacy Whisper wake is explicit only.
+No zero-latency/native-accuracy claim without attended validation. See ADR 0022;
+the owner's test pause remains active until they resume that validation.
+
+The owner selected automatic first-result playback for Spotify music/playlist
+requests, without displaying a choice list. Select only fresh retrieved results
+through the existing search/open/play broker phases; explicit artist/owner
+constraints remain binding. Search-only requests still list results. This is
+Spotify-specific, with no change to YouTube selection, stop, verification or
+qualification gates. Preserve prior corpora/results; see decision 0023.
+
+For the first-result Spotify change, the owner explicitly resumed fake-only
+tests and actual-local-model qualifications against synthetic targets. This
+does not resume native microphone/speaker or real app/media tests; those still
+need separately confirmed attended scope.
+
+The owner approved the Kokoro local neural speech installation/model bundle and
+selected an American male voice (am_michael). Keep its dependencies in .venv,
+verified assets in private speech storage, CPU inference and explicit provider
+selection; no runtime downloads or silent Windows/cloud fallback. Only the fixed
+synthetic "Yes sir." acknowledgement may have a setup-created private audio cache;
+ordinary spoken replies stay transient. Preserve exact selected SAPI output,
+verified stream start/end, half-duplex, bounded workers and physical Stop. Existing
+Windows voice configuration remains available as an explicit setting. The owner
+separately confirmed readiness for the speaker-only preview, with microphone off;
+that does not authorize real app/media/screen effects or microphone tests.
+
+The owner subsequently approved downloading and selecting the English small.en
+command recognizer in private speech storage; preserve base.en and explicit local
+CPU-only selection. Capture/decoding improvements retain complete transient audio,
+strict bounds, no history/vocabulary rewriting and confidence review; no permission
+or acceptance gate changes. The owner separately confirmed readiness for the
+seven-sentence recognition-only wake/microphone test, including its local fixed
+acknowledgement. It must not execute the spoken app/media requests or capture the
+screen. Preserve exact-match failures and do not claim general speech accuracy
+from synthetic samples or this small attended corpus.
+
+The owner clarified app-name homophones such as Discord / this cord. Bounded
+decoder spelling hints may use friendly names from the existing read-only enabled
+application catalog and optional explicit private Settings spellings. No post-hoc
+transcript substitution, previous-chat conditioning, extra decode/retry or new
+model download. Automatic OS vocabulary stays transient and cannot grant authority,
+select a target or bypass review/broker gates. Preserve literal-word counterexamples
+and earlier failed corpora/reports. See decision 0024.
+The owner separately confirmed readiness for the four-sentence app-spelling
+microphone check using the normal wake/ack flow. It may record only the prompted
+test utterances and speak the fixed acknowledgement; no app/media/screen action.
+The attended spelling check failed (1/4 exact), and the owner confirmed literal
+"this cord" became "Discord". Automatic app-name hints are now an experimental
+opt-in, disabled by default and explicitly disabled on this PC. Preserve optional
+explicit spellings, all failed evidence and the unchanged gate. Do not claim that
+removing this bias solves the original speech accuracy issue.

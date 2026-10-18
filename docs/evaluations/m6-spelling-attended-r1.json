@@ -1,0 +1,89 @@
+{
+  "version": "m6-recognition-attended-v1",
+  "corpus_version": "m6-app-spelling-corpus-v1",
+  "model_directory": "speech/small.en",
+  "command_pause_seconds": 1.0,
+  "beam_size": 5,
+  "application_name_hint_count": 54,
+  "gate": {
+    "minimum_exact_fraction": 1.0
+  },
+  "scope": "full frozen corpus",
+  "selected_cases": [
+    "discord-open",
+    "discord-minimize",
+    "literal-cord",
+    "literal-cord-question"
+  ],
+  "records": [
+    {
+      "case": "discord-open",
+      "exact": true,
+      "uncertain": false,
+      "command_input_ready_seconds": 0.06550130000005083,
+      "transcript_received": true,
+      "audio_seconds": 2.1,
+      "diagnostic": "EXACT",
+      "quality": {
+        "audio_rms": 0.01790381409227848,
+        "audio_peak": 0.16552734375,
+        "clipped_fraction": 0.0,
+        "minimum_logprob": -0.2125474289059639,
+        "maximum_no_speech_probability": 0.0006423367885872722
+      }
+    },
+    {
+      "case": "discord-minimize",
+      "exact": false,
+      "uncertain": false,
+      "command_input_ready_seconds": 0.0656808000003366,
+      "transcript_received": true,
+      "audio_seconds": 2.35,
+      "diagnostic": "LEADING_WORDS_MISSING",
+      "quality": {
+        "audio_rms": 0.022016063332557678,
+        "audio_peak": 0.206817626953125,
+        "clipped_fraction": 0.0,
+        "minimum_logprob": -0.06773614883422852,
+        "maximum_no_speech_probability": 9.202573710354045e-05
+      }
+    },
+    {
+      "case": "literal-cord",
+      "exact": false,
+      "uncertain": false,
+      "command_input_ready_seconds": 0.06678640000018277,
+      "transcript_received": true,
+      "audio_seconds": 3.4,
+      "diagnostic": "WORDS_DIFFER",
+      "quality": {
+        "audio_rms": 0.016805067658424377,
+        "audio_peak": 0.181304931640625,
+        "clipped_fraction": 0.0,
+        "minimum_logprob": -0.20839214750698634,
+        "maximum_no_speech_probability": 0.00010930225107586011
+      }
+    },
+    {
+      "case": "literal-cord-question",
+      "exact": false,
+      "uncertain": false,
+      "command_input_ready_seconds": 0.06601419999969949,
+      "transcript_received": true,
+      "audio_seconds": 3.3,
+      "diagnostic": "WORDS_DIFFER",
+      "quality": {
+        "audio_rms": 0.020289139822125435,
+        "audio_peak": 0.229644775390625,
+        "clipped_fraction": 0.0,
+        "minimum_logprob": -0.0989915756508708,
+        "maximum_no_speech_probability": 3.102479604422115e-05
+      }
+    }
+  ],
+  "status": "FAILED",
+  "audio_or_transcripts_saved": false,
+  "app_media_screen_actions": 0,
+  "correct": 1,
+  "total": 4
+}

@@ -160,6 +160,9 @@ class Status:
         )
         function(self.user, "ShowWindow", W.BOOL, W.HWND, C.c_int)(self.hwnd, 4)
 
+    def hide(self):
+        function(self.user, "ShowWindow", W.BOOL, W.HWND, C.c_int)(self.hwnd, 0)
+
     def after(self, milliseconds, callback):
         self.tcl.after(milliseconds, callback)
 

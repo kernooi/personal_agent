@@ -16,7 +16,7 @@ from jarvis.ollama import OllamaProvider
 
 CORPUS = Path(__file__).resolve().parents[2] / "tests/fixtures/m4-corpus-v2.json"
 WINDOWS_CORPUS = CORPUS.with_name("m4-windows-media-corpus-v1.json")
-SPOTIFY_DESKTOP_CORPUS = CORPUS.with_name("m4-spotify-desktop-corpus-v1.json")
+SPOTIFY_DESKTOP_CORPUS = CORPUS.with_name("m4-spotify-desktop-corpus-v2.json")
 
 
 def contract_hash():

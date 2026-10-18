@@ -1,0 +1,13 @@
+{
+  "version": "m6-recognition-corpus-v1",
+  "gate": {"minimum_exact_fraction": 1.0},
+  "cases": [
+    {"id": "identity", "text": "What is your name?"},
+    {"id": "notepad", "text": "Please open Notepad."},
+    {"id": "spotify-song", "text": "Play Never Gonna Give You Up on Spotify."},
+    {"id": "general-question", "text": "How much muscle gain did I lose by sleeping six hours instead of eight?"},
+    {"id": "negation", "text": "Do not close the window."},
+    {"id": "youtube", "text": "Search YouTube for Outdoor Boys."},
+    {"id": "playlist-name", "text": "Play the playlist Fav Jpop on Spotify."}
+  ]
+}

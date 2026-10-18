@@ -1,0 +1,96 @@
+{
+  "version": "m6-spelling-synthetic-v1",
+  "corpus_sha256": "7474203ee86b6fdfa770905adfb3ca4e5d9445c4591184f18c5ba5813ef7d4f8",
+  "gate": {
+    "minimum_exact_fraction": 1.0
+  },
+  "hint_source": "read-only installed application labels",
+  "model_directory": "speech/small.en",
+  "hint_count": 54,
+  "microphone_or_speakers_opened": false,
+  "app_effects": 0,
+  "audio_or_transcripts_saved": false,
+  "records": [
+    {
+      "case": "discord-open",
+      "variant": "unhinted",
+      "exact": true,
+      "word_errors": 0,
+      "reference_words": 2,
+      "uncertain": false,
+      "vocabulary_terms": 0,
+      "stt_seconds": 1.74
+    },
+    {
+      "case": "discord-open",
+      "variant": "app_names",
+      "exact": true,
+      "word_errors": 0,
+      "reference_words": 2,
+      "uncertain": false,
+      "vocabulary_terms": 54,
+      "stt_seconds": 1.989
+    },
+    {
+      "case": "discord-minimize",
+      "variant": "unhinted",
+      "exact": true,
+      "word_errors": 0,
+      "reference_words": 3,
+      "uncertain": false,
+      "vocabulary_terms": 0,
+      "stt_seconds": 1.732
+    },
+    {
+      "case": "discord-minimize",
+      "variant": "app_names",
+      "exact": true,
+      "word_errors": 0,
+      "reference_words": 3,
+      "uncertain": false,
+      "vocabulary_terms": 54,
+      "stt_seconds": 1.949
+    },
+    {
+      "case": "literal-cord",
+      "variant": "unhinted",
+      "exact": true,
+      "word_errors": 0,
+      "reference_words": 6,
+      "uncertain": false,
+      "vocabulary_terms": 0,
+      "stt_seconds": 1.709
+    },
+    {
+      "case": "literal-cord",
+      "variant": "app_names",
+      "exact": true,
+      "word_errors": 0,
+      "reference_words": 6,
+      "uncertain": false,
+      "vocabulary_terms": 54,
+      "stt_seconds": 2.067
+    },
+    {
+      "case": "literal-cord-question",
+      "variant": "unhinted",
+      "exact": true,
+      "word_errors": 0,
+      "reference_words": 6,
+      "uncertain": false,
+      "vocabulary_terms": 0,
+      "stt_seconds": 1.751
+    },
+    {
+      "case": "literal-cord-question",
+      "variant": "app_names",
+      "exact": true,
+      "word_errors": 0,
+      "reference_words": 6,
+      "uncertain": false,
+      "vocabulary_terms": 54,
+      "stt_seconds": 2.177
+    }
+  ],
+  "status": "PASSED"
+}

@@ -1,6 +1,7 @@
 """Named Spotify song/playlist workflow, reusing the broker-bound media phases."""
 
 import re
+from dataclasses import replace
 
 from jarvis.media_language import named_media_request
 from jarvis.youtube_flow import YouTubeFlow
@@ -45,6 +46,27 @@ class SpotifyFlow(YouTubeFlow):
             and self.matches_item(query, item)
         ]
         return exact or super().matching_candidates(query, results)
+
+    def automatic_selection(self, goal, query, results):
+        if goal != "play":
+            return super().automatic_selection(goal, query, results)
+        if not results:
+            return None
+        # Standing owner preference: a play request selects Spotify's first
+        # retrieved result without an extra choice turn. An explicit creator
+        # remains a constraint; never substitute another artist/playlist owner.
+        if re.search(r"(?i)\s+by\s+", query):
+            return next(
+                (i for i, item in enumerate(results, 1) if self.matches_item(query, item)), None
+            )
+        return 1
+
+    def play_selection_prompt(self, result):
+        return replace(
+            result,
+            display_message="I couldn't verify a result for that artist or playlist owner. "
+            "Please check the name; nothing was played.",
+        )
 
     def matches_item(self, query, item):
         query = re.sub(r"(?i)^playlist ", "", query)

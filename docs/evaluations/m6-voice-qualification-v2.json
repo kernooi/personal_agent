@@ -1,0 +1,17 @@
+{
+  "date": "2026-10-17",
+  "checks": {
+    "m2": true,
+    "conversation": true,
+    "applications": true,
+    "browser": true,
+    "spotify": true,
+    "language": true
+  },
+  "all_matching": true,
+  "profile_unchanged": true,
+  "new_model_gates": "apps 31/31, browser 27/27, Spotify 25/25, language 33/33",
+  "actual_app_media_effects": 0,
+  "speech_qualification": "pending real microphone/speaker validation",
+  "previous_v1_preserved": true
+}

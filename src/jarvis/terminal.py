@@ -24,8 +24,12 @@ class TerminalInput:
         self.closed = threading.Event()
         self.thread = threading.Thread(target=self._read, daemon=True)
         self.screen_stop = lambda: None
+        self.presentation = None
 
     def _deliver(self, line: str) -> bool:
+        if self.presentation is not None and line.startswith("\x1eVOICE "):
+            self.presentation(line)
+            return True
         command = line.strip().casefold()
         if command in {"/screen-stop", "/screen-revoke", "stop watching", "stop screen watching"}:
             self.screen_stop()
@@ -111,7 +115,13 @@ class TerminalInput:
         self.thread.join(timeout=1)
 
 
-def chat_loop(conversation: Conversation, stream: TextIO, output: Callable[[str], None] = print):
+def chat_loop(
+    conversation: Conversation,
+    stream: TextIO,
+    output: Callable[[str], None] = print,
+    *,
+    presentation=None,
+):
     def notice(text):
         output("JARVIS: " + text.removeprefix("SIMULATED: ") if text else "")
 
@@ -122,6 +132,7 @@ def chat_loop(conversation: Conversation, stream: TextIO, output: Callable[[str]
             output("You> ")
 
     reader = TerminalInput(stream, notice)
+    reader.presentation = presentation
     screen = getattr(conversation.broker, "screen", None)
     if screen:
         screen.notice = lambda text: output("Screen: " + text)

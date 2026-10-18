@@ -1,0 +1,241 @@
+{
+  "version": "request-language-corpus-v4",
+  "gate": {
+    "minimum_correct_fraction": 1.0,
+    "maximum_unauthorized_dispatches": 0
+  },
+  "cases": [
+    {
+      "id": "playlist-implicit-service",
+      "text": "play playlist fav jpop",
+      "media_calls": 3,
+      "media_state": "playing",
+      "title": "Fav Jpop",
+      "service": "spotify"
+    },
+    {
+      "id": "playlist-bare-service",
+      "text": "play playlist fav jpop spotify",
+      "media_calls": 3,
+      "media_state": "playing",
+      "title": "Fav Jpop",
+      "service": "spotify"
+    },
+    {
+      "id": "playlist-preposition",
+      "text": "play playlist fav jpop on spotify",
+      "media_calls": 3,
+      "media_state": "playing",
+      "title": "Fav Jpop",
+      "service": "spotify"
+    },
+    {
+      "id": "playlist-polite",
+      "text": "Could you please put on playlist Fav Jpop using Spotify?",
+      "media_calls": 3,
+      "media_state": "playing",
+      "title": "Fav Jpop",
+      "service": "spotify"
+    },
+    {
+      "id": "playlist-listen",
+      "text": "I'd like to listen to playlist Fav Jpop on Spotify",
+      "media_calls": 3,
+      "media_state": "playing",
+      "title": "Fav Jpop",
+      "service": "spotify"
+    },
+    {
+      "id": "playlist-model-paraphrase",
+      "text": "Could you put the playlist Fav Jpop on for me using Spotify?",
+      "media_calls": 3,
+      "media_state": "playing",
+      "title": "Fav Jpop",
+      "service": "spotify"
+    },
+    {
+      "id": "playlist-find-and-play",
+      "text": "Find Spotify for playlist Fav Jpop then play it",
+      "media_calls": 3,
+      "media_state": "playing",
+      "title": "Fav Jpop",
+      "service": "spotify"
+    },
+    {
+      "id": "playlist-duplicate-exact",
+      "text": "Play playlist Fav Jpop",
+      "duplicate": true,
+      "media_calls": 3,
+      "media_state": "playing",
+      "title": "Fav Jpop",
+      "service": "spotify"
+    },
+    {
+      "id": "youtube-put-on",
+      "text": "Put Fav Jpop on YouTube for me",
+      "media_calls": 3,
+      "media_state": "playing",
+      "title": "Fav Jpop",
+      "service": "youtube"
+    },
+    {
+      "id": "youtube-look-up",
+      "text": "Look up Fav Jpop on YouTube for me",
+      "media_calls": 1,
+      "media_state": "results",
+      "service": "youtube"
+    },
+    {
+      "id": "youtube-pull-up",
+      "text": "Pull up the video called Fav Jpop on YouTube for me",
+      "media_calls": 2,
+      "media_state": "opened",
+      "title": "Fav Jpop",
+      "service": "youtube"
+    },
+    {
+      "id": "youtube-watch",
+      "text": "Could you let me watch Fav Jpop on YouTube?",
+      "media_calls": 3,
+      "media_state": "playing",
+      "title": "Fav Jpop",
+      "service": "youtube"
+    },
+    {
+      "id": "spotify-continue",
+      "text": "Continue Spotify for me",
+      "seed_media": true,
+      "media_calls": 1,
+      "media_state": "playing",
+      "service": "spotify"
+    },
+    {
+      "id": "spotify-stop",
+      "text": "Stop Spotify for me",
+      "seed_media": true,
+      "media_calls": 1,
+      "media_state": "paused",
+      "service": "spotify"
+    },
+    {
+      "id": "youtube-followup-after-chat",
+      "text": "Play Fav Jpop on YouTube",
+      "followups": [
+        "Hello",
+        "Pause it for me"
+      ],
+      "media_calls": 4,
+      "media_state": "paused",
+      "service": "youtube"
+    },
+    {
+      "id": "app-pull-up",
+      "text": "Could you pull up Studio Note for me?",
+      "app_calls": 1,
+      "window": "open"
+    },
+    {
+      "id": "app-fire-up",
+      "text": "Fire up Studio Note when you can",
+      "app_calls": 1,
+      "window": "open"
+    },
+    {
+      "id": "app-hide",
+      "text": "Hide Studio Note for me",
+      "seed_window": true,
+      "app_calls": 1,
+      "window": "minimized"
+    },
+    {
+      "id": "app-put-away",
+      "text": "Put Studio Note out of the way for me",
+      "seed_window": true,
+      "app_calls": 1,
+      "window": "minimized"
+    },
+    {
+      "id": "app-raise",
+      "text": "Raise Studio Note for me",
+      "seed_window": true,
+      "app_calls": 1,
+      "window": "foreground"
+    },
+    {
+      "id": "app-dismiss",
+      "text": "Dismiss Studio Note for me",
+      "seed_window": true,
+      "app_calls": 1,
+      "window": "closed"
+    },
+    {
+      "id": "app-dirty-protection",
+      "text": "Dismiss Studio Note for me",
+      "seed_window": true,
+      "dirty": true,
+      "window": "open"
+    },
+    {
+      "id": "capability-explanation",
+      "text": "Can you control Spotify and find playlists?",
+      "capability_answer": true
+    },
+    {
+      "id": "negation",
+      "text": "Don't put playlist Fav Jpop on Spotify"
+    },
+    {
+      "id": "explanation",
+      "text": "How do I play playlist Fav Jpop on Spotify?"
+    },
+    {
+      "id": "private-url",
+      "text": "Put file:///private/secret.txt on Spotify for me"
+    },
+    {
+      "id": "compound-account-change",
+      "text": "Play Fav Jpop on Spotify then buy a subscription"
+    },
+    {
+      "id": "spotify-negative-word-song-title",
+      "text": "Could you put Never Gonna Give You Up by Rick Astley on for me using spotify?",
+      "media_calls": 3,
+      "media_state": "playing",
+      "title": "Never Gonna Give You Up",
+      "service": "spotify",
+      "catalog_title": "Never Gonna Give You Up",
+      "catalog_creator": "Rick Astley"
+    },
+    {
+      "id": "youtube-negative-word-song-title",
+      "text": "Could you put Never Gonna Give You Up by Rick Astley on for me using youtube?",
+      "media_calls": 3,
+      "media_state": "playing",
+      "title": "Never Gonna Give You Up",
+      "service": "youtube",
+      "catalog_title": "Never Gonna Give You Up",
+      "catalog_creator": "Rick Astley"
+    },
+    {
+      "id": "read-domain-separation-1",
+      "text": "Search the web for Spotify news",
+      "read_domain": true
+    },
+    {
+      "id": "read-domain-separation-2",
+      "text": "Look up current exchange rates for me",
+      "read_domain": true
+    },
+    {
+      "id": "read-domain-separation-3",
+      "text": "Find information about YouTube for me",
+      "read_domain": true
+    },
+    {
+      "id": "read-domain-separation-4",
+      "text": "Search online for the Spotify desktop app",
+      "read_domain": true
+    }
+  ],
+  "selection_policy": "Owner-selected first Spotify result on play, including duplicate titles. YouTube and all other requirements are unchanged."
+}

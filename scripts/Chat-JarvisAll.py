@@ -18,17 +18,19 @@ def chat_command(*, real=True):
     pairs = {
         "--profile": private / "profiles/notepad-m2-concurrent-v1.toml",
         "--registration": private / "notepad-registration.json",
-        "--model-report": root / "docs/evaluations/m5-screen-handoff-m2-model-r1.json",
-        "--conversation-report": root / "docs/evaluations/m5-screen-handoff-conversation-r1.json",
+        "--model-report": root / "docs/evaluations/spotify-first-result-m2-model-r1.json",
+        "--conversation-report": root
+        / "docs/evaluations/spotify-first-result-conversation-r1.json",
         "--applications-config": private / "applications.toml",
-        "--applications-report": root / "docs/evaluations/m5-screen-handoff-applications-r1.json",
-        "--language-report": root / "docs/evaluations/m5-screen-handoff-language-r1.json",
+        "--applications-report": root
+        / "docs/evaluations/spotify-first-result-applications-r1.json",
+        "--language-report": root / "docs/evaluations/spotify-first-result-language-r1.json",
         "--public-data-config": private / "public-data.toml",
         "--web-config": private / "web.toml",
         "--media-config": private / "media-all-spotify-desktop-v1.toml",
         "--browser-registration": private / "chrome-registration.json",
-        "--media-report": root / "docs/evaluations/m5-screen-handoff-browser-r1.json",
-        "--windows-media-report": root / "docs/evaluations/m5-screen-handoff-spotify-r1.json",
+        "--media-report": root / "docs/evaluations/spotify-first-result-browser-r1.json",
+        "--windows-media-report": root / "docs/evaluations/spotify-first-result-desktop-r1.json",
     }
     if not real:
         for option in (

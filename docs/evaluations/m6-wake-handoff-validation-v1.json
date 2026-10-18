@@ -1,0 +1,22 @@
+{
+  "date": "2026-10-18",
+  "scope": "Owner-approved attended voice-only handoff test on this Windows PC",
+  "source_report": "m6-wake-warm-input-r1.json",
+  "native_wake_and_inactive_command_input_coexistence": "OBSERVED",
+  "verified_sapi_completion_to_first_received_input_seconds": 0.0668258000005153,
+  "initial_native_wake_stream_start_seconds_since_lab_launch": 0.802,
+  "expected_synthetic_question_exactly_recognized": true,
+  "command_uncertain": false,
+  "operator_confirmed_acknowledgement_audibility": true,
+  "operator_confirmed_orb_visibility": true,
+  "full_fake_suite": {"passed": 1666, "seconds": 63.69},
+  "focused_fake_voice_suite": {"passed": 128, "seconds": 4.5},
+  "current_combined_model_qualifications_still_accepted": 6,
+  "raw_audio_or_transcripts_saved": false,
+  "app_media_screen_actions": 0,
+  "chat_model_calls": 0,
+  "private_configuration_changed": false,
+  "physical_stop_retested_in_this_run": false,
+  "full_m6_qualification": "NOT ESTABLISHED",
+  "source_report_note": "Original report retained. Its status string was computed before operator checkboxes; its explicit audibility and visibility fields confirm the observations. Future lab reports now reconcile the status after Finish."
+}

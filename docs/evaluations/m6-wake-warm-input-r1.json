@@ -1,0 +1,29 @@
+{
+  "version": "m6-attended-wake-v1",
+  "status": "NATIVE FLOW OBSERVED; AUDIBILITY PENDING",
+  "started_at": 1792263980.6320288,
+  "states": [
+    "WAKE_LISTENING",
+    "WAKE_ACKNOWLEDGING",
+    "SPEAKING",
+    "LISTENING",
+    "TRANSCRIBING"
+  ],
+  "diagnostics": [],
+  "expected_command_recognized": true,
+  "command_uncertain": false,
+  "command_audio_seconds": 1.75,
+  "question_diagnostic": "EXACT",
+  "microphone_started_seconds": 0.802,
+  "maximum_wake_input_level": 0,
+  "acknowledgement_seconds": 8.483,
+  "speech_started_seconds": 8.623,
+  "command_input_ready_seconds": 0.0668258000005153,
+  "app_media_screen_actions": 0,
+  "chat_model_calls": 0,
+  "audio_or_transcripts_saved": false,
+  "audibility": "OPERATOR CONFIRMED ACKNOWLEDGEMENT",
+  "ended_at": 1792264002.6920516,
+  "operator_heard_acknowledgement": true,
+  "operator_saw_orb": true
+}

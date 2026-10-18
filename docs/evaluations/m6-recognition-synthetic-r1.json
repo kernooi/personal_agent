@@ -1,0 +1,159 @@
+{
+  "version": "m6-recognition-synthetic-v1",
+  "corpus_sha256": "a59cb7dfd3922cdf7aa62db79d6b31de0b303998332e42575c83a80247dcc204",
+  "gate": {
+    "minimum_exact_fraction": 1.0
+  },
+  "speech_source": "am_michael",
+  "scope": "Synthetic speech only; does not qualify the owner's microphone/accent",
+  "microphone_or_speakers_opened": false,
+  "app_media_screen_actions": 0,
+  "audio_or_transcripts_saved": false,
+  "models": [
+    "speech/base.en",
+    "speech/small.en"
+  ],
+  "records": [
+    {
+      "case": "identity",
+      "model": "speech/base.en",
+      "exact": true,
+      "word_errors": 0,
+      "reference_words": 4,
+      "uncertain": false,
+      "seconds": 0.679
+    },
+    {
+      "case": "identity",
+      "model": "speech/small.en",
+      "exact": true,
+      "word_errors": 0,
+      "reference_words": 4,
+      "uncertain": false,
+      "seconds": 1.854
+    },
+    {
+      "case": "notepad",
+      "model": "speech/base.en",
+      "exact": true,
+      "word_errors": 0,
+      "reference_words": 3,
+      "uncertain": false,
+      "seconds": 0.599
+    },
+    {
+      "case": "notepad",
+      "model": "speech/small.en",
+      "exact": true,
+      "word_errors": 0,
+      "reference_words": 3,
+      "uncertain": false,
+      "seconds": 1.868
+    },
+    {
+      "case": "spotify-song",
+      "model": "speech/base.en",
+      "exact": false,
+      "word_errors": 2,
+      "reference_words": 8,
+      "uncertain": false,
+      "seconds": 0.616
+    },
+    {
+      "case": "spotify-song",
+      "model": "speech/small.en",
+      "exact": true,
+      "word_errors": 0,
+      "reference_words": 8,
+      "uncertain": false,
+      "seconds": 1.951
+    },
+    {
+      "case": "general-question",
+      "model": "speech/base.en",
+      "exact": true,
+      "word_errors": 0,
+      "reference_words": 14,
+      "uncertain": false,
+      "seconds": 0.652
+    },
+    {
+      "case": "general-question",
+      "model": "speech/small.en",
+      "exact": false,
+      "word_errors": 2,
+      "reference_words": 14,
+      "uncertain": false,
+      "seconds": 2.047
+    },
+    {
+      "case": "negation",
+      "model": "speech/base.en",
+      "exact": true,
+      "word_errors": 0,
+      "reference_words": 5,
+      "uncertain": false,
+      "seconds": 0.62
+    },
+    {
+      "case": "negation",
+      "model": "speech/small.en",
+      "exact": true,
+      "word_errors": 0,
+      "reference_words": 5,
+      "uncertain": false,
+      "seconds": 1.892
+    },
+    {
+      "case": "youtube",
+      "model": "speech/base.en",
+      "exact": true,
+      "word_errors": 0,
+      "reference_words": 5,
+      "uncertain": false,
+      "seconds": 0.59
+    },
+    {
+      "case": "youtube",
+      "model": "speech/small.en",
+      "exact": true,
+      "word_errors": 0,
+      "reference_words": 5,
+      "uncertain": false,
+      "seconds": 1.917
+    },
+    {
+      "case": "playlist-name",
+      "model": "speech/base.en",
+      "exact": false,
+      "word_errors": 3,
+      "reference_words": 7,
+      "uncertain": false,
+      "seconds": 0.615
+    },
+    {
+      "case": "playlist-name",
+      "model": "speech/small.en",
+      "exact": false,
+      "word_errors": 3,
+      "reference_words": 7,
+      "uncertain": false,
+      "seconds": 1.997
+    }
+  ],
+  "status": "FAILED",
+  "summary": [
+    {
+      "model": "speech/base.en",
+      "correct": 5,
+      "total": 7,
+      "word_error_rate": 0.10869565217391304
+    },
+    {
+      "model": "speech/small.en",
+      "correct": 5,
+      "total": 7,
+      "word_error_rate": 0.10869565217391304
+    }
+  ]
+}

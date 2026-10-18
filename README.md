@@ -1,4 +1,48 @@
-# JARVIS local text assistant
+# JARVIS local desktop assistant
+
+## Local hands-free voice (M6: not fully qualified)
+
+Start the existing GUI with:
+
+```powershell
+.\.venv\Scripts\python.exe scripts\Chat-JarvisGUI.py
+```
+
+When chat is ready, say your configured wake call (default **Jarvis**). The orb
+appears and replies **"Yes sir."**, then listens for one command. Speak when the
+acknowledgement finishes; a short pause ends your command automatically. Voice
+uses the same chat pipeline and broker as typing.
+
+**Settings**, beside **Details**, controls the microphone, output, wake call,
+command listening window (3-20 seconds), end-of-command pause and speech engine.
+Spoken replies are always on. Stop/Esc interrupts and pauses wake listening;
+Settings > Save resumes it. Ctrl+Alt+Shift+F10 is the global emergency stop.
+The visible microphone status distinguishes quiet input, sound and transcription.
+
+This PC selects the approved local **small.en** command recognizer on CPU and
+**Kokoro / Michael (American male)** speech. Base.en is retained; Windows offline
+voices remain explicitly selectable. Windows SAPI recognizes only the wake call;
+Whisper transcribes commands. The microphone pauses during speech/processing,
+audio stays transient, and startup never downloads models or uses cloud speech.
+Only the fixed "Yes sir." acknowledgement has a setup-created private audio cache.
+Voice and screen assistance share the existing orb, with screen privacy priority.
+
+Actual handoff tests measured about **66-67 ms** from acknowledgement completion
+to command input, but recognition accuracy remains unresolved: the general
+attended corpus matched **2/7** exactly and the spelling corpus **1/4**. Both failed
+the unchanged gate. Automatic app-name hints caused literal "this cord" to become
+"Discord"; they are now **off by default** and disabled privately. Settings keeps
+these as an experimental opt-in. Optional **Names and spellings** can also bias
+recognition; no replacement table rewrites transcripts. Restart the GUI after
+code/settings changes.
+
+Text chat remains available when voice setup fails. No voice request bypasses
+registrations, qualifications, scope, transcript review or broker checks. Native
+microphone/speaker validation requires attended readiness. Full M6 acceptance,
+noise/false-wake coverage and integrated screen/voice validation remain incomplete.
+See [voice setup and controls](docs/VOICE.md), [actual M6 results](docs/M6_TEST_REPORT.md),
+[wake architecture](docs/decisions/0022-windows-wake-grammar.md) and
+[spelling-hint limits](docs/decisions/0024-local-speech-vocabulary.md).
 
 ## Animated screen companion
 
@@ -199,7 +243,8 @@ server, additional dependency, cloud fallback, auto-start entry or installation 
 added. Startup progress appears in the activity bar; a search startup failure leaves
 local chat available with an explicit notice. Missing model/runtime/image artifacts
 are reported rather than downloaded. M5 screen assistance is independently opted
-in through the private screen configuration above. Voice remains outside scope.
+in through the private screen configuration above. M6 adds independently bounded
+GUI voice controls; see the voice section and its pending native acceptance status.
 
 Approved service startup metadata is private at `%LOCALAPPDATA%\Jarvis\gui-startup.toml`:
 registered Ollama executable/hash/version, local Docker context, owned container name
@@ -348,6 +393,14 @@ separate from this bounded Windows evidence.
 
 
 ## M4: dedicated Google Chrome and media
+
+Spotify play requests now select the first fresh result without showing a
+numbered list. For example, ask `Play Avid on Spotify` or
+`Play playlist Fav Jpop on Spotify`. Explicit artist/playlist-owner constraints
+still apply. `Search Spotify for Avid` lists results without playing them.
+See [selection behavior and qualification](docs/decisions/0023-spotify-first-result.md).
+The shared GUI/terminal launcher selects the fresh `spotify-first-result-*`
+qualification reports; older milestone reports remain historical evidence.
 
 M4 adds opt-in installed Chrome for YouTube and Netflix, and an official Spotify
 API adapter. See [M4 results](docs/M4_TEST_REPORT.md),
@@ -670,6 +723,8 @@ directory; optional pytest caching is disabled to avoid the previously observed
 Windows temp/cache access-denied errors. Explicit `--basetemp` is honored; use
 only a dedicated disposable directory because pytest clears it.
 
+### Starting Ollama manually
+
 The authorized standalone installation is outside Git at
 `%LOCALAPPDATA%\Jarvis\runtime\ollama-v0.40.2\bin\ollama.exe`, with weights at
 `%LOCALAPPDATA%\Jarvis\models`. A manually started server is currently available.
@@ -782,7 +837,7 @@ To regenerate the generated lock after a deliberate dependency change:
 ```powershell
 # Bootstrap only if pip-tools is not already installed in .venv:
 .\.venv\Scripts\python.exe -m pip install pip-tools
-.\.venv\Scripts\python.exe -m piptools compile --extra dev --extra windows --extra browser --extra media --strip-extras --allow-unsafe --generate-hashes --output-file requirements-dev.lock pyproject.toml
+.\.venv\Scripts\python.exe -m piptools compile --extra dev --extra windows --extra browser --extra media --extra voice --extra neural-voice --strip-extras --allow-unsafe --generate-hashes --output-file requirements-dev.lock pyproject.toml
 .\.venv\Scripts\python.exe -m pip install --require-hashes -r requirements-dev.lock
 .\.venv\Scripts\python.exe -m pip install --no-deps --no-build-isolation -e .
 ```
@@ -826,19 +881,10 @@ update, inspect the changed installation and deliberately create a new registrat
 No Notepad settings or recovery files are touched. Classic/unpackaged installations
 are currently unsupported and fail closed.
 
-Start the already installed standalone Ollama manually in a separate terminal:
+For CLI-only sessions, follow [Starting Ollama manually](#starting-ollama-manually)
+in a separate terminal if the registered server is not already running. Verify
+the cloud-disabled startup log; loopback alone is not evidence.
 
-```powershell
-$env:OLLAMA_NO_CLOUD = '1'
-$env:OLLAMA_HOST = '127.0.0.1:11434'
-$env:OLLAMA_MODELS = "$env:LOCALAPPDATA\Jarvis\models"
-$env:OLLAMA_CONTEXT_LENGTH = '4096'
-& "$env:LOCALAPPDATA\Jarvis\runtime\ollama-v0.40.2\bin\ollama.exe" serve
-```
-
-These settings affect this process only. Check its actual startup log for
-`Ollama cloud disabled: true` before marking private profile evidence verified.
-Do not infer cloud-disabled status solely from the loopback address.
 On this PC the private M2 profile was derived from `desktop.toml`, retaining its
 model/provider options, setting `prompt_version="planner-m2-v10"` and
 `decision_version="decision-m2-v1"`. The checked-in example

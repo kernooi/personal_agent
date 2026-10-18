@@ -1,5 +1,248 @@
 # JARVIS implementation plan
 
+## Repository cleanup (2026-10-18)
+
+Consolidated repeated README voice/Ollama instructions and overlapping update
+chains in the project-state/handoff guides, retaining their original historical
+audits and links to canonical evidence. Static audit confirmed no safe-to-remove
+unused source module or byte-identical Python file; runtime code, dependencies,
+optional providers, frozen corpora and evaluation reports are unchanged.
+1722 tests pass in 62.07s; lint, formatting, dependencies and guide file links pass.
+Ruff's own cache was cleaned. Recursive Python/test-cache deletion was rejected
+by automatic approval review ("blocked by policy"); those generated directories
+remain. No native effects, installations, private-setting changes, commit or push.
+
+## M6 app-name spelling context (2026-10-18) — native gate failed; broad hints disabled
+
+Owner supplied actual Discord/this-cord example. Generic decoder vocabulary uses
+only read-only installed friendly labels plus optional explicit private spellings;
+no per-app replacements, history bias, extra transcription pass or new authority.
+Bound transient metadata/IPC to 64 terms, 512 chars and actual-tokenizer 160 tokens.
+GUI saves explicit preferences, never automatic OS names. Model/Stop/review/broker
+gates unchanged. 1720 fake tests and static/dependency checks pass. New strict
+four-case synthetic app/literal-cord corpus passes all 8 hinted/unhinted checks;
+this proves non-regression only. Old 5/7 synthetic and 2/7 native failures stay.
+Attended spelling r1 FAILED (1/4 exact). Owner confirms literal-cord false positives
+became Discord. Automatic app-name hints now default OFF and are explicitly
+disabled privately, preserving all other settings with backup. Optional hints are
+labelled experimental. No native retest after disabling; original homophone issue
+and general accuracy remain unresolved. See decision 0024/BUILD_LOG.
+Final correction checks: 1722 fake tests pass in 64.45s; lint, formatting (225
+files), dependency and whitespace checks pass. No additional native audio test.
+
+## M6 command recognition (2026-10-18) — installed; accuracy gate not met
+
+Corrected actual-audio silence endpoint timing, headset resampling and partial
+transcript dropping; widened bounded decoding search without history bias or
+weaker confidence gates. Private end-of-command pause changed 0.5→1.0s with backup.
+Owner approved small.en download/selection; pinned assets installed locally on
+CPU and base.en preserved, with Michael/mic/output settings retained. 1700 full
+deterministic tests, 162 focused voice tests and lint/format/pip check pass.
+Frozen synthetic exact-match report FAILED (both models 5/7); preserve failures
+and gate. Small.en fixes the song-title case, has a number-format mismatch, and
+still misses the unusual playlist name. Synthetic evidence does not establish
+owner accuracy. Fresh owner readiness obtained for recognition-only seven-sentence
+normal wake-path test; launched m6-recognition-attended-r1.json. No spoken command
+executes, no screen capture or ordinary audio/transcripts saved. Attended r1 FAILED:
+seven transcripts, 2/7 exact matches, no worker errors; post-ack input 65.5–67.5ms.
+Cause of mismatches is pending operator feedback because text/audio was not saved.
+Prepared safe input-quality and error-category diagnostics without changing exact
+scoring or claiming a pass. Overall M6 remains unqualified. See BUILD_LOG/VOICE.
+Final full regression suite after diagnostics: 1708 passed in 54.35s; all static
+and dependency checks pass. Further native diagnosis awaits the owner's feedback.
+
+## M6 natural speech (2026-10-18) — installed; speaker/Stop preview passed
+
+Owner chose American male after approving the Kokoro setup proposal. Implemented
+optional pinned Kokoro CPU speech with strict explicit config, private verified
+assets, preserved SAPI output selection, existing queued playback verification,
+Stop/half-duplex/deadlines and no runtime downloads/fallback. Ordinary audio stays
+transient; setup prepares only the fixed synthetic acknowledgement cache, loaded
+before wake so the prepared command-input handoff stays intact. GUI engine/voice
+settings and explicit setup/speaker-only lab are implemented. Dependencies/model
+installed, selected Michael privately with backup. 1684 full fake tests and 147
+final focused voice tests pass; lint/format/pip check pass. Six combined action-
+model reports still match current profile/contracts using their preserved metadata;
+no action qualifications regenerated or gates altered. Attended speaker preview
+completed: four verified samples and one Stop during playback (0.232s worker exit).
+Operator confirms clear Michael audio and successful Stop, with no errors or
+microphone/app/media/screen effects. Preserved m6-neural-speech-michael-r1.json.
+Neural wake/command timing remains pending; earlier 67ms is not reused. Overall
+M6 is still not fully qualified. See BUILD_LOG.md.
+
+## M6 acknowledgement-to-command handoff (2026-10-18) — attended result observed
+
+Remove device discovery/format/open work from after "Yes sir" by reserving an
+inactive command stream before native wake recognition. Start only after verified
+TTS completion, require real input samples before Listening, and retain the first
+block. Stop, no-overlap, bounds and close-before-STT remain. Add actual handoff
+timing metadata; no private configuration or artificial wait was changed.
+128 focused tests and all 1666 fake-only tests pass; lint/format pass (213 files).
+All six existing combined qualification validators still accept their reports.
+Owner-approved attended voice-only run confirms native device coexistence and
+0.0668258s (67ms) verified playback completion to first input. The immediately
+spoken synthetic question matched exactly without uncertainty; audible ack/orb
+are operator-confirmed. No app/media/screen effects. This is one successful
+handoff, not full M6 qualification. See BUILD_LOG.md and
+evaluations/m6-wake-handoff-validation-v1.json.
+
+## Spotify first-result playback (2026-10-18) — complete with fake/model evidence
+
+Play requests now select the first fresh Spotify result without a numbered list.
+Explicit artist/owner constraints, search-only result lists and all broker phase
+checks remain. YouTube is unchanged. Owner resumed fake-only checks: 248 focused
+tests and all 1658 fake-only tests pass. Actual qwen3:8b gates pass model 24/24,
+conversation 41/41, apps 31/31, language 33/33, browser 27/27 and Spotify desktop
+25/25, with zero unauthorized dispatches. Preserved historical corpus/results and introduced
+desktop v2/language v4 with the unchanged 100% gate. Existing validators accept
+all six current reports; shared GUI/terminal launcher now selects them. No live
+Spotify test for this change, old-report overwrite or gate bypass. See decision
+0023 and BUILD_LOG.md.
+
+## M6 empty command recovery (2026-10-18) — implemented, runtime unverified
+
+The owner's GUI log exposed NO_SPEECH_DETECTED disabling the wake frontend.
+Handle the exact empty-result frame only during wake command transcription;
+wait for worker completion before the normal fresh wake session. No transcript
+retry, chat submission or action replay. Preserve Stop, PTT and all genuine
+device/output errors. Added fake recovery/cancellation/error-boundary cases,
+unrun under the existing general test pause. No live audio test. See BUILD_LOG.md.
+
+## M6 exact-question mismatch — operator confirmation and diagnostic followup
+
+Run r3 was not performed by the operator; preserved separately. In the requested
+repeat r4 the operator confirms audible "Yes sir" and orb visibility. Native
+input started in 0.886 seconds; local STT processes a 1.05-second command clip,
+but exact phrase mismatch remains. Added safe fixed-fixture mismatch categories
+without relaxing the exact gate or retaining text. Followup r5 starts input in
+0.796 seconds but observes no wake/command; participation unknown. Preserved all
+results. Question recognition still needs a performed diagnostic trial; no cause
+can be established from the existing reports.
+
+Owner confirms using the expected synthetic question in r2. Its mismatch remains
+unresolved because recognized text was transient. Preserve original and separate
+operator supplement. The same approved voice-only lab now displays recognition
+until Finish and collects acknowledgement/orb observation checkboxes without
+logging text/audio. Exact comparison stays unchanged. Static checks
+pass; general tests remain paused. See BUILD_LOG.md.
+
+## M6 wake startup (2026-10-18) — live input start verified; full flow pending
+
+Corrected the owned worker's Windows message dispatch after an inactive synthetic
+comparison reproduced the COM-wait starvation. Eight-second startup limit remains.
+Owner resumed only the attended voice-only lab: r1/r2 started the native microphone
+stream in 0.805/0.935 seconds; r2 also observed wake, speech start and command
+transcription. Exact synthetic question check failed and audible output needs
+operator confirmation. Preserve both reports; full M6 remains unverified.
+Static lint/format/whitespace pass; broad pytest remains paused. See BUILD_LOG.md,
+evaluations/m6-wake-message-pump-v1.json and m6-wake-live-r1/r2.json.
+
+## M6 wake startup defect (2026-10-18) — inactive setup verified
+
+Reproduced automatic SAPI event-interface binding failure with the recognizer
+inactive; explicit _ISpeechRecoContextEvents now connects and the grammar builds.
+Owner approved only that inactive comparison. Added staged safe error diagnostics
+and inspection command; fake regression cases remain unrun. No recording/playback
+or GUI test, and no overall M6 qualification. See BUILD_LOG.md and
+evaluations/m6-wake-inactive-setup-v1.json. Live wake/latency/audio still pending.
+
+## M6 responsive wake path (2026-10-18) — native validation pending
+
+Implemented Windows offline grammar wake detection, separate from Whisper
+command transcription. Uses the installed Microsoft English recognizer in an
+owned worker, selected mic and literal configured phrase, high-confidence full
+results, existing orb/SAPI acknowledgement, then bounded command capture and
+unchanged review/broker. No engine/model installation or global setting change.
+Safe statuses reveal unclear/unmatched wake input. Fake cases added but unrun;
+the owner has not resumed testing. Static checks only; latency, native accuracy,
+false wakes, repeated input and stop remain pending. See decision 0022.
+
+## M6 configurable wake flow (2026-10-18) — unverified
+
+Added Settings > Wake call and Command listening window, persisted privately and
+applied to the next wake session. Literal bounded whole-word phrases replace
+fixed Jarvis in matching/status; old files default to Jarvis. Existing orb/“Yes
+sir” precedes fresh timed command capture. Scrollable settings keeps controls
+accessible. Fake gate/config/UI cases added but unrun; no runtime/native tests
+while the owner's pause remains active. Recognition and audibility remain pending.
+
+## M6 wake acknowledgement (2026-10-18) — unverified
+
+Standalone “JARVIS” now shows the existing orb and speaks local “Yes sir.” with
+capture paused, then restarts the owned mic and arms a fresh bounded followup.
+Reuse one wake worker/model and existing speech checks/Stop/privacy presentation;
+no model/history/tool request for the acknowledgement. Single-utterance questions
+are unchanged. Added fake cases await execution; no runtime testing at the
+owner's request. M6 remains NOT FULLY VERIFIED. See VOICE.md and decision 0021.
+
+## M6 playback correction (2026-10-18) — unverified
+
+The reported SPEECH_PLAYBACK_NOT_STARTED persisted after the event-interest
+change. Replaced the automation callback with explicitly subscribed native SAPI
+queued start/end events bound to the exact Speak stream. Require both events,
+completion and successful output status; retain finite deadlines, cancellation
+and finally-purge, including submission failure. Added fake regression cases;
+not executed because the owner paused testing. Static review only. Native
+playback/audibility, interruption and wake integration remain pending; M6 remains
+NOT FULLY VERIFIED. See BUILD_LOG.md, M6_TEST_REPORT.md and VOICE.md.
+
+## M6 owner update: hands-free GUI (2026-10-17) — unverified
+
+Ordinary GUI now has Settings beside Details, no Mic/Finish/Stop speaking toolbar,
+always-on spoken replies and local wake addressing with "JARVIS". Reuses installed
+base.en in bounded CPU workers and silence-ended utterances. Background words are
+discarded; addressed requests use the same submission/broker. Passive microphone
+status stays visible, Settings can disable listening, capture pauses through
+backend processing/speech, and Stop/Esc/global stop retain authority. Following
+missed-wake reports, capture now buffers continuously through local wake analysis
+with a four-second queue and 300 ms lead-in. Idle silence no longer dilutes short
+utterances; sensitivity is adjustable and followup expiry uses capture timing.
+Confidence/address/approval gates remain unchanged. These fixes are untested.
+Explicit
+PTT lab remains user-activated; no new models, dependencies or permissions.
+
+No runtime tests or native effects were run, per owner request. Static lint/format
+and whitespace checks only. New fake address/lifecycle cases await execution.
+Wake accuracy/false triggers, sustained resource/device behavior, speech output,
+interruption and integrated M5/tool acceptance remain pending. Last full-suite
+pass predates these changes. See ADR 0021 and VOICE.md. M6 NOT FULLY VERIFIED.
+
+## M6 local GUI voice (2026-10-17) — implemented, NOT FULLY VERIFIED
+
+Added bounded PTT microphone capture, CPU faster-whisper adapter, Windows offline
+SAPI output, interruption, device/config controls and trusted voice states to the
+existing Tkinter chat. One shared ChatWindow.send_text/backend/broker pipeline and
+one existing orb overlay; M5 capture/watch privacy has presentation priority. No
+always-listening mode, cloud speech, separate history/action engine or tool grant.
+Model/profile remains the existing qualified legacy qwen3 setup.
+
+Actual baseline 1531 passed; last regression 1593 passed in 60.08 s; new voice/UI
+suite 62 passed. Lint/format/dependencies passed before the final SAPI event-interest
+correction, which is untested at the owner's request. Refreshed app/media/language model
+gates pass unchanged thresholds and all six report readers match. These are mock
+audio/native-controller simulations with actual local text inference where noted.
+Read-only real device/voice enumeration succeeded; no capture/playback was run.
+
+Owner approved base.en and attended testing. Pinned model setup and offline CPU
+loading passed (0.312 s); synthetic silence produced no transcript. First native
+GUI lab stopped before recording on a fixture mapping race; its report is retained
+and corrected r2 confirmed fixture scope. The owner then hit a settings-save bug:
+zero numeric defaults appeared blank and failed validation. Fixed zero rendering
+and specific error messages; the form's save/recovery paths pass isolated Tk
+tests. R2 ended without audio acceptance; corrected native retest awaits restart.
+R4 subsequently confirmed genuine PTT/local STT for both synthetic phrases. Native
+startup deadlock was fixed by preloading speech libraries before the control
+reader, with bounded startup and transient input-level feedback. SAPI had no start
+event interest; corrected interest=2 after the owner stopped testing. This final
+change is not tested. Audibility, interruption and complete M5 handoff remain open.
+
+Testing is stopped at the owner's request. Remaining: attended
+microphone/speaker/interruption/device-loss checks, real voice-to-M5 GUI fixture
+demonstration and separately scoped app/media/web voice validation. Requests for
+model download and attended readiness have been answered. Prepared explicit operator
+setup and production-GUI lab; no automatic model downloads or fake live claims.
+Update M6_TEST_REPORT.md with new immutable evidence when authorized; no M7 work.
+
 ## Companion indicator appearance (2026-10-17)
 
 Replaced the red rectangular screen-access panel with a smaller rounded charcoal

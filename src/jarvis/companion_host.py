@@ -24,6 +24,10 @@ class Host:
             config.reduced_motion == "system" and system_reduced_motion()
         )
         self.animation = Animation(config, reduced=reduced)
+        self.voice_animation = Animation(config, reduced=reduced)
+        self.voice_epoch = 0
+        self.voice_label = None
+        self.label_hidden = True
         try:
             if config.enabled:
                 self.overlay = Overlay(config)
@@ -125,10 +129,46 @@ class Host:
                 or any(type(v) is not int for v in bounds)
             ):
                 continue
+            if event == "voice":
+                state = message.get("voice_state")
+                mapped = {
+                    "WAKE_ACKNOWLEDGING": "listening",
+                    "LISTENING": "listening",
+                    "TRANSCRIBING": "transcribing",
+                    "PROCESSING": "thinking",
+                    "SPEAKING": "speaking",
+                }.get(state)
+                if mapped:
+                    if (
+                        self.voice_animation.terminal is not None
+                        or self.voice_animation.task is None
+                    ):
+                        self.voice_epoch += 1
+                    self.voice_animation.event(mapped, f"voice-{self.voice_epoch}", sequence, now)
+                    self.voice_label = state.title()
+                    if self.overlay and not self.screen_priority(now):
+                        self.overlay.move(bounds)
+                elif state in {
+                    "IDLE",
+                    "DISABLED",
+                    "STOPPING",
+                    "ERROR",
+                    "SUBMITTING",
+                    "WAKE_LISTENING",
+                    "WAKE_CHECKING",
+                }:
+                    if self.voice_animation.task:
+                        self.voice_animation.event(
+                            "cancelled", self.voice_animation.task, sequence, now
+                        )
+                    self.voice_label = None
+                print(json.dumps({"ack": sequence, **self.metadata()}), flush=True)
+                continue
             accepted = self.animation.event(
                 event, task, sequence, now, watching=message.get("watching") is True
             )
             if accepted:
+                self.label_hidden = False
                 text = {
                     "capturing": "Reading screen",
                     "analyzing": "Thinking locally",
@@ -183,7 +223,14 @@ class Host:
                         self.overlay = None
                         self.error = "COMPANION_UNAVAILABLE"
             print(json.dumps({"ack": sequence, **self.metadata()}), flush=True)
-        pose = self.animation.pose(now)
+        screen_pose = self.animation.pose(now)
+        if self.screen_priority(now):
+            pose = screen_pose
+        else:
+            pose = self.voice_animation.pose(now)
+            if not self.label_hidden and not self.closing:
+                self.root.hide()
+                self.label_hidden = True
         if self.overlay and (not self.animation.reduced or pose != self.previous_pose):
             start = time.perf_counter()
             try:
@@ -202,6 +249,11 @@ class Host:
             return
         self.next_frame = max(self.next_frame + 1 / 60, time.monotonic())
         self.root.after(max(1, round((self.next_frame - time.monotonic()) * 1000)), self.tick)
+
+    def screen_priority(self, now):
+        return self.animation.state in {"capturing", "analyzing", "watching"} or (
+            self.animation.pose(now).opacity > 0
+        )
 
     def close(self):
         if self.overlay:

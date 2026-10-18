@@ -7,6 +7,7 @@ import subprocess
 import sys
 import threading
 import time
+from functools import wraps
 from uuid import uuid4
 
 from jarvis.domain import Denied
@@ -107,6 +108,15 @@ class WindowsCapture:
         return frame
 
 
+def serialized(method):
+    @wraps(method)
+    def invoke(self, *args, **kwargs):
+        with self.lock:
+            return method(self, *args, **kwargs)
+
+    return invoke
+
+
 class CaptureIndicator:
     """Separate visible process stays responsive during synchronous inference."""
 
@@ -117,7 +127,9 @@ class CaptureIndicator:
         self.companion = companion or CompanionConfig()
         self.sequence = 0
         self.replies = queue.Queue(maxsize=32)
+        self.lock = threading.RLock()
 
+    @serialized
     def start(self):
         if self.process and self.process.poll() is None:
             return
@@ -154,7 +166,8 @@ class CaptureIndicator:
 
         threading.Thread(target=read_events, daemon=True).start()
 
-    def update(self, event, task="", bounds=(0, 0, 1, 1), *, watching=False):
+    @serialized
+    def update(self, event, task="", bounds=(0, 0, 1, 1), *, watching=False, voice_state=None):
         if not self.alive:
             return None
         self.sequence += 1
@@ -165,6 +178,8 @@ class CaptureIndicator:
             "sequence": self.sequence,
             "watching": watching,
         }
+        if event == "voice":
+            message["voice_state"] = voice_state
         try:
             self.process.stdin.write((json.dumps(message) + "\n").encode())
             self.process.stdin.flush()
@@ -185,6 +200,7 @@ class CaptureIndicator:
     def pid(self):
         return self.process.pid if self.alive else 0
 
+    @serialized
     def close(self):
         if self.process:
             if self.alive:

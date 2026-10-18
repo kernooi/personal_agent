@@ -1,0 +1,33 @@
+{
+  "version": "m6-wake-inactive-setup-v1",
+  "date": "2026-10-18",
+  "scope": "Owner-approved inactive Windows recognizer and grammar setup only",
+  "plain_check": {
+    "command": ".\\.venv\\Scripts\\python.exe scripts\\Inspect-JarvisWake.py",
+    "exit_code": 0,
+    "status": "INACTIVE_SETUP_READY",
+    "activation_requested": false,
+    "stage": "GRAMMAR"
+  },
+  "comparison": {
+    "command": ".\\.venv\\Scripts\\python.exe scripts\\Inspect-JarvisWake.py --compare-events",
+    "exit_code": 0,
+    "explicit_event_interface": "INACTIVE_SETUP_READY",
+    "automatic_events": {
+      "status": "FAILED",
+      "stage": "EVENTS",
+      "category": "BINDING",
+      "hresult": null
+    },
+    "activation_requested": false
+  },
+  "correction": "Pass SpeechLib._ISpeechRecoContextEvents explicitly to comtypes.client.GetEvents",
+  "microphone_recording_requested": false,
+  "speech_playback_requested": false,
+  "global_setting_changes": false,
+  "raw_audio_or_transcripts_saved": false,
+  "live_wake_accuracy": "NOT TESTED",
+  "wake_to_reply_latency": "NOT TESTED",
+  "audibility_and_stop": "NOT TESTED",
+  "m6_status": "NOT FULLY VERIFIED"
+}

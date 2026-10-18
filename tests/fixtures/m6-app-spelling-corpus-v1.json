@@ -1,0 +1,10 @@
+{
+  "version": "m6-app-spelling-corpus-v1",
+  "gate": {"minimum_exact_fraction": 1.0},
+  "cases": [
+    {"id": "discord-open", "text": "Open Discord."},
+    {"id": "discord-minimize", "text": "Please minimize Discord."},
+    {"id": "literal-cord", "text": "This cord connects to the monitor."},
+    {"id": "literal-cord-question", "text": "How do I untangle this cord?"}
+  ]
+}
